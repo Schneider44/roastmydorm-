@@ -3547,3 +3547,65 @@ body {
     }
 }
 
+/* ===== MOBILE PHONE ONLY (max-width: 480px) ===== */
+@media (max-width: 480px) {
+    /* Scale down for phones only */
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .nav-logo {
+        font-size: 1.3rem;
+    }
+    
+    .nav-logo i {
+        font-size: 1.5rem;
+    }
+    
+    .nav-logo-img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .nav-menu {
+        gap: 15px;
+    }
+    
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 12px;
+    }
+    
+    .hero {
+        padding: 100px 0 60px;
+    }
+    
+    .hero-image {
+        transform: scale(0.75);
+    }
+    
+    /* Grid cards on mobile */
+    .dorms-grid {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 16px;
+    }
+    
+    .city-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Section titles smaller on mobile */
+    .section-title {
+        font-size: 2rem;
+    }
+}
