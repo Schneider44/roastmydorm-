@@ -3606,4 +3606,33 @@ body {
     .section-title {
         font-size: 2rem;
     }
+    
+    /* How It Works section - smaller on mobile only */
+    .how-it-works {
+        padding: 50px 0;
+    }
+    
+    .process-cards {
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+    
+    .process-card {
+        padding: 30px 20px;
+    }
+    
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 18px;
+    }
+    
+    .process-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+    }
+    
+    .process-card p {
+        font-size: 0.9rem;
+    }
 }
