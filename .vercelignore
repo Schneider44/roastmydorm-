@@ -1,0 +1,16 @@
+backend/
+.git
+.gitignore
+node_modules
+*.md
+docker-compose.yml
+Dockerfile
+nginx.conf
+build.ps1
+build.sh
+run.ps1
+run.sh
+test.ps1
+test.sh
+.dockerignore
+.vscode/

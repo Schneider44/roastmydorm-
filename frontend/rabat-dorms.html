@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabat Dorms - RoastMyDorm</title>
+    <meta name="description" content="Find student housing in Rabat. Browse dorms, view details, and contact landlords directly.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root{--bg:#ffffff;--text:#111827;--muted:#6b7280;--card:#ffffff;--border:#e5e7eb}
+        .city-dorms-container { min-height: 100vh; background: var(--bg); padding-top: 70px; }
+        .city-header { background:#ffffff; color: var(--text); padding:2.5rem 0 2rem; text-align: left; border-bottom:1px solid var(--border); }
+        
+        .city-header-content { position: relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 2rem; }
+        
+        .city-title { font-size:2rem; font-weight:700; line-height:1.2; margin-bottom:.75rem; text-shadow:none; }
+        
+        .city-subtitle { font-size:1rem; color:var(--muted); margin-bottom:1.5rem; max-width:900px; line-height:1.8; overflow:visible; word-wrap:break-word; white-space:normal; display:block; visibility:visible; opacity:1; }
+        
+        .city-stats { display:flex; gap:.75rem; margin-top:.75rem; flex-wrap:wrap; }
+        
+        .stat-card { display:flex; align-items:center; gap:.5rem; background:#ffffff; border-radius:8px; padding:.75rem 1rem; border:1px solid var(--border); }
+        .stat-number { font-size:1.1rem; font-weight:800; color:var(--text); }
+        .stat-label { font-size:.85rem; color:var(--muted); font-weight:600; }
+        
+        /* Dark Blue Search and Filter Section */
+        .search-filter-section { background:#ffffff; padding:.75rem 0 1.25rem; border-bottom:1px solid var(--border); }
+        
+        .search-filter-container { max-width:1200px; margin:0 auto; padding:0 2rem; }
+        
+        .search-filter-grid { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:.5rem; align-items:center; background:#ffffff; border:1px solid var(--border); border-radius:10px; padding:.5rem; }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-label { color:var(--muted); font-weight:600; font-size:.8rem; margin-left:.25rem; margin-bottom:.25rem; }
+        
+        .filter-input { background:#fff; border:1px solid var(--border); border-radius:8px; padding:.7rem .9rem; font-size:.95rem; color:#374151; }
+        
+        .filter-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .date-input {
+            position: relative;
+        }
+        
+        .date-input::before {
+            content: '📅';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .date-input input {
+            padding-left: 2.5rem;
+        }
+        
+        .room-type-input {
+            position: relative;
+        }
+        
+        .room-type-input::after {
+            content: '▼';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+        }
+        
+        /* Date Picker Styles */
+        .date-picker {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .date-picker.show {
+            display: block;
+        }
+        
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .date-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .date-nav {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .date-nav:hover {
+            color: #374151;
+        }
+        
+        .date-cell {
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .date-cell:hover {
+            background: #f3f4f6;
+        }
+        
+        .date-cell.selected {
+            background: #0f766e;
+            color: white;
+        }
+        
+        .date-cell.other-month {
+            color: #d1d5db;
+        }
+        
+        /* Room Type Dropdown */
+        .room-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            margin-top: 0.5rem;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .room-dropdown.show {
+            display: block;
+        }
+        
+        .room-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .room-option:hover {
+            background: #f3f4f6;
+        }
+        
+        .room-option.selected {
+            background: #f0fdfa;
+            color: #0f766e;
+        }
+        
+        /* Modern Price Input Boxes Design */
+        .budget-slider {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .price-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        
+        .price-input-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        
+        .price-input-box {
+            background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 3.5rem 0.85rem 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+        
+        .price-input-box::-webkit-outer-spin-button,
+        .price-input-box::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+        
+        .price-input-box:focus {
+            outline: none;
+            border-color: var(--text);
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .price-input-box::placeholder {
+            color: #9ca3af;
+            font-weight: 500;
+        }
+        
+        .price-input-wrapper > div {
+            position: relative;
+        }
+        
+        .price-currency {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+        
+        .price-input-box:focus ~ .price-currency {
+            color: var(--text);
+        }
+        
+        .price-input-wrapper:focus-within .price-currency {
+            color: var(--text);
+        }
+        
+        .search-btn { background:#111827; color:#fff; border:0; border-radius:8px; padding:.7rem 1rem; font-weight:700; cursor:pointer; }
+        .search-btn:hover { opacity:.9; }
+        
+        /* Dark Blue Content Section */
+        .dorms-content { background:#ffffff; padding:1rem 0 2rem; }
+        
+        .dorms-content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .dorms-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+        
+        .back-button { display:flex; align-items:center; gap:.5rem; color:#111827; text-decoration:none; font-weight:600; opacity:.9; }
+        
+        .back-button:hover {
+            opacity: 0.8;
+        }
+        
+        .dorms-title { font-size:1.1rem; font-weight:800; color:#111827; text-align:center; flex:1; }
+        
+        .dorms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+        
+        .dorm-card { background:#ffffff; border-radius:10px; overflow:hidden; border:1px solid var(--border); box-shadow:none; transition: transform .15s ease; }
+        .dorm-card:hover { transform: translateY(-2px); }
+        
+        .dorm-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .dorm-price { position:absolute; top:.5rem; right:.5rem; background:#111827; color:#fff; padding:.25rem .5rem; border-radius:6px; font-weight:700; font-size:.85rem; }
+        
+        .dorm-content {
+            padding: 1.5rem;
+        }
+        
+        .dorm-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .dorm-location {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .dorm-price-large { font-size:.95rem; font-weight:800; color:#111827; margin-bottom:.5rem; }
+        
+        .dorm-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stars {
+            color: #fbbf24;
+            font-size: 1.1rem;
+        }
+        
+        .rating-text {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .dorm-amenity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .amenity-icon {
+            width: 16px;
+            height: 16px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        
+        .view-details-btn { width:100%; background:#111827; color:#fff; border:0; padding:.7rem .9rem; border-radius:8px; font-weight:700; font-size:.95rem; cursor:pointer; }
+        .view-details-btn:hover { opacity:.9; }
+        
+        /* Availability Badge */
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        
+        .availability-badge.available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .availability-badge.booked {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .availability-badge i {
+            font-size: 0.75rem;
+        }
+        
+        /* Booking Buttons */
+        .booking-btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        
+        .book-now-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        
+        .book-now-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .waitlist-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .waitlist-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .booked-btn {
+            width: 100%;
+            background: #9ca3af;
+            color: white;
+            border: none;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        @media (max-width:768px){
+            .city-dorms-container {
+                padding-top: 70px;
+            }
+            
+            .city-header {
+                padding: 1.5rem 0;
+            }
+            
+            .city-header-content {
+                padding: 0 1rem;
+            }
+            
+            .city-title { 
+                font-size:1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .city-subtitle {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                max-width: 100%;
+            }
+            
+            .city-stats {
+                flex-direction: column;
+                gap: .75rem;
+            }
+            
+            .search-filter-grid { grid-template-columns:1fr; gap:.75rem; border-radius:10px; }
+            
+            .budget-slider {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .price-input-box {
+                padding: 0.75rem 3rem 0.75rem 0.9rem;
+                font-size: 0.95rem;
+            }
+            
+            .price-input-label {
+                font-size: 0.7rem;
+            }
+            
+            .price-currency {
+                font-size: 0.85rem;
+            }
+            
+            .dorms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dorms-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .dorms-title { font-size:1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-social">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <span>RoastMyDorm</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn">Sign In</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="city-dorms-container">
+        <!-- Light Blue Header Section -->
+        <div class="city-header">
+            <div class="city-header-content">
+                <h1 class="city-title">Rabat: Premier Student Accommodation</h1>
+                <p class="city-subtitle">Capital city with prestigious universities and rich cultural heritage offering exceptional academic opportunities.</p>
+                <div class="city-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">14</span>
+                        <span class="stat-label">Approved Listings</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4.0/5</span>
+                        <span class="stat-label">Average Resident Rating</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2,500 MAD</span>
+                        <span class="stat-label">(Average Monthly Rent)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Blue Search and Filter Section -->
+        <div class="search-filter-section">
+            <div class="search-filter-container">
+                <div class="search-filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Check Date</label>
+                        <div class="date-input">
+                            <input type="text" class="filter-input" id="dateInput" placeholder="Select Date" readonly>
+                            <div class="date-picker" id="datePicker">
+                                <div class="date-header">
+                                    <button class="date-nav" id="prevMonth">‹</button>
+                                    <span id="currentMonth"></span>
+                                    <button class="date-nav" id="nextMonth">›</button>
+                                </div>
+                                <div class="date-grid" id="dateGrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Room Type</label>
+                        <div class="room-type-input">
+                            <input type="text" class="filter-input" id="roomTypeInput" placeholder="Select Room Type" readonly>
+                            <div class="room-dropdown" id="roomDropdown">
+                                <div class="room-option" data-type="all">All Types</div>
+                                <div class="room-option" data-type="studio">Studio</div>
+                                <div class="room-option" data-type="single">Single Room</div>
+                                <div class="room-option" data-type="shared">Shared Room</div>
+                                <div class="room-option" data-type="apartment">Apartment</div>
+                                <div class="room-option" data-type="house">House</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Budget Price</label>
+                        <div class="budget-slider">
+                            <div class="price-input-wrapper">
+                                <label class="price-input-label">Minimum (DH)</label>
+                                <div style="position: relative;">
+                                    <input type="number" 
+                                           class="price-input-box" 
+                                           id="minPriceInput" 
+                                           placeholder="1000" 
+                                           min="1000" 
+                                           max="5000" 
+                                           value="1000">
+                                    <span class="price-currency">DH</span>
+                                </div>
+                            </div>
+                            <div class="price-input-wrapper">
+                                <label class="price-input-label">Maximum (DH)</label>
+                                <div style="position: relative;">
+                                    <input type="number" 
+                                           class="price-input-box" 
+                                           id="maxPriceInput" 
+                                           placeholder="5000" 
+                                           min="1000" 
+                                           max="5000" 
+                                           value="5000">
+                                    <span class="price-currency">DH</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="search-btn" id="searchBtn">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Blue Content Section -->
+        <div class="dorms-content">
+            <div class="dorms-content-container">
+                <div class="dorms-header">
+                    <a href="index.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        Explore Other Cities
+                    </a>
+                    <h2 class="dorms-title">Curated Student Rentals in Rabat</h2>
+                    <div></div>
+                </div>
+                
+                <div id="dorms-grid" class="dorms-grid">
+                    <!-- Dorms will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rabat dorm data
+        const rabatDorms = [
+            {
+                id: 1,
+                title: "Modern Studio | Near Mohammed V | Al Irfane ",
+                location: "Al Irfane , Rabat | 3 min walk to Mohammed V Univ.",
+                price: "4,500 MAD/month",
+                priceValue: 2500,
+                roomType: "shared studio",
+                amenity: "Premium Location",
+                rating: 4.6,
+                reviews: 31,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                available: true
+            },
+            {
+                id: 2,
+                title: "Shared Apartment | 2 Bedrooms | Hassan",
+                location: "Hassan, Rabat | 8 min walk to Mohammed V Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 4000,
+                roomType: "shared",
+                amenity: "All Bills Included",
+                rating: 4.3,
+                reviews: 22,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"
+            },
+            {
+                id: 3,
+                title: "Luxury Apartment | AC & Parking |  In Boutana",
+                location: " In Boutana, Sale | 5 min walk to Mohammed V Univ.",
+                price: "2,800 MAD/month",
+                priceValue: 2800,
+                roomType: "shared apartment",
+                amenity: "Garden View",
+                rating: 4.7,
+                reviews: 28,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400"
+            },
+            {
+                id: 4,
+                title: "Traditional Room | Medina Style | Sale el Jadida",
+                location: "Sale el Jadida | 12 min by Tram to Mohammed V Univ.",
+                price: "3,500 MAD/month",
+                priceValue: 3500,
+                roomType: "shared",
+                amenity: "Cultural Heritage",
+                rating: 4.1,
+                reviews: 19,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400"
+            },
+            {
+                id: 5,
+                title: "Shared Apartment | 2 Bedrooms | El Massira",
+                location: "El Massira, Rabat | 15 min walk to Mohammed V Univ.",
+                price: "3,300 MAD/month",
+                priceValue: 3300,
+                roomType: "shared apartment",
+                amenity: "Premium Location",
+                rating: 4.4,
+                reviews: 25,
+                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
+                available: false
+            },
+            {
+                id: 6,
+                title: "Budget Studio | Near Campus | L'ocean",
+                location: "L'ocean, Rabat | 7 min walk to Mohammed V Univ.",
+                price: "5,000 MAD/month",
+                priceValue: 1500,
+                roomType: "studio",
+                amenity: "3 bedrooms",
+                rating: 3.9,
+                reviews: 16,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                available: true
+            },
+            {
+                id: 7,
+                title: "Shared Apartement | 2 Rooms | Hay Al Fath",
+                location: "Hay Al Fath, Rabat | 10 min walk to Mohammed V Univ.",
+                price: "3,500 MAD/month",
+                priceValue: 3500,
+                roomType: "house",
+                amenity: "Private Garden",
+                rating: 4.8,
+                reviews: 35,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                available: true
+            },
+            {
+                id: 8,
+                title: "Cozy Room | Shared Bath | Hay al Mouadda",
+                location: "Hay al Mouadda , Rabat | 18 min walk to Mohammed V Univ.",
+                price: "3,000 MAD/month",
+                priceValue: 1200,
+                roomType: "shared",
+                amenity: "Shared Kitchen",
+                rating: 3.8,
+                reviews: 12,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400"
+            },
+            {
+                id: 9,
+                title: "Executive Studio | Sea View | Temara",
+                location: "Andalousse, temara , Rabat | 10 min by taxi to Mohammed V Univ.",
+                price: "3,000 MAD/month",
+                priceValue: 3000,
+                roomType: "shared studio",
+                amenity: "Ocean View",
+                rating: 4.9,
+                reviews: 42,
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400"
+            },
+            {
+                id: 10,
+                title: "Student Residence | All Inclusive | Agdal",
+                location: "Agdal, Rabat | 2 min walk to Mohammed V Univ.",
+                price: "2,100 MAD/month",
+                priceValue: 2100,
+                roomType: "single",
+                amenity: "24/7 Security",
+                rating: 4.5,
+                reviews: 38,
+                image: "https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400"
+            },
+            {
+                id: 11,
+                title: "Shared Apartement |  2 Bedrooms | Sale el jadida",
+                location: "Sale el jadida , Rabat | 20 min drive to Mohammed V Univ.",
+                price: "2,800 MAD/month",
+                priceValue: 1800,
+                roomType: "shared",
+                amenity: "Furnished",
+                rating: 4.2,
+                reviews: 24,
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400"
+            },
+            {
+                id: 12,
+                title: "Modern Apartment | 2 Bedrooms | L'occean",
+                location: "L'occean , Rabat | 6 min walk to Mohammed V Univ.",
+                price: "5,000 MAD/month",
+                priceValue: 5000,
+                roomType: "shared apartment",
+                amenity: "Fully Furnished",
+                rating: 4.6,
+                reviews: 29,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"
+            },
+            {
+                id: 13,
+                title: "Budget Shared Room | Near Train Station | Agdal",
+                location: "Agdal, Rabat | 5 min walk to Mohammed V Univ.",
+                price: "1,000 MAD/month",
+                priceValue: 1000,
+                roomType: "shared",
+                amenity: "Transport Access",
+                rating: 3.7,
+                reviews: 15,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400"
+            },
+            {
+                id: 14,
+                title: "Luxury Villa | Private Room | Souissi",
+                location: "Souissi, Rabat | 8 min walk to Mohammed V Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 4000,
+                roomType: "house",
+                amenity: "Swimming Pool",
+                rating: 4.9,
+                reviews: 45,
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400"
+            },
+            {
+                id: 15,
+                title: "Cozy Studio | Near Parliament | Hassan",
+                location: "Hassan, Rabat | 10 min walk to Mohammed V Univ.",
+                price: "2,300 MAD/month",
+                priceValue: 2300,
+                roomType: "studio",
+                amenity: "Historic Area",
+                rating: 4.3,
+                reviews: 21,
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400"
+            },
+            {
+                id: 16,
+                title: "Student Dormitory | Single Room | Agdal",
+                location: "Agdal, Rabat | 1 min walk to Mohammed V Univ.",
+                price: "1,400 MAD/month",
+                priceValue: 1400,
+                roomType: "single",
+                amenity: "Study Room Access",
+                rating: 4.0,
+                reviews: 18,
+                image: "https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400"
+            },
+            {
+                id: 17,
+                title: "Shared Apartment | 2 Bedrooms | Medina",
+                location: "Medina, Rabat | 14 min walk to Mohammed V Univ.",
+                price: "1,900 MAD/month",
+                priceValue: 1900,
+                roomType: "shared",
+                amenity: "Traditional Courtyard",
+                rating: 4.1,
+                reviews: 20,
+                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400"
+            },
+            {
+                id: 18,
+                title: "Modern Studio | Near Beach | Hay Riad",
+                location: "Hay Riad, Rabat | 6 min walk to Mohammed V Univ.",
+                price: "2,700 MAD/month",
+                priceValue: 2700,
+                roomType: "studio",
+                amenity: "Beach Access",
+                rating: 4.7,
+                reviews: 33,
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400"
+            },
+            {
+                id: 19,
+                title: "Budget Apartment | 1 Bedroom | Hassan",
+                location: "Hassan, Rabat | 12 min walk to Mohammed V Univ.",
+                price: "2,100 MAD/month",
+                priceValue: 2100,
+                roomType: "apartment",
+                amenity: "Balcony View",
+                rating: 4.2,
+                reviews: 26,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"
+            },
+            {
+                id: 20,
+                title: "Luxury Studio | City Center | Agdal",
+                location: "Agdal, Rabat | 4 min walk to Mohammed V Univ.",
+                price: "3,000 MAD/month",
+                priceValue: 3000,
+                roomType: "studio",
+                amenity: "Gym Access",
+                rating: 4.8,
+                reviews: 41,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400"
+            },
+            {
+                id: 21,
+                title: "Shared House | 3 Bedrooms | Temara",
+                location: "Temara, Rabat | 25 min drive to Mohammed V Univ.",
+                price: "1,600 MAD/month",
+                priceValue: 1600,
+                roomType: "shared",
+                amenity: "Quiet Neighborhood",
+                rating: 4.0,
+                reviews: 17,
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400"
+            },
+            {
+                id: 22,
+                title: "Shared Apartment | 2 Bedrooms | Occean",
+                location: "Occean, Rabat | 3 min walk to Mohammed V Univ.",
+                price: "3,500 MAD/month",
+                priceValue: 3500,
+                roomType: "single",
+                amenity: "Library Access",
+                rating: 3.9,
+                reviews: 14,
+                image: "https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400"
+            },
+            {
+                id: 23,
+                title: "Modern Apartment | 3 Bedrooms | Souissi",
+                location: "Souissi, Rabat | 7 min walk to Mohammed V Univ.",
+                price: "3,200 MAD/month",
+                priceValue: 3200,
+                roomType: "apartment",
+                amenity: "Parking Space",
+                rating: 4.6,
+                reviews: 36,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400"
+            },
+            {
+                id: 24,
+                title: "Budget Studio | Near Market | Medina",
+                location: "Medina, Rabat | 16 min walk to Mohammed V Univ.",
+                price: "1,700 MAD/month",
+                priceValue: 1700,
+                roomType: "studio",
+                amenity: "Market Access",
+                rating: 3.8,
+                reviews: 13,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400"
+            },
+            {
+                id: 25,
+                title: "Luxury House | Private Room | Hay Riad",
+                location: "Hay Riad, Rabat | 5 min walk to Mohammed V Univ.",
+                price: "3,800 MAD/month",
+                priceValue: 3800,
+                roomType: "house",
+                amenity: "Private Terrace",
+                rating: 4.9,
+                reviews: 48,
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400",
+                available: false
+            },
+            
+            {
+                id: 26,
+                title: "Hay Nahda Apartment | Student Friendly | Hay Nahda",
+                location: "Hay Nahda, Rabat | 12 min to Mohammed V Univ.",
+                price: "2,400 MAD/month",
+                priceValue: 2400,
+                roomType: "apartment",
+                amenity: "Bright & Quiet",
+                rating: 4.2,
+                reviews: 18,
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400",
+                available: true
+            },
+        {
+            id:27,
+            title : "Place Al Joulane Studio | Student Friendly | Place Al joulane",
+            location : "Place Al Joulane , Rabat | 3 min walk to Mohmed V university",
+            price :"5,000 Mad/Month",
+            priceValue : "5000",
+            roomType : "Studio",
+            amenity :"Cozy & Quiet",
+            rating :"4.5",
+            reviews :"5",
+            image :" Joulane.png",
+            available : true
+        },
+        {
+            id:28,
+            title : "Yaccoub Mansour Studio | Student friendly | Yaccoub Mnasour ",
+            location : "Yaccoub Mansour , Rabat | 3 min walk to Mohamed V University",
+            price : "1,900 Mad/Month",
+            pricevalue : "1900",
+            roomtype :"Studio",
+            amenity :"Cozy & Quiet",
+            rating :"4.5",
+            reviews :"5",
+            image :" yaacoub studio.png",
+            available : true
+        },
+        {
+            id:29,
+            title : "Studio Agdal | Student friendly | Agdal",
+            location : "Agdal, Rabat | 3 min walk to Mohamed V University",
+            price : "1,900 Mad/Month",
+            pricevalue : "1900",
+            roomtype :"Studio",
+            amenity :"Cozy & Quiet",
+            rating :"4.5",
+            reviews :"5",
+            image :" studio agdal.png",
+            available : true
+        },
+        {
+            id:30,
+            title :"Apartement Kebibat | kebibat",
+            location : "Kebibat , Rabat | 5 min walk to UIR",
+            price : "4,500 MAD/MONTH",
+            pricevalue: "4500",
+            roomtype : "Shared",
+            amenity: "Quiet",
+            rating:"4.5",
+            reviews:"5",
+            image :"kebibat app 4.png",
+            available: true
+        },
+        {
+            id:31,
+            title :"Apartement Bouitate | Modern Apartement",
+            location : "Bouitate , Rabat | 5 min walk to UIR , ISPITS",
+            price :"3,200 MAD/MONTH",
+            pricevalue :"3200",
+            roomtype: "Shared",
+            amenity :"Furnished",
+            rating :"4,0",
+            reviews :"5",
+            image :"Bouitate app 2.png",
+            available : true
+        },
+        {
+            id:32,
+            title : "Apartement Dyur Jamae | Shared Apartement",
+            location :"Yaacoub Mnasour , Dyur Jamae , Rabat| 5 min walk to ISPITS",
+            price : "4,000 MAD/MONTH",
+            pricevalue :"4000",
+            roomtype :"Shared",
+            amenity :"Furnished",
+            rating :"4,0",
+            reviews :"10",
+            image :"yaacoub m1.png",
+            available : true
+        },
+        {
+            id : 33,
+            title :"Apartement Al Manzah | Shared Apartement", 
+            location :"Al Manzah , Rabat | 5 min walk to ",
+            price : "4,000 MAD/MONTH",
+            pricevalue :"4000",
+            roomtype :"Shared",
+            amenity : "Furnished",
+            rating :"4,0",
+            reviews :"10",
+            image :"manzah app.png",
+            available : true 
+        },
+    {
+        id : 34,
+        title :"Studio in Agdal | Student Friendly",
+        location :"Agdal , Avenue Abtal , Rabat| 2 min walk to Univ Mohmed V ",
+        price :"4,000 Mad/Month",
+        pricevalue :"4000",
+        roomtype :"Single",
+        amenity :"Furnished",
+        rating : 4.0,
+        reviews : 10,
+        image :"agdal app1.png",
+        available : true 
+    },
+    {
+        id : 35,
+        title : "Modern Apartement in Agdal | Shared Apartement",
+        location :"Agdal , Avenue Abtal , Rabat| 2 min walk to Univ Mohmed V",
+        price :"4,000 Mad/Month",
+        pricevalue :"4000",
+        roomtype :"Shared",
+        amenity :"Quiet",
+        rating : 4.0,
+        reviews : 5,
+        image :"agdal ap1.jpg",
+        available : false 
+    },
+    {
+        id : 36,
+        title : "Shared Apartement | Near UIR | L'occean",
+        location :"L'occean , Rabat ",
+        price:"4000 Mad/Month",
+        pricevalue :"4000",
+        roomtype :"Shared",
+        amenity :"Quiet",
+        rating : 4.0,
+        reviews : 10,
+        image :"loccean.png",
+        available : true 
+    },
+
+    {
+        id:37,
+        title :"Studio in Agadl / Student Friendly",
+        location:"Agdal, Rabat",
+        price :"6000 Mad/Month",
+        pricevalue:"6000",
+        roomtype :"Single",
+        amenity :"Furnished",
+        rating : 4.6,
+        reviews : 25,
+        image :"ap agdal.jpg",
+        available : true 
+    }
+
+
+
+        ];
+
+        // Global variables for filtering
+        let currentFilters = {
+            selectedDate: null,
+            roomType: 'all',
+            minPrice: 1000,
+            maxPrice: 5000
+        };
+
+        // Load dorms when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDorms();
+            initializeDatePicker();
+            initializeRoomDropdown();
+            initializePriceInputs();
+            setupSearchFunctionality();
+        });
+
+        // Date Picker Functionality
+        function initializeDatePicker() {
+            const dateInput = document.getElementById('dateInput');
+            const datePicker = document.getElementById('datePicker');
+            const currentMonthSpan = document.getElementById('currentMonth');
+            const dateGrid = document.getElementById('dateGrid');
+            const prevBtn = document.getElementById('prevMonth');
+            const nextBtn = document.getElementById('nextMonth');
+
+            let currentDate = new Date();
+            let selectedDate = null;
+
+            function updateCalendar() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                
+                currentMonthSpan.textContent = new Date(year, month).toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    year: 'numeric' 
+                });
+
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const startDate = new Date(firstDay);
+                startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+                dateGrid.innerHTML = '';
+
+                // Add day headers
+                const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                dayHeaders.forEach(day => {
+                    const header = document.createElement('div');
+                    header.textContent = day;
+                    header.style.fontWeight = 'bold';
+                    header.style.color = '#6b7280';
+                    dateGrid.appendChild(header);
+                });
+
+                // Add calendar days
+                for (let i = 0; i < 42; i++) {
+                    const date = new Date(startDate);
+                    date.setDate(startDate.getDate() + i);
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'date-cell';
+                    cell.textContent = date.getDate();
+                    
+                    if (date.getMonth() !== month) {
+                        cell.classList.add('other-month');
+                    }
+                    
+                    if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+                        cell.classList.add('selected');
+                    }
+                    
+                    cell.addEventListener('click', () => {
+                        selectedDate = new Date(date);
+                        currentFilters.selectedDate = selectedDate;
+                        
+                        // Update display
+                        dateInput.value = selectedDate.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+                        
+                        // Update calendar
+                        updateCalendar();
+                        datePicker.classList.remove('show');
+                        
+                        // Filter dorms
+                        filterDorms();
+                    });
+                    
+                    dateGrid.appendChild(cell);
+                }
+            }
+
+            // Event listeners
+            dateInput.addEventListener('click', () => {
+                datePicker.classList.toggle('show');
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+
+            // Close date picker when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dateInput.contains(e.target) && !datePicker.contains(e.target)) {
+                    datePicker.classList.remove('show');
+                }
+            });
+
+            updateCalendar();
+        }
+
+        // Room Type Dropdown Functionality
+        function initializeRoomDropdown() {
+            const roomInput = document.getElementById('roomTypeInput');
+            const roomDropdown = document.getElementById('roomDropdown');
+            const roomOptions = roomDropdown.querySelectorAll('.room-option');
+
+            roomInput.addEventListener('click', () => {
+                roomDropdown.classList.toggle('show');
+            });
+
+            roomOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const roomType = option.dataset.type;
+                    const roomText = option.textContent;
+                    
+                    // Update current selection
+                    roomOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    // Update input display
+                    roomInput.value = roomText;
+                    currentFilters.roomType = roomType;
+                    
+                    // Close dropdown
+                    roomDropdown.classList.remove('show');
+                    
+                    // Filter dorms
+                    filterDorms();
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!roomInput.contains(e.target) && !roomDropdown.contains(e.target)) {
+                    roomDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Price Input Boxes Functionality
+        function initializePriceInputs() {
+            const minPriceInput = document.getElementById('minPriceInput');
+            const maxPriceInput = document.getElementById('maxPriceInput');
+
+            // Validate and update price filters
+            function updatePriceFilters() {
+                let minPrice = parseInt(minPriceInput.value) || 1000;
+                let maxPrice = parseInt(maxPriceInput.value) || 5000;
+
+                // Ensure min is at least 1000
+                if (minPrice < 1000) {
+                    minPrice = 1000;
+                    minPriceInput.value = 1000;
+                }
+
+                // Ensure max is at most 5000
+                if (maxPrice > 5000) {
+                    maxPrice = 5000;
+                    maxPriceInput.value = 5000;
+                }
+
+                // Ensure min is not greater than max
+                if (minPrice > maxPrice) {
+                    minPrice = maxPrice;
+                    minPriceInput.value = maxPrice;
+                }
+
+                // Ensure max is not less than min
+                if (maxPrice < minPrice) {
+                    maxPrice = minPrice;
+                    maxPriceInput.value = minPrice;
+                }
+
+                currentFilters.minPrice = minPrice;
+                currentFilters.maxPrice = maxPrice;
+            }
+
+            // Event listeners for input changes
+            minPriceInput.addEventListener('input', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            maxPriceInput.addEventListener('input', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            // Event listeners for blur (when user leaves the input)
+            minPriceInput.addEventListener('blur', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            maxPriceInput.addEventListener('blur', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            // Initialize with default values
+            updatePriceFilters();
+        }
+
+        // Search Functionality
+        function setupSearchFunctionality() {
+            const searchBtn = document.getElementById('searchBtn');
+            searchBtn.addEventListener('click', () => {
+                filterDorms();
+            });
+        }
+
+        // Filter Dorms Function
+        function filterDorms() {
+            let filteredDorms = rabatDorms.filter(dorm => {
+                // Filter by room type (handle partial matches)
+                if (currentFilters.roomType !== 'all') {
+                    const dormType = dorm.roomType.toLowerCase().trim();
+                    const filterType = currentFilters.roomType.toLowerCase().trim();
+                    
+                    // Check if dorm type matches exactly or contains the filter type
+                    // This handles cases like:
+                    // - "shared studio" matching "shared" filter
+                    // - "shared apartment" matching "apartment" or "shared" filter
+                    // - "studio" matching "studio" filter
+                    if (dormType !== filterType && !dormType.includes(filterType)) {
+                        return false;
+                    }
+                }
+                
+                // Filter by price range
+                if (dorm.priceValue < currentFilters.minPrice || dorm.priceValue > currentFilters.maxPrice) {
+                    return false;
+                }
+                
+                return true;
+            });
+
+            // Display filtered results
+            displayFilteredDorms(filteredDorms);
+            
+            // Show filter summary
+            showFilterSummary(filteredDorms.length);
+        }
+
+        // Display Filtered Dorms
+        function displayFilteredDorms(dorms) {
+            const dormsGrid = document.getElementById('dorms-grid');
+            dormsGrid.innerHTML = '';
+
+            if (dorms.length === 0) {
+                dormsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #6b7280;">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; color: #9ca3af;"></i>
+                        <h3 style="color: #374151; margin-bottom: 0.5rem;">No dorms found matching your criteria</h3>
+                        <p style="color: #6b7280;">Try adjusting your filters to see more results.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            dorms.forEach(dorm => {
+                const dormCard = document.createElement('div');
+                dormCard.className = 'dorm-card';
+                
+                // Determine availability status (default to true if not set)
+                const isAvailable = dorm.available !== false;
+                const availabilityBadge = isAvailable 
+                    ? '<span class="availability-badge available"><i class="fas fa-check-circle"></i> Available Now</span>'
+                    : '<span class="availability-badge booked"><i class="fas fa-times-circle"></i> Already Booked</span>';
+                
+                // Determine which buttons to show
+                let buttonsHtml = '';
+                if (isAvailable) {
+                    buttonsHtml = `
+                        <div class="booking-btn-container">
+                            <button class="book-now-btn" onclick="bookNow(${dorm.id}, event)">
+                                <i class="fas fa-calendar-check"></i> Book Now
+                            </button>
+                            <button class="view-details-btn" onclick="viewDormDetails(${dorm.id})">
+                                View Details
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    buttonsHtml = `
+                        <div class="booking-btn-container">
+                            <button class="waitlist-btn" onclick="joinWaitlist(${dorm.id}, event)">
+                                <i class="fas fa-bell"></i> Get it when it's available
+                            </button>
+                            <button class="view-details-btn" onclick="viewDormDetails(${dorm.id})">
+                                View Details
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                dormCard.innerHTML = `
+                    <div class="dorm-image" style="background-image: url('${dorm.image}')">
+                    </div>
+                    <div class="dorm-content">
+                        <h3 class="dorm-title">${dorm.title}</h3>
+                        <div class="dorm-location">
+                            ${dorm.location}
+                        </div>
+                        <div class="dorm-price-large">${dorm.price}</div>
+                        <div class="dorm-rating">
+                            <div class="stars">
+                                ${'★'.repeat(Math.floor(dorm.rating))}${'☆'.repeat(5 - Math.floor(dorm.rating))}
+                            </div>
+                            <span class="rating-text">${dorm.rating} (${dorm.reviews} Reviews)</span>
+                        </div>
+                        <div class="dorm-amenity">
+                            <div class="amenity-icon">✓</div>
+                            ${dorm.amenity}
+                        </div>
+                        ${availabilityBadge}
+                        ${buttonsHtml}
+                    </div>
+                `;
+                dormsGrid.appendChild(dormCard);
+            });
+        }
+
+        // Show Filter Summary
+        function showFilterSummary(count) {
+            console.log(`Showing ${count} dorms matching your criteria`);
+        }
+
+        function loadDorms() {
+            displayFilteredDorms(rabatDorms);
+        }
+
+        // Book Now Function
+        window.bookNow = function(dormId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const dorm = rabatDorms.find(d => d.id === dormId);
+            if (!dorm) {
+                alert('Dorm not found.');
+                return;
+            }
+            
+            if (dorm.available === false) {
+                alert('This dorm is no longer available. Would you like to join the waitlist?');
+                joinWaitlist(dormId, event);
+                return;
+            }
+            
+            // Show booking confirmation
+            const confirmMessage = `Book "${dorm.title}"?\n\nPrice: ${dorm.price}\nLocation: ${dorm.location}\n\nYou will be redirected to the booking page.`;
+            
+            if (confirm(confirmMessage)) {
+                // Navigate to booking page or show booking form
+                viewDormDetails(dormId);
+            }
+        };
+        
+        // Join Waitlist Function
+        window.joinWaitlist = function(dormId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const dorm = rabatDorms.find(d => d.id === dormId);
+            if (!dorm) {
+                alert('Dorm not found.');
+                return;
+            }
+            
+            if (dorm.available !== false) {
+                alert('This dorm is currently available! Click "Book Now" to proceed with booking.');
+                return;
+            }
+            
+            // Get user email/contact info for waitlist
+            const email = prompt(`Join waitlist for "${dorm.title}"?\n\nEnter your email address to be notified when this dorm becomes available:`);
+            
+            if (email && email.trim()) {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(email.trim())) {
+                    // Here you would normally send this to your backend
+                    // For now, we'll just show a confirmation
+                    alert(`✓ You've been added to the waitlist!\n\nWe'll notify you at ${email.trim()} when "${dorm.title}" becomes available.`);
+                    
+                    // You could also store this in localStorage for demonstration
+                    const waitlist = JSON.parse(localStorage.getItem('dormWaitlist') || '[]');
+                    waitlist.push({
+                        dormId: dormId,
+                        dormTitle: dorm.title,
+                        email: email.trim(),
+                        dateAdded: new Date().toISOString(),
+                        city: 'Rabat'
+                    });
+                    localStorage.setItem('dormWaitlist', JSON.stringify(waitlist));
+                } else {
+                    alert('Please enter a valid email address.');
+                }
+            }
+        };
+
+        // Make viewDormDetails globally available
+        window.viewDormDetails = function(dormId) {
+            switch(dormId) {
+                case 1:
+                    window.location.href = 'Al Irfane Studio.html';
+                    break;
+                case 2:
+                    window.location.href = 'shared-room-3-bedrooms-rabat.html';
+                    break;
+                case 3:
+                    window.location.href = 'modern-apartment-rabat.html';
+                    break;
+                case 4:
+                    window.location.href = 'cozy-room-rabat.html';
+                    break;
+                case 5:
+                    window.location.href = 'massira rabat.html';
+                    break;
+                case 6:
+                    window.location.href = 'Locean a  Rabat.html';
+                    break;
+                case 7:
+                    window.location.href = 'Hay Al Fath.html';
+                    break;
+                case 8:
+                    window.location.href = 'Hay al Mouadda.html';
+                    break;
+                case 9:
+                    window.location.href = 'executive-studio-hay-riad.html';
+                    break;
+                case 10:
+                    window.location.href = 'occean appartement.html';
+                    break;
+                case 11:
+                    window.location.href = 'sale el jadida.html';
+                    break;
+                case 12:
+                    window.location.href = 'Locean a  Rabat.html';
+                    break;
+                case 13:
+                    window.location.href = 'Sale el Jadida 2.html';
+                    break;
+                case 14:
+                    window.location.href = 'luxury-villa-souissi.html';
+                    break;
+                case 15:
+                    window.location.href = 'cozy-studio-hassan.html';
+                    break;
+                case 16:
+                    window.location.href = 'occean appartement.html';
+                    break;
+                case 17:
+                    window.location.href = 'shared-apartment-medina.html';
+                    break;
+                case 18:
+                    window.location.href = 'modern-studio-hay-riad.html';
+                    break;
+                case 19:
+                    window.location.href = 'budget-apartment-hassan.html';
+                    break;
+                case 20:
+                    window.location.href = 'luxury-studio-agdal.html';
+                    break;
+                case 21:
+                    window.location.href = 'shared-house-temara-2.html';
+                    break;
+                case 22:
+                    window.location.href = 'occean appartement.html';
+                    break;
+                case 23:
+                    window.location.href = 'modern-apartment-souissi.html';
+                    break;
+                case 24:
+                    window.location.href = 'budget-studio-medina.html';
+                    break;
+                case 25:
+                    window.location.href = 'luxury-house-hay-riad.html';
+                    break;
+                case 26:
+                    window.location.href = 'hay nahda app.html';
+                    break;
+                case 27 :
+                        window.location.href= 'Place Joulane.html';
+                        break;
+                case 28 :
+                        window.location.href= 'yaacoub mansour.html';
+                        break;
+                case 29 :
+                        window.location.href= 'Studio Agdal.html';
+                        break;
+                case 30 :
+                        window.location.href= 'kebibat app.html';
+                        break;
+                case 31 :
+                        window.location.href='Bouitate app.html';
+                        break;    
+                 case 32 :
+                        window.location.href='yaacoub app 2.html';
+                        break;  
+                 case 33 : 
+                         window.location.href='Al Manzah.html';
+                          break; 
+                  case 34 :
+                          window.location.href='Agdal app.html';
+                          break ;     
+                   case 35 :
+                           window.location.href='Agdal app2.html';
+                           break;        
+                   case 36:
+                    window.location.href='loccean.html';        
+                   break;
+                   case 37:
+                    window.location.href='Agdal ap.html';
+                    break;
+                default:
+                    alert(`Viewing details for dorm ${dormId}. This would open a detailed dorm page with photos, amenities, landlord contact, and payment options.`);
+            }
+        };
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>RoastMyDorm</h3>
+                        <p>Your trusted platform for finding the perfect student accommodation in Morocco's top cities.</p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="casablanca-dorms.html">Casablanca</a></li>
+                        <li><a href="rabat-dorms.html">Rabat</a></li>
+                        <li><a href="marrakech-dorms.html">Marrakech</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Students</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">How to Apply</a></li>
+                        <li><a href="#">Student Guide</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Moving Checklist</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Landlords</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">List Your Property</a></li>
+                        <li><a href="#">Landlord Portal</a></li>
+                        <li><a href="#">Pricing Guide</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> info@roastmydorm.com</p>
+                        <p><i class="fas fa-phone"></i> +212 6 00 00 00 00</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Rabat, Morocco</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .footer {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            padding: 3rem 0 0;
+            margin-top: auto;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #0f766e;
+        }
+        
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e5e7eb;
+        }
+        
+        .footer-logo p {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #374151;
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #0f766e;
+            transform: translateY(-2px);
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #0f766e;
+        }
+        
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #9ca3af;
+        }
+        
+        .contact-info i {
+            color: #0f766e;
+            width: 16px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding: 1.5rem 0;
+        }
+        
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9ca3af;
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-bottom-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-bottom-links a:hover {
+            color: #0f766e;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+            
+            .footer-bottom-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .footer-bottom-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

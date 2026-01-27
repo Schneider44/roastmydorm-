@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Roommate - RoastMyDorm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/roommate.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="matches-page-body">
+    <!-- Navigation -->
+    <nav class="profile-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-box">R</div>
+                <span>RoastMyDorm</span>
+            </a>
+            <div style="display: flex; gap: 1rem;">
+                <a href="find-roommate-profile.html" class="nav-browse-btn">
+                    <i class="fas fa-user-edit"></i> Create/Edit Profile
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <div class="matches-hero">
+        <div class="matches-hero-content">
+            <div class="matches-hero-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h1 class="matches-hero-title">Find Your Perfect Roommate</h1>
+            <p class="matches-hero-subtitle">Discover compatible matches based on lifestyle, habits, and preferences</p>
+            <div class="matches-stats" id="matches-stats">
+                <div class="stat-item">
+                    <i class="fas fa-user-friends"></i>
+                    <span id="total-matches">0</span>
+                    <span class="stat-label">Matches</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="matches-container">
+
+        <!-- No Profile Message -->
+        <div id="no-profile-message" class="empty-state-modern" style="display: none;">
+            <div class="empty-icon-wrapper">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h3>Create Your Profile First</h3>
+            <p>You need to create a roommate profile before you can browse matches.</p>
+            <a href="find-roommate-profile.html" class="btn-primary-modern" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-plus"></i> Create Profile
+            </a>
+        </div>
+
+        <!-- Filters -->
+        <div id="match-feed-content" style="display: none;">
+            <div class="match-feed-filters-modern">
+                <div class="filters-header">
+                    <div class="filter-icon">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h2>Search & Filter</h2>
+                </div>
+                <div class="search-bar-modern">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search by name, university, location..." onkeyup="filterMatches()">
+                </div>
+                <div class="filter-row-modern">
+                    <div class="filter-group">
+                        <i class="fas fa-graduation-cap"></i>
+                        <select id="filter-university" onchange="filterMatches()">
+                            <option value="">All Universities</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <select id="filter-location" onchange="filterMatches()">
+                            <option value="">All Locations</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <input type="number" id="filter-min-budget" placeholder="Min Budget" onchange="filterMatches()">
+                    </div>
+                    <div class="filter-group">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <input type="number" id="filter-max-budget" placeholder="Max Budget" onchange="filterMatches()">
+                    </div>
+                    <div class="filter-group">
+                        <i class="fas fa-user"></i>
+                        <select id="filter-personality" onchange="filterMatches()">
+                            <option value="">All Personalities</option>
+                            <option value="Introvert">Introvert</option>
+                            <option value="Extrovert">Extrovert</option>
+                            <option value="Ambivert">Ambivert</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <i class="fas fa-users"></i>
+                        <select id="filter-social" onchange="filterMatches()">
+                            <option value="">All Social Levels</option>
+                            <option value="Very Social">Very Social</option>
+                            <option value="Social">Social</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Quiet">Quiet</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="clearFilters()" class="clear-filters-btn">
+                    <i class="fas fa-times-circle"></i> Clear Filters
+                </button>
+            </div>
+
+            <!-- Matches Count -->
+            <div id="matches-count" class="matches-count-badge"></div>
+
+            <!-- Matches Grid -->
+            <div class="matches-grid-modern" id="matches-container"></div>
+
+            <!-- Empty State -->
+            <div id="no-matches" class="empty-state-modern" style="display: none;">
+                <div class="empty-icon-wrapper">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>No matches found</h3>
+                <p>Try adjusting your filters or check back later for new profiles.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/roommate-data.js"></script>
+    <script src="js/roommate-match.js"></script>
+    <script src="js/roommate-matches.js"></script>
+</body>
+</html>
+

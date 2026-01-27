@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Room - 3 Bedrooms - Rabat - RoastMyDorm</title>
+    <meta name="description" content="Shared room with 3 bedrooms near Hassan district in Rabat. Perfect for students with WiFi, kitchen, and shared amenities.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+        
+        /* Dark Header */
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #3b82f6 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo span::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #3b82f6 100%);
+            border-radius: 8px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .breadcrumbs {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumbs a {
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumbs a:hover {
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        /* Apartment Overview Card */
+        .apartment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .apartment-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        .review-count {
+            color: #6b7280;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .badge i {
+            font-size: 0.9rem;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .main-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .gallery-thumbnails {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-2px);
+            border-color: #dc2626;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .gallery-tab {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 1rem 0;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-tab.active {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+        }
+
+        .gallery-tab:hover {
+            color: #dc2626;
+        }
+
+        /* Booking Card */
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .price-section {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .current-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            color: #6b7280;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .original-price {
+            color: #9ca3af;
+            text-decoration: line-through;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .info-icon {
+            color: #6b7280;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .info-icon:hover {
+            color: #dc2626;
+        }
+
+        .advance-rent-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .advance-rent-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox {
+            margin-top: 0.25rem;
+            transform: scale(1.2);
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .checkbox-label a {
+            color: #dc2626;
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .guarantee-btn {
+            background: #f8fafc;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .guarantee-btn:hover {
+            background: #f1f5f9;
+            color: #374151;
+        }
+
+        /* Room Details Section */
+        .room-details {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: #dc2626;
+        }
+
+        .room-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .spec-item {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .spec-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .spec-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .spec-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .amenity-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .amenity-icon {
+            color: #dc2626;
+            font-size: 1.1rem;
+        }
+
+        .amenity-text {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        /* Location Map Section */
+        .location-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .location-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .address-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .address-card h3 {
+            color: #1f2937;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .address-card p {
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .address-card i {
+            color: #dc2626;
+            width: 20px;
+        }
+
+        .map-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .map {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .map::before {
+            content: '📍 Interactive Map - Hassan District, Rabat';
+            text-align: center;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .map-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #374151;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nearby-places {
+            margin-top: 2rem;
+        }
+
+        .nearby-places h3 {
+            color: #1f2937;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .place-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .place-item:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .place-item i {
+            color: #dc2626;
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .place-item div {
+            flex: 1;
+        }
+        
+        .place-item strong {
+            display: block;
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .place-item span {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .write-review-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .write-review-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .review-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .review-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-date {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .review-stars {
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .review-text {
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .review-action {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .review-action:hover {
+            color: #dc2626;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .close {
+            color: #6b7280;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #dc2626;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .star-input {
+            font-size: 2rem;
+            color: #e5e7eb;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .star-input:hover,
+        .star-input.active {
+            color: #fbbf24;
+        }
+
+        /* Image Lightbox Modal */
+        .image-lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+            transition: color 0.3s ease;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-close:hover {
+            color: #ef4444;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: background 0.3s ease;
+            user-select: none;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .lightbox-prev {
+            left: 30px;
+        }
+
+        .lightbox-next {
+            right: 30px;
+        }
+
+        /* Booking Modal Date Picker */
+        .booking-modal-content {
+            max-width: 800px;
+            width: 95%;
+        }
+
+        .date-selection-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .date-selection-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .date-title h4 {
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-title p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .date-input-group {
+            flex: 1;
+        }
+
+        .date-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-nav {
+            background: #f3f4f6;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .month-year {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .month-year select {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .month-year select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #6b7280;
+            padding: 0.5rem 0;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .calendar-day:hover {
+            background: #f3f4f6;
+        }
+
+        .calendar-day.other-month {
+            color: #d1d5db;
+        }
+
+        .calendar-day.selected {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .calendar-day.in-range {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .calendar-day.start-date {
+            background: #1e40af;
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.end-date {
+            background: #1e40af;
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.disabled {
+            color: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.disabled:hover {
+            background: transparent;
+        }
+
+        .date-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .clear-dates-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-dates-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .apply-dates-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-dates-btn:hover {
+            background: #2563eb;
+        }
+
+        .success-message, .error-message {
+            display: none;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Responsive Design for Date Picker */
+        @media (max-width: 768px) {
+            .calendar-container {
+                grid-template-columns: 1fr;
+            }
+
+            .date-inputs {
+                flex-direction: column;
+            }
+
+            .date-actions {
+                flex-direction: column;
+            }
+
+            .apply-dates-btn {
+                width: 100%;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            padding: 1rem;
+            }
+
+            .booking-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .breadcrumbs {
+                position: static;
+                transform: none;
+                margin-top: 0.5rem;
+            }
+
+            .apartment-title {
+                font-size: 2rem;
+            }
+
+            .badges {
+            justify-content: center;
+            }
+
+            .gallery-thumbnails {
+                justify-content: center;
+            }
+
+            .room-specs {
+                grid-template-columns: 1fr;
+            }
+
+            .amenities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .location-info {
+                grid-template-columns: 1fr;
+            }
+
+            .places-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reviews-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .action-buttons {
+                gap: 0.75rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.875rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+
+            .apartment-card,
+            .booking-card,
+            .room-details,
+            .reviews-section {
+                padding: 1.5rem;
+            }
+
+            .gallery-thumbnails {
+                flex-wrap: wrap;
+            }
+
+            .thumbnail {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo"><span>RoastMyDorm</span></a>
+            <div class="breadcrumbs">
+                <a href="index.html">Home</a> > <a href="rabat-dorms.html">Rabat</a> > Shared Room - 3 Bedrooms
+            </div>
+            </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Column - Apartment Details -->
+        <div class="apartment-card">
+            <h1 class="apartment-title">Shared Room - 3 Bedrooms</h1>
+            <div class="rating-section">
+                <div class="stars">★★★★★</div>
+                <span class="review-count">4.8 (24 reviews)</span>
+    </div>
+
+            <div class="badges">
+                <div class="badge">
+                    <i class="fas fa-bed"></i>
+                    <span>3 Bedrooms</span>
+                </div>
+                <div class="badge">
+                    <i class="fas fa-users"></i>
+                    <span>Shared</span>
+                </div>
+                <div class="badge">
+                    <i class="fas fa-wifi"></i>
+                    <span>WiFi</span>
+            </div>
+                <div class="badge">
+                    <i class="fas fa-utensils"></i>
+                    <span>Kitchen</span>
+        </div>
+                    </div>
+
+            <!-- Main Image -->
+            <img src="app hassan.png" alt="Shared Room - 3 Bedrooms" class="main-image" onclick="openImageModal('app hassan.png')">
+            
+            <!-- Gallery Thumbnails -->
+                    <div class="gallery-thumbnails">
+                <img src="app hassan 2.png" alt="Room 1" class="thumbnail" onclick="changeMainImage('app hassan 2.png')">
+                <img src="app hassan 3.png" alt="Room 2" class="thumbnail" onclick="changeMainImage('app hassan 3.png')">
+                <img src="app hassan 4.png" alt="Room 3" class="thumbnail" onclick="changeMainImage('app hassan 4.png')">
+                <img src="app hassan 4.png" alt="Kitchen" class="thumbnail" onclick="changeMainImage('app hassan 4.png')">
+                        </div>
+
+            <!-- Room Details Section -->
+            <div class="room-details">
+                <h2 class="section-title">
+                    <i class="fas fa-home"></i>
+                    Room Details
+                </h2>
+                
+                <div class="room-specs">
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="spec-title">1 Master Bedroom</div>
+                        <div class="spec-desc">Comfortable master bedroom with a double bed and a wardrobe</div>
+                        </div>
+                    
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="spec-title">Shared Living</div>
+                        <div class="spec-desc">Perfect for students who want to share costs and make friends</div>
+                    </div>
+                    
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="spec-title">High-Speed WiFi</div>
+                        <div class="spec-desc">Fast internet connection for studying and entertainment</div>
+                </div>
+
+                    <div class="spec-item">
+                        <div class="spec-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="spec-title">Shared Kitchen</div>
+                        <div class="spec-desc">Fully equipped kitchen for cooking meals together</div>
+                    </div>
+                    </div>
+
+                        <div class="amenities-grid">
+                            <div class="amenity-item">
+                        <i class="fas fa-shower amenity-icon"></i>
+                        <span class="amenity-text">Shared Bathroom</span>
+                            </div>
+                            <div class="amenity-item">
+                        <i class="fas fa-tshirt amenity-icon"></i>
+                        <span class="amenity-text">Laundry Access</span>
+                            </div>
+                            <div class="amenity-item">
+                        <i class="fas fa-car amenity-icon"></i>
+                        <span class="amenity-text">Parking Available</span>
+                            </div>
+                            <div class="amenity-item">
+                        <i class="fas fa-bus amenity-icon"></i>
+                        <span class="amenity-text">Public Transport</span>
+                            </div>
+                            <div class="amenity-item">
+                        <i class="fas fa-shopping-cart amenity-icon"></i>
+                        <span class="amenity-text">Near Shopping</span>
+                            </div>
+                            <div class="amenity-item">
+                        <i class="fas fa-graduation-cap amenity-icon"></i>
+                        <span class="amenity-text">Near University</span>
+                            </div>
+                        </div>
+                    </div>
+
+            <!-- Location Section -->
+            <div class="location-section">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Location
+                </h2>
+                
+                <div class="location-info">
+                    <div class="address-card">
+                        <h3>Hassan District, Rabat</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> Near Hassan II University</p>
+                        <p><i class="fas fa-bus"></i> 5 min walk to bus stop</p>
+                        <p><i class="fas fa-shopping-cart"></i> 10 min to shopping center</p>
+                        <p><i class="fas fa-utensils"></i> Many restaurants nearby</p>
+                    </div>
+                    
+                    <div class="map-container">
+                        <div class="map" id="map"></div>
+                        <div class="map-overlay">
+                            <button class="map-btn" onclick="openFullMap()">
+                                <i class="fas fa-expand"></i>
+                                View Full Map
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nearby-places">
+                    <h3>Nearby Places</h3>
+                    <div class="places-grid">
+                        <div class="place-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <strong>Hassan II University</strong>
+                                <span>5 minutes walk</span>
+                        </div>
+                    </div>
+                        <div class="place-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <div>
+                                <strong>Agdal Shopping Center</strong>
+                                <span>10 minutes walk</span>
+                        </div>
+                    </div>
+                        <div class="place-item">
+                            <i class="fas fa-bus"></i>
+                            <div>
+                                <strong>Bus Station</strong>
+                                <span>5 minutes walk</span>
+                        </div>
+                        </div>
+                        <div class="place-item">
+                            <i class="fas fa-utensils"></i>
+                            <div>
+                                <strong>Restaurants</strong>
+                                <span>2 minutes walk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <div class="reviews-header">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Reviews
+                    </h2>
+                    <button class="write-review-btn" onclick="openReviewModal()">
+                        <i class="fas fa-pen"></i>
+                        Write Review
+                    </button>
+                </div>
+
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-avatar">A</div>
+                        <div class="review-info">
+                            <div class="reviewer-name">Ahmed M.</div>
+                            <div class="review-date">2 weeks ago</div>
+                </div>
+                        <div class="review-stars">★★★★★</div>
+                    </div>
+                    <div class="review-text">
+                        Great shared space! The rooms are clean and the kitchen is well-equipped. Perfect for students who want to save money while living in a good location.
+                    </div>
+                    <div class="review-actions">
+                        <a href="#" class="review-action">Helpful</a>
+                        <a href="#" class="review-action">Reply</a>
+            </div>
+        </div>
+
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-avatar">S</div>
+                        <div class="review-info">
+                            <div class="reviewer-name">Sarah K.</div>
+                            <div class="review-date">1 month ago</div>
+            </div>
+                        <div class="review-stars">★★★★☆</div>
+        </div>
+                    <div class="review-text">
+                        Good value for money. The WiFi is fast and the location is convenient. The shared bathroom can get busy in the morning, but overall it's a good place to live.
+    </div>
+                    <div class="review-actions">
+                        <a href="#" class="review-action">Helpful</a>
+                        <a href="#" class="review-action">Reply</a>
+            </div>
+        </div>
+            </div>
+    </div>
+
+        <!-- Right Column - Booking Card -->
+        <div class="booking-card">
+            <div class="price-section">
+                <div class="current-price">1,200 MAD</div>
+                <div class="price-period">per month</div>
+                <div class="original-price">
+                    <span>1,500 MAD</span>
+                    <i class="fas fa-info-circle info-icon" onclick="showPriceInfo()"></i>
+                </div>
+            </div>
+
+            <button class="advance-rent-btn" onclick="showAdvanceRentInfo()">
+                <span>Advance Rent Required</span>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <form id="contactForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" name="phone" class="form-input" placeholder="Enter your phone number" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea name="message" class="form-input" placeholder="Tell us about yourself and when you'd like to move in" rows="4"></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" class="checkbox" id="terms" required>
+                        <label class="checkbox-label" for="terms">
+                            I agree to the <a href="#" onclick="showTerms()">Terms and Conditions</a>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" class="btn-primary" onclick="openBookingModal()">
+                        <i class="fas fa-calendar-check"></i>
+                        Book Now
+                    </button>
+                    <button type="submit" class="btn-secondary">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Inquiry
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="contactLandlord()">
+                        <i class="fas fa-comments"></i>
+                        Contact Landlord
+                    </button>
+                </div>
+
+                <button class="guarantee-btn" onclick="showGuaranteeInfo()">
+                    <span>RoastMyDorm Guarantee</span>
+                    <i class="fas fa-shield-alt"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div id="imageModal" class="image-lightbox-modal" onclick="closeImageModal()">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <span class="lightbox-close" onclick="closeImageModal()">&times;</span>
+            <img id="lightboxImage" class="lightbox-image" src="" alt="">
+            <div class="lightbox-nav lightbox-prev" onclick="navigateImage(-1)">❮</div>
+            <div class="lightbox-nav lightbox-next" onclick="navigateImage(1)">❯</div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Contact Landlord</h3>
+                <span class="close" onclick="closeModal('contactModal')">&times;</span>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Email</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content booking-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Book Your Stay</h3>
+                <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            </div>
+            <div class="success-message" id="bookingSuccess">Booking request submitted successfully!</div>
+            <div class="error-message" id="bookingError">Please fill in all required fields.</div>
+            
+            <!-- Date Selection Section -->
+            <div class="date-selection-section">
+                <div class="date-selection-header">
+                    <div class="date-title">
+                        <h4>Select your dates</h4>
+                        <p>Minimum stay: 30 days</p>
+                    </div>
+                </div>
+                
+                <div class="date-inputs">
+                    <div class="date-input-group">
+                        <label class="date-label">MOVE IN</label>
+                        <input type="text" class="date-input" id="moveInDate" placeholder="Date" readonly>
+                    </div>
+                    <div class="date-input-group">
+                        <label class="date-label">MOVE OUT</label>
+                        <input type="text" class="date-input" id="moveOutDate" placeholder="Date" readonly>
+                    </div>
+                </div>
+                
+                <!-- Calendar Container -->
+                <div class="calendar-container">
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+                            <div class="month-year">
+                                <select id="month1" onchange="updateCalendar()">
+                                    <option value="0">January</option>
+                                    <option value="1">February</option>
+                                    <option value="2">March</option>
+                                    <option value="3">April</option>
+                                    <option value="4">May</option>
+                                    <option value="5">June</option>
+                                    <option value="6">July</option>
+                                    <option value="7">August</option>
+                                    <option value="8">September</option>
+                                    <option value="9">October</option>
+                                    <option value="10">November</option>
+                                    <option value="11">December</option>
+                                </select>
+                                <select id="year1" onchange="updateCalendar()">
+                                    <option value="2024">2024</option>
+                                    <option value="2025" selected>2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendar1">
+                            <div class="day-header">MON</div>
+                            <div class="day-header">TUE</div>
+                            <div class="day-header">WED</div>
+                            <div class="day-header">THU</div>
+                            <div class="day-header">FRI</div>
+                            <div class="day-header">SAT</div>
+                            <div class="day-header">SUN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <div class="month-year">
+                                <select id="month2" onchange="updateCalendar()">
+                                    <option value="0">January</option>
+                                    <option value="1">February</option>
+                                    <option value="2">March</option>
+                                    <option value="3">April</option>
+                                    <option value="4">May</option>
+                                    <option value="5">June</option>
+                                    <option value="6">July</option>
+                                    <option value="7">August</option>
+                                    <option value="8">September</option>
+                                    <option value="9">October</option>
+                                    <option value="10">November</option>
+                                    <option value="11">December</option>
+                                </select>
+                                <select id="year2" onchange="updateCalendar()">
+                                    <option value="2024">2024</option>
+                                    <option value="2025" selected>2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
+                            </div>
+                            <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar2">
+                            <div class="day-header">MON</div>
+                            <div class="day-header">TUE</div>
+                            <div class="day-header">WED</div>
+                            <div class="day-header">THU</div>
+                            <div class="day-header">FRI</div>
+                            <div class="day-header">SAT</div>
+                            <div class="day-header">SUN</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="date-actions">
+                    <button class="clear-dates-btn" onclick="clearDates()">Clear dates</button>
+                    <button class="apply-dates-btn" onclick="applyDates()">Apply dates</button>
+                </div>
+            </div>
+            
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label class="form-label">Number of Guests *</label>
+                    <select name="guests" class="form-input" required>
+                        <option value="">Select number of guests</option>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Special Requests</label>
+                    <textarea name="specialRequests" class="form-input" placeholder="Any special requests or requirements?"></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">
+                    <i class="fas fa-calendar-check"></i>
+                    Confirm Booking
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Write a Review</h3>
+                <span class="close" onclick="closeModal('reviewModal')">&times;</span>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rating</label>
+                    <div class="rating-input">
+                        <span class="star-input" onclick="setRating(1)">★</span>
+                        <span class="star-input" onclick="setRating(2)">★</span>
+                        <span class="star-input" onclick="setRating(3)">★</span>
+                        <span class="star-input" onclick="setRating(4)">★</span>
+                        <span class="star-input" onclick="setRating(5)">★</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Review</label>
+                    <textarea class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Image Gallery Functions
+        function changeMainImage(src) {
+            const mainImage = document.querySelector('.main-image');
+            mainImage.style.opacity = '0';
+                setTimeout(() => {
+                mainImage.src = src;
+                mainImage.style.opacity = '1';
+            }, 300);
+        }
+
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = src;
+            modal.style.display = 'block';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function navigateImage(direction) {
+            const images = ['app hassan.png', 'app hassan 2.png', 'app hassan 3.png', 'app hassan 4.png', 'app hassan 4.png'];
+            const currentImage = document.getElementById('lightboxImage').src;
+            const currentIndex = images.findIndex(img => currentImage.includes(img));
+            let newIndex = currentIndex + direction;
+            
+            if (newIndex < 0) newIndex = images.length - 1;
+            if (newIndex >= images.length) newIndex = 0;
+            
+            document.getElementById('lightboxImage').src = images[newIndex];
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openContactModal() {
+            openModal('contactModal');
+        }
+
+        function openReviewModal() {
+            openModal('reviewModal');
+        }
+
+        // Contact Functions
+        function contactLandlord() {
+            alert('Contact landlord functionality would be implemented here.');
+        }
+
+        // Review Functions
+        function setRating(rating) {
+            const stars = document.querySelectorAll('.star-input');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Info Functions
+        function showPriceInfo() {
+            alert('Price includes all utilities and WiFi. Advance rent of 2 months required.');
+        }
+
+        function showAdvanceRentInfo() {
+            alert('Advance rent of 2 months (2,400 MAD) is required to secure the room.');
+        }
+
+        function showGuaranteeInfo() {
+            alert('RoastMyDorm guarantees: Verified listings, secure payments, and 24/7 support.');
+        }
+
+        function showTerms() {
+            alert('Terms and conditions would be displayed here.');
+        }
+
+        // Booking Functions
+        let selectedStartDate = null;
+        let selectedEndDate = null;
+        let currentMonth1 = new Date().getMonth();
+        let currentYear1 = new Date().getFullYear();
+        let currentMonth2 = currentMonth1 + 1;
+        let currentYear2 = currentYear1;
+
+        function openBookingModal() {
+            openModal('bookingModal');
+            initializeDatePicker();
+            // Show date selection first
+            document.querySelector('.date-selection-section').style.display = 'block';
+            document.querySelector('#bookingForm').style.display = 'none';
+        }
+
+        function initializeDatePicker() {
+            // Set initial months
+            if (currentMonth2 > 11) {
+                currentMonth2 = 0;
+                currentYear2++;
+            }
+            
+            document.getElementById('month1').value = currentMonth1;
+            document.getElementById('year1').value = currentYear1;
+            document.getElementById('month2').value = currentMonth2;
+            document.getElementById('year2').value = currentYear2;
+            
+            updateCalendar();
+        }
+
+        function updateCalendar() {
+            const month1 = parseInt(document.getElementById('month1').value);
+            const year1 = parseInt(document.getElementById('year1').value);
+            const month2 = parseInt(document.getElementById('month2').value);
+            const year2 = parseInt(document.getElementById('year2').value);
+            
+            renderCalendar('calendar1', month1, year1);
+            renderCalendar('calendar2', month2, year2);
+            
+            // Update second calendar to be next month if needed
+            if (year1 === year2 && month1 === month2) {
+                let nextMonth = month2 + 1;
+                let nextYear = year2;
+                if (nextMonth > 11) {
+                    nextMonth = 0;
+                    nextYear++;
+                }
+                document.getElementById('month2').value = nextMonth;
+                document.getElementById('year2').value = nextYear;
+                renderCalendar('calendar2', nextMonth, nextYear);
+            }
+        }
+
+        function renderCalendar(calendarId, month, year) {
+            const calendar = document.getElementById(calendarId);
+            const dayHeaders = calendar.querySelectorAll('.day-header');
+            const existingDays = calendar.querySelectorAll('.calendar-day');
+            existingDays.forEach(day => day.remove());
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = (firstDay.getDay() + 6) % 7; // Monday = 0
+            
+            // Add empty days for the previous month
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day other-month';
+                emptyDay.textContent = '';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                dayElement.onclick = () => selectDate(day, month, year, calendarId);
+                
+                // Check if this date is in the past
+                const today = new Date();
+                const currentDate = new Date(year, month, day);
+                if (currentDate < today.setHours(0, 0, 0, 0)) {
+                    dayElement.classList.add('disabled');
+                    dayElement.onclick = null;
+                }
+                
+                // Check if this date is selected
+                if (selectedStartDate && selectedStartDate.getDate() === day && 
+                    selectedStartDate.getMonth() === month && selectedStartDate.getFullYear() === year) {
+                    dayElement.classList.add('start-date');
+                }
+                
+                if (selectedEndDate && selectedEndDate.getDate() === day && 
+                    selectedEndDate.getMonth() === month && selectedEndDate.getFullYear() === year) {
+                    dayElement.classList.add('end-date');
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        function selectDate(day, month, year, calendarId) {
+            const selectedDate = new Date(year, month, day);
+            
+            if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                // Start new selection
+                selectedStartDate = selectedDate;
+                selectedEndDate = null;
+                document.getElementById('moveInDate').value = formatDate(selectedDate);
+                document.getElementById('moveOutDate').value = '';
+            } else if (selectedDate > selectedStartDate) {
+                // Complete selection
+                selectedEndDate = selectedDate;
+                document.getElementById('moveOutDate').value = formatDate(selectedDate);
+            } else {
+                // Reselect start date
+                selectedStartDate = selectedDate;
+                selectedEndDate = null;
+                document.getElementById('moveInDate').value = formatDate(selectedDate);
+                document.getElementById('moveOutDate').value = '';
+            }
+            
+            updateCalendar();
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function clearDates() {
+            selectedStartDate = null;
+            selectedEndDate = null;
+            document.getElementById('moveInDate').value = '';
+            document.getElementById('moveOutDate').value = '';
+            updateCalendar();
+        }
+
+        function applyDates() {
+            if (selectedStartDate && selectedEndDate) {
+                // Calculate minimum stay (30 days)
+                const timeDiff = selectedEndDate.getTime() - selectedStartDate.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                if (daysDiff < 30) {
+                    alert('Minimum stay is 30 days. Please select a longer period.');
+                    return;
+                }
+                
+                // Close the date selection and proceed with booking
+                document.querySelector('.date-selection-section').style.display = 'none';
+                document.querySelector('#bookingForm').style.display = 'block';
+            } else {
+                alert('Please select both move-in and move-out dates.');
+            }
+        }
+
+        function changeMonth(direction) {
+            if (direction === -1) {
+                currentMonth1--;
+                if (currentMonth1 < 0) {
+                    currentMonth1 = 11;
+                    currentYear1--;
+                }
+            } else {
+                currentMonth1++;
+                if (currentMonth1 > 11) {
+                    currentMonth1 = 0;
+                    currentYear1++;
+                }
+            }
+            
+            currentMonth2 = currentMonth1 + 1;
+            currentYear2 = currentYear1;
+            if (currentMonth2 > 11) {
+                currentMonth2 = 0;
+                currentYear2++;
+            }
+            
+            document.getElementById('month1').value = currentMonth1;
+            document.getElementById('year1').value = currentYear1;
+            document.getElementById('month2').value = currentMonth2;
+            document.getElementById('year2').value = currentYear2;
+            
+            updateCalendar();
+        }
+
+        // Map Functions
+        function openFullMap() {
+            alert('Full map would open in a new window.');
+        }
+
+        function initializeMap() {
+            // Map initialization would go here
+            console.log('Map initialized');
+        }
+
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your inquiry! We will contact you soon.');
+        });
+
+        // Booking Form Submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const guests = formData.get('guests') || this.querySelector('select').value;
+            const specialRequests = formData.get('specialRequests') || this.querySelector('textarea').value;
+            
+            if (!guests) {
+                alert('Please select the number of guests.');
+                return;
+            }
+            
+            // Show success message
+            document.getElementById('bookingSuccess').style.display = 'block';
+            document.getElementById('bookingError').style.display = 'none';
+            
+            // Hide success message after 3 seconds and close modal
+            setTimeout(() => {
+                document.getElementById('bookingSuccess').style.display = 'none';
+                closeModal('bookingModal');
+                
+                // Reset form
+                this.reset();
+                clearDates();
+                document.querySelector('.date-selection-section').style.display = 'block';
+                document.querySelector('#bookingForm').style.display = 'none';
+            }, 3000);
+            
+            console.log('Booking submitted:', {
+                moveIn: selectedStartDate,
+                moveOut: selectedEndDate,
+                guests: guests,
+                specialRequests: specialRequests
+            });
+        });
+
+        // Initialize map when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal, .image-lightbox-modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

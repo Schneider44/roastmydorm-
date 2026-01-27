@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Review - RoastMyDorm</title>
+    <meta name="description" content="Write a review for your student accommodation experience. Help other students make informed decisions.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .review-form-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 2rem 0;
+        }
+        
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .review-form {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-section h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-section h3::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-radius: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            min-height: 140px;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            font-family: inherit;
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rating-label {
+            font-weight: 700;
+            color: #374151;
+            font-size: 1.1rem;
+        }
+        
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .star {
+            font-size: 2.5rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .star:hover {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+        
+        .star.active {
+            color: #fbbf24;
+            transform: scale(1.05);
+        }
+        
+        .rating-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .rating-category {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .rating-category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 1rem;
+        }
+        
+        .category-stars {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .category-star {
+            font-size: 1.4rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-star:hover {
+            color: #fbbf24;
+            transform: scale(1.1);
+        }
+        
+        .category-star.active {
+            color: #fbbf24;
+            transform: scale(1.05);
+        }
+        
+        .form-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(107, 114, 128, 0.3);
+        }
+        
+        /* Navigation Styles */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .nav-logo {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ef4444;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .logo-text:hover {
+            color: #dc2626;
+        }
+        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 1rem;
+            flex: 1;
+        }
+        
+        .nav-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background: #dc2626;
+        }
+        
+        .breadcrumb {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .breadcrumb a {
+            color: #ef4444;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 0 1rem;
+            }
+            
+            .form-title {
+                font-size: 2rem;
+            }
+            
+            .rating-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" class="logo-text">RoastMyDorm</a>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="showSignInModal()">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > 
+        <a href="modern-studio-hassan-ii.html">Modern Studio Near Hassan II University</a> > 
+        <span>Write Review</span>
+    </div>
+
+    <div class="review-form-page">
+        <div class="form-container">
+            <!-- Form Header -->
+            <div class="form-header">
+                <h1 class="form-title">Write a Review</h1>
+                <p class="form-subtitle">Share your experience to help other students make informed decisions</p>
+            </div>
+
+            <!-- Review Form -->
+            <form class="review-form" id="reviewForm">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3>Basic Information</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="dormName">Dormitory Name</label>
+                        <input type="text" id="dormName" class="form-input" value="Modern Studio Near Hassan II University" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="studentName">Your Name</label>
+                        <input type="text" id="studentName" class="form-input" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="studentEmail">Email Address</label>
+                        <input type="email" id="studentEmail" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <!-- Overall Rating -->
+                <div class="form-section">
+                    <h3>Overall Rating</h3>
+                    <div class="rating-section">
+                        <span class="rating-label">Rate your experience:</span>
+                        <div class="star-rating" id="overallRating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Ratings -->
+                <div class="form-section">
+                    <h3>Detailed Ratings</h3>
+                    <div class="rating-categories">
+                        <div class="rating-category">
+                            <span class="category-label">Cleanliness</span>
+                            <div class="category-stars" data-category="cleanliness">
+                                <span class="category-star" data-rating="1">★</span>
+                                <span class="category-star" data-rating="2">★</span>
+                                <span class="category-star" data-rating="3">★</span>
+                                <span class="category-star" data-rating="4">★</span>
+                                <span class="category-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-category">
+                            <span class="category-label">Location</span>
+                            <div class="category-stars" data-category="location">
+                                <span class="category-star" data-rating="1">★</span>
+                                <span class="category-star" data-rating="2">★</span>
+                                <span class="category-star" data-rating="3">★</span>
+                                <span class="category-star" data-rating="4">★</span>
+                                <span class="category-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-category">
+                            <span class="category-label">Value for Money</span>
+                            <div class="category-stars" data-category="value">
+                                <span class="category-star" data-rating="1">★</span>
+                                <span class="category-star" data-rating="2">★</span>
+                                <span class="category-star" data-rating="3">★</span>
+                                <span class="category-star" data-rating="4">★</span>
+                                <span class="category-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-category">
+                            <span class="category-label">Landlord Response</span>
+                            <div class="category-stars" data-category="landlord">
+                                <span class="category-star" data-rating="1">★</span>
+                                <span class="category-star" data-rating="2">★</span>
+                                <span class="category-star" data-rating="3">★</span>
+                                <span class="category-star" data-rating="4">★</span>
+                                <span class="category-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-category">
+                            <span class="category-label">WiFi Quality</span>
+                            <div class="category-stars" data-category="wifi">
+                                <span class="category-star" data-rating="1">★</span>
+                                <span class="category-star" data-rating="2">★</span>
+                                <span class="category-star" data-rating="3">★</span>
+                                <span class="category-star" data-rating="4">★</span>
+                                <span class="category-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-category">
+                            <span class="category-label">Security</span>
+                            <div class="category-stars" data-category="security">
+                                <span class="category-star" data-rating="1">★</span>
+                                <span class="category-star" data-rating="2">★</span>
+                                <span class="category-star" data-rating="3">★</span>
+                                <span class="category-star" data-rating="4">★</span>
+                                <span class="category-star" data-rating="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Text -->
+                <div class="form-section">
+                    <h3>Your Review</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="reviewText">Tell us about your experience</label>
+                        <textarea id="reviewText" class="form-textarea" placeholder="Share your experience living in this dormitory. What did you like? What could be improved?" required></textarea>
+                    </div>
+                </div>
+
+                <!-- Pros and Cons -->
+                <div class="form-section">
+                    <h3>Pros and Cons</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="pros">What did you like most?</label>
+                        <textarea id="pros" class="form-textarea" placeholder="List the things you liked about this accommodation..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="cons">What could be improved?</label>
+                        <textarea id="cons" class="form-textarea" placeholder="List areas that could be improved..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Review
+                    </button>
+                    <a href="modern-studio-hassan-ii.html" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dorm
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Star rating functionality
+        function setupStarRating(container, category = null) {
+            const stars = container.querySelectorAll('.star, .category-star');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = parseInt(star.dataset.rating);
+                    
+                    // Reset all stars
+                    stars.forEach(s => s.classList.remove('active'));
+                    
+                    // Activate stars up to clicked rating
+                    for (let i = 0; i < rating; i++) {
+                        stars[i].classList.add('active');
+                    }
+                    
+                    // Store rating
+                    if (category) {
+                        container.dataset.rating = rating;
+                    } else {
+                        document.getElementById('overallRating').dataset.rating = rating;
+                    }
+                });
+                
+                star.addEventListener('mouseenter', () => {
+                    const rating = parseInt(star.dataset.rating);
+                    
+                    // Reset all stars
+                    stars.forEach(s => s.classList.remove('active'));
+                    
+                    // Activate stars up to hovered rating
+                    for (let i = 0; i < rating; i++) {
+                        stars[i].classList.add('active');
+                    }
+                });
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                const currentRating = container.dataset.rating || 0;
+                const stars = container.querySelectorAll('.star, .category-star');
+                
+                // Reset all stars
+                stars.forEach(s => s.classList.remove('active'));
+                
+                // Restore current rating
+                for (let i = 0; i < currentRating; i++) {
+                    stars[i].classList.add('active');
+                }
+            });
+        }
+
+        // Initialize star ratings
+        document.addEventListener('DOMContentLoaded', function() {
+            // Overall rating
+            setupStarRating(document.getElementById('overallRating'));
+            
+            // Category ratings
+            document.querySelectorAll('.category-stars').forEach(container => {
+                setupStarRating(container, container.dataset.category);
+            });
+            
+            // Form submission
+            document.getElementById('reviewForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = {
+                    dormName: document.getElementById('dormName').value,
+                    studentName: document.getElementById('studentName').value,
+                    studentEmail: document.getElementById('studentEmail').value,
+                    overallRating: document.getElementById('overallRating').dataset.rating || 0,
+                    cleanliness: document.querySelector('[data-category="cleanliness"]').dataset.rating || 0,
+                    location: document.querySelector('[data-category="location"]').dataset.rating || 0,
+                    value: document.querySelector('[data-category="value"]').dataset.rating || 0,
+                    landlord: document.querySelector('[data-category="landlord"]').dataset.rating || 0,
+                    wifi: document.querySelector('[data-category="wifi"]').dataset.rating || 0,
+                    security: document.querySelector('[data-category="security"]').dataset.rating || 0,
+                    reviewText: document.getElementById('reviewText').value,
+                    pros: document.getElementById('pros').value,
+                    cons: document.getElementById('cons').value
+                };
+                
+                // Validate form
+                if (!formData.studentName || !formData.studentEmail || !formData.reviewText) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+                
+                if (formData.overallRating === '0') {
+                    alert('Please provide an overall rating.');
+                    return;
+                }
+                
+                // Simulate form submission
+                alert('Thank you for your review! Your feedback has been submitted and will help other students make informed decisions.');
+                
+                // Reset form
+                document.getElementById('reviewForm').reset();
+                document.querySelectorAll('.star, .category-star').forEach(star => {
+                    star.classList.remove('active');
+                });
+                document.querySelectorAll('[data-rating]').forEach(element => {
+                    element.dataset.rating = '0';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

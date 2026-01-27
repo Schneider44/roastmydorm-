@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dorms in Morocco - RoastMyDorm</title>
+    <meta name="description" content="Browse dorms in Moroccan cities. Filter by city and discover student housing.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-social">
+                <a href="index.html" class="social-icon" title="Home"><i class="fas fa-home"></i></a>
+            </div>
+            <div class="nav-logo">
+                <span>RoastMyDorm</span>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="document.getElementById('signInModal')?.style.display='block'">Sign In</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header / Hero -->
+    <section class="dorms-hero" style="padding-top: 110px;">
+        <div class="container">
+            <div class="dorms-hero-inner">
+                <h1>Find Your Next Dorm</h1>
+                <p>Browse verified student housing across Moroccan cities. Filter by city, search by name, and sort by rating or price.</p>
+                
+                <div class="dorms-controls">
+                    <div class="search-bar-compact">
+                        <i class="fas fa-search"></i>
+                        <input id="dormSearchInput" type="text" placeholder="Search dorm name (e.g. Bayt, Residence, University)…">
+                    </div>
+                    <div class="sort-select">
+                        <i class="fas fa-sort-amount-down"></i>
+                        <select id="sortSelect">
+                            <option value="recommended" selected>Recommended</option>
+                            <option value="rating_desc">Rating: High to Low</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="city-chips" id="cityChips">
+                    <button class="chip active" data-city="all"><i class="fas fa-globe-africa"></i> All</button>
+                    <button class="chip" data-city="Casablanca">Casablanca</button>
+                    <button class="chip" data-city="Rabat">Rabat</button>
+                    <button class="chip" data-city="Marrakech">Marrakech</button>
+                    <button class="chip" data-city="Fes">Fes</button>
+                    <button class="chip" data-city="Kenitra">Kenitra</button>
+                </div>
+
+                <div class="results-meta">
+                    <span id="resultsCount">Showing all dorms</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dorms Grid -->
+    <section class="popular-dorms" style="padding-top: 30px;">
+        <div class="container">
+            <div class="dorms-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
+                <!-- Casablanca -->
+                <div class="dorm-card popular" data-city="Casablanca" data-price="2200" data-rating="4.8">
+                    <div class="dorm-image">
+                        <img src="BAYT CASA .PNG" alt="Casablanca Dorm">
+                        <div class="popular-badge"><i class="fas fa-fire"></i> Popular</div>
+                        <div class="rating-badge"><i class="fas fa-star"></i><span>4.8</span></div>
+                    </div>
+                    <div class="dorm-info">
+                        <h3>Bayt Al Maârifa Casablanca</h3>
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> Casablanca</div>
+                        <div class="dorm-features">
+                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                            <span><i class="fas fa-shield-alt"></i> Security</span>
+                            <span><i class="fas fa-book"></i> Study Room</span>
+                        </div>
+                        <div class="dorm-price">
+                            <span class="price">2,200 MAD/month</span>
+                            <span class="reviews">156 reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rabat -->
+                <div class="dorm-card popular" data-city="Rabat" data-price="2000" data-rating="4.7">
+                    <div class="dorm-image">
+                        <img src="bayt al maârifa rabat.PNG" alt="Rabat Dorm">
+                        <div class="popular-badge"><i class="fas fa-fire"></i> Popular</div>
+                        <div class="rating-badge"><i class="fas fa-star"></i><span>4.7</span></div>
+                    </div>
+                    <div class="dorm-info">
+                        <h3>Bayt Al Maârifa Rabat</h3>
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> Rabat</div>
+                        <div class="dorm-features">
+                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                            <span><i class="fas fa-kitchen-set"></i> Kitchen</span>
+                            <span><i class="fas fa-shield-alt"></i> Security</span>
+                        </div>
+                        <div class="dorm-price">
+                            <span class="price">2,000 MAD/month</span>
+                            <span class="reviews">134 reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marrakech -->
+                <div class="dorm-card popular" data-city="Marrakech" data-price="1700" data-rating="4.6">
+                    <div class="dorm-image">
+                        <img src="daoudiate.png" alt="Marrakech Dorm">
+                        <div class="popular-badge"><i class="fas fa-fire"></i> Popular</div>
+                        <div class="rating-badge"><i class="fas fa-star"></i><span>4.6</span></div>
+                    </div>
+                    <div class="dorm-info">
+                        <h3>Daoudiate Residence</h3>
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> Marrakech</div>
+                        <div class="dorm-features">
+                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                            <span><i class="fas fa-leaf"></i> Garden</span>
+                            <span><i class="fas fa-utensils"></i> Kitchen</span>
+                        </div>
+                        <div class="dorm-price">
+                            <span class="price">1,700 MAD/month</span>
+                            <span class="reviews">112 reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fes -->
+                <div class="dorm-card popular" data-city="Fes" data-price="1600" data-rating="4.4">
+                    <div class="dorm-image">
+                        <img src="Universite fes.png" alt="Fes Dorm">
+                        <div class="popular-badge"><i class="fas fa-fire"></i> Popular</div>
+                        <div class="rating-badge"><i class="fas fa-star"></i><span>4.4</span></div>
+                    </div>
+                    <div class="dorm-info">
+                        <h3>Fes University Dorms</h3>
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> Fes</div>
+                        <div class="dorm-features">
+                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                            <span><i class="fas fa-book"></i> Library</span>
+                            <span><i class="fas fa-utensils"></i> Kitchen</span>
+                        </div>
+                        <div class="dorm-price">
+                            <span class="price">1,600 MAD/month</span>
+                            <span class="reviews">76 reviews</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kenitra -->
+                <div class="dorm-card popular" data-city="Kenitra" data-price="1500" data-rating="4.5">
+                    <div class="dorm-image">
+                        <img src="hem.png" alt="Kenitra Dorm">
+                        <div class="popular-badge"><i class="fas fa-fire"></i> Popular</div>
+                        <div class="rating-badge"><i class="fas fa-star"></i><span>4.5</span></div>
+                    </div>
+                    <div class="dorm-info">
+                        <h3>Kenitra Student Housing</h3>
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> Kenitra</div>
+                        <div class="dorm-features">
+                            <span><i class="fas fa-wifi"></i> WiFi</span>
+                            <span><i class="fas fa-shield-alt"></i> Security</span>
+                            <span><i class="fas fa-book"></i> Study Room</span>
+                        </div>
+                        <div class="dorm-price">
+                            <span class="price">1,500 MAD/month</span>
+                            <span class="reviews">73 reviews</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

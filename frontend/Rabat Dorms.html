@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabat - Student Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation Header */
+        .navbar {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            position: relative;
+        }
+
+        .nav-social {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-icon {
+            color: #1e3a8a;
+            font-size: 1.8rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: #dc2626;
+        }
+
+        .nav-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #3b82f6 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease-in-out infinite;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .nav-logo span::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #1e3a8a, #dc2626, #3b82f6);
+            border-radius: 8px;
+            z-index: -1;
+            opacity: 0.1;
+            filter: blur(4px);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #1e3a8a;
+        }
+
+        .nav-btn {
+            background: #dc2626;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #b91c1c;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #1e3a8a;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 768px) {
+            .nav-social {
+                display: none;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        /* Header Section */
+        .header {
+            position: relative;
+            height: 400px;
+            margin-top: 70px; /* Account for fixed navbar */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Multiple Background Images */
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                url('Rabat street.png'),
+                url('bayt al maârifa rabat.PNG'),
+                url('mohmed 5.png'),
+                url('hassan 2 uni .png'),
+                url('lktuba.png');
+                
+            background-size: 
+                25% 100%,
+                25% 100%,
+                25% 100%,
+                25% 100%,
+                25% 100%;
+                
+            background-position: 
+                0% 0%,
+                25% 0%,
+                50% 0%,
+                75% 0%,
+                100% 0%;
+                
+            background-repeat: no-repeat;
+            opacity: 0.8;
+        }
+
+        .header-content h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .location-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .content-header h2 .highlight {
+            color: #007bff;
+        }
+
+        .content-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Search and Filters */
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        /* Dorm List */
+        .dorm-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dorm-entry {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .dorm-entry:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .dorm-thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 20px;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        }
+
+        .dorm-info {
+            flex: 1;
+        }
+
+        .dorm-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .dorm-location {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .dorm-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            color: #ffc107;
+            font-size: 1.1rem;
+        }
+
+        .review-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .review-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .review-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .qa-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .qa-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .qa-answer {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .see-more {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .see-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .search-filters {
+                flex-direction: column;
+            }
+
+            .dorm-entry {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .dorm-thumbnail {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .dorm-rating {
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dorms Modal Styles */
+        .dorms-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dorms-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dorms-modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            max-width: 1000px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .dorms-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .dorms-modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .dorms-modal-close {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .dorms-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dorms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .dorm-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dorm-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .dorm-card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        }
+
+        .dorm-card-content {
+            padding: 1.25rem;
+        }
+
+        .dorm-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .dorm-card-location {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .dorm-card-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .dorm-card-rating .stars {
+            color: #ffc107;
+            font-size: 0.875rem;
+        }
+
+        .dorm-card-rating .reviews {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .dorm-card-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+
+        .dorm-card-btn {
+            width: 100%;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .dorm-card-btn:hover {
+            background: #0056b3;
+        }
+
+        .dorms-modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-close {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-close:hover {
+            background: #4b5563;
+        }
+
+        @media (max-width: 768px) {
+            .dorms-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .dorms-modal-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .dorms-modal-header h2 {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-social">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <span>RoastMyDorm</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn">Sign In</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="location-badge">
+            <i class="fas fa-map-marker-alt"></i> Rabat, Morocco
+        </div>
+        <div class="header-content">
+            <h1>Rabat</h1>
+            <p>Student Housing Reviews & Information</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Content Layout -->
+        <div class="main-layout">
+            <!-- Left Column - Main Content -->
+            <div class="main-content">
+                <div class="content-header">
+                    <h2>Browse <span class="highlight">287</span> Student Reviews</h2>
+                    <p>Click on a dorm below to write a review</p>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="search-filters">
+                    <input type="text" class="search-input" placeholder="Search for your dorm...">
+                    <select class="filter-select">
+                        <option>Sort by: Number of Reviews</option>
+                        <option>Sort by: Rating</option>
+                        <option>Sort by: Name</option>
+                        <option>Sort by: Location</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Filter: All Dorms</option>
+                        <option>Filter: Single Rooms</option>
+                        <option>Filter: Shared Rooms</option>
+                        <option>Filter: Studios</option>
+                    </select>
+                </div>
+
+                <!-- Dorm List -->
+                <div class="dorm-list">
+                    <!-- Dorm Entry 1 -->
+                    <div class="dorm-entry">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect fill='%23e3f2fd' width='80' height='80'/><rect fill='%23bbdefb' x='10' y='20' width='60' height='40'/><rect fill='%2390caf9' x='20' y='30' width='15' height='20'/><rect fill='%2390caf9' x='45' y='30' width='15' height='20'/></svg>" alt="Al Irfane" class="dorm-thumbnail">
+                        <div class="dorm-info">
+                            <div class="dorm-name">AlIrfane Studio</div>
+                            <div class="dorm-location">Near Mohammed V University</div>
+                            <div class="dorm-rating">
+                                <div class="stars">★★★★☆</div>
+                                <div class="review-count">134 reviews</div>
+                            </div>
+                        </div>
+                        <button class="review-btn" onclick="showAlIrfaneStudioDorms()">Explore</button>
+                    </div>
+
+                    <!-- Dorm Entry 2 -->
+                    <div class="dorm-entry">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect fill='%23e8f5e8' width='80' height='80'/><rect fill='%23c8e6c9' x='10' y='20' width='60' height='40'/><rect fill='%23a5d6a7' x='20' y='30' width='15' height='20'/><rect fill='%23a5d6a7' x='45' y='30' width='15' height='20'/></svg>" alt="Rabat Student Center" class="dorm-thumbnail">
+                        <div class="dorm-info">
+                            <div class="dorm-name">L'Ocean</div>
+                            <div class="dorm-location">L'Ocean District</div>
+                            <div class="dorm-rating">
+                                <div class="stars">★★★★★</div>
+                                <div class="review-count">98 reviews</div>
+                            </div>
+                        </div>
+                        <button class="review-btn" onclick="showLOceanDorms()">Explore</button>
+                    </div>
+
+                    <!-- Dorm Entry 3 -->
+                    <div class="dorm-entry">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect fill='%23fff3e0' width='80' height='80'/><rect fill='%23ffe0b2' x='10' y='20' width='60' height='40'/><rect fill='%23ffcc02' x='20' y='30' width='15' height='20'/><rect fill='%23ffcc02' x='45' y='30' width='15' height='20'/></svg>" alt="Capital City Dorms" class="dorm-thumbnail">
+                        <div class="dorm-info">
+                            <div class="dorm-name">Hay Riyad</div>
+                            <div class="dorm-location">Hay Riyad, Rabat</div>
+                            <div class="dorm-rating">
+                                <div class="stars">★★★☆☆</div>
+                                <div class="review-count">76 reviews</div>
+                            </div>
+                        </div>
+                        <button class="review-btn" onclick="showHayRiyadDorms()">Explore</button>
+                    </div>
+
+                    <!-- Dorm Entry 4 -->
+                    <div class="dorm-entry">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect fill='%23f3e5f5' width='80' height='80'/><rect fill='%23e1bee7' x='10' y='20' width='60' height='40'/><rect fill='%23ce93d8' x='20' y='30' width='15' height='20'/><rect fill='%23ce93d8' x='45' y='30' width='15' height='20'/></svg>" alt="Rabat University Residence" class="dorm-thumbnail">
+                        <div class="dorm-info">
+                            <div class="dorm-name">Sale - Sale El Jadida</div>
+                            <div class="dorm-location">Hassan II University Area</div>
+                            <div class="dorm-rating">
+                                <div class="stars">★★★★☆</div>
+                                <div class="review-count">89 reviews</div>
+                            </div>
+                        </div>
+                        <button class="review-btn" onclick="showSaleDorms()">Explore</button>
+                    </div>
+
+                    <!-- Dorm Entry 5 -->
+                    <div class="dorm-entry">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect fill='%23e0f2f1' width='80' height='80'/><rect fill='%23b2dfdb' x='10' y='20' width='60' height='40'/><rect fill='%2380cbc4' x='20' y='30' width='15' height='20'/><rect fill='%2380cbc4' x='45' y='30' width='15' height='20'/></svg>" alt="Medina Student House" class="dorm-thumbnail">
+                        <div class="dorm-info">
+                            <div class="dorm-name">Hassan</div> 
+                            <div class="dorm-location">Hassan</div>
+                            <div class="dorm-rating">
+                                <div class="stars">★★★☆☆</div>
+                                <div class="review-count">67 reviews</div>
+                            </div>
+                        </div>
+                        <button class="review-btn" onclick="showHassanDorms()">Explore</button>
+                    </div>
+
+                    <!--Dorm Entry 6 -->
+                    <div class="dorm-entry">
+                        <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'><rect fill='%23e0f2f1' width='80' height='80'/><rect fill='%23b2dfdb' x='10' y='20' width='60' height='40'/><rect fill='%2380cbc4' x='20' y='30' width='15' height='20'/><rect fill='%2380cbc4' x='45' y='30' width='15' height='20'/></svg>" alt="Medina Student House" class="dorm-thumbnail">
+                        <div class="dorm-info">
+                            <div class="dorm-name">Agdal</div>
+                            <div class="dorm-location">Agdal</div>
+                            <div class="dorm-rating">
+                                <div class="stars">★★★☆☆</div>
+                                <div class="review-count">5 reviews</div>
+                            </div>
+                        </div>
+                        <button class="review-btn" onclick="showAgdalDorms()">Explore</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="sidebar">
+                <h3>Housing Forum</h3>
+                
+                <div class="qa-block">
+                    <div class="qa-question">Best dorms in Rabat?</div>
+                    <div class="qa-answer">
+                        "Bayt Al Maârifa and Rabat Student Center are definitely the best options. Bayt Al Maârifa has amazing amenities and the location is perfect for getting to classes. The rooms are spacious and the common areas are well-maintained."
+                    </div>
+                    <a href="#" class="see-more">See more answers</a>
+                </div>
+
+                <div class="qa-block">
+                    <div class="qa-question">Worst dorms in Rabat?</div>
+                    <div class="qa-answer">
+                        "Capital City Dorms can be pretty rough. The building is old and the rooms are tiny. There are heating issues in the winter and the bathrooms are always crowded."
+                    </div>
+                    <a href="#" class="see-more">See more answers</a>
+                </div>
+
+                <div class="qa-block">
+                    <div class="qa-question">What's the social scene like?</div>
+                    <div class="qa-answer">
+                        "The social life really depends on which dorm you're in. Rabat Student Center has the best community feel with lots of events. Bayt Al Maârifa is more quiet and study-focused."
+                    </div>
+                    <a href="#" class="see-more">See more answers</a>
+                </div>
+
+                <div class="qa-block">
+                    <div class="qa-question">How's the food situation?</div>
+                    <div class="qa-answer">
+                        "Most dorms have decent dining halls nearby. Rabat Student Center has the best food options with multiple restaurants. Bayt Al Maârifa's dining hall is okay but gets crowded during peak hours."
+                    </div>
+                    <a href="#" class="see-more">See more answers</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            const dormEntries = document.querySelectorAll('.dorm-entry');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                dormEntries.forEach(entry => {
+                    const dormName = entry.querySelector('.dorm-name').textContent.toLowerCase();
+                    const dormLocation = entry.querySelector('.dorm-location').textContent.toLowerCase();
+                    
+                    if (dormName.includes(searchTerm) || dormLocation.includes(searchTerm)) {
+                        entry.style.display = 'flex';
+                    } else {
+                        entry.style.display = 'none';
+                    }
+                });
+            });
+
+            // Review button functionality (no longer needed as buttons have onclick handlers)
+
+            // Sort functionality
+            const sortSelect = document.querySelector('.filter-select');
+            sortSelect.addEventListener('change', function() {
+                const sortBy = this.value;
+                const dormList = document.querySelector('.dorm-list');
+                const entries = Array.from(dormEntries);
+
+                entries.sort((a, b) => {
+                    switch(sortBy) {
+                        case 'Sort by: Rating':
+                            const ratingA = a.querySelector('.stars').textContent.length;
+                            const ratingB = b.querySelector('.stars').textContent.length;
+                            return ratingB - ratingA;
+                        case 'Sort by: Name':
+                            const nameA = a.querySelector('.dorm-name').textContent;
+                            const nameB = b.querySelector('.dorm-name').textContent;
+                            return nameA.localeCompare(nameB);
+                        case 'Sort by: Location':
+                            const locationA = a.querySelector('.dorm-location').textContent;
+                            const locationB = b.querySelector('.dorm-location').textContent;
+                            return locationA.localeCompare(locationB);
+                        default: // Number of Reviews
+                            const reviewsA = parseInt(a.querySelector('.review-count').textContent);
+                            const reviewsB = parseInt(b.querySelector('.review-count').textContent);
+                            return reviewsB - reviewsA;
+                    }
+                });
+
+                // Re-append sorted entries
+                entries.forEach(entry => dormList.appendChild(entry));
+            });
+
+        });
+
+        // AlIrfane Dorms Data
+        const AlIrfaneStudioDorms = [
+            {
+                id: 1,
+                name: "AlIrfane Studio",
+                location: "Near Mohammed V University, Rabat",
+                price: "2,000 MAD/month",
+                rating: 4.7,
+                reviews: 134,
+                image: "irfane studio.png",
+                link: "Al Irfane Studio.html"
+            }
+
+        ];
+        const AgdalStudioDorms = [
+            {
+                id: 1,
+                name: "Agdal Studio",
+                location: "Agdal, Rabat",
+                price: "2,000 MAD/month",
+                rating: 4.7,
+                reviews: 134,
+                image: "Agdal Studio.png",
+                link: "Studio Agdal.html"
+            },
+            {
+                id: 2,
+                name: "Student Residence | All Inclusive | Agdal",
+                location: "Agdal, Rabat",
+                price: "3,500 MAD/month",
+                rating: 4.5,
+                reviews: 5,
+                image: "Agdal Studio.png",
+                link: "#"
+            }
+        ];
+
+        // L'Ocean Dorms Data
+        const lOceanDorms = [
+            {
+                id: 1,
+                name: "L'Ocean Apartment",
+                location: "L'Ocean District, Rabat",
+                price: "2,400 MAD/month",
+                rating: 4.8,
+                reviews: 98,
+                image: "lktuba.png",
+                link: "Locean a  Rabat.html"
+            },
+            {
+                id: 2,
+                name: "Ocean Apartment",
+                location: "L'Ocean District, Rabat",
+                price: "2,600 MAD/month",
+                rating: 4.7,
+                reviews: 67,
+                image: "lktuba.png",
+                link: "occean appartement.html"
+            },
+            {
+                id: 3,
+                name: "Modern Studio | L'Ocean",
+                location: "L'Ocean District, Rabat",
+                price: "2,200 MAD/month",
+                rating: 4.6,
+                reviews: 52,
+                image: "lktuba.png",
+                link: "#"
+            }
+        ];
+
+        // Hay Riyad Dorms Data
+        const hayRiyadDorms = [
+            {
+                id: 1,
+                name: "Executive Studio | Hay Riyad",
+                location: "Hay Riyad, Rabat",
+                price: "2,500 MAD/month",
+                rating: 3.8,
+                reviews: 76,
+                image: "hassan 2 uni .png",
+                link: "executive-studio-hay-riad.html"
+            },
+            {
+                id: 2,
+                name: "Modern Apartment | Hay Riyad",
+                location: "Hay Riyad, Rabat",
+                price: "2,300 MAD/month",
+                rating: 3.7,
+                reviews: 54,
+                image: "hassan 2 uni .png",
+                link: "modern-apartment-rabat.html"
+            },
+            {
+                id: 3,
+                name: "Cozy Room | Hay Riyad",
+                location: "Hay Riyad, Rabat",
+                price: "1,900 MAD/month",
+                rating: 3.6,
+                reviews: 42,
+                image: "hassan 2 uni .png",
+                link: "cozy-room-rabat.html"
+            },
+            {
+                id: 4,
+                name: "Hay Al Mouadda",
+                location: "Hay Riyad, Rabat",
+                price: "2,100 MAD/month",
+                rating: 3.9,
+                reviews: 38,
+                image: "hassan 2 uni .png",
+                link: "Hay al Mouadda.html"
+            }
+        ];
+
+        // Sale - Sale El Jadida Dorms Data
+        const saleDorms = [
+            {
+                id: 1,
+                name: "Sale El Jadida Apartment",
+                location: "Sale - Sale El Jadida, Rabat | Hassan II University Area",
+                price: "2,200 MAD/month",
+                rating: 4.4,
+                reviews: 89,
+                image: "Rabat street.png",
+                link: "sale el jadida.html"
+            },
+            {
+                id: 2,
+                name: "Sale El Jadida 2",
+                location: "Sale - Sale El Jadida, Rabat | Hassan II University Area",
+                price: "2,100 MAD/month",
+                rating: 4.3,
+                reviews: 64,
+                image: "Rabat street.png",
+                link: "Sale el Jadida 2.html"
+            },
+            {
+                id: 3,
+                name: "Modern Studio | Sale",
+                location: "Sale - Sale El Jadida, Rabat",
+                price: "2,000 MAD/month",
+                rating: 4.2,
+                reviews: 47,
+                image: "Rabat street.png",
+                link: "#"
+            }
+        ];
+
+        // Hassan Dorms Data
+        const hassanDorms = [
+            {
+                id: 1,
+                name: "Shared Apartment | 2 Bedrooms | Hassan",
+                location: "Hassan, Rabat",
+                price: "2,400 MAD/month",
+                rating: 3.7,
+                reviews: 67,
+                image: "mohmed 5.png",
+                link: "massira rabat.html"
+            },
+            {
+                id: 2,
+                name: "Cozy Studio | Hassan",
+                location: "Hassan, Rabat",
+                price: "2,100 MAD/month",
+                rating: 3.6,
+                reviews: 48,
+                image: "mohmed 5.png",
+                link: "cozy-studio-hassan.html"
+            },
+            {
+                id: 3,
+                name: "Modern Room | Hassan",
+                location: "Hassan, Rabat",
+                price: "1,900 MAD/month",
+                rating: 3.5,
+                reviews: 35,
+                image: "mohmed 5.png",
+                link: "#"
+            },
+            {
+                id: 4,
+                name: "Hay Al Fath",
+                location: "Hassan, Rabat",
+                price: "2,300 MAD/month",
+                rating: 3.8,
+                reviews: 41,
+                image: "mohmed 5.png",
+                link: "Hay Al Fath.html"
+            }
+        ];
+
+        // Generic function to show dorms modal
+        function showDormsModal(modalId, areaName, dormsArray) {
+            // Remove existing modal if any
+            const existingModal = document.getElementById(modalId);
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            // Escape quotes for HTML attributes
+            const escapeHtml = (text) => {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, m => map[m]);
+            };
+
+            // Escape single quotes for JavaScript strings
+            const escapeJs = (text) => {
+                return text.replace(/'/g, "\\'").replace(/"/g, '\\"');
+            };
+
+            // Create modal HTML
+            const modalHTML = `
+                <div id="${modalId}" class="dorms-modal" onclick="closeDormsModal('${modalId}', event)">
+                    <div class="dorms-modal-content" onclick="event.stopPropagation()">
+                        <div class="dorms-modal-header">
+                            <h2><i class="fas fa-building"></i> All Dorms in ${escapeHtml(areaName)}</h2>
+                            <button class="dorms-modal-close" onclick="closeDormsModal('${modalId}')">&times;</button>
+                        </div>
+                        <div class="dorms-grid">
+                            ${dormsArray.map(dorm => {
+                                const safeName = escapeJs(dorm.name);
+                                const safeLink = escapeJs(dorm.link);
+                                return `
+                                <div class="dorm-card" onclick="selectDormForReview('${safeName}', '${safeLink}')">
+                                    <img src="${escapeHtml(dorm.image)}" alt="${escapeHtml(dorm.name)}" class="dorm-card-image" 
+                                         onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 280 180\'><rect fill=\'%23e3f2fd\' width=\'280\' height=\'180\'/><rect fill=\'%23bbdefb\' x=\'20\' y=\'40\' width=\'240\' height=\'100\'/></svg>'">
+                                    <div class="dorm-card-content">
+                                        <h3 class="dorm-card-title">${escapeHtml(dorm.name)}</h3>
+                                        <p class="dorm-card-location">${escapeHtml(dorm.location)}</p>
+                                        <div class="dorm-card-rating">
+                                            <span class="stars">${'★'.repeat(Math.floor(dorm.rating))}${'☆'.repeat(5 - Math.floor(dorm.rating))}</span>
+                                            <span class="reviews">${dorm.reviews} reviews</span>
+                                        </div>
+                                        <div class="dorm-card-price">${escapeHtml(dorm.price)}</div>
+                                        <button class="dorm-card-btn" onclick="event.stopPropagation(); selectDormForReview('${safeName}', '${safeLink}')">
+                                            Leave a Review
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            }).join('')}
+                        </div>
+                        <div class="dorms-modal-footer">
+                            <button class="btn-close" onclick="closeDormsModal('${modalId}')">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Show modal with animation
+            setTimeout(() => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                }
+            }, 10);
+        }
+
+        // Functions to show dorms for each area
+        function showAlIrfaneStudioDorms() {
+            showDormsModal('AlIrfaneStudioDormsModal', 'Al Irfane Studio (Near Mohammed V University)', AlIrfaneStudioDorms);
+        }
+
+        function showLOceanDorms() {
+            showDormsModal('lOceanDormsModal', 'L\'Ocean District', lOceanDorms);
+        }
+
+        function showHayRiyadDorms() {
+            showDormsModal('hayRiyadDormsModal', 'Hay Riyad', hayRiyadDorms);
+        }
+
+        function showSaleDorms() {
+            showDormsModal('saleDormsModal', 'Sale - Sale El Jadida', saleDorms);
+        }
+
+        function showHassanDorms() {
+            showDormsModal('hassanDormsModal', 'Hassan', hassanDorms);
+        }
+        function showAgdalDorms() {
+            showDormsModal('AgdalDormsModal', 'Agdal', AgdalStudioDorms);
+        }
+
+        // Generic function to close any dorm modal
+        function closeDormsModal(modalId, event) {
+            if (event && event.target !== event.currentTarget && event.target.classList.contains('dorms-modal-close') === false && event.target.classList.contains('btn-close') === false) {
+                return;
+            }
+            
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = ''; // Restore scrolling
+                
+                // Remove modal after animation
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        }
+
+        // Function to select a dorm for review
+        function selectDormForReview(dormName, dormLink) {
+            // Close any open modal
+            const modals = ['AlIrfaneStudioDormsModal', 'lOceanDormsModal', 'hayRiyadDormsModal', 'saleDormsModal', 'hassanDormsModal', 'AgdalDormsModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (modal && modal.classList.contains('show')) {
+                    closeDormsModal(modalId);
+                }
+            });
+            
+            // Small delay to allow modal to close
+            setTimeout(() => {
+                // If the dorm has a specific link, navigate to it
+                if (dormLink && dormLink !== '#') {
+                    window.location.href = dormLink;
+                } else {
+                    // Otherwise, redirect to review form with the dorm name
+                    const cityName = 'Rabat';
+                    window.location.href = `review-form.html?dorm=${encodeURIComponent(dormName)}&city=${encodeURIComponent(cityName)}`;
+                }
+            }, 300);
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                // Close any open modal
+                const modals = ['AlIrfaneStudioDormsModal', 'lOceanDormsModal', 'hayRiyadDormsModal', 'saleDormsModal', 'hassanDormsModal', 'AgdalDormsModal'];
+                modals.forEach(modalId => {
+                    const modal = document.getElementById(modalId);
+                    if (modal && modal.classList.contains('show')) {
+                        closeDormsModal(modalId);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

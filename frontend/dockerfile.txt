@@ -1,0 +1,14 @@
+# Step 1: Get a clean web server (like an empty house)
+FROM nginx:alpine
+
+# Step 2: Remove old stuff in the house
+RUN rm -rf /usr/share/nginx/html/*
+
+# Step 3: Put your website inside the house
+COPY ./frontend /usr/share/nginx/html
+
+# Step 4: Open the door so people can come in
+EXPOSE 80
+
+# Step 5: Keep the lights on (keep it running)
+CMD ["nginx", "-g", "daemon off;"]

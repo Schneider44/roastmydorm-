@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Residence Agdal - RoastMyDorm</title>
+    <meta name="description" content="Student residence in Agdal, Rabat with 24/7 security and all-inclusive amenities. Perfect for students near Mohammed V University.">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        /* Dark Header */
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #3b82f6 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo span::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #3b82f6 100%);
+            border-radius: 8px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .breadcrumbs {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumbs a {
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumbs a:hover {
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Apartment Overview Card */
+        .apartment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .apartment-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        .review-count {
+            color: #6b7280;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .badge i {
+            font-size: 0.9rem;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .main-image:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-thumbnails {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .thumbnail:hover {
+            transform: translateY(-2px);
+            border-color: #dc2626;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .gallery-tab {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 1rem 0;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-tab.active {
+            color: #dc2626;
+            border-bottom-color: #dc2626;
+        }
+
+        .gallery-tab:hover {
+            color: #dc2626;
+        }
+
+        /* Booking Card */
+        .booking-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .price-section {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .current-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            color: #6b7280;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .original-price {
+            color: #9ca3af;
+            text-decoration: line-through;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .info-icon {
+            color: #6b7280;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .info-icon:hover {
+            color: #dc2626;
+        }
+
+        .advance-rent-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .advance-rent-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .checkbox-group {
+            margin-bottom: 2rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox {
+            margin-top: 0.25rem;
+            transform: scale(1.2);
+        }
+
+        .checkbox-label {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .checkbox-label a {
+            color: #dc2626;
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #dc2626;
+            border: 2px solid #dc2626;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .guarantee-btn {
+            background: #f8fafc;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .guarantee-btn:hover {
+            background: #f1f5f9;
+            color: #374151;
+        }
+
+        /* Room Details Section */
+        .room-details {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: #dc2626;
+        }
+
+        .room-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .spec-item {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .spec-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .spec-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .spec-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .spec-desc {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .amenity-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+
+        .amenity-icon {
+            color: #dc2626;
+            font-size: 1.1rem;
+        }
+
+        .amenity-text {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        /* Location Map Section */
+        .location-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .location-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .address-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .address-card h3 {
+            color: #1f2937;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .address-card p {
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .address-card i {
+            color: #dc2626;
+            width: 20px;
+        }
+
+        .map-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .map {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .map::before {
+            content: '📍 Interactive Map - Agdal, Rabat';
+            text-align: center;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .map-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #374151;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .map-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nearby-places {
+            margin-top: 2rem;
+        }
+
+        .nearby-places h3 {
+            color: #1f2937;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .place-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .place-item:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .place-item i {
+            color: #dc2626;
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .place-item div {
+            flex: 1;
+        }
+
+        .place-item strong {
+            display: block;
+            color: #1f2937;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .place-item span {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .write-review-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .write-review-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .review-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .review-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .review-date {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .review-stars {
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .review-text {
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .review-action {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .review-action:hover {
+            color: #dc2626;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .booking-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .breadcrumbs {
+                position: static;
+                transform: none;
+                margin-top: 0.5rem;
+            }
+
+            .apartment-title {
+                font-size: 2rem;
+            }
+
+            .badges {
+                justify-content: center;
+            }
+
+            .gallery-thumbnails {
+                justify-content: center;
+            }
+
+            .room-specs {
+                grid-template-columns: 1fr;
+            }
+
+            .amenities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .location-info {
+                grid-template-columns: 1fr;
+            }
+
+            .places-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reviews-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .action-buttons {
+                gap: 0.75rem;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.875rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+
+            .apartment-card,
+            .booking-card,
+            .room-details,
+            .location-section,
+            .reviews-section {
+                padding: 1.5rem;
+            }
+
+            .gallery-thumbnails {
+                flex-wrap: wrap;
+            }
+
+            .thumbnail {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo"><span>RoastMyDorm</span></a>
+            <div class="breadcrumbs">
+                <a href="index.html">Home</a> > <a href="rabat-dorms.html">Rabat</a> > Student Residence Agdal
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Apartment Overview Card -->
+        <div class="apartment-card">
+            <h1 class="apartment-title">Student Residence Agdal, Rabat</h1>
+            
+            <div class="rating-section">
+                <div class="stars">★★★★☆</div>
+                <span class="review-count">(38 reviews)</span>
+            </div>
+
+            <div class="badges">
+                <div class="badge">
+                    <i class="fas fa-user-graduate"></i>
+                    Student Accommodation
+                </div>
+                <div class="badge">
+                    <i class="fas fa-shield-alt"></i>
+                    24/7 Security
+                </div>
+                <div class="badge">
+                    <i class="fas fa-check-circle"></i>
+                    All Inclusive
+                </div>
+            </div>
+
+            <img src="https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=800" alt="Student Residence Agdal" class="main-image" onclick="openImageModal()">
+
+            <div class="gallery-thumbnails">
+                <img src="https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400" alt="Room" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400" alt="Common Area" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400" alt="Study Room" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400" alt="Kitchen" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400" alt="Lounge" class="thumbnail" onclick="changeMainImage(this)">
+            </div>
+
+            <div class="gallery-tabs">
+                <a href="#" class="gallery-tab active">Photos (5)</a>
+                <a href="#" class="gallery-tab">Videos (1)</a>
+                <a href="#" class="gallery-tab">3D Views (1)</a>
+                <a href="#" class="gallery-tab">Virtual Tour (1)</a>
+            </div>
+        </div>
+
+        <!-- Booking Card -->
+        <div class="booking-card">
+            <div class="price-section">
+                <div class="current-price">2,100 MAD</div>
+                <div class="price-period">per month</div>
+                <div class="original-price">
+                    2,300 MAD
+                    <i class="fas fa-info-circle info-icon" onclick="showPriceInfo()"></i>
+                </div>
+            </div>
+
+            <button class="advance-rent-btn" onclick="showAdvanceRentInfo()">
+                <span>Advance rent 1,050 MAD</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <div class="form-group">
+                <label class="form-label">First Name *</label>
+                <input type="text" class="form-input" placeholder="Enter your first name" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Last Name *</label>
+                <input type="text" class="form-input" placeholder="Enter your last name" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" class="form-input" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone Number *</label>
+                <input type="tel" class="form-input" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" class="checkbox" id="privacy" required>
+                    <label for="privacy" class="checkbox-label">
+                        I agree to the <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a>
+                    </label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="openBookingModal()">
+                    <i class="fas fa-calendar-check"></i>
+                    Book Now
+                </button>
+                <button class="btn-secondary" onclick="openContactModal()">
+                    <i class="fas fa-phone"></i>
+                    Contact Landlord
+                </button>
+            </div>
+
+            <button class="guarantee-btn" onclick="showGuaranteeInfo()">
+                <span>Lower Price Guarantee</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Room Details Section -->
+    <div class="main-container">
+        <div class="room-details">
+            <h2 class="section-title">
+                <i class="fas fa-home"></i>
+                Room Details & Amenities
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: #4b5563; line-height: 1.6;">
+                This student residence offers a safe and comfortable living environment with 24/7 security and all-inclusive amenities. Perfect for students who want convenience and peace of mind while studying.
+            </p>
+            
+            <div class="room-specs">
+                <div class="spec-item">
+                    <div class="spec-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="spec-title">Single Room</div>
+                    <div class="spec-desc">Private single room with modern furniture, study desk, and wardrobe. Perfect for focused studying.</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon">
+                        <i class="fas fa-bath"></i>
+                    </div>
+                    <div class="spec-title">Shared Bathroom</div>
+                    <div class="spec-desc">Clean shared bathroom facilities with regular maintenance and cleaning service.</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="spec-title">Study Room Access</div>
+                    <div class="spec-desc">Dedicated study rooms with quiet environment, perfect for group study sessions.</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="spec-title">Shared Kitchen</div>
+                    <div class="spec-desc">Fully equipped shared kitchen with modern appliances and cooking facilities.</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <div class="spec-title">High-Speed WiFi</div>
+                    <div class="spec-desc">Unlimited high-speed internet included in rent. Perfect for online learning and research.</div>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="spec-title">24/7 Security</div>
+                    <div class="spec-desc">Round-the-clock security with CCTV monitoring and secure access control system.</div>
+                </div>
+            </div>
+
+            <h3 style="margin: 2rem 0 1rem 0; color: #1f2937; font-size: 1.3rem;">Residence Amenities</h3>
+            <div class="amenities-grid">
+                <div class="amenity-item">
+                    <i class="fas fa-shield-alt amenity-icon"></i>
+                    <span class="amenity-text">24/7 Security</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-book amenity-icon"></i>
+                    <span class="amenity-text">Study Rooms</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-users amenity-icon"></i>
+                    <span class="amenity-text">Common Areas</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-tshirt amenity-icon"></i>
+                    <span class="amenity-text">Laundry Facilities</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-dumbbell amenity-icon"></i>
+                    <span class="amenity-text">Fitness Room</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-tv amenity-icon"></i>
+                    <span class="amenity-text">TV Lounge</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-leaf amenity-icon"></i>
+                    <span class="amenity-text">Garden</span>
+                </div>
+                <div class="amenity-item">
+                    <i class="fas fa-car amenity-icon"></i>
+                    <span class="amenity-text">Parking</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Map Section -->
+    <div class="main-container">
+        <div class="location-section">
+            <h2 class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                Location & Map
+            </h2>
+            
+            <div class="location-info">
+                <div class="address-card">
+                    <h3>Address</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Agdal, Rabat, Morocco</p>
+                    <p><i class="fas fa-university"></i> 2 minutes walk to Mohammed V University</p>
+                    <p><i class="fas fa-bus"></i> 1 minute walk to public transport</p>
+                    <p><i class="fas fa-shopping-cart"></i> 3 minutes walk to shopping center</p>
+                </div>
+                
+                <div class="map-container">
+                    <div id="map" class="map"></div>
+                    <div class="map-overlay">
+                        <button class="map-btn" onclick="openFullMap()">
+                            <i class="fas fa-expand"></i>
+                            View Full Map
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nearby-places">
+                <h3>Nearby Places</h3>
+                <div class="places-grid">
+                    <div class="place-item">
+                        <i class="fas fa-university"></i>
+                        <div>
+                            <strong>Mohammed V University</strong>
+                            <span>2 min walk</span>
+                        </div>
+                    </div>
+                    <div class="place-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <div>
+                            <strong>Agdal Shopping Center</strong>
+                            <span>3 min walk</span>
+                        </div>
+                    </div>
+                    <div class="place-item">
+                        <i class="fas fa-utensils"></i>
+                        <div>
+                            <strong>Restaurant District</strong>
+                            <span>2 min walk</span>
+                        </div>
+                    </div>
+                    <div class="place-item">
+                        <i class="fas fa-hospital"></i>
+                        <div>
+                            <strong>Medical Center</strong>
+                            <span>5 min walk</span>
+                        </div>
+                    </div>
+                    <div class="place-item">
+                        <i class="fas fa-bus"></i>
+                        <div>
+                            <strong>Bus Station</strong>
+                            <span>1 min walk</span>
+                        </div>
+                    </div>
+                    <div class="place-item">
+                        <i class="fas fa-plane"></i>
+                        <div>
+                            <strong>Rabat Airport</strong>
+                            <span>25 min drive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="main-container">
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    Reviews (38)
+                </h2>
+                <button class="write-review-btn" onclick="openReviewModal()">
+                    <i class="fas fa-pen"></i>
+                    Write a Review
+                </button>
+            </div>
+            
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="review-avatar">A</div>
+                    <div class="review-info">
+                        <div class="reviewer-name">Ahmed B.</div>
+                        <div class="review-date">March 18, 2024</div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                </div>
+                <p class="review-text">
+                    "Excellent student residence! The 24/7 security gives me peace of mind, and the location is perfect - just 2 minutes walk to university. 
+                    The study rooms are quiet and well-equipped. The staff is friendly and helpful. Highly recommended for students!"
+                </p>
+                <div class="review-actions">
+                    <a href="#" class="review-action">Helpful (12)</a>
+                    <a href="#" class="review-action">Reply</a>
+                </div>
+            </div>
+
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="review-avatar">F</div>
+                    <div class="review-info">
+                        <div class="reviewer-name">Fatima K.</div>
+                        <div class="review-date">March 8, 2024</div>
+                    </div>
+                    <div class="review-stars">★★★★☆</div>
+                </div>
+                <p class="review-text">
+                    "Great value for money! The residence is clean and well-maintained. The common areas are nice for socializing with other students. 
+                    The only minor issue is that the WiFi can be slow during peak hours, but overall it's a good place to live."
+                </p>
+                <div class="review-actions">
+                    <a href="#" class="review-action">Helpful (8)</a>
+                    <a href="#" class="review-action">Reply</a>
+                </div>
+            </div>
+
+            <div class="review-item">
+                <div class="review-header">
+                    <div class="review-avatar">O</div>
+                    <div class="review-info">
+                        <div class="reviewer-name">Omar M.</div>
+                        <div class="review-date">February 25, 2024</div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                </div>
+                <p class="review-text">
+                    "Perfect location and excellent facilities! The study rooms are amazing for group projects and the security is top-notch. 
+                    The residence staff is very responsive to any issues. This is definitely the best student accommodation in Agdal!"
+                </p>
+                <div class="review-actions">
+                    <a href="#" class="review-action">Helpful (15)</a>
+                    <a href="#" class="review-action">Reply</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image gallery functionality
+        function changeMainImage(thumbnail) {
+            const mainImage = document.querySelector('.main-image');
+            if (mainImage && thumbnail) {
+                mainImage.src = thumbnail.src;
+                mainImage.alt = thumbnail.alt;
+                
+                // Add a smooth transition effect
+                mainImage.style.opacity = '0.7';
+                setTimeout(() => {
+                    mainImage.style.opacity = '1';
+                }, 150);
+            }
+        }
+
+        function openImageModal() {
+            // Create a lightbox modal for full-screen image viewing
+            const mainImage = document.querySelector('.main-image');
+            if (mainImage) {
+                const lightbox = document.createElement('div');
+                lightbox.className = 'image-lightbox-modal';
+                lightbox.innerHTML = `
+                    <div class="lightbox-content">
+                        <span class="lightbox-close">&times;</span>
+                        <img src="${mainImage.src}" alt="${mainImage.alt}" class="lightbox-image">
+                        <div class="lightbox-nav lightbox-prev" onclick="navigateImage(-1)">‹</div>
+                        <div class="lightbox-nav lightbox-next" onclick="navigateImage(1)">›</div>
+                    </div>
+                `;
+                
+                document.body.appendChild(lightbox);
+                document.body.style.overflow = 'hidden';
+                
+                // Close lightbox functionality
+                lightbox.querySelector('.lightbox-close').onclick = () => {
+                    document.body.removeChild(lightbox);
+                    document.body.style.overflow = 'auto';
+                };
+                
+                lightbox.onclick = (e) => {
+                    if (e.target === lightbox) {
+                        document.body.removeChild(lightbox);
+                        document.body.style.overflow = 'auto';
+                    }
+                };
+            }
+        }
+
+        // Image navigation for lightbox
+        function navigateImage(direction) {
+            const lightboxImage = document.querySelector('.lightbox-image');
+            if (lightboxImage) {
+                const images = [
+                    'https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=800',
+                    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800',
+                    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
+                    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',
+                    'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'
+                ];
+                
+                let currentIndex = images.indexOf(lightboxImage.src);
+                currentIndex += direction;
+                
+                if (currentIndex < 0) currentIndex = images.length - 1;
+                if (currentIndex >= images.length) currentIndex = 0;
+                
+                lightboxImage.src = images[currentIndex];
+            }
+        }
+
+        // Gallery tab switching
+        document.querySelectorAll('.gallery-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openBookingModal() {
+            alert('Booking modal would open here. This would include date selection, guest count, and payment options.');
+        }
+
+        function openContactModal() {
+            alert('Contact modal would open here. This would allow you to message the landlord directly.');
+        }
+
+        function openReviewModal() {
+            alert('Review modal would open here. This would allow you to write and submit a review.');
+        }
+
+        // Info functions
+        function showPriceInfo() {
+            alert('Original price: 2,300 MAD/month\nCurrent price: 2,100 MAD/month\nYou save: 200 MAD/month (8.7% discount)');
+        }
+
+        function showAdvanceRentInfo() {
+            alert('Advance rent is typically 50% of the monthly rent and is required to secure your booking.');
+        }
+
+        function showGuaranteeInfo() {
+            alert('We guarantee the lowest price! If you find the same apartment for less elsewhere, we will match the price and give you an additional 5% discount.');
+        }
+
+        // Map functionality
+        function openFullMap() {
+            const address = 'Agdal, Rabat, Morocco';
+            const encodedAddress = encodeURIComponent(address);
+            const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+            window.open(googleMapsUrl, '_blank');
+        }
+
+        // Initialize map when page loads
+        function initializeMap() {
+            const mapElement = document.getElementById('map');
+            if (mapElement) {
+                mapElement.addEventListener('click', openFullMap);
+                mapElement.style.cursor = 'pointer';
+                mapElement.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                mapElement.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            }
+        }
+
+        // Initialize map on page load
+        document.addEventListener('DOMContentLoaded', initializeMap);
+    </script>
+</body>
+</html>

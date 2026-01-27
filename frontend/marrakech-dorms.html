@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marrakech Dorms - RoastMyDorm</title>
+    <meta name="description" content="Find student housing in Marrakech. Browse dorms, view details, and contact landlords directly.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .city-dorms-container {
+            min-height: 100vh;
+            background: #ffffff;
+            padding-top: 70px;
+        }
+        
+        /* Light Red Header Section */
+        .city-header {
+            background: #ffffff;
+            color: #111827;
+            padding: 2.5rem 0 2rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .city-header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .city-title {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: .75rem;
+            text-shadow: none;
+        }
+        
+        .city-subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            max-width: 900px;
+            overflow: visible;
+            word-wrap: break-word;
+            white-space: normal;
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .city-stats {
+            display: flex;
+            gap: .75rem;
+            margin-top: .75rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: .75rem 1rem;
+            box-shadow: none;
+            border: 1px solid #e5e7eb;
+            min-width: 180px;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #111827;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: .85rem;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        /* Dark Red Search and Filter Section */
+        .search-filter-section {
+            background: #ffffff;
+            padding: .75rem 0 1.25rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .search-filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .search-filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: .5rem;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: .5rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-label {
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            margin-left: .25rem;
+        }
+        
+        .filter-input {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+        
+        .filter-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .date-input {
+            position: relative;
+        }
+        
+        .date-input::before {
+            content: '📅';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .date-input input {
+            padding-left: 2.5rem;
+        }
+        
+        .room-type-input {
+            position: relative;
+        }
+        
+        .room-type-input::after {
+            content: '▼';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+        }
+        
+        /* Date Picker Styles */
+        .date-picker {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .date-picker.show {
+            display: block;
+        }
+        
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+        
+        .date-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .date-nav {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .date-nav:hover {
+            color: #374151;
+        }
+        
+        .date-cell {
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .date-cell:hover {
+            background: #f3f4f6;
+        }
+        
+        .date-cell.selected {
+            background: #dc2626;
+            color: white;
+        }
+        
+        .date-cell.other-month {
+            color: #d1d5db;
+        }
+        
+        /* Room Type Dropdown */
+        .room-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            margin-top: 0.5rem;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .room-dropdown.show {
+            display: block;
+        }
+        
+        .room-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .room-option:hover {
+            background: #f3f4f6;
+        }
+        
+        .room-option.selected {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        /* Modern Price Input Boxes Design */
+        .budget-slider {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .price-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        
+        .price-input-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        
+        .price-input-box {
+            background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 0.85rem 3.5rem 0.85rem 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+        
+        .price-input-box::-webkit-outer-spin-button,
+        .price-input-box::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+        
+        .price-input-box:focus {
+            outline: none;
+            border-color: #111827;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .price-input-box::placeholder {
+            color: #9ca3af;
+            font-weight: 500;
+        }
+        
+        .price-input-wrapper > div {
+            position: relative;
+        }
+        
+        .price-currency {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-weight: 600;
+            font-size: 0.9rem;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+        
+        .price-input-box:focus ~ .price-currency {
+            color: #111827;
+        }
+        
+        .price-input-wrapper:focus-within .price-currency {
+            color: #111827;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #111827 0%, #374151 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.5rem;
+            font-size: .95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(17, 24, 39, 0.2);
+            align-self: flex-end;
+            height: fit-content;
+        }
+        
+        .search-btn:hover { 
+            opacity: .9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(17, 24, 39, 0.3);
+        }
+        
+        .search-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Dark Red Content Section */
+        .dorms-content {
+            background: #ffffff;
+            padding: 1rem 0 2rem;
+            min-height: 60vh;
+        }
+        
+        .dorms-content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .dorms-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #111827;
+            text-decoration: none;
+            font-weight: 600;
+            opacity: .9;
+        }
+        
+        .back-button:hover {
+            opacity: 0.8;
+        }
+        
+        .dorms-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #111827;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .dorms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+        
+        .dorm-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            box-shadow: none;
+            transition: transform .15s ease;
+        }
+        
+        .dorm-card:hover { transform: translateY(-2px); }
+        
+        .dorm-image {
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .dorm-price {
+            position: absolute;
+            top: .5rem;
+            right: .5rem;
+            background: #111827;
+            color: white;
+            padding: .25rem .5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: .85rem;
+        }
+        
+        .dorm-content {
+            padding: 1.5rem;
+        }
+        
+        .dorm-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+        
+        .dorm-location {
+            color: #6b7280;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .dorm-price-large {
+            font-size: .95rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: .5rem;
+        }
+        
+        .dorm-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stars {
+            color: #fbbf24;
+            font-size: 1.1rem;
+        }
+        
+        .rating-text {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .dorm-amenity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .amenity-icon {
+            width: 16px;
+            height: 16px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        
+        .view-details-btn {
+            width: 100%;
+            background: #111827;
+            color: white;
+            border: none;
+            padding: .7rem .9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: .95rem;
+            cursor: pointer;
+            margin-top: .75rem;
+        }
+        
+        .view-details-btn:hover { opacity: .9; }
+        
+        /* Availability Badge */
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        
+        .availability-badge.available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .availability-badge.booked {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .availability-badge i {
+            font-size: 0.75rem;
+        }
+        
+        /* Booking Buttons */
+        .booking-btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        
+        .book-now-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        
+        .book-now-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .waitlist-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .waitlist-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .booked-btn {
+            width: 100%;
+            background: #9ca3af;
+            color: white;
+            border: none;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .city-header {
+                padding: 1.5rem 0;
+            }
+            
+            .city-header-content {
+                padding: 0 1rem;
+            }
+            
+            .city-title { 
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .city-subtitle {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                max-width: 100%;
+            }
+            
+            .city-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .search-filter-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .budget-slider {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .price-input-box {
+                padding: 0.75rem 3rem 0.75rem 0.9rem;
+                font-size: 0.95rem;
+            }
+            
+            .price-input-label {
+                font-size: 0.7rem;
+            }
+            
+            .price-currency {
+                font-size: 0.85rem;
+            }
+            
+            .search-btn {
+                width: 100%;
+                align-self: stretch;
+                margin-top: 0.5rem;
+            }
+            
+            .dorms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dorms-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .dorms-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-social">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <span>RoastMyDorm</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn">Sign In</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="city-dorms-container">
+        <!-- Light Red Header Section -->
+        <div class="city-header">
+            <div class="city-header-content">
+                <h1 class="city-title">Marrakech: Premier Student Accommodation</h1>
+                <p class="city-subtitle">Historic Red City with growing universities and unique cultural charm offering exceptional student experiences.</p>
+                <div class="city-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">32</span>
+                        <span class="stat-label">Approved Listings</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4.5/5</span>
+                        <span class="stat-label">Average Resident Rating</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">2,100 MAD</span>
+                        <span class="stat-label">(Average Monthly Rent)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Red Search and Filter Section -->
+        <div class="search-filter-section">
+            <div class="search-filter-container">
+                <div class="search-filter-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Check Date</label>
+                        <div class="date-input">
+                            <input type="text" class="filter-input" id="dateInput" placeholder="Select Date" readonly>
+                            <div class="date-picker" id="datePicker">
+                                <div class="date-header">
+                                    <button class="date-nav" id="prevMonth">‹</button>
+                                    <span id="currentMonth"></span>
+                                    <button class="date-nav" id="nextMonth">›</button>
+                                </div>
+                                <div class="date-grid" id="dateGrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Room Type</label>
+                        <div class="room-type-input">
+                            <input type="text" class="filter-input" id="roomTypeInput" placeholder="Select Room Type" readonly>
+                            <div class="room-dropdown" id="roomDropdown">
+                                <div class="room-option" data-type="all">All Types</div>
+                                <div class="room-option" data-type="studio">Studio</div>
+                                <div class="room-option" data-type="single">Single Room</div>
+                                <div class="room-option" data-type="shared">Shared Room</div>
+                                <div class="room-option" data-type="apartment">Apartment</div>
+                                <div class="room-option" data-type="house">House</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Budget Price</label>
+                        <div class="budget-slider">
+                            <div class="price-input-wrapper">
+                                <label class="price-input-label">Minimum (DH)</label>
+                                <div style="position: relative;">
+                                    <input type="number" 
+                                           class="price-input-box" 
+                                           id="minPriceInput" 
+                                           placeholder="1000" 
+                                           min="1000" 
+                                           max="5000" 
+                                           value="1000">
+                                    <span class="price-currency">DH</span>
+                                </div>
+                                </div>
+                            <div class="price-input-wrapper">
+                                <label class="price-input-label">Maximum (DH)</label>
+                                <div style="position: relative;">
+                                    <input type="number" 
+                                           class="price-input-box" 
+                                           id="maxPriceInput" 
+                                           placeholder="5000" 
+                                           min="1000" 
+                                           max="5000" 
+                                           value="5000">
+                                    <span class="price-currency">DH</span>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="search-btn" id="searchBtn">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Red Content Section -->
+        <div class="dorms-content">
+            <div class="dorms-content-container">
+                <div class="dorms-header">
+                    <a href="index.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i>
+                        Explore Other Cities
+                    </a>
+                    <h2 class="dorms-title">Curated Student Rentals in Marrakech</h2>
+                    <div></div>
+                </div>
+                
+                <div id="dorms-grid" class="dorms-grid">
+                    <!-- Dorms will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Marrakech dorm data
+        const marrakechDorms = [
+            {
+                id: 1,
+                title: " SHARED | Izdihar Apartment",
+                location: "Izdihar, Marrakech | 10 min walk to Cadi Ayyad Univ.",
+                price: "2,100 MAD/month",
+                priceValue: 2100,
+                roomType: "apartment",
+                amenity: "Cultural Heritage",
+                rating: 4.4,
+                reviews: 19,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                available: true
+            },
+            {
+                id: 2,
+                title: "Modern Studio | AC & WiFi | izdihaar",
+                location: "izdihar, Marrakech | 10 min walk to Cadi Ayyad Univ.",
+                price: "2,400 MAD/month",
+                priceValue: 2400,
+                roomType: "studio",
+                amenity: "Premium Location",
+                rating: 4.7,
+                reviews: 27,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                available: false
+            },
+            {
+                id: 3,
+                title: "Cozy Room | Medina Style | Medina",
+                location: "Medina, Marrakech | 12 min walk to Cadi Ayyad Univ.",
+                price: "1,800 MAD/month",
+                priceValue: 1800,
+                roomType: "single",
+                amenity: "Historic Location",
+                rating: 4.2,
+                reviews: 15,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                available: true
+            },
+            {
+                id: 4,
+                title: "Shared Apartment | 2 Bedrooms | Mabrouka",
+                location: "Mabrouka, Marrakech | 8 min walk to Cadi Ayyad Univ.",
+                price: "2,000 MAD/month",
+                priceValue: 2000,
+                roomType: "shared",
+                amenity: "All Bills Included",
+                rating: 4.3,
+                reviews: 23,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                available: true
+            },
+            {
+                id: 5,
+                title: "Luxury Studio | Garden View | Gueliz",
+                location: "Gueliz, Marrakech | 4 min walk to Cadi Ayyad Univ.",
+                price: "2,600 MAD/month",
+                priceValue: 2600,
+                roomType: "studio",
+                amenity: "Garden View",
+                rating: 4.8,
+                reviews: 32,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                available: false
+            },
+            {
+                id: 6,
+                title: "Budget Room | Shared Bath | Semlalia",
+                location: "Semlalia, Marrakech | 15 min walk to Cadi Ayyad Univ.",
+                price: "1,200 MAD/month",
+                priceValue: 1200,
+                roomType: "single",
+                amenity: "Shared Kitchen",
+                rating: 3.9,
+                reviews: 11,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                available: true
+            },
+            {
+                id: 7,
+                title: "Shared Apartement | 3 Rooms | Jenan Awrad",
+                location: "Medina, Marrakech | 20 min walk to Cadi Ayyad Univ.",
+                price: "5,000 MAD/month",
+                priceValue: 3200,
+                roomType: "apartment",
+                amenity: "Private Courtyard",
+                rating: 4.9,
+                reviews: 41,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                available: true
+            },
+            {
+                id: 8,
+                title: "Modern Apartment | Marjane Dyur Nakhil",
+                location: "Marjane Dyur Nakhil, Marrakech | 6 min walk to Cadi Ayyad Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 2800,
+                roomType: "apartment",
+                amenity: "3 Bedrooms",
+                rating: 4.6,
+                reviews: 29,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                available: false
+            },
+            {
+                id: 9,
+                title: "Apartment | Balcony & AC | Route de Fès",
+                location: "Route de Fès, Marrakech | 9 min to Cadi Ayyad Univ.",
+                price: "2,000 MAD/month",
+                priceValue: 2300,
+                roomType: "apartment",
+                amenity: "3 rooms",
+                rating: 4.4,
+                reviews: 21,
+                image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=400",
+                available: true
+            },
+            {
+                id: 10,
+                title: "Studio | Furnished | Izdihar",
+                location: "Daoudiate, Marrakech | 7 min bus to Cadi Ayyad Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 1900,
+                roomType: "shared apartment",
+                amenity: "2 Bedrooms",
+                rating: 4.1,
+                reviews: 14,
+                image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400",
+                available: false
+            },
+            {
+                id: 11,
+                title: "Modern Apartment | 3 Bedrooms | Route Asfi",
+                location: "Route Asfi, Marrakech | 5 min walk to Cadi Ayyad Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 3200,
+                roomType: "apartment",
+                amenity: "Spacious Living",
+                rating: 4.5,
+                reviews: 28,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                available: true
+            },
+            {
+                id: 12,
+                title: "Apartement | Near Cadi Ayad Semlalia | Izdihar",
+                location: "Izdihar, Marrakech | 8 min walk to Cadi Ayyad Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 4000,
+                roomType: "studio",
+                amenity: "Modern Facilities",
+                rating: 4.6,
+                reviews: 31,
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                available: false
+            },
+            {
+                id: 13,
+                title: "Luxury Apartment | 2 Bedrooms | Hay Mabrouka",
+                location: "Hay Mbrouka, Marrakech | 7 min walk to FST Univ.",
+                price: "4,000 MAD/month",
+                priceValue: 4000,
+                roomType: "apartment",
+                amenity: "Fully Equipped",
+                rating: 4.7,
+                reviews: 35,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                available: true
+            },
+            {
+                id: 14,
+                title: "Budget Shared Room | Near Cadi Ayad Univ | Charaf ",
+                location: "Charf , Marrakech | 6 min walk to Cadi Ayyad Univ.",
+                price: "3,800 MAD/month",
+                priceValue: 3800,
+                roomType: "shared",
+                amenity: "All Inclusive",
+                rating: 4.2,
+                reviews: 22,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                available: true
+            },
+            {
+                id: 15,
+                title: "Budget Shared Room | Near HEEC | Al Ouhda 5 ",
+                location: "Al Ouhda 5 , Marrakech | 2 min walk to HEEC.",
+                price: "3,000 MAD/month",
+                priceValue: 3000,
+                roomType: "Single",
+                amenity: "All Inclusive",
+                rating: 4.2,
+                reviews: 22,
+                image: "Al Ouhda 5.png",
+                available: true
+            },
+            {
+                id : 16,
+                title : "Modern  Shared Apartement | Near FST | Gueliz",
+                location :"Gueliz , Marrakech | 5 min walk to Fst , ISPTS",
+                price :"3,950 MAD/MONTH",
+                pricevalue:"3950",
+                roomtype:"Shared",
+                amenity :"Quiet",
+                rating : 4.4,
+                reviews : 5,
+                image :"Gueliz app.png",
+                available : true 
+            },
+            {
+                id:17,
+                title :"Shared Apartement | Near Cady Ayyad Univ | Saada",
+                location :"Saada , Marrakech | 5 min Drive to Cady Ayyad Univ",
+                price :"4,000 MAD/MONTH",
+                pricevalue:"4000",
+                roomtype :"Shared",
+                amenity :"Furnished",
+                rating :4.4,
+                reviews : 5,
+                image :"saada app.png",
+                available : true
+            },
+            {
+                id:18,
+                title :"Shared Apartement | Near FST | Zohour Targa, Salma 1",
+                location :"Zohour Targa, Salma 1,Marrakech",
+                price :"3,800 MAD/MONTH",
+                pricevalue :"3.800",
+                roomtype :"SHared",
+                amenity :"Furnished",
+                rating :4.5,
+                reviews: 5,
+                image:"targa app6.png",
+                available : true
+            } ,
+            {
+                id:19,
+                title :"Shared Apartement | Near FST | Doha Gates of Marrakech",
+                location :"Doha gates of marrakech , Marrakech",
+                price :"4,000MAD/MONTH",
+                pricevalue:"4.000",
+                roomtype :"Shared",
+                amenity :"Furnished",
+                rating :4.4,
+                reviews : 5,
+                image :"mabrouka app1.png",
+                available : true
+            },
+            {
+                id:20,
+                title :"Shared Apartement | Near Univ | Dyur Marjane",
+                location :"Dyur Marjane , Route de Casablanca , Marrakech",
+                price:"3,000 MAD/MONTH",
+                pricevalue :"3.000",
+                roomtype:"Shared",
+                amenity :"Quiet",
+                rating :4.4,
+                reviews : 5,
+                image :"dyur marjane app1.png",
+                available : true
+            },
+            {
+
+            id: 21,
+            title :"Shared Apartement | Near FST | Izdihar",
+            location :"Izdihar , Marrakech",
+            price :"4000 Mad/Month",
+            pricevalue :"4000",
+            roomtype :"Shared",
+            amenity:"Quiet",
+            rating : 4.5,
+            reviews : 10,
+            image :"izdihar app1.png",
+            available : false 
+            },
+            {
+                id:22,
+                title :"Shared Apartement | Near FST | Mabrouka",
+                location :"Mabrouka , Marrakech",
+                price:"4000 Mad/Month",
+                pricevalue:"4000",
+                roomtype :"Shared",
+                amenity :"Furnished",
+                rating : 4.0,
+                reviews : 10,
+                image :"mabrouka st1.png",
+                available : true 
+            },
+            {
+                id:23,
+                title :"Shared Apartement | Near FST | Azzouzia",
+                location :"Bassatin Targa , Azzouzia , Marrakech",
+                price :"2800 Mad/Month",
+                pricevalue:"2800",
+                roomtype:"Shared",
+                amenity :"Quiet",
+                rating : 4.0,
+                reviews : 10,
+                image :"targa ap1.png",
+                available : true 
+            }
+
+
+        ];
+
+        // Global variables for filtering
+        let currentFilters = {
+            selectedDate: null,
+            roomType: 'all',
+            minPrice: 1000,
+            maxPrice: 5000
+        };
+
+        // Load dorms when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDorms();
+            initializeDatePicker();
+            initializeRoomDropdown();
+            initializePriceInputs();
+            setupSearchFunctionality();
+        });
+
+        // Date Picker Functionality
+        function initializeDatePicker() {
+            const dateInput = document.getElementById('dateInput');
+            const datePicker = document.getElementById('datePicker');
+            const currentMonthSpan = document.getElementById('currentMonth');
+            const dateGrid = document.getElementById('dateGrid');
+            const prevBtn = document.getElementById('prevMonth');
+            const nextBtn = document.getElementById('nextMonth');
+
+            let currentDate = new Date();
+            let selectedDate = null;
+
+            function updateCalendar() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+                
+                currentMonthSpan.textContent = new Date(year, month).toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    year: 'numeric' 
+                });
+
+                const firstDay = new Date(year, month, 1);
+                const lastDay = new Date(year, month + 1, 0);
+                const startDate = new Date(firstDay);
+                startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+                dateGrid.innerHTML = '';
+
+                // Add day headers
+                const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                dayHeaders.forEach(day => {
+                    const header = document.createElement('div');
+                    header.textContent = day;
+                    header.style.fontWeight = 'bold';
+                    header.style.color = '#6b7280';
+                    dateGrid.appendChild(header);
+                });
+
+                // Add calendar days
+                for (let i = 0; i < 42; i++) {
+                    const date = new Date(startDate);
+                    date.setDate(startDate.getDate() + i);
+                    
+                    const cell = document.createElement('div');
+                    cell.className = 'date-cell';
+                    cell.textContent = date.getDate();
+                    
+                    if (date.getMonth() !== month) {
+                        cell.classList.add('other-month');
+                    }
+                    
+                    if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+                        cell.classList.add('selected');
+                    }
+                    
+                    cell.addEventListener('click', () => {
+                        selectedDate = new Date(date);
+                        currentFilters.selectedDate = selectedDate;
+                        
+                        // Update display
+                        dateInput.value = selectedDate.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
+                        
+                        // Update calendar
+                        updateCalendar();
+                        datePicker.classList.remove('show');
+                        
+                        // Filter dorms
+                        filterDorms();
+                    });
+                    
+                    dateGrid.appendChild(cell);
+                }
+            }
+
+            // Event listeners
+            dateInput.addEventListener('click', () => {
+                datePicker.classList.toggle('show');
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateCalendar();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateCalendar();
+            });
+
+            // Close date picker when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dateInput.contains(e.target) && !datePicker.contains(e.target)) {
+                    datePicker.classList.remove('show');
+                }
+            });
+
+            updateCalendar();
+        }
+
+        // Room Type Dropdown Functionality
+        function initializeRoomDropdown() {
+            const roomInput = document.getElementById('roomTypeInput');
+            const roomDropdown = document.getElementById('roomDropdown');
+            const roomOptions = roomDropdown.querySelectorAll('.room-option');
+
+            roomInput.addEventListener('click', () => {
+                roomDropdown.classList.toggle('show');
+            });
+
+            roomOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const roomType = option.dataset.type;
+                    const roomText = option.textContent;
+                    
+                    // Update current selection
+                    roomOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    // Update input display
+                    roomInput.value = roomText;
+                    currentFilters.roomType = roomType;
+                    
+                    // Close dropdown
+                    roomDropdown.classList.remove('show');
+                    
+                    // Filter dorms
+                    filterDorms();
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!roomInput.contains(e.target) && !roomDropdown.contains(e.target)) {
+                    roomDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Price Input Boxes Functionality
+        function initializePriceInputs() {
+            const minPriceInput = document.getElementById('minPriceInput');
+            const maxPriceInput = document.getElementById('maxPriceInput');
+
+            // Validate and update price filters
+            function updatePriceFilters() {
+                let minPrice = parseInt(minPriceInput.value) || 1000;
+                let maxPrice = parseInt(maxPriceInput.value) || 5000;
+
+                // Ensure min is at least 1000
+                if (minPrice < 1000) {
+                    minPrice = 1000;
+                    minPriceInput.value = 1000;
+                }
+
+                // Ensure max is at most 5000
+                if (maxPrice > 5000) {
+                    maxPrice = 5000;
+                    maxPriceInput.value = 5000;
+            }
+
+                // Ensure min is not greater than max
+                if (minPrice > maxPrice) {
+                    minPrice = maxPrice;
+                    minPriceInput.value = maxPrice;
+            }
+
+                // Ensure max is not less than min
+                if (maxPrice < minPrice) {
+                    maxPrice = minPrice;
+                    maxPriceInput.value = minPrice;
+                }
+
+                currentFilters.minPrice = minPrice;
+                currentFilters.maxPrice = maxPrice;
+            }
+
+            // Event listeners for input changes
+            minPriceInput.addEventListener('input', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            maxPriceInput.addEventListener('input', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            // Event listeners for blur (when user leaves the input)
+            minPriceInput.addEventListener('blur', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            maxPriceInput.addEventListener('blur', function() {
+                updatePriceFilters();
+                filterDorms();
+            });
+
+            // Initialize with default values
+            updatePriceFilters();
+        }
+
+        // Search Functionality
+        function setupSearchFunctionality() {
+            const searchBtn = document.getElementById('searchBtn');
+            searchBtn.addEventListener('click', () => {
+                filterDorms();
+            });
+        }
+
+        // Filter Dorms Function
+        function filterDorms() {
+            let filteredDorms = marrakechDorms.filter(dorm => {
+                // Filter by room type (handle partial matches and typos)
+                if (currentFilters.roomType !== 'all') {
+                    const dormType = dorm.roomType.toLowerCase().trim().replace(/\s+/g, ' ');
+                    const filterType = currentFilters.roomType.toLowerCase().trim();
+                    
+                    // Normalize common typos: "apartement" -> "apartment"
+                    const normalizedDormType = dormType.replace('apartement', 'apartment');
+                    
+                    // Check if dorm type matches exactly or contains the filter type
+                    // This handles cases like:
+                    // - "shared studio" matching "shared" filter
+                    // - "shared apartment" or "shared apartement" matching "apartment" or "shared" filter
+                    // - "studio" matching "studio" filter
+                    if (normalizedDormType !== filterType && !normalizedDormType.includes(filterType)) {
+                    return false;
+                    }
+                }
+                
+                // Filter by price range
+                if (dorm.priceValue < currentFilters.minPrice || dorm.priceValue > currentFilters.maxPrice) {
+                    return false;
+                }
+                
+                return true;
+            });
+
+            // Display filtered results
+            displayFilteredDorms(filteredDorms);
+            
+            // Show filter summary
+            showFilterSummary(filteredDorms.length);
+        }
+
+        // Display Filtered Dorms
+        function displayFilteredDorms(dorms) {
+            const dormsGrid = document.getElementById('dorms-grid');
+            dormsGrid.innerHTML = '';
+
+            if (dorms.length === 0) {
+                dormsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #6b7280;">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; color: #9ca3af;"></i>
+                        <h3 style="color: #374151; margin-bottom: 0.5rem;">No dorms found matching your criteria</h3>
+                        <p style="color: #6b7280;">Try adjusting your filters to see more results.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            dorms.forEach(dorm => {
+                const dormCard = document.createElement('div');
+                dormCard.className = 'dorm-card';
+                
+                // Determine availability status
+                const isAvailable = dorm.available === true || dorm.available === 'available' || dorm.available === undefined;
+                const availabilityBadge = isAvailable 
+                    ? '<span class="availability-badge available"><i class="fas fa-check-circle"></i> Available Now</span>'
+                    : '<span class="availability-badge booked"><i class="fas fa-times-circle"></i> Already Booked</span>';
+                
+                // Determine which buttons to show
+                let buttonsHtml = '';
+                if (isAvailable) {
+                    buttonsHtml = `
+                        <div class="booking-btn-container">
+                            <button class="book-now-btn" onclick="bookNow(${dorm.id}, event)">
+                                <i class="fas fa-calendar-check"></i> Book Now
+                            </button>
+                            <button class="view-details-btn" onclick="viewDormDetails(${dorm.id})">
+                                View Details
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    buttonsHtml = `
+                        <div class="booking-btn-container">
+                            <button class="waitlist-btn" onclick="joinWaitlist(${dorm.id}, event)">
+                                <i class="fas fa-bell"></i> Get it when it's available
+                            </button>
+                            <button class="view-details-btn" onclick="viewDormDetails(${dorm.id})">
+                                View Details
+                            </button>
+                        </div>
+                    `;
+                }
+                
+                dormCard.innerHTML = `
+                    <div class="dorm-image" style="background-image: url('${dorm.image}')">
+                    </div>
+                    <div class="dorm-content">
+                        <h3 class="dorm-title">${dorm.title}</h3>
+                        <div class="dorm-location">
+                            ${dorm.location}
+                        </div>
+                        <div class="dorm-price-large">${dorm.price}</div>
+                        <div class="dorm-rating">
+                            <div class="stars">
+                                ${'★'.repeat(Math.floor(dorm.rating))}${'☆'.repeat(5 - Math.floor(dorm.rating))}
+                            </div>
+                            <span class="rating-text">${dorm.rating} (${dorm.reviews} Reviews)</span>
+                        </div>
+                        <div class="dorm-amenity">
+                            <div class="amenity-icon">✓</div>
+                            ${dorm.amenity}
+                        </div>
+                        ${availabilityBadge}
+                        ${buttonsHtml}
+                    </div>
+                `;
+                dormsGrid.appendChild(dormCard);
+            });
+        }
+
+        // Show Filter Summary
+        function showFilterSummary(count) {
+            console.log(`Showing ${count} dorms matching your criteria`);
+        }
+
+        function loadDorms() {
+            displayFilteredDorms(marrakechDorms);
+        }
+
+        // Book Now Function
+        window.bookNow = function(dormId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const dorm = marrakechDorms.find(d => d.id === dormId);
+            if (!dorm) {
+                alert('Dorm not found.');
+                return;
+            }
+            
+            if (!dorm.available) {
+                alert('This dorm is no longer available. Would you like to join the waitlist?');
+                joinWaitlist(dormId, event);
+                return;
+            }
+            
+            // Show booking confirmation
+            const confirmMessage = `Book "${dorm.title}"?\n\nPrice: ${dorm.price}\nLocation: ${dorm.location}\n\nYou will be redirected to the booking page.`;
+            
+            if (confirm(confirmMessage)) {
+                // Navigate to booking page or show booking form
+                viewDormDetails(dormId);
+                // You could also open a booking modal or redirect to a booking page
+                // window.location.href = `booking.html?dormId=${dormId}`;
+            }
+        };
+        
+        // Join Waitlist Function
+        window.joinWaitlist = function(dormId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            const dorm = marrakechDorms.find(d => d.id === dormId);
+            if (!dorm) {
+                alert('Dorm not found.');
+                return;
+            }
+            
+            if (dorm.available) {
+                alert('This dorm is currently available! Click "Book Now" to proceed with booking.');
+                return;
+            }
+            
+            // Get user email/contact info for waitlist
+            const email = prompt(`Join waitlist for "${dorm.title}"?\n\nEnter your email address to be notified when this dorm becomes available:`);
+            
+            if (email && email.trim()) {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(email.trim())) {
+                    // Here you would normally send this to your backend
+                    // For now, we'll just show a confirmation
+                    alert(`✓ You've been added to the waitlist!\n\nWe'll notify you at ${email.trim()} when "${dorm.title}" becomes available.`);
+                    
+                    // You could also store this in localStorage for demonstration
+                    const waitlist = JSON.parse(localStorage.getItem('dormWaitlist') || '[]');
+                    waitlist.push({
+                        dormId: dormId,
+                        dormTitle: dorm.title,
+                        email: email.trim(),
+                        dateAdded: new Date().toISOString()
+                    });
+                    localStorage.setItem('dormWaitlist', JSON.stringify(waitlist));
+                } else {
+                    alert('Please enter a valid email address.');
+                }
+            }
+        };
+
+        // Make viewDormDetails globally available
+        window.viewDormDetails = function(dormId) {
+            switch(dormId) {
+                case 1:
+                    window.location.href = 'Izdihar apartement.html';
+                    break;
+                case 2:
+                    window.location.href = 'modern-studio-cadi-ayyad.html';
+                    break;
+                case 3:
+                    window.location.href = 'cozy-room-medina-marrakech.html';
+                    break;
+                case 4:
+                    window.location.href = 'shared-apartment-2-bedrooms-marrakech.html';
+                    break;
+                case 5:
+                    window.location.href = 'luxury-studio-gueliz.html';
+                    break;
+                case 6:
+                    window.location.href = 'semlaliya.html';
+                    break;
+                case 7:
+                    window.location.href = 'Jenan Awrad app.html';
+                    break;
+                case 8:
+                    window.location.href = 'Dyur Marjane Nakhil.html';
+                    break;
+                case 9:
+                    window.location.href = 'Route fes app.html';
+                    break;
+                case 10:
+                     window.location.href='izdihar.html';
+                        break;
+                case 11:
+                    window.location.href = 'Route Asfi.html';
+                    break;
+                case 12:
+                    window.location.href = 'Izdihar app.html';
+                    break;
+                case 13:
+                    window.location.href = 'Hay mabrouka app.html';
+                    break;
+                case 14:
+                    window.location.href = 'Charaf.html';
+                        break;
+                case 15:
+                    window.location.href = 'Al Ouhda 5.html';
+                    break;
+                 case 16:
+                    window.location.href='Gueliz app.html';
+                    break;   
+                    case 17 :
+                        window.location.href='saada app2.html';
+                        break;
+                     case 18:
+                        window.location.href='Targa app.html';
+                        break;   
+                     case 19 :
+                        window.location.href='Abwab Marrakech.html';
+                        break;   
+                        case 20:
+                        window.location.href='Dyur Marjane app.html';
+                        break;
+                        case 21:
+                        window.location.href='izdihar 2.html';
+                        break ;
+                        case 22 :
+                        window.location.href='mabrouka studio.html';
+                        break;
+                        case 23:
+                            window.location.href='targa.html';
+                            break;
+
+                default:
+                    alert(`Viewing details for dorm ${dormId}. This would open a detailed dorm page with photos, amenities, landlord contact, and payment options.`);
+            }
+        };
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>RoastMyDorm</h3>
+                        <p>Your trusted platform for finding the perfect student accommodation in Morocco's top cities.</p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="casablanca-dorms.html">Casablanca</a></li>
+                        <li><a href="rabat-dorms.html">Rabat</a></li>
+                        <li><a href="marrakech-dorms.html">Marrakech</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Students</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">How to Apply</a></li>
+                        <li><a href="#">Student Guide</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Moving Checklist</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Landlords</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">List Your Property</a></li>
+                        <li><a href="#">Landlord Portal</a></li>
+                        <li><a href="#">Pricing Guide</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> info@roastmydorm.com</p>
+                        <p><i class="fas fa-phone"></i> +212 6 00 00 00 00</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Marrakech, Morocco</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .footer {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            padding: 3rem 0 0;
+            margin-top: auto;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #dc2626;
+        }
+        
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #e5e7eb;
+        }
+        
+        .footer-logo p {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #374151;
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #dc2626;
+        }
+        
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #9ca3af;
+        }
+        
+        .contact-info i {
+            color: #dc2626;
+            width: 16px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding: 1.5rem 0;
+        }
+        
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #9ca3af;
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-bottom-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-bottom-links a:hover {
+            color: #dc2626;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+            
+            .footer-bottom-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .footer-bottom-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

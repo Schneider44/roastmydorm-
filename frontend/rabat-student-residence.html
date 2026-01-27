@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabat Student Residence - RoastMyDorm</title>
+    <meta name="description" content="Student residence near École Mohammadia d'Ingénieurs in Rabat. Perfect for students with WiFi, laundry, and garden.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .dorm-detail-page {
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .dorm-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dorm-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('cover 2.png') center/cover;
+            opacity: 0.1;
+            z-index: 1;
+        }
+        
+        .dorm-header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .dorm-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dorm-location {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dorm-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .dorm-rating {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .rating-stars {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+        
+        .rating-text {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .dorm-gallery {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .gallery-main {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .gallery-main img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .gallery-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .gallery-thumb {
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .gallery-thumb:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-thumb img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+        }
+        
+        /* Image Lightbox Styles */
+        .gallery-main, .gallery-thumb {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .gallery-main::after, .gallery-thumb::after {
+            content: '🔍';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 50%;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-main:hover::after, .gallery-thumb:hover::after {
+            opacity: 1;
+        }
+        
+        .image-lightbox {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .lightbox-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+        }
+        
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+            transition: color 0.3s ease;
+        }
+        
+        .lightbox-close:hover {
+            color: #ef4444;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+        
+        .lightbox-nav:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .lightbox-prev {
+            left: 30px;
+        }
+        
+        .lightbox-next {
+            right: 30px;
+        }
+        
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .dorm-details {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .amenity-icon {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+        
+        .contact-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .contact-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        
+        .contact-btn {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        #map {
+            height: 300px;
+            border-radius: 8px;
+        }
+        
+        .reviews-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .review-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .review-author {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .review-rating {
+            color: #fbbf24;
+        }
+        
+        .review-text {
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        .breadcrumb {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .breadcrumb a {
+            color: #10b981;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .navigation-footer {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .nav-btn-primary {
+            background: #10b981;
+            color: white;
+        }
+        
+        .nav-btn-primary:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        .nav-btn-secondary {
+            background: white;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+        
+        .nav-btn-secondary:hover {
+            background: #10b981;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .dorm-title {
+                font-size: 2rem;
+            }
+            
+            .gallery-thumbnails {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="roastmydorm_logo-removebg-preview.png" alt="RoastMyDorm" class="logo-img">
+                <span class="logo-text">RoastMyDorm</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#about" class="nav-link">About</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+                <button class="nav-btn" onclick="showSignInModal()">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="index.html">Home</a> > 
+        <a href="rabat-dorms.html">Rabat Dorms</a> > 
+        <span>Rabat Student Residence</span>
+    </div>
+
+    <div class="dorm-detail-page">
+        <!-- Dorm Header -->
+        <div class="dorm-header">
+            <div class="dorm-header-content">
+                <h1 class="dorm-title">Rabat Student Residence</h1>
+                <div class="dorm-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Close to École Mohammadia d'Ingénieurs, Rabat
+                </div>
+                <div class="dorm-price">1,900 MAD/month</div>
+                <div class="dorm-rating">
+                    <div class="rating-stars">★★★★★</div>
+                    <span class="rating-text">4.6 (98 reviews)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Left Column -->
+            <div class="main-content">
+                <!-- Image Gallery -->
+                <div class="dorm-gallery">
+                    <h3>Photos</h3>
+                    <div class="gallery-main" onclick="openLightbox('cover 2.png')">
+                        <img id="mainImage" src="cover 2.png" alt="Rabat Student Residence Main View">
+                    </div>
+                    <div class="gallery-thumbnails">
+                        <div class="gallery-thumb" onclick="changeMainImage('cover.png'); openLightbox('cover.png')">
+                            <img src="cover.png" alt="Common Area">
+                        </div>
+                        <div class="gallery-thumb" onclick="changeMainImage('cover 3.png'); openLightbox('cover 3.png')">
+                            <img src="cover 3.png" alt="Garden">
+                        </div>
+                        <div class="gallery-thumb" onclick="changeMainImage('dormart.png'); openLightbox('dormart.png')">
+                            <img src="dormart.png" alt="Laundry Room">
+                        </div>
+                        <div class="gallery-thumb" onclick="changeMainImage('lbiit.png'); openLightbox('lbiit.png')">
+                            <img src="lbiit.png" alt="Study Area">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dorm Details -->
+                <div class="dorm-details">
+                    <div class="detail-section">
+                        <h3>Description</h3>
+                        <p>Comfortable student residence located in a quiet neighborhood near École Mohammadia d'Ingénieurs. This residence offers a perfect balance of privacy and community living, with shared common areas and beautiful garden spaces. Ideal for students who want to focus on their studies while enjoying a supportive environment.</p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Amenities</h3>
+                        <div class="amenities-grid">
+                            <div class="amenity-item">
+                                <i class="fas fa-wifi amenity-icon"></i>
+                                <span>Free WiFi</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="fas fa-tshirt amenity-icon"></i>
+                                <span>Laundry Facilities</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="fas fa-seedling amenity-icon"></i>
+                                <span>Beautiful Garden</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="fas fa-users amenity-icon"></i>
+                                <span>Common Area</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="fas fa-shield-alt amenity-icon"></i>
+                                <span>24/7 Security</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i class="fas fa-book amenity-icon"></i>
+                                <span>Study Room</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Location</h3>
+                        <p>Located in the peaceful Hay Riad district of Rabat, this residence is just a short walk from École Mohammadia d'Ingénieurs and close to public transportation. The area offers a perfect blend of academic environment and residential comfort, with easy access to shopping centers and restaurants.</p>
+                    </div>
+                </div>
+
+                <!-- Reviews -->
+                <div class="reviews-section">
+                    <h3>Student Reviews</h3>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-author">Omar Benjelloun</span>
+                            <span class="review-rating">★★★★★</span>
+                        </div>
+                        <p class="review-text">"Great residence with excellent facilities. The garden is perfect for relaxing after classes, and the laundry facilities are very convenient. The staff is friendly and helpful."</p>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-author">Aicha Alami</span>
+                            <span class="review-rating">★★★★☆</span>
+                        </div>
+                        <p class="review-text">"Good value for money. The common areas are well-maintained and the WiFi is reliable. The location is perfect for engineering students."</p>
+                    </div>
+                    <div class="review-item">
+                        <div class="review-header">
+                            <span class="review-author">Hassan Tazi</span>
+                            <span class="review-rating">★★★★★</span>
+                        </div>
+                        <p class="review-text">"Perfect for students who want a quiet place to study. The garden is beautiful and the residence has a great community feel."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="sidebar">
+                <!-- Contact Card -->
+                <div class="contact-card">
+                    <h3>Contact Landlord</h3>
+                    <button class="contact-btn" onclick="contactLandlord()">
+                        <i class="fas fa-phone"></i> Call Now
+                    </button>
+                    <button class="contact-btn" onclick="sendMessage()" style="background: #3b82f6;">
+                        <i class="fas fa-envelope"></i> Send Message
+                    </button>
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                        <p style="font-size: 0.9rem; color: #6b7280; margin-bottom: 0.5rem;">
+                            <strong>Landlord:</strong> Fatima Benali
+                        </p>
+                        <p style="font-size: 0.9rem; color: #6b7280; margin-bottom: 0.5rem;">
+                            <strong>Phone:</strong> +212 6 23 45 67 89
+                        </p>
+                        <p style="font-size: 0.9rem; color: #6b7280;">
+                            <strong>Email:</strong> fatima.benali@email.com
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Map -->
+                <div class="map-container">
+                    <h3>Location</h3>
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="navigation-footer">
+            <h3>Explore More Options</h3>
+            <div class="nav-buttons">
+                <a href="rabat-dorms.html" class="nav-btn nav-btn-primary">
+                    <i class="fas fa-list"></i> View All Rabat Dorms
+                </a>
+                <a href="index.html" class="nav-btn nav-btn-secondary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Lightbox -->
+    <div id="imageLightbox" class="image-lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightboxImage" class="lightbox-image" src="" alt="">
+            <div class="lightbox-counter">
+                <span id="lightboxCounter">1 / 1</span>
+            </div>
+        </div>
+        <div class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</div>
+        <div class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">&#10095;</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Image gallery functionality
+        function changeMainImage(imageSrc) {
+            document.getElementById('mainImage').src = imageSrc;
+        }
+
+        // Contact functions
+        function contactLandlord() {
+            alert('Calling Fatima Benali at +212 6 23 45 67 89');
+        }
+
+        function sendMessage() {
+            alert('Opening message form for Fatima Benali');
+        }
+
+        // Image Lightbox functionality
+        let currentLightboxImages = [
+            'cover 2.png',
+            'cover.png',
+            'cover 3.png',
+            'dormart.png',
+            'lbiit.png'
+        ];
+        let currentLightboxIndex = 0;
+
+        function openLightbox(imageSrc) {
+            currentLightboxIndex = currentLightboxImages.indexOf(imageSrc);
+            if (currentLightboxIndex === -1) currentLightboxIndex = 0;
+
+            const lightbox = document.getElementById('imageLightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxCounter = document.getElementById('lightboxCounter');
+
+            lightboxImage.src = currentLightboxImages[currentLightboxIndex];
+            lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
+            lightbox.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            // Show/hide navigation arrows
+            const prevBtn = document.querySelector('.lightbox-prev');
+            const nextBtn = document.querySelector('.lightbox-next');
+            
+            if (currentLightboxImages.length > 1) {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('imageLightbox');
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLightboxImage(direction) {
+            if (currentLightboxImages.length <= 1) return;
+
+            currentLightboxIndex += direction;
+            
+            if (currentLightboxIndex >= currentLightboxImages.length) {
+                currentLightboxIndex = 0;
+            } else if (currentLightboxIndex < 0) {
+                currentLightboxIndex = currentLightboxImages.length - 1;
+            }
+
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxCounter = document.getElementById('lightboxCounter');
+            
+            lightboxImage.src = currentLightboxImages[currentLightboxIndex];
+            lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
+        }
+
+        // Close lightbox when clicking outside the image
+        document.getElementById('imageLightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('imageLightbox');
+            if (lightbox.style.display === 'block') {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    changeLightboxImage(-1);
+                } else if (e.key === 'ArrowRight') {
+                    changeLightboxImage(1);
+                }
+            }
+        });
+
+        // Initialize map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Rabat, Morocco coordinates (approximate)
+            const map = L.map('map').setView([34.0209, -6.8416], 15);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add marker for the dorm location
+            L.marker([34.0209, -6.8416]).addTo(map)
+                .bindPopup('Rabat Student Residence<br>Close to École Mohammadia d\'Ingénieurs')
+                .openPopup();
+        });
+    </script>
+</body>
+</html>

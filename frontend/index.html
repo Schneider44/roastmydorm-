@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoastMyDorm- Find, Rate & Rent Your Student Home</title>
+    <meta name="description" content="Find, Rate & Rent Your Student Home Anywhere in Morocco. Honest reviews from students + rentals near your university.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* University visibility control */
+        .university-text {
+            display: inline;
+        }
+        .university-text.hidden {
+            display: none;
+        }
+        .campus-text {
+            display: none;
+        }
+        .campus-text.show {
+            display: inline;
+        }
+        
+        /* Search button styling */
+        .search-btn {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .search-btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        /* Navigation link styling */
+        .nav-link {
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            margin-right: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+            background: #f3f4f6;
+        }
+
+        /* Style How It Works button like Sign In button */
+        .nav-link {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-btn.active {
+            background: #dc2626;
+        }
+        
+        .hero-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-search {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-btn {
+                margin-left: 0;
+                margin-top: 10px;
+                justify-content: center;
+            }
+        }
+
+        /* Search dropdown styles */
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-result {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-result:hover {
+            background-color: #f9fafb;
+        }
+
+        .search-result:last-child {
+            border-bottom: none;
+        }
+
+        .search-result strong {
+            display: block;
+            color: #1f2937;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .search-result-type {
+            display: inline-block;
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-right: 8px;
+        }
+
+        .search-result-city {
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+
+        .search-no-results {
+            padding: 16px;
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .hero-search {
+            position: relative;
+        }
+
+        /* Dorms Modal Styles */
+        .dorms-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dorms-modal.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .dorms-modal-content {
+            position: relative;
+            background-color: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .dorms-modal.show .dorms-modal-content {
+            transform: scale(1);
+        }
+
+        .dorms-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .dorms-modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .dorms-modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .dorms-modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dorms-grid {
+            padding: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .dorm-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dorm-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.15);
+        }
+
+        .dorm-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .dorm-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .dorm-card:hover .dorm-image img {
+            transform: scale(1.05);
+        }
+
+        .dorm-price {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .dorm-info {
+            padding: 20px;
+        }
+
+        .dorm-info h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .dorm-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .dorm-type {
+            background: #f59e0b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .dorm-distance {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .dorm-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .dorm-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .amenity-tag {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .dorm-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-contact, .btn-view {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-contact {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-contact:hover {
+            background: #b91c1c;
+        }
+
+        .btn-view {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #2563eb;
+        }
+
+        .dorms-modal-footer {
+            padding: 24px 32px;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        @media (max-width: 768px) {
+            .dorms-modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+
+            .dorms-modal-header {
+                padding: 16px 20px;
+            }
+
+            .dorms-modal-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .dorms-grid {
+                padding: 20px;
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .dorm-actions {
+                flex-direction: column;
+            }
+
+            .dorms-modal-footer {
+                padding: 16px 20px;
+            }
+        }
+
+        /* City cards hover effects */
+        .city-card {
+            transition: all 0.3s ease;
+        }
+
+        .city-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .city-preview-card {
+            transition: all 0.3s ease;
+        }
+
+        .city-preview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Sign In Modal Styles */
+        .signin-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .signin-modal.show {
+            opacity: 1;
+        }
+
+        .signin-content {
+            position: relative;
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .signin-modal.show .signin-content {
+            transform: scale(1);
+        }
+
+        .signin-header {
+            position: relative;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+        }
+
+        .signin-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .signin-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .signin-options {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .signin-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .signin-option:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.15);
+        }
+
+        .option-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+        }
+
+        .gmail-option .option-icon {
+            background: #ea4335;
+            color: white;
+        }
+
+        .id-option .option-icon {
+            background: #10b981;
+            color: white;
+        }
+
+        .signin-option h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .signin-option p {
+            margin: 0 0 20px 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .signin-btn {
+            width: 100%;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .gmail-btn {
+            background: #ea4335;
+            color: white;
+        }
+
+        .gmail-btn:hover {
+            background: #d33b2c;
+        }
+
+        .id-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .id-btn:hover {
+            background: #059669;
+        }
+
+        /* Gmail Form Styles */
+        .email-form {
+            margin-top: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .send-verification-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .send-verification-btn:hover {
+            background: #2563eb;
+        }
+
+        .verification-status {
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .status-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            color: #065f46;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .status-message i {
+            color: #10b981;
+        }
+
+        .resend-btn {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 0 auto;
+        }
+
+        .resend-btn:hover {
+            background: #d97706;
+        }
+
+        .verification-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .demo-btn:hover {
+            background: #059669;
+        }
+
+        .verification-pending {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+
+        .verification-pending i {
+            color: #f59e0b;
+        }
+
+        .verification-success {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .verification-success i {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .signin-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .signin-header {
+                padding: 24px 20px;
+            }
+
+            .signin-options {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-social">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="nav-logo">
+                <span>RoastMyDorm</span>
+            </div>
+            <div class="nav-menu">
+                <a href="../how-it-works.html" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    How It Works
+                </a>
+                <button class="nav-btn" onclick="showSignInModal()">Sign In</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Find , Rate & Rent  <span class="highlight">Your student Home</span> in Morocco
+                    <div class="hero-search">
+                        <i class="fas fa-search"></i>
+                        <input id="schoolSearchInput" type="text" placeholder="Search universities and schools">
+                        <button id="searchUniversitiesBtn" class="search-btn" onclick="toggleUniversitySearch()">
+                            <i class="fas fa-graduation-cap"></i> Search Universities
+                        </button>
+                        <div id="schoolSearchDropdown" class="search-dropdown"></div>
+                    </div>
+                </h1>
+                <p class="hero-subtitle">
+                    Honest Reviews From Students + Rentals near Your <span class="university-text hidden">University</span><span class="campus-text">Campus</span>
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary">For Students</button>
+                    <button class="btn-primary">Start Rating</button>
+                    <button class="btn-secondary">Browse Housing</button>
+                    <a href="find-roommate-profile.html" class="btn-primary" style="text-decoration: none; display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">👥 Find Your Roommate</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">30+</span>
+                        <span class="stat-label">Dormitories</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Reviews</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">3+</span>
+                        <span class="stat-label">Cities</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Your custom background image will be set in CSS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- For Students Section -->
+    <section class="for-students-section">
+        <div class="container">
+            <div class="for-students-content">
+                <div class="for-students-text">
+                    <h2 class="section-title">For Students</h2>
+                    <p class="section-subtitle">Find your perfect student home in Morocco's top cities</p>
+                    <div class="student-features">
+                        <div class="feature-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <h4>City Selection</h4>
+                                <p>Choose from Casablanca, Rabat, and Marrakech</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-home"></i>
+                            <div>
+                                <h4>Dorm Listings</h4>
+                                <p>Browse available dorms with photos and details</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-credit-card"></i>
+                            <div>
+                                <h4>Payment Options</h4>
+                                <p>Face-to-Face payment arrangements</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-user-tie"></i>
+                            <div>
+                                <h4>Direct Contact</h4>
+                                <p>Connect directly with landlords</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="for-students-visual">
+                    <div class="cities-preview">
+                        <a href="casablanca-dorms.html" class="city-preview-card casablanca" style="cursor: pointer; text-decoration: none; color: inherit;">
+                            <div class="city-preview-image">
+                                <img src="Casablanca 🇲🇦.png" alt="Casablanca">
+                            </div>
+                            <div class="city-preview-info">
+                                <h4>Casablanca</h4>
+                                <p>12 verified dorms available - Near HEC, FST, ENCG
+                                    💰 Avg Rent: 2,200–4,000 MAD
+                                    ⭐ Rating: 4.4 / 5</p>
+                                </p>
+                            </div>
+                        </a>
+                        <a href="rabat-dorms.html" class="city-preview-card rabat" style="cursor: pointer; text-decoration: none; color: inherit;">
+                            <div class="city-preview-image">
+                                <img src="Rabat.png" alt="Rabat">
+                            </div>
+                            <div class="city-preview-info">
+                                <h4>Rabat</h4>
+                                <p>12 verified dorms available  - Near UM5, ENA, ENSIAS
+                                   💰 Avg Rent: 2,200–4,500 MAD
+                                   ⭐ Rating: 4.4 / 5</p>
+                            </div>
+                        </a>
+                        <a href="marrakech-dorms.html" class="city-preview-card marrakech" style="cursor: pointer; text-decoration: none; color: inherit;">
+                            <div class="city-preview-image">
+                                <img src="marrakeech.png" alt="Marrakech">
+                            </div>
+                            <div class="city-preview-info">
+                                <h4>Marrakech</h4>
+                                <p>14 verified dorms available - Near Cadi Ayyad, FSTG , ENCG , ISPTS
+                                    💰 Avg Rent: 2,000–4,000 MAD
+                                    ⭐ Rating: 4.4 / 5 </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Cities Section -->
+    <section class="top-cities">
+        <div class="container">
+            <h2 class="section-title">POPULAR Cities</h2>
+            <div class="city-cards">
+                <a href="Casablanca Dorms.html" class="city-card" style="cursor: pointer; text-decoration: none; color: inherit;">
+                    <div class="city-image">
+                        <img src="casa art.png" alt="Casablanca">
+                    </div>
+                    <h3>Casablanca</h3>
+                    <p>Explore Housing in</p>
+                </a>
+                <a href="Rabat Dorms.html" class="city-card" style="cursor: pointer; text-decoration: none; color: inherit;">
+                    <div class="city-image">
+                        <img src="rabat art.png" alt="Rabat">
+                    </div>
+                    <h3>Rabat</h3>
+                    <p>Explore Housing in</p>
+                </a>
+                <a href="Marrakech Dorms.html" class="city-card" style="cursor: pointer; text-decoration: none; color: inherit;">
+                    <div class="city-image">
+                        <img src="Marrakech, known as the Red City, is famous for….png" alt="Marrakech">
+                    </div>
+                    <h3>Marrakech</h3>
+                    <p>Explore Housing in</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Student Reviews Section -->
+    <section class="student-reviews">
+        <div class="container">
+            <h2 class="section-title">Student Reviews</h2>
+            <div class="review-cards">
+                <div class="review-card">
+                    <div class="review-avatar male"></div>
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">Great dorm near <span class="university-text hidden">Rabat University</span><span class="campus-text">campus</span> but no sy at night.</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-avatar female"></div>
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">Affordable apartment in Casablanca but far from campus.</p>
+                </div>
+                <div class="review-card">
+                    <div class="review-avatar male"></div>
+                    <div class="review-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="review-text">Cozy studio in Marrakech, perfect for one.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="process-cards">
+                <div class="process-card">
+                    <div class="card-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Search</h3>
+                    <p>for dorms or apartments near your university.</p>
+                </div>
+                <div class="process-card">
+                    <div class="card-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>Read Reviews</h3>
+                    <p>from real students</p>
+                </div>
+                <div class="process-card">
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Rent Easily</h3>
+                    <p>with verified landlords</p>
+                </div>
+            </div>
+            
+            <div class="housing-types">
+                <div class="housing-type">
+                    <div class="type-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <span>Dorms</span>
+                </div>
+                <div class="housing-type">
+                    <div class="type-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span>Shared Apartments</span>
+                </div>
+                <div class="housing-type">
+                    <div class="type-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span>Studios</span>
+                </div>
+                <div class="housing-type">
+                    <div class="type-icon">
+                        <i class="fas fa-house"></i>
+                    </div>
+                    <span>Flats</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Footer -->
+    <section class="cta-footer">
+        <div class="container">
+            <h2 class="cta-heading">Find, Rate & Rent Your Student Home</h2>
+            <p class="cta-subtext">Join thousands of students discovering honest reviews and verified housing near their universities.</p>
+            <div class="cta-buttons">
+                <button class="cta-btn primary">Start Rating Now</button>
+                <a href="dorms.html" class="cta-btn secondary" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border:none;cursor:pointer;">Browse Available Housing</a>
+            </div>
+            <div class="cta-badges">
+                <span><i class="fas fa-shield-alt"></i> Verified Students</span>
+                <span><i class="fas fa-star"></i> Honest Reviews</span>
+                <span><i class="fas fa-home"></i> Trusted Listings</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sign In Modal -->
+    <div id="signInModal" class="signin-modal">
+        <div class="signin-content">
+            <div class="signin-header">
+                <h2>Sign In to RoastMyDorm</h2>
+                <p>Choose your verification method to start rating and renting</p>
+                <button class="close-modal" onclick="closeSignInModal()">&times;</button>
+            </div>
+            
+            <div class="signin-options">
+                <!-- Gmail Sign In Option -->
+                <div class="signin-option gmail-option" id="gmailOption">
+                    <div class="option-icon">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <h3>Sign in with Gmail</h3>
+                    <p>We'll send a verification link to your email</p>
+                    
+                    <!-- Email Input Form (Initially Hidden) -->
+                    <div class="email-form" id="gmailEmailForm" style="display: none;">
+                        <div class="form-group">
+                            <input type="email" id="gmailEmailInput" placeholder="Enter your Gmail address" required>
+                            <button class="send-verification-btn" onclick="sendVerificationEmail()">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Verification
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification Status -->
+                    <div class="verification-status" id="verificationStatus" style="display: none;">
+                        <div class="status-message">
+                            <i class="fas fa-envelope"></i>
+                            <span>Verification email sent! Check your inbox.</span>
+                        </div>
+                        <div class="verification-actions">
+                            <button class="resend-btn" onclick="resendVerification()">
+                                <i class="fas fa-redo"></i>
+                                Resend Email
+                            </button>
+                            <button class="demo-btn" onclick="demoEmailVerification()">
+                                <i class="fas fa-check"></i>
+                                Demo: Verify Email
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Initial Button -->
+                    <button class="signin-btn gmail-btn" id="gmailSignIn" onclick="showGmailForm()">
+                        <i class="fab fa-google"></i>
+                        Continue with Gmail
+                    </button>
+                </div>
+                
+                <!-- Student ID Scan Option -->
+                <div class="signin-option id-option">
+                    <div class="option-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>Verify with Student ID</h3>
+                    <p>Scan your student ID for instant verification</p>
+                    <button class="signin-btn id-btn" id="idScanBtn" onclick="signInWithIDScan()">
+                        <i class="fas fa-camera"></i>
+                        Scan Student ID
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Gmail Email Input Step -->
+            <div class="verification-step" id="gmailEmailInput" style="display: none;">
+                <div class="verification-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Enter Your Gmail Address</h3>
+                <p>We'll send a verification link to your Gmail account</p>
+                <div class="email-input-container">
+                    <input type="email" id="gmailEmail" placeholder="Enter your Gmail address" required>
+                    <button class="btn-primary" id="sendVerificationEmail">Send Verification Email</button>
+                </div>
+            </div>
+            
+            <!-- Gmail Verification Step -->
+            <div class="verification-step" id="gmailVerification" style="display: none;">
+                <div class="verification-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Check Your Email</h3>
+                <p>We've sent a verification link to <strong id="userEmail"></strong>. Please check your inbox and click the link to verify your account.</p>
+                <div class="verification-actions">
+                    <button class="btn-secondary" id="resendEmail">Resend Email</button>
+                    <button class="btn-primary" id="checkVerification">I've Verified</button>
+                </div>
+            </div>
+            
+            <!-- ID Scan Step -->
+            <div class="verification-step" id="idScanStep" style="display: none;">
+                <div class="scan-area">
+                    <div class="scan-box" id="scanBox">
+                        <i class="fas fa-camera"></i>
+                        <p>Position your student ID within the frame</p>
+                        <input type="file" id="idFileInput" accept="image/*" capture="environment" style="display: none;">
+                    </div>
+                    <div class="scan-preview" id="scanPreview" style="display: none;">
+                        <img id="previewImage" alt="Student ID Preview">
+                        <div class="scan-actions">
+                            <button class="btn-secondary" id="retakePhoto">Retake</button>
+                            <button class="btn-primary" id="verifyId">Verify ID</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Verification Success -->
+            <div class="verification-success" id="verificationSuccess" style="display: none;">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Verification Successful!</h3>
+                <p>Welcome to RoastMyDorm! You can now rate dorms, write reviews, and rent student housing.</p>
+                <div class="success-actions">
+                    <button class="btn-primary" id="startRating">Start Rating Dorms</button>
+                    <button class="btn-secondary" id="browseHousing">Browse Housing</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-toggle" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+            <div class="chat-badge" id="chatBadge">1</div>
+        </button>
+        
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <h3>RoastMyDorm Support</h3>
+                    <p>We're here to help! 👋</p>
+                </div>
+                <button class="chat-close" onclick="toggleChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message -->
+                <div class="chat-message support">
+                    <div class="message-avatar support">S</div>
+                    <div class="message-bubble support">
+                        Hi 👋 How can we help you with finding or renting a dorm?
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-support-options">
+                <div class="support-options-title">Quick Actions:</div>
+                <div class="support-options-grid">
+                    <button class="support-option-btn" onclick="handleQuickAction('email')">
+                        <i class="fas fa-envelope"></i> Email
+                    </button>
+                    <button class="support-option-btn" onclick="handleQuickAction('faq')">
+                        <i class="fas fa-question-circle"></i> FAQ
+                    </button>
+                    <button class="support-option-btn" onclick="handleQuickAction('phone')">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <textarea 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="Type your message..."
+                    rows="1"
+                    onkeypress="handleKeyPress(event)"
+                    oninput="autoResize(this)"
+                ></textarea>
+                <button class="chat-send" onclick="sendMessage()" id="sendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Landlord Chat Modal -->
+    <div id="landlordChatModal" class="landlord-chat-modal">
+        <div class="landlord-chat-container">
+            <div class="landlord-chat-header">
+                <div class="landlord-avatar" id="landlordAvatar">M</div>
+                <div class="landlord-info">
+                    <h3 id="landlordName">Mohamed</h3>
+                    <p id="landlordStatus">Available 9 AM - 6 PM</p>
+                </div>
+                <button class="landlord-chat-close" onclick="closeLandlordChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="landlord-chat-messages" id="landlordChatMessages">
+                <!-- Messages will be loaded here -->
+            </div>
+            
+            <div class="landlord-chat-input-container">
+                <textarea 
+                    class="landlord-chat-input" 
+                    id="landlordChatInput" 
+                    placeholder="Type your message..."
+                    rows="1"
+                    onkeypress="handleLandlordKeyPress(event)"
+                    oninput="autoResizeLandlordInput(this)"
+                ></textarea>
+                <button class="landlord-chat-send" onclick="sendLandlordMessage()" id="landlordSendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Live Chat Widget
+        class LiveChat {
+            constructor() {
+                this.messages = this.loadMessages();
+                this.isOpen = false;
+                this.isTyping = false;
+                this.init();
+            }
+
+            init() {
+                this.renderMessages();
+                this.updateBadge();
+            }
+
+            toggleChat() {
+                this.isOpen = !this.isOpen;
+                const chatWindow = document.getElementById('chatWindow');
+                const chatBadge = document.getElementById('chatBadge');
+                
+                if (this.isOpen) {
+                    chatWindow.style.display = 'flex';
+                    chatBadge.style.display = 'none';
+                    document.getElementById('chatInput').focus();
+                } else {
+                    chatWindow.style.display = 'none';
+                }
+            }
+
+            sendMessage() {
+                const input = document.getElementById('chatInput');
+                const message = input.value.trim();
+                
+                if (!message) return;
+
+                // Add user message
+                this.addMessage(message, 'user');
+                input.value = '';
+                this.autoResize(input);
+
+                // Simulate support response
+                this.simulateSupportResponse(message);
+            }
+
+            addMessage(text, sender, timestamp = null) {
+                const message = {
+                    id: Date.now(),
+                    text: text,
+                    sender: sender,
+                    timestamp: timestamp || new Date()
+                };
+
+                this.messages.push(message);
+                this.saveMessages();
+                this.renderMessages();
+                this.updateBadge();
+            }
+
+            renderMessages() {
+                const messagesContainer = document.getElementById('chatMessages');
+                messagesContainer.innerHTML = '';
+
+                this.messages.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `chat-message ${msg.sender}`;
+                    
+                    const avatar = document.createElement('div');
+                    avatar.className = `message-avatar ${msg.sender}`;
+                    avatar.textContent = msg.sender === 'user' ? 'U' : 'S';
+                    
+                    const bubble = document.createElement('div');
+                    bubble.className = `message-bubble ${msg.sender}`;
+                    bubble.innerHTML = `
+                        ${msg.text}
+                        <div class="message-time">${this.formatTime(msg.timestamp)}</div>
+                    `;
+                    
+                    messageDiv.appendChild(avatar);
+                    messageDiv.appendChild(bubble);
+                    messagesContainer.appendChild(messageDiv);
+                });
+
+                this.scrollToBottom();
+            }
+
+            simulateSupportResponse(userMessage) {
+                this.showTyping();
+                
+                setTimeout(() => {
+                    this.hideTyping();
+                    const response = this.generateResponse(userMessage);
+                    this.addMessage(response, 'support');
+                }, 1500 + Math.random() * 1000);
+            }
+
+            generateResponse(userMessage) {
+                const message = userMessage.toLowerCase();
+                
+                // Check for Arabic greetings
+                if (message.includes('مرحبا') || message.includes('سلام') || message.includes('السلام عليكم')) {
+                    return "مرحبا! أنا هنا لمساعدتك في العثور على السكن الطلابي المثالي. في أي مدينة تبحث؟\n\nHello! I'm here to help you find the perfect student housing. What city are you looking for?";
+                }
+                
+                if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                    return "Hello! I'm here to help you find the perfect student housing. What city are you looking in?\n\nمرحبا! أنا هنا لمساعدتك في العثور على السكن الطلابي المثالي. في أي مدينة تبحث؟";
+                } else if (message.includes('casablanca') || message.includes('casa') || message.includes('الدار البيضاء') || message.includes('كازا')) {
+                    return "Great choice! Casablanca has many excellent student housing options. Would you like to see dorms near campus or other areas?\n\nاختيار رائع! الدار البيضاء لديها العديد من خيارات السكن الطلابي الممتازة. هل ترغب في رؤية السكن بالقرب من الحرم الجامعي أو مناطق أخرى؟";
+                } else if (message.includes('rabat') || message.includes('الرباط')) {
+                    return "Rabat is a wonderful city for students! We have several verified dorms near campus. What's your budget range?\n\nالرباط مدينة رائعة للطلاب! لدينا العديد من السكنات المعتمدة بالقرب من الحرم الجامعي. ما هي ميزانيتك؟";
+                } else if (message.includes('marrakech') || message.includes('مراكش')) {
+                    return "Marrakech offers unique student housing experiences! Are you looking for studio , shared apartements or modern apartments?\n\nمراكش تقدم تجارب سكن طلابي فريدة! هل تبحث عن رياضات تقليدية أو شقق حديثة؟";
+                } else if (message.includes('price') || message.includes('cost') || message.includes('budget') || message.includes('ثمن') || message.includes('سعر') || message.includes('ميزانية')) {
+                    return "Our dorms range from 1,500 MAD to 3,000 MAD per month. What's your budget? I can show you the best options in your price range.\n\nتتراوح أسعار سكناتنا من 1,500 إلى 3,000 درهم شهريا. ما هي ميزانيتك؟ يمكنني أن أريك أفضل الخيارات في نطاق سعرك.";
+                } else if (message.includes('wifi') || message.includes('internet') || message.includes('واي فاي') || message.includes('انترنت')) {
+                    return "All our verified dorms include free high-speed WiFi! Would you like to see dorms with additional amenities like AC or parking?\n\nجميع سكناتنا المعتمدة تشمل واي فاي مجاني عالي السرعة! هل ترغب في رؤية سكنات بمرافق إضافية مثل التكييف أو موقف السيارات؟";
+                } else if (message.includes('help') || message.includes('support') || message.includes('مساعدة') || message.includes('دعم')) {
+                    return "I'm here to help! You can:\n• Browse dorms by city\n• Read student reviews\n• Contact landlords directly\n• Get help with your account\n\nWhat would you like to do?\n\nأنا هنا للمساعدة! يمكنك:\n• تصفح السكنات حسب المدينة\n• قراءة تقييمات الطلاب\n• التواصل مع الملاك مباشرة\n• الحصول على المساعدة في حسابك\n\nماذا تريد أن تفعل؟";
+                } else if (message.includes('review') || message.includes('rating') || message.includes('تقييم') || message.includes('مراجعة')) {
+                    return "You can rate and review dorms after staying there! This helps other students make informed decisions. Would you like to see how the review system works?\n\nيمكنك تقييم ومراجعة السكنات بعد الإقامة فيها! هذا يساعد الطلاب الآخرين على اتخاذ قرارات مستنيرة. هل ترغب في معرفة كيف يعمل نظام التقييم؟";
+                } else if (message.includes('شكرا') || message.includes('شكراً')) {
+                    return "You're welcome! Feel free to ask if you need anything else.\n\nعلى الرحب والسعة! لا تتردد في السؤال إذا كنت بحاجة إلى أي شيء آخر.";
+                } else if (message.includes('How does this platform work exactly?')) {
+                    return "We connect verified students with trusted landlords offering student-friendly rentals. You can browse, verify your student status, chat with landlords, and book safely — all in one place.";
+                } else {
+                    const responses = [
+                        "That's a great question! Let me help you with that. Can you tell me more about what you're looking for?\n\nهذا سؤال رائع! دعني أساعدك في ذلك. هل يمكنك إخباري المزيد عما تبحث عنه؟",
+                        "I understand! Our team can help you find the perfect student housing. What city are you interested in?\n\nأفهم! يمكن لفريقنا مساعدتك في العثور على السكن الطلابي المثالي. في أي مدينة أنت مهتم؟",
+                        "Thanks for reaching out! We have many housing options available. What's your preferred location and budget?\n\nشكراً على التواصل! لدينا العديد من خيارات السكن المتاحة. ما هو الموقع والميزانية المفضلة لديك؟",
+                        "I'm here to help you find the best student housing! What specific information do you need?\n\nأنا هنا لمساعدتك في العثور على أفضل سكن طلابي! ما هي المعلومات المحددة التي تحتاجها؟",
+                        "Great! Let me connect you with the right resources. Are you looking for housing in a specific city?\n\nرائع! دعني أوصلك بالموارد المناسبة. هل تبحث عن سكن في مدينة معينة؟"
+                    ];
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+            }
+
+            showTyping() {
+                this.isTyping = true;
+                const messagesContainer = document.getElementById('chatMessages');
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'chat-message support';
+                typingDiv.id = 'typingIndicator';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar support">S</div>
+                    <div class="message-bubble support">
+                        <div class="chat-typing">
+                            Support is typing
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(typingDiv);
+                this.scrollToBottom();
+            }
+
+            hideTyping() {
+                this.isTyping = false;
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            handleQuickAction(action) {
+                switch(action) {
+                    case 'email':
+                        this.addMessage("I'd like to contact support via email", 'user');
+                        setTimeout(() => {
+                            this.addMessage("Perfect! You can email us at support@roastmydorm.com. We typically respond within 24 hours and can help with account issues, housing questions, and technical problems.", 'support');
+                        }, 1000);
+                        break;
+                    case 'faq':
+                        this.addMessage("I need to see the FAQ", 'user');
+                        setTimeout(() => {
+                            this.addMessage("Here are our most common topics:\n• How to verify my student ID\n• How to rate a dorm\n• How to contact landlords\n• How to find housing near my university\n• How to write reviews\n\nIs there a specific topic you'd like help with?", 'support');
+                        }, 1000);
+                        break;
+                    case 'phone':
+                        this.addMessage("I need to call support", 'user');
+                        setTimeout(() => {
+                            this.addMessage("You can call us at +212 5 22 123 456. We're available Monday-Friday: 9 AM - 6 PM, Saturday: 10 AM - 4 PM. We can help with urgent housing issues, account verification, and payment problems.", 'support');
+                        }, 1000);
+                        break;
+                }
+            }
+
+            formatTime(timestamp) {
+                const now = new Date();
+                const time = new Date(timestamp);
+                const diff = now - time;
+                
+                if (diff < 60000) return 'Just now';
+                if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+                if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+                return time.toLocaleDateString();
+            }
+
+            updateBadge() {
+                const badge = document.getElementById('chatBadge');
+                const unreadCount = this.messages.filter(msg => 
+                    msg.sender === 'support' && 
+                    new Date() - new Date(msg.timestamp) < 300000 // 5 minutes
+                ).length;
+                
+                if (unreadCount > 0 && !this.isOpen) {
+                    badge.textContent = unreadCount;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            scrollToBottom() {
+                const messagesContainer = document.getElementById('chatMessages');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            autoResize(textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+            }
+
+            handleKeyPress(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    this.sendMessage();
+                }
+            }
+
+            loadMessages() {
+                try {
+                    const saved = localStorage.getItem('roastmydorm_chat_messages');
+                    return saved ? JSON.parse(saved) : [];
+                } catch (error) {
+                    console.error('Error loading messages:', error);
+                    return [];
+                }
+            }
+
+            saveMessages() {
+                try {
+                    localStorage.setItem('roastmydorm_chat_messages', JSON.stringify(this.messages));
+                } catch (error) {
+                    console.error('Error saving messages:', error);
+                }
+            }
+
+            // Future Firebase integration methods
+            connectToFirebase() {
+                // TODO: Implement Firebase Realtime Database connection
+                console.log('Firebase integration ready for implementation');
+            }
+
+            connectToWebSocket() {
+                // TODO: Implement WebSocket connection for real-time chat
+                console.log('WebSocket integration ready for implementation');
+            }
+        }
+
+        // Initialize chat when page loads
+        let chatWidget;
+        document.addEventListener('DOMContentLoaded', function() {
+            chatWidget = new LiveChat();
+        });
+
+        // Global functions for HTML onclick events
+        function toggleChat() {
+            chatWidget.toggleChat();
+        }
+
+        function sendMessage() {
+            chatWidget.sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            chatWidget.handleKeyPress(event);
+        }
+
+        function autoResize(textarea) {
+            chatWidget.autoResize(textarea);
+        }
+
+        function handleQuickAction(action) {
+            chatWidget.handleQuickAction(action);
+        }
+
+        // Landlord Chat System
+        class LandlordChat {
+            constructor() {
+                this.currentChatId = null;
+                this.currentLandlord = null;
+                this.currentListing = null;
+                this.messages = [];
+                this.isOpen = false;
+                this.firebaseConfig = {
+                    // Firebase configuration will be added here
+                    apiKey: "your-api-key",
+                    authDomain: "your-project.firebaseapp.com",
+                    databaseURL: "https://your-project.firebaseio.com",
+                    projectId: "your-project",
+                    storageBucket: "your-project.appspot.com",
+                    messagingSenderId: "123456789",
+                    appId: "your-app-id"
+                };
+                this.init();
+            }
+
+            init() {
+                // Initialize Firebase (commented out for now)
+                // this.initializeFirebase();
+            }
+
+            openChat(landlordInfo, listingInfo) {
+                this.currentLandlord = landlordInfo;
+                this.currentListing = listingInfo;
+                this.currentChatId = this.generateChatId();
+                
+                // Update header with landlord info
+                document.getElementById('landlordName').textContent = landlordInfo.name;
+                document.getElementById('landlordStatus').textContent = landlordInfo.availability || 'Available';
+                document.getElementById('landlordAvatar').textContent = landlordInfo.name.charAt(0).toUpperCase();
+                
+                // Show modal
+                document.getElementById('landlordChatModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                this.isOpen = true;
+                
+                // Load chat history
+                this.loadChatHistory();
+                
+                // Focus input
+                document.getElementById('landlordChatInput').focus();
+            }
+
+            closeChat() {
+                document.getElementById('landlordChatModal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+                this.isOpen = false;
+                this.currentChatId = null;
+                this.currentLandlord = null;
+                this.currentListing = null;
+                this.messages = [];
+            }
+
+            generateChatId() {
+                const studentId = this.getCurrentStudentId();
+                const landlordId = this.currentLandlord.id;
+                const listingId = this.currentListing.id;
+                return `${studentId}_${landlordId}_${listingId}`;
+            }
+
+            getCurrentStudentId() {
+                // In a real app, this would come from authentication
+                return 'student_' + Date.now();
+            }
+
+            sendMessage() {
+                const input = document.getElementById('landlordChatInput');
+                const message = input.value.trim();
+                
+                if (!message) return;
+
+                const messageData = {
+                    id: Date.now(),
+                    text: message,
+                    sender: 'student',
+                    senderId: this.getCurrentStudentId(),
+                    timestamp: new Date().toISOString(),
+                    chatId: this.currentChatId,
+                    listingId: this.currentListing.id,
+                    landlordId: this.currentLandlord.id
+                };
+
+                // Add message to UI
+                this.addMessageToUI(messageData);
+                
+                // Save to Firebase (simulated for now)
+                this.saveMessageToFirebase(messageData);
+                
+                // Clear input
+                input.value = '';
+                this.autoResize(input);
+
+                // Simulate landlord response
+                this.simulateLandlordResponse();
+            }
+
+            addMessageToUI(message) {
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `landlord-message ${message.sender}`;
+                
+                const avatar = document.createElement('div');
+                avatar.className = `landlord-message-avatar ${message.sender}`;
+                avatar.textContent = message.sender === 'student' ? 'S' : this.currentLandlord.name.charAt(0).toUpperCase();
+                
+                const bubble = document.createElement('div');
+                bubble.className = `landlord-message-bubble ${message.sender}`;
+                bubble.innerHTML = `
+                    ${message.text}
+                    <div class="landlord-message-time">${this.formatTime(message.timestamp)}</div>
+                `;
+                
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(bubble);
+                messagesContainer.appendChild(messageDiv);
+                
+                this.scrollToBottom();
+            }
+
+            simulateLandlordResponse() {
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    const response = this.generateLandlordResponse();
+                    const responseData = {
+                        id: Date.now(),
+                        text: response,
+                        sender: 'landlord',
+                        senderId: this.currentLandlord.id,
+                        timestamp: new Date().toISOString(),
+                        chatId: this.currentChatId,
+                        listingId: this.currentListing.id,
+                        landlordId: this.currentLandlord.id
+                    };
+                    
+                    this.addMessageToUI(responseData);
+                    this.saveMessageToFirebase(responseData);
+                }, 1500 + Math.random() * 2000);
+            }
+
+            generateLandlordResponse() {
+                const responses = [
+                    "Hello! Thanks for your interest in my property. How can I help you?",
+                    "Hi there! I'm available to answer any questions about the apartment.",
+                    "Hello! Are you interested in scheduling a viewing?",
+                    "Hi! The apartment is still available. Would you like to know more details?",
+                    "Hello! I can provide more photos or arrange a virtual tour if you'd like.",
+                    "Hi there! The rent includes all utilities and WiFi. Any other questions?",
+                    "Hello! I'm flexible with move-in dates. What works best for you?",
+                    "Hi! The apartment is fully furnished and ready to move in. Interested?"
+
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+
+            showTypingIndicator() {
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'landlord-message landlord';
+                typingDiv.id = 'landlordTypingIndicator';
+                typingDiv.innerHTML = `
+                    <div class="landlord-message-avatar landlord">${this.currentLandlord.name.charAt(0).toUpperCase()}</div>
+                    <div class="landlord-message-bubble landlord">
+                        <div class="landlord-typing-indicator">
+                            ${this.currentLandlord.name} is typing
+                            <div class="landlord-typing-dots">
+                                <div class="landlord-typing-dot"></div>
+                                <div class="landlord-typing-dot"></div>
+                                <div class="landlord-typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(typingDiv);
+                this.scrollToBottom();
+            }
+
+            hideTypingIndicator() {
+                const typingIndicator = document.getElementById('landlordTypingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            loadChatHistory() {
+                // In a real app, this would load from Firebase
+                // For now, we'll show a welcome message
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                messagesContainer.innerHTML = '';
+                
+                const welcomeMessage = {
+                    id: Date.now(),
+                    text: `Hello! I'm ${this.currentLandlord.name}, the landlord for this property. How can I help you today?`,
+                    sender: 'landlord',
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.addMessageToUI(welcomeMessage);
+            }
+
+            saveMessageToFirebase(messageData) {
+                // Firebase implementation would go here
+                console.log('Saving message to Firebase:', messageData);
+                
+                // For now, save to localStorage as backup
+                try {
+                    const existingMessages = JSON.parse(localStorage.getItem(`landlord_chat_${this.currentChatId}`) || '[]');
+                    existingMessages.push(messageData);
+                    localStorage.setItem(`landlord_chat_${this.currentChatId}`, JSON.stringify(existingMessages));
+                } catch (error) {
+                    console.error('Error saving message:', error);
+                }
+            }
+
+            formatTime(timestamp) {
+                const now = new Date();
+                const time = new Date(timestamp);
+                const diff = now - time;
+                
+                if (diff < 60000) return 'Just now';
+                if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+                if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+                return time.toLocaleDateString();
+            }
+
+            scrollToBottom() {
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            autoResize(textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+            }
+
+            handleKeyPress(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    this.sendMessage();
+                }
+            }
+
+            // Firebase integration methods (ready for implementation)
+            initializeFirebase() {
+                // TODO: Initialize Firebase
+                console.log('Firebase integration ready for implementation');
+            }
+
+            connectToFirebase() {
+                // TODO: Connect to Firebase Realtime Database
+                console.log('Firebase connection ready for implementation');
+            }
+        }
+
+        // Initialize landlord chat
+        let landlordChat;
+        document.addEventListener('DOMContentLoaded', function() {
+            landlordChat = new LandlordChat();
+        });
+
+        // Global functions for HTML onclick events
+        function openLandlordChat(landlordInfo, listingInfo) {
+            landlordChat.openChat(landlordInfo, listingInfo);
+        }
+
+        function closeLandlordChat() {
+            landlordChat.closeChat();
+        }
+
+        function sendLandlordMessage() {
+            landlordChat.sendMessage();
+        }
+
+        function handleLandlordKeyPress(event) {
+            landlordChat.handleKeyPress(event);
+        }
+
+        function autoResizeLandlordInput(textarea) {
+            landlordChat.autoResize(textarea);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) { 
+            const modal = document.getElementById('landlordChatModal');
+            if (event.target === modal) {
+                closeLandlordChat();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && landlordChat.isOpen) {
+                closeLandlordChat();
+            }
+        });
+
+        // Universities and Schools Database
+        const universitiesAndSchools = {
+            casablanca: [
+                { name: "Hassan II University", type: "University", city: "Casablanca" },
+                { name: "Mohammed VI University of Health Sciences", type: "University", city: "Casablanca" },
+                { name: "International University of Casablanca", type: "University", city: "Casablanca" },
+                { name: "École Nationale Supérieure d'Informatique et d'Analyse des Systèmes", type: "Engineering School", city: "Casablanca" },
+                { name: "École Supérieure de Commerce de Casablanca", type: "Business School", city: "Casablanca" },
+                { name : "Internationale Averroès University" , type: "University" , city: "Casablanca"},
+                { name : "Ecole Supérieure Internationale de Gestion" , type:"Business School" , city:"Casablanca"},
+                { name : "ENSEM" , type :"Engineering School" , city:"Casablanca"}
+            ],
+            rabat: [
+                { name: "Mohammed V University", type: "University", city: "Rabat" },
+                { name: "International University of Rabat", type: "University", city: "Rabat" },
+                { name: "École Mohammadia d'Ingénieurs", type: "Engineering School", city: "Rabat" },
+                { name: "Institut National des Postes et Télécommunications", type: "Technology School", city: "Rabat" }
+            ],
+            marrakech: [
+                { name: "Cadi Ayyad University", type: "University", city: "Marrakech" },
+                { name: "École Supérieure de Technologie de Marrakech", type: "Technology School", city: "Marrakech" },
+                { name: "Faculté de Médecine et de Pharmacie de Marrakech", type: "Medical School", city: "Marrakech" },
+                { name: "HEEC MARRAKECH SCHOOL - Graduate School of Business", type: "Business School", city: "Marrakech" }
+            ]
+        };
+
+        // Dorms Database with University Associations
+        const nearbyDorms = {
+            "Hassan II University": [
+                {
+                    id: "dorm_1",
+                    name: "Modern Studio in Casablanca",
+                    price: "2,500 MAD/month",
+                    distance: "5 min walk",
+                    type: "Studio",
+                    amenities: ["WiFi", "AC", "Kitchen", "Security"],
+                    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                    description: "Modern studio apartment perfect for students at Hassan II University.",
+                    location: "Near Hassan II University, Casablanca",
+                    contact: "+212 6 12 34 56 78"
+                },
+                {
+                    id: "dorm_2",
+                    name: "Cozy Shared Apartment",
+                    price: "1,800 MAD/month",
+                    distance: "8 min walk",
+                    type: "Shared",
+                    amenities: ["WiFi", "Kitchen", "Laundry", "Parking"],
+                    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                    description: "Shared apartment with friendly atmosphere near campus.",
+                    location: "Near Hassan II University, Casablanca",
+                    contact: "+212 6 87 65 43 21"
+                },
+                {
+                id: "dorm_3",
+                name: "Shared Flat | 2 Bedrooms | Ain Sebaa",
+                price: "3.000 Mad/Month",
+                distance: " 5 min Walk",
+                type:"Apartement",
+                amenties:"Landry machine , Security , Kitchen",
+                image:"Ain sabaa.png",
+                description:" Shared Apartement",
+                Location:"Near Hassan II University , Casablanca ",
+                contact:"+212 00 000 000"
+                }
+            ],
+            "Mohammed V University": [
+                {
+                    id: "dorm_3",
+                    name: "Cozy Studio in Rabat",
+                    price: "2,200 MAD/month",
+                    distance: "3 min walk",
+                    type: "Studio",
+                    amenities: ["WiFi", "AC", "Kitchen", "Security"],
+                    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                    description: "Perfect location for Mohammed V University students.",
+                    location: "Near Mohammed V University, Rabat",
+                    contact: "+212 6 11 22 33 44"
+                },
+                {
+                    id: "dorm_4",
+                    name: "Modern Apartment - 2 Bedrooms",
+                    price: "3,000 MAD/month",
+                    distance: "7 min walk",
+                    type: "Shared",
+                    amenities: ["WiFi", "AC", "Kitchen", "Balcony"],
+                    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
+                    description: "Spacious apartment ideal for sharing with friends.",
+                    location: "Near Mohammed V University, Rabat",
+                    contact: "+212 6 55 66 77 88"
+                }
+            ],
+            "Cadi Ayyad University": [
+                {
+                    id: "dorm_5",
+                    name: "Modern Studio in Semlalia",
+                    price: "2,200 MAD/month",
+                    distance: "5 min walk",
+                    type: "Studio",
+                    amenities: ["WiFi", "AC", "Kitchen", "Security"],
+                    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                    description: "Modern studio perfect for Cadi Ayyad University students.",
+                    location: "Near Cadi Ayyad University, Marrakech",
+                    contact: "+212 6 99 88 77 66",
+                    link: "modern-studio-cadi-ayyad.html"
+                },
+                {
+                    id: "dorm_6",
+                    name: "Traditional Riad Student Room",
+                    price: "1,900 MAD/month",
+                    distance: "10 min walk",
+                    type: "Single",
+                    amenities: ["WiFi", "Shared Kitchen", "Garden", "Traditional"],
+                    image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
+                    description: "Experience traditional Moroccan living near campus.",
+                    location: "Near Cadi Ayyad University, Marrakech",
+                    contact: "+212 6 44 33 22 11",
+                    link: "cozy-room-medina-marrakech.html"
+                },
+                {
+                    id: "dorm_7",
+                    name: "Luxury Studio in Marrakech",
+                    price: "3,000 MAD/month",
+                    distance: "6 min walk",
+                    type: "Studio",
+                    amenities: ["WiFi", "AC", "Kitchen", "Gym", "Pool"],
+                    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                    description: "Premium accommodation for Cadi Ayyad University students.",
+                    location: "Near Cadi Ayyad University, Marrakech",
+                    contact: "+212 6 77 88 99 00",
+                    link: "luxury-studio-gueliz.html"
+                },
+            ],
+            "HEEC MARRAKECH SCHOOL - Graduate School of Business": [
+                {
+                    id: "dorm_8",
+                    name: "Single Appartement in Al Ouhda 5",
+                    price: "3000 Mad/Month",
+                    distance: "2 Min Walk",
+                    type: "Single",
+                    amenities: ["Kitchen","Landry machine","Calm"],
+                    image:"Al Ouhda 5.png",
+                    description:"Single Apartement in Al Ouhda 5",
+                    location:"Near HEEC MARRAKECH SCHOOL - Graduate School of Business",
+                    contact:"+212 6 77 88 99 00",
+                    link: "al ouhda 5.html"
+                }
+            ],
+            "International University of Rabat": [
+                {
+                    id: "dorm_9",
+                    name: "Luxury Studio in Rabat",
+                    price: "2,800 MAD/month",
+                    distance: "6 min walk",
+                    type: "Studio",
+                    amenities: ["WiFi", "AC", "Kitchen", "Gym", "Pool"],
+                    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                    description: "Premium accommodation for International University students.",
+                    location: "Near International University of Rabat",
+                    contact: "+212 6 77 88 99 00"
+                }
+            ],
+            "International University of Casablanca": [
+                {
+                    id: "dorm_10",
+                    name: "Executive Studio Casa",
+                    price: "2,600 MAD/month",
+                    distance: "4 min walk",
+                    type: "Studio",
+                    amenities: ["WiFi", "AC", "Kitchen", "Business Center"],
+                    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                    description: "Professional environment for International University students.",
+                    location: "Near International University of Casablanca",
+                    contact: "+212 6 33 44 55 66"
+                }
+            ]
+        };
+
+        // University visibility control
+        let universitiesVisible = false;
+
+        function toggleUniversitySearch() {
+            universitiesVisible = !universitiesVisible;
+            const searchBtn = document.getElementById('searchUniversitiesBtn');
+            const universityTexts = document.querySelectorAll('.university-text');
+            const campusTexts = document.querySelectorAll('.campus-text');
+            
+            if (universitiesVisible) {
+                // Show university names
+                universityTexts.forEach(text => text.classList.remove('hidden'));
+                campusTexts.forEach(text => text.classList.remove('show'));
+                searchBtn.classList.add('active');
+                searchBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Universities';
+                searchBtn.style.background = '#dc2626';
+            } else {
+                // Hide university names
+                universityTexts.forEach(text => text.classList.add('hidden'));
+                campusTexts.forEach(text => text.classList.add('show'));
+                searchBtn.classList.remove('active');
+                searchBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> Search Universities';
+                searchBtn.style.background = '#f59e0b';
+            }
+        }
+
+        // Initialize university visibility on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide universities by default
+            const universityTexts = document.querySelectorAll('.university-text');
+            const campusTexts = document.querySelectorAll('.campus-text');
+            
+            universityTexts.forEach(text => text.classList.add('hidden'));
+            campusTexts.forEach(text => text.classList.add('show'));
+
+            // Initialize university search functionality
+            initUniversitySearch();
+        });
+
+        // University search functionality
+        function initUniversitySearch() {
+            const input = document.getElementById('schoolSearchInput');
+            const dropdown = document.getElementById('schoolSearchDropdown');
+            
+            if (!input || !dropdown) return;
+
+            // Flatten all universities and schools into one array
+            const allInstitutions = [];
+            Object.values(universitiesAndSchools).forEach(cityInstitutions => {
+                allInstitutions.push(...cityInstitutions);
+            });
+
+            input.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query.length < 2) {
+                    dropdown.innerHTML = '';
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                const matches = allInstitutions.filter(institution => 
+                    institution.name.toLowerCase().includes(query) ||
+                    institution.type.toLowerCase().includes(query) ||
+                    institution.city.toLowerCase().includes(query)
+                );
+
+                if (matches.length === 0) {
+                    dropdown.innerHTML = '<div class="search-no-results">No universities or schools found</div>';
+                } else {
+                    dropdown.innerHTML = matches.map(institution => 
+                        `<div class="search-result" onclick="selectUniversity('${institution.name}')">
+                            <strong>${institution.name}</strong>
+                            <span class="search-result-type">${institution.type}</span>
+                            <span class="search-result-city">${institution.city}</span>
+                        </div>`
+                    ).join('');
+                }
+
+                dropdown.style.display = matches.length > 0 || query.length >= 2 ? 'block' : 'none';
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!input.contains(event.target) && !dropdown.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+
+        function selectUniversity(universityName) {
+            const input = document.getElementById('schoolSearchInput');
+            const dropdown = document.getElementById('schoolSearchDropdown');
+            
+            input.value = universityName;
+            dropdown.style.display = 'none';
+            
+            // Show nearby dorms for the selected university
+            showNearbyDorms(universityName);
+        }
+
+        function showNearbyDorms(universityName) {
+            const dorms = nearbyDorms[universityName];
+            
+            if (!dorms || dorms.length === 0) {
+                alert(`No dorms found near ${universityName}. Please check back later!`);
+                return;
+            }
+
+            // Create modal HTML
+            const modalHTML = `
+                <div id="dormsModal" class="dorms-modal" onclick="closeDormsModal(event)">
+                    <div class="dorms-modal-content" onclick="event.stopPropagation()">
+                        <div class="dorms-modal-header">
+                            <h2>Available Dorms near ${universityName}</h2>
+                            <button class="dorms-modal-close" onclick="closeDormsModal()">&times;</button>
+                        </div>
+                        <div class="dorms-grid">
+                            ${dorms.map(dorm => {
+                                // Escape quotes for JavaScript
+                                const safeUniName = universityName.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                                const safeDormId = dorm.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                                return `
+                                <div class="dorm-card" onclick="viewDormDetails('${safeDormId}', '${safeUniName}')">
+                                    <div class="dorm-image">
+                                        <img src="${dorm.image}" alt="${dorm.name}" loading="lazy">
+                                        <div class="dorm-price">${dorm.price}</div>
+                                    </div>
+                                    <div class="dorm-info">
+                                        <h3>${dorm.name}</h3>
+                                        <div class="dorm-meta">
+                                            <span class="dorm-type">${dorm.type}</span>
+                                            <span class="dorm-distance">${dorm.distance}</span>
+                                        </div>
+                                        <p class="dorm-description">${dorm.description}</p>
+                                        <div class="dorm-amenities">
+                                            ${dorm.amenities.map(amenity => `<span class="amenity-tag">${amenity}</span>`).join('')}
+                                        </div>
+                                        <div class="dorm-actions">
+                                            <button class="btn-contact" onclick="event.stopPropagation(); contactDorm('${dorm.contact}')">
+                                                <i class="fas fa-phone"></i> Contact
+                                            </button>
+                                            <button class="btn-view" onclick="event.stopPropagation(); viewDormDetails('${safeDormId}', '${safeUniName}')">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            }).join('')}
+                        </div>
+                        <div class="dorms-modal-footer">
+                            <button class="btn-secondary" onclick="closeDormsModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal with animation
+            setTimeout(() => {
+                document.getElementById('dormsModal').classList.add('show');
+            }, 10);
+        }
+
+        function closeDormsModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            const modal = document.getElementById('dormsModal');
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        }
+
+        function contactDorm(phoneNumber) {
+            startChatWithLandlord(phoneNumber, "Landlord", "Dorm Listing");
+        }
+
+        function viewDormDetails(dormId, universityName) {
+            // Find the dorm in the nearbyDorms database
+            let foundDorm = null;
+            let universityCity = '';
+            
+            // If university name is provided, use it directly
+            if (universityName) {
+                const dorms = nearbyDorms[universityName];
+                if (dorms) {
+                    foundDorm = dorms.find(d => d.id === dormId);
+                    // Find the city for this university
+                    for (const [city, institutions] of Object.entries(universitiesAndSchools)) {
+                        const institution = institutions.find(inst => inst.name === universityName);
+                        if (institution) {
+                            universityCity = institution.city;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // Fallback: Search through all universities to find the dorm
+                for (const [uniName, dorms] of Object.entries(nearbyDorms)) {
+                    const dorm = dorms.find(d => d.id === dormId);
+                    if (dorm) {
+                        foundDorm = dorm;
+                        universityName = uniName;
+                        // Find the city for this university
+                        for (const [city, institutions] of Object.entries(universitiesAndSchools)) {
+                            const institution = institutions.find(inst => inst.name === uniName);
+                            if (institution) {
+                                universityCity = institution.city;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            // Determine which page to navigate to based on the city
+            let dormPage = '';
+            
+            if (foundDorm && foundDorm.link) {
+                // If the dorm has a specific link, use it
+                dormPage = foundDorm.link;
+            } else if (universityCity) {
+                // Redirect to the appropriate city dorms page
+                switch(universityCity.toLowerCase()) {
+                    case 'casablanca':
+                        dormPage = 'Casablanca Dorms.html';
+                        break;
+                    case 'rabat':
+                        dormPage = 'Rabat Dorms.html';
+                        break;
+                    case 'marrakech':
+                        dormPage = 'Marrakech Dorms.html';
+                        break;
+                    default:
+                        // Default to Casablanca if city not found
+                        dormPage = 'Casablanca Dorms.html';
+                }
+            } else {
+                // Fallback to Casablanca Dorms page
+                dormPage = 'Casablanca Dorms.html';
+            }
+            
+            // Navigate to the specific dorm page
+            window.location.href = dormPage;
+        }
+
+        // City-specific dorm filtering
+        function showCityDorms(cityName) {
+            // Get all dorms for the selected city
+            const cityDorms = [];
+            
+            Object.values(nearbyDorms).forEach(dormList => {
+                dormList.forEach(dorm => {
+                    if (dorm.location.toLowerCase().includes(cityName.toLowerCase())) {
+                        cityDorms.push(dorm);
+                    }
+                });
+            });
+
+            if (cityDorms.length === 0) {
+                alert(`No dorms found in ${cityName}. Please check back later!`);
+                return;
+            }
+
+            // Create modal HTML for city dorms
+            const modalHTML = `
+                <div id="dormsModal" class="dorms-modal" onclick="closeDormsModal(event)">
+                    <div class="dorms-modal-content" onclick="event.stopPropagation()">
+                        <div class="dorms-modal-header">
+                            <h2>Available Dorms in ${cityName}</h2>
+                            <button class="dorms-modal-close" onclick="closeDormsModal()">&times;</button>
+                        </div>
+                        <div class="dorms-grid">
+                            ${cityDorms.map(dorm => `
+                                <div class="dorm-card" onclick="viewDormDetails('${dorm.id}')">
+                                    <div class="dorm-image">
+                                        <img src="${dorm.image}" alt="${dorm.name}" loading="lazy">
+                                        <div class="dorm-price">${dorm.price}</div>
+                                    </div>
+                                    <div class="dorm-info">
+                                        <h3>${dorm.name}</h3>
+                                        <div class="dorm-meta">
+                                            <span class="dorm-type">${dorm.type}</span>
+                                            <span class="dorm-distance">${dorm.distance}</span>
+                                        </div>
+                                        <p class="dorm-description">${dorm.description}</p>
+                                        <div class="dorm-amenities">
+                                            ${dorm.amenities.map(amenity => `<span class="amenity-tag">${amenity}</span>`).join('')}
+                                        </div>
+                                        <div class="dorm-actions">
+                                            <button class="btn-contact" onclick="event.stopPropagation(); contactDorm('${dorm.contact}')">
+                                                <i class="fas fa-phone"></i> Contact
+                                            </button>
+                                            <button class="btn-view" onclick="event.stopPropagation(); viewDormDetails('${dorm.id}')">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="dorms-modal-footer">
+                            <button class="btn-secondary" onclick="closeDormsModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal with animation
+            setTimeout(() => {
+                document.getElementById('dormsModal').classList.add('show');
+            }, 10);
+        }
+
+        function showAllDorms() {
+            // Get all dorms from all cities
+            const allDorms = [];
+            
+            Object.values(nearbyDorms).forEach(dormList => {
+                allDorms.push(...dormList);
+            });
+
+            if (allDorms.length === 0) {
+                alert('No dorms available at the moment. Please check back later!');
+                return;
+            }
+
+            // Create modal HTML for all dorms
+            const modalHTML = `
+                <div id="dormsModal" class="dorms-modal" onclick="closeDormsModal(event)">
+                    <div class="dorms-modal-content" onclick="event.stopPropagation()">
+                        <div class="dorms-modal-header">
+                            <h2>All Available Dorms</h2>
+                            <button class="dorms-modal-close" onclick="closeDormsModal()">&times;</button>
+                        </div>
+                        <div class="dorms-grid">
+                            ${allDorms.map(dorm => `
+                                <div class="dorm-card" onclick="viewDormDetails('${dorm.id}')">
+                                    <div class="dorm-image">
+                                        <img src="${dorm.image}" alt="${dorm.name}" loading="lazy">
+                                        <div class="dorm-price">${dorm.price}</div>
+                                    </div>
+                                    <div class="dorm-info">
+                                        <h3>${dorm.name}</h3>
+                                        <div class="dorm-meta">
+                                            <span class="dorm-type">${dorm.type}</span>
+                                            <span class="dorm-distance">${dorm.distance}</span>
+                                        </div>
+                                        <p class="dorm-description">${dorm.description}</p>
+                                        <div class="dorm-amenities">
+                                            ${dorm.amenities.map(amenity => `<span class="amenity-tag">${amenity}</span>`).join('')}
+                                        </div>
+                                        <div class="dorm-actions">
+                                            <button class="btn-contact" onclick="event.stopPropagation(); contactDorm('${dorm.contact}')">
+                                                <i class="fas fa-phone"></i> Contact
+                                            </button>
+                                            <button class="btn-view" onclick="event.stopPropagation(); viewDormDetails('${dorm.id}')">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="dorms-modal-footer">
+                            <button class="btn-secondary" onclick="closeDormsModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal with animation
+            setTimeout(() => {
+                document.getElementById('dormsModal').classList.add('show');
+            }, 10);
+        }
+
+        // Sign In Modal Functions
+        function showSignInModal() {
+            const modal = document.getElementById('signInModal');
+            if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                // Add animation
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
+            }
+        }
+
+        function closeSignInModal() {
+            const modal = document.getElementById('signInModal');
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+        }
+
+        // Gmail Sign In Flow
+        let currentEmail = '';
+        let verificationSent = false;
+        let verificationTimer = null;
+
+        function showGmailForm() {
+            const emailForm = document.getElementById('gmailEmailForm');
+            const signInBtn = document.getElementById('gmailSignIn');
+            
+            signInBtn.style.display = 'none';
+            emailForm.style.display = 'block';
+            
+            // Focus on email input
+            setTimeout(() => {
+                document.getElementById('gmailEmailInput').focus();
+            }, 100);
+        }
+
+        function sendVerificationEmail() {
+            const emailInput = document.getElementById('gmailEmailInput');
+            const email = emailInput.value.trim();
+            
+            if (!email) {
+                alert('Please enter your Gmail address');
+                return;
+            }
+            
+            if (!isValidGmail(email)) {
+                alert('Please enter a valid Gmail address');
+                return;
+            }
+            
+            currentEmail = email;
+            
+            // Hide email form and show verification status
+            document.getElementById('gmailEmailForm').style.display = 'none';
+            document.getElementById('verificationStatus').style.display = 'block';
+            
+            // Simulate sending verification email
+            setTimeout(() => {
+                showVerificationSent();
+                startVerificationTimer();
+            }, 1000);
+        }
+
+        function isValidGmail(email) {
+            const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+            return gmailRegex.test(email);
+        }
+
+        function showVerificationSent() {
+            const statusMessage = document.querySelector('.status-message span');
+            const statusIcon = document.querySelector('.status-message i');
+            
+            statusMessage.textContent = `Verification email sent to ${currentEmail}! Check your inbox.`;
+            statusIcon.className = 'fas fa-envelope';
+            
+            verificationSent = true;
+        }
+
+        function startVerificationTimer() {
+            let timeLeft = 300; // 5 minutes
+            
+            verificationTimer = setInterval(() => {
+                timeLeft--;
+        
+                if (timeLeft <= 0) {
+                    clearInterval(verificationTimer);
+                    showVerificationReminder();
+                }
+            }, 1000);
+        }
+
+        function showVerificationReminder() {
+            const statusMessage = document.querySelector('.status-message span');
+            const statusIcon = document.querySelector('.status-message i');
+            
+            statusMessage.textContent = 'Verification expired. Please check your email and click the verification link.';
+            statusIcon.className = 'fas fa-exclamation-triangle';
+            
+            // Change status to pending/warning style
+            const statusDiv = document.querySelector('.status-message');
+            statusDiv.className = 'status-message verification-pending';
+        }
+
+        function resendVerification() {
+            const statusMessage = document.querySelector('.status-message span');
+            const statusIcon = document.querySelector('.status-message i');
+            
+            // Reset status
+            statusMessage.textContent = `Resending verification email to ${currentEmail}...`;
+            statusIcon.className = 'fas fa-paper-plane';
+            
+            // Clear previous timer
+            if (verificationTimer) {
+                clearInterval(verificationTimer);
+            }
+            
+            // Simulate resending
+            setTimeout(() => {
+                showVerificationSent();
+                startVerificationTimer();
+            }, 1500);
+        }
+
+        function simulateEmailVerification() {
+            // This function would be called when user clicks verification link in email
+            const statusMessage = document.querySelector('.status-message span');
+            const statusIcon = document.querySelector('.status-message i');
+            
+            statusMessage.textContent = `Email verified successfully! Welcome to RoastMyDorm, ${currentEmail}`;
+            statusIcon.className = 'fas fa-check-circle';
+            
+            // Change status to success style
+            const statusDiv = document.querySelector('.status-message');
+            statusDiv.className = 'status-message verification-success';
+            
+            // Clear timer
+            if (verificationTimer) {
+                clearInterval(verificationTimer);
+            }
+            
+            // Close modal after success
+            setTimeout(() => {
+                closeSignInModal();
+                alert(`Welcome to RoastMyDorm! You are now signed in as ${currentEmail}`);
+            }, 2000);
+        }
+
+        // Simulate verification for demo (you can call this manually for testing)
+        function demoEmailVerification() {
+            if (verificationSent) {
+                simulateEmailVerification();
+            }
+        }
+
+        // ID Scan Sign In
+        function signInWithIDScan() {
+            // You can integrate with camera/ID scanning here
+            alert('ID scanning would open here. This would typically open camera for ID scanning.');
+            // For now, just close the modal
+            closeSignInModal();
+        }
+    </script>
+</body>
+</html> 

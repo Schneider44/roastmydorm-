@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Studio <span class="university-text hidden">Near Cadi Ayyad University</span><span class="campus-text">in Hay Charaf</span> - RoastMyDorm</title>
+    <meta name="description" content="Modern studio apartment near Cadi Ayyad University in Semlalia, Marrakech. Perfect for students with AC, and all amenities.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            --navy-blue: #1e3a8a;
+            --navy-blue-dark: #1e40af;
+            --navy-blue-light: #3b82f6;
+            --red: #dc2626;
+            --red-light: #ef4444;
+            --red-dark: #b91c1c;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --light-blue: #e0f2f7;
+            --light-blue-dark: #b8e6f0;
+            --orange: #ff6b35;
+            --dark-grey: #2c3e50;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+        
+        .nav-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--navy-blue);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-text {
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--red) 50%, var(--navy-blue-light) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease-in-out infinite;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-transform: uppercase;
+            position: relative;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        .logo-text::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--navy-blue), var(--red), var(--navy-blue-light));
+            border-radius: 8px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .dorm-detail-page {
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .dorm-header {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .dorm-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dorm-location {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .dorm-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .dorm-main {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .gallery-main {
+            position: relative;
+            height: 400px;
+            background: #f3f4f6;
+            cursor: pointer;
+        }
+        
+        .gallery-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-thumbs {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        
+        .gallery-thumb {
+            min-width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-thumb:hover,
+        .gallery-thumb.active {
+            opacity: 1;
+        }
+        
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .dorm-details {
+            padding: 2rem;
+        }
+        
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+        
+        .detail-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        
+        .amenity-item i {
+            color: #f59e0b;
+            width: 20px;
+        }
+        
+        .dorm-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .contact-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-btn {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.3s ease;
+        }
+        
+        .contact-btn:hover {
+            background: #dc2626;
+        }
+        
+        .contact-info {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .contact-info p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .contact-info i {
+            width: 16px;
+            margin-right: 0.5rem;
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-container h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        #map {
+            height: 200px;
+            border-radius: 8px;
+        }
+        
+        .reviews-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .review-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .review-author {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .review-rating {
+            color: #f59e0b;
+        }
+        
+        .review-text {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        /* Image Lightbox Styles */
+        .image-lightbox {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+        
+        .lightbox-content {
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .lightbox-image {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+        }
+        
+        .lightbox-close:hover {
+            color: #bbb;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f1f1f1;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 16px;
+            user-select: none;
+            z-index: 10001;
+        }
+        
+        .lightbox-prev {
+            left: 0;
+        }
+        
+        .lightbox-next {
+            right: 0;
+        }
+        
+        .lightbox-nav:hover {
+            color: #bbb;
+        }
+        
+        @media (max-width: 768px) {
+            .dorm-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .dorm-title {
+                font-size: 2rem;
+            }
+            
+            .gallery-main {
+                height: 250px;
+            }
+        }
+
+        /* Landlord Chat Modal Styles */
+        .landlord-chat-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .landlord-chat-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            max-width: 90vw;
+            height: 600px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .landlord-chat-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .landlord-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .landlord-info {
+            flex: 1;
+        }
+
+        .landlord-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .landlord-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .landlord-chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .landlord-chat-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .landlord-chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .landlord-message {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 85%;
+        }
+
+        .landlord-message.landlord {
+            align-self: flex-start;
+        }
+
+        .landlord-message.student {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .landlord-message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .landlord-message.landlord .landlord-message-avatar {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .landlord-message.student .landlord-message-avatar {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .landlord-message-content {
+            background: #f3f4f6;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            position: relative;
+        }
+
+        .landlord-message.landlord .landlord-message-content {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .landlord-message.student .landlord-message-content {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .landlord-message-text {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .landlord-message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        .landlord-typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: #f3f4f6;
+            border-radius: 18px;
+            max-width: 85%;
+        }
+
+        .landlord-typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .landlord-typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #9ca3af;
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+
+        .landlord-typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .landlord-typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingDot {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .landlord-chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .landlord-chat-input {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s ease;
+            max-height: 120px;
+        }
+
+        .landlord-chat-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .landlord-chat-send {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .landlord-chat-send:hover {
+            background: #2563eb;
+        }
+
+        .landlord-chat-send:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .landlord-chat-container {
+                bottom: 0;
+                right: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+        }
+        
+        /* University visibility control */
+        .university-text {
+            display: inline;
+        }
+        .university-text.hidden {
+            display: none;
+        }
+        .campus-text {
+            display: none;
+        }
+        .campus-text.show {
+            display: inline;
+        }
+        
+        /* University toggle button */
+        .university-toggle-btn {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .university-toggle-btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+        
+        .university-toggle-btn.active {
+            background: #dc2626;
+        }
+        
+        @media (max-width: 768px) {
+            .university-toggle-btn {
+                top: 80px;
+                right: 10px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- University Toggle Button -->
+    <button class="university-toggle-btn" onclick="toggleUniversityVisibility()">
+        <i class="fas fa-graduation-cap"></i> Show Universities
+    </button>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" class="logo-text">RoastMyDorm</a>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn" onclick="showSignInModal()">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" style="background: #f8fafc; padding: 1rem 2rem; border-bottom: 1px solid #e5e7eb;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <a href="index.html" style="color: #6b7280; text-decoration: none;">Home</a>
+            <span style="margin: 0 0.5rem; color: #6b7280;">></span>
+            <a href="marrakech-dorms.html" style="color: #6b7280; text-decoration: none;">Marrakech Dorms</a>
+            <span style="margin: 0 0.5rem; color: #6b7280;">></span>
+            <span style="color: #1f2937; font-weight: 500;">Modern Studio <span class="university-text hidden">Near Cadi Ayyad University</span><span class="campus-text">in Semlalia</span></span>
+        </div>
+    </div>
+
+    <!-- Dorm Header -->
+    <div class="dorm-header">
+        <h1 class="dorm-title">Modern Studio <span class="university-text hidden">Near Cadi Ayyad University</span><span class="campus-text">in Semlalia</span></h1>
+        <div class="dorm-location">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Semlalia, Marrakech</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dorm-container">
+        <div class="dorm-main">
+            <!-- Image Gallery -->
+            <div class="gallery-main" onclick="openLightbox('app fadel.png')">
+                <img src="app fadel.png" alt="Modern Studio" id="mainImage">
+            </div>
+            <div class="gallery-thumbs">
+                <div class="gallery-thumb active" onclick="changeMainImage('app fadel 2.png')">
+                    <img src="app fadel 2.png" alt="Studio View">
+                </div>
+                <div class="gallery-thumb" onclick="changeMainImage('app fadel 3.png')">
+                    <img src="app fadel 3.png" alt="Kitchen Area">
+                </div>
+                <div class="gallery-thumb" onclick="changeMainImage('app fadel 5.png')">
+                    <img src="app fadel 5.png" alt="Bedroom">
+                </div>
+                <div class="gallery-thumb" onclick="changeMainImage('app fadel 6.png')">
+                    <img src="app fadel 6.png" alt="Bathroom">
+                </div>
+            </div>
+
+            <!-- Dorm Details -->
+            <div class="dorm-details">
+                <div class="detail-section">
+                    <h3>About this place</h3>
+                    <p>This modern studio apartment is perfectly located <span class="university-text hidden">near Cadi Ayyad University</span><span class="campus-text">in Semlalia</span>. The space features contemporary design with air conditioning, making it ideal for students who want comfort and style.</p>
+                    <p>The studio includes a fully equipped kitchen, modern bathroom, and a comfortable living/sleeping area. With high-speed WiFi and 24/7 security, this is the perfect home for your university years in Marrakech.</p>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Amenities</h3>
+                    <div class="amenities-grid">
+                        <div class="amenity-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>High-Speed WiFi</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>Fully Equipped Kitchen</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="fas fa-washing-machine"></i>
+                            <span>Laundry Facilities</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>24/7 Security</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="fas fa-tv"></i>
+                            <span>Smart TV</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>What's included</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #f59e0b; margin-right: 0.5rem;"></i> All utilities (water, electricity, internet)</li>
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #f59e0b; margin-right: 0.5rem;"></i> Furniture and appliances</li>
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #f59e0b; margin-right: 0.5rem;"></i> Weekly cleaning service</li>
+                        <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #f59e0b; margin-right: 0.5rem;"></i> Maintenance support</li>
+                    </ul>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Location & Transportation</h3>
+                    <p><strong>Distance to <span class="university-text hidden">Cadi Ayyad University</span><span class="campus-text">Campus</span>:</strong> 5 minutes walk</p>
+                    <p><strong>Nearest Bus Stop:</strong> 2 minutes walk</p>
+                    <p><strong>Nearest Shopping Center:</strong> 10 minutes walk</p>
+                    <p><strong>City Center:</strong> 15 minutes by bus</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="dorm-sidebar">
+            <!-- Contact Card -->
+            <div class="contact-card">
+                <h3>Contact Landlord</h3>
+                <button class="contact-btn" onclick="contactLandlord()">
+                    <i class="fas fa-phone"></i> Call Now
+                </button>
+                <button class="contact-btn" onclick="openLandlordChat({
+                    id: 'landlord_3',
+                    name: 'Youssef',
+                    availability: 'Available 9 AM - 6 PM',
+                    phone: '+212 6 12 34 56 78',
+                    email: 'youssef.benali@email.com',
+                    profilePicture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+                }, {
+                    id: 'listing_3',
+                    title: 'Modern Studio Near Cadi Ayyad University',
+                    price: '2,200 MAD/month'
+                })" style="background: #3b82f6;">
+                    <i class="fas fa-envelope"></i> Send Message
+                </button>
+                <button class="contact-btn" onclick="window.location.href='review-form.html'" style="background: #f59e0b;">
+                    <i class="fas fa-star"></i> Write Review
+                </button>
+                <div class="contact-info">
+                    <p><i class="fas fa-user"></i> Youssef Alami</p>
+                    <p><i class="fas fa-phone"></i> +212 6 78 90 12 34</p>
+                    <p><i class="fas fa-envelope"></i> youssef.alami@email.com</p>
+                    <p><i class="fas fa-clock"></i> Available 24/7</p>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="map-container">
+                <h3>Location</h3>
+                <div id="map"></div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: #6b7280;">
+                    <i class="fas fa-walking"></i> 5 min walk to <span class="university-text hidden">Cadi Ayyad University</span><span class="campus-text">Campus</span><br>
+                    <i class="fas fa-bus"></i> 2 min walk to bus stop<br>
+                    <i class="fas fa-store"></i> 10 min walk to shopping center
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+        <h3>Student Reviews</h3>
+        <div class="review-item">
+            <div class="review-header">
+                <span class="review-author">Ahmed B.</span>
+                <span class="review-rating">★★★★★</span>
+            </div>
+            <div class="review-text">
+                "Perfect location for university students. The AC is a lifesaver in Marrakech summers, and the WiFi is super fast. Landlord is very responsive to any issues."
+            </div>
+        </div>
+        <div class="review-item">
+            <div class="review-header">
+                <span class="review-author">Fatima K.</span>
+                <span class="review-rating">★★★★☆</span>
+            </div>
+            <div class="review-text">
+                "Great studio with modern amenities. The kitchen is well-equipped and the location is perfect for getting to campus. Highly recommend for students."
+            </div>
+        </div>
+        <div class="review-item">
+            <div class="review-header">
+                <span class="review-author">Omar S.</span>
+                <span class="review-rating">★★★★★</span>
+            </div>
+            <div class="review-text">
+                "Excellent value for money. The studio is clean, modern, and has everything you need. The landlord is professional and helpful. Would definitely stay again."
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="navigation-footer" style="background: #f8fafc; padding: 2rem; border-top: 1px solid #e5e7eb; margin-top: 2rem;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h3 style="margin-bottom: 1rem; color: #1f2937;">Explore More Options</h3>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-secondary" onclick="window.location.href='marrakech-dorms.html'" style="padding: 12px 24px; border: 2px solid #f59e0b; color: #f59e0b; background: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-sun"></i> All Marrakech Dorms
+                </button>
+                <button class="btn-secondary" onclick="window.location.href='casablanca-dorms.html'" style="padding: 12px 24px; border: 2px solid #3b82f6; color: #3b82f6; background: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-building"></i> Casablanca Dorms
+                </button>
+                <button class="btn-secondary" onclick="window.location.href='rabat-dorms.html'" style="padding: 12px 24px; border: 2px solid #10b981; color: #10b981; background: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-map-marker-alt"></i> Rabat Dorms
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Lightbox -->
+    <div id="imageLightbox" class="image-lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <img class="lightbox-image" id="lightboxImage" src="" alt="">
+            <a class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</a>
+            <a class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">&#10095;</a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Gallery images for lightbox
+        const currentLightboxImages = [
+            'app fadel.png',
+            'app fadel 2.png',
+            'app fadel 3.png',
+            'app fadel 5.png',
+            'app fadel 6.png'
+        ];
+        let currentLightboxIndex = 0;
+
+        // Initialize map
+        document.addEventListener('DOMContentLoaded', function() {
+            const map = L.map('map').setView([31.6295, -7.9811], 15);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            L.marker([31.6295, -7.9811]).addTo(map)
+                .bindPopup('Modern Studio Near Cadi Ayyad University')
+                .openPopup();
+        });
+
+        // Gallery functions
+        function changeMainImage(src) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.gallery-thumb').forEach(thumb => thumb.classList.remove('active'));
+            event.target.closest('.gallery-thumb').classList.add('active');
+        }
+
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('imageLightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            
+            currentLightboxIndex = currentLightboxImages.indexOf(imageSrc);
+            lightboxImage.src = imageSrc;
+            lightbox.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('imageLightbox');
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeLightboxImage(direction) {
+            currentLightboxIndex += direction;
+            
+            if (currentLightboxIndex >= currentLightboxImages.length) {
+                currentLightboxIndex = 0;
+            } else if (currentLightboxIndex < 0) {
+                currentLightboxIndex = currentLightboxImages.length - 1;
+            }
+            
+            document.getElementById('lightboxImage').src = currentLightboxImages[currentLightboxIndex];
+        }
+
+        // Close lightbox when clicking outside
+        document.getElementById('imageLightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('imageLightbox');
+            if (lightbox.style.display === 'block') {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                } else if (e.key === 'ArrowLeft') {
+                    changeLightboxImage(-1);
+                } else if (e.key === 'ArrowRight') {
+                    changeLightboxImage(1);
+                }
+            }
+        });
+
+        // Contact functions
+        function contactLandlord() {
+            alert('Calling Youssef Alami at +212 6 78 90 12 34');
+        }
+
+        // Landlord Chat System
+        class LandlordChat {
+            constructor() {
+                this.currentLandlord = null;
+                this.currentListing = null;
+                this.chatId = null;
+                this.isTyping = false;
+            }
+
+            init() {
+                this.setupEventListeners();
+            }
+
+            openChat(landlordInfo, listingInfo) {
+                this.currentLandlord = landlordInfo;
+                this.currentListing = listingInfo;
+                this.chatId = this.generateChatId();
+                
+                document.getElementById('landlordAvatar').textContent = landlordInfo.name.charAt(0).toUpperCase();
+                document.getElementById('landlordName').textContent = landlordInfo.name;
+                document.getElementById('landlordStatus').textContent = landlordInfo.availability;
+                
+                document.getElementById('landlordChatModal').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                
+                this.loadChatHistory();
+                
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                if (messagesContainer.children.length === 0) {
+                    this.addMessageToUI({
+                        text: `Hello! I'm ${landlordInfo.name}, the landlord for this property. How can I help you today?`,
+                        sender: 'landlord',
+                        timestamp: new Date()
+                    });
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('landlordChatInput').focus();
+                }, 100);
+            }
+
+            closeChat() {
+                document.getElementById('landlordChatModal').style.display = 'none';
+                document.body.style.overflow = 'auto';
+                this.currentLandlord = null;
+                this.currentListing = null;
+                this.chatId = null;
+            }
+
+            generateChatId() {
+                return `chat_${this.currentLandlord.id}_${this.currentListing.id}_${Date.now()}`;
+            }
+
+            sendMessage() {
+                const input = document.getElementById('landlordChatInput');
+                const message = input.value.trim();
+                
+                if (!message) return;
+                
+                this.addMessageToUI({
+                    text: message,
+                    sender: 'student',
+                    timestamp: new Date()
+                });
+                
+                input.value = '';
+                this.autoResize(input);
+                
+                setTimeout(() => {
+                    this.simulateLandlordResponse();
+                }, 1000 + Math.random() * 2000);
+            }
+
+            addMessageToUI(message) {
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                const messageElement = document.createElement('div');
+                messageElement.className = `landlord-message ${message.sender}`;
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'landlord-message-avatar';
+                avatar.textContent = message.sender === 'landlord' 
+                    ? this.currentLandlord.name.charAt(0).toUpperCase()
+                    : 'S';
+                
+                const content = document.createElement('div');
+                content.className = 'landlord-message-content';
+                
+                const text = document.createElement('p');
+                text.className = 'landlord-message-text';
+                text.textContent = message.text;
+                
+                const time = document.createElement('div');
+                time.className = 'landlord-message-time';
+                time.textContent = this.formatTime(message.timestamp);
+                
+                content.appendChild(text);
+                content.appendChild(time);
+                messageElement.appendChild(avatar);
+                messageElement.appendChild(content);
+                messagesContainer.appendChild(messageElement);
+                
+                this.scrollToBottom();
+            }
+
+            simulateLandlordResponse() {
+                if (this.isTyping) return;
+                
+                this.showTypingIndicator();
+                
+                setTimeout(() => {
+                    this.hideTypingIndicator();
+                    const response = this.generateLandlordResponse();
+                    this.addMessageToUI({
+                        text: response,
+                        sender: 'landlord',
+                        timestamp: new Date()
+                    });
+                }, 1500 + Math.random() * 1000);
+            }
+
+            generateLandlordResponse() {
+                const responses = [
+                    "Thank you for your interest! This modern studio is perfect for students at Cadi Ayyad University.",
+                    "Yes, the studio is available! It's just a 5-minute walk to the university campus.",
+                    "The studio comes fully furnished with a comfortable bed, desk, and wardrobe.",
+                    "The WiFi is included in the rent, and there's a shared kitchen on each floor.",
+                    "I can show you the studio this weekend if you're interested.",
+                    "The rent includes all utilities and access to the building's laundry facilities.",
+                    "The location is excellent - close to both the university and the city center.",
+                    "The building has 24/7 security and a friendly atmosphere with other students.",
+                    "You can move in as early as next month if you decide to take it.",
+                    "Feel free to ask me any other questions about the studio or the area!"
+                ];
+                
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+
+            showTypingIndicator() {
+                this.isTyping = true;
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                const typingElement = document.createElement('div');
+                typingElement.className = 'landlord-typing-indicator';
+                typingElement.id = 'typingIndicator';
+                typingElement.style.display = 'flex';
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'landlord-message-avatar';
+                avatar.style.background = '#3b82f6';
+                avatar.style.color = 'white';
+                avatar.textContent = this.currentLandlord.name.charAt(0).toUpperCase();
+                
+                const dots = document.createElement('div');
+                dots.className = 'landlord-typing-dots';
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'landlord-typing-dot';
+                    dots.appendChild(dot);
+                }
+                
+                typingElement.appendChild(avatar);
+                typingElement.appendChild(dots);
+                messagesContainer.appendChild(typingElement);
+                this.scrollToBottom();
+            }
+
+            hideTypingIndicator() {
+                this.isTyping = false;
+                const typingElement = document.getElementById('typingIndicator');
+                if (typingElement) {
+                    typingElement.remove();
+                }
+            }
+
+            loadChatHistory() {
+                const chatKey = `chat_${this.currentLandlord.id}_${this.currentListing.id}`;
+                const history = localStorage.getItem(chatKey);
+                
+                if (history) {
+                    try {
+                        const messages = JSON.parse(history);
+                        messages.forEach(message => {
+                            this.addMessageToUI(message);
+                        });
+                    } catch (e) {
+                        console.error('Error loading chat history:', e);
+                    }
+                }
+            }
+
+            formatTime(timestamp) {
+                return timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            scrollToBottom() {
+                const messagesContainer = document.getElementById('landlordChatMessages');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            autoResize(textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            }
+
+            handleKeyPress(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    this.sendMessage();
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('landlordChatModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'landlordChatModal') {
+                        this.closeChat();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && document.getElementById('landlordChatModal').style.display === 'block') {
+                        this.closeChat();
+                    }
+                });
+            }
+        }
+
+        let landlordChat;
+        document.addEventListener('DOMContentLoaded', function() {
+            landlordChat = new LandlordChat();
+            landlordChat.init();
+        });
+
+        function openLandlordChat(landlordInfo, listingInfo) {
+            landlordChat.openChat(landlordInfo, listingInfo);
+        }
+
+        function closeLandlordChat() {
+            landlordChat.closeChat();
+        }
+
+        function sendLandlordMessage() {
+            landlordChat.sendMessage();
+        }
+
+        function handleLandlordKeyPress(event) {
+            landlordChat.handleKeyPress(event);
+        }
+
+        function autoResizeLandlordInput(textarea) {
+            landlordChat.autoResize(textarea);
+        }
+
+        // University visibility control
+        let universitiesVisible = false;
+
+        function toggleUniversityVisibility() {
+            universitiesVisible = !universitiesVisible;
+            const toggleBtn = document.querySelector('.university-toggle-btn');
+            const universityTexts = document.querySelectorAll('.university-text');
+            const campusTexts = document.querySelectorAll('.campus-text');
+            
+            if (universitiesVisible) {
+                // Show university names
+                universityTexts.forEach(text => text.classList.remove('hidden'));
+                campusTexts.forEach(text => text.classList.remove('show'));
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Universities';
+            } else {
+                // Hide university names
+                universityTexts.forEach(text => text.classList.add('hidden'));
+                campusTexts.forEach(text => text.classList.add('show'));
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-graduation-cap"></i> Show Universities';
+            }
+        }
+
+        // Initialize university visibility on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide universities by default
+            const universityTexts = document.querySelectorAll('.university-text');
+            const campusTexts = document.querySelectorAll('.campus-text');
+            
+            universityTexts.forEach(text => text.classList.add('hidden'));
+            campusTexts.forEach(text => text.classList.add('show'));
+        });
+    </script>
+
+    <!-- Landlord Chat Modal -->
+    <div id="landlordChatModal" class="landlord-chat-modal">
+        <div class="landlord-chat-container">
+            <div class="landlord-chat-header">
+                <div class="landlord-avatar" id="landlordAvatar">Y</div>
+                <div class="landlord-info">
+                    <h3 id="landlordName">Youssef</h3>
+                    <p id="landlordStatus">Available 9 AM - 6 PM</p>
+                </div>
+                <button class="landlord-chat-close" onclick="closeLandlordChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="landlord-chat-messages" id="landlordChatMessages">
+                <!-- Messages will be loaded here -->
+            </div>
+            
+            <div class="landlord-chat-input-container">
+                <textarea 
+                    class="landlord-chat-input" 
+                    id="landlordChatInput" 
+                    placeholder="Type your message..."
+                    rows="1"
+                    onkeypress="handleLandlordKeyPress(event)"
+                    oninput="autoResizeLandlordInput(this)"
+                ></textarea>
+                <button class="landlord-chat-send" onclick="sendLandlordMessage()" id="landlordSendBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

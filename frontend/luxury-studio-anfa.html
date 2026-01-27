@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio M'Sik  - RoastMyDorm</title>
+    <meta name="description" content="Luxury Studio with AC in Anfa, Casablanca. Premium student accommodation with all amenities.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f2937; background: #f8fafc; }
+
+        /* Header (Izdihar style) */
+        .dorm-header { background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); color: white; padding: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .dorm-header::before { content: ''; position: absolute; inset: 0; background: url('cover 2.png') center/cover; opacity: 0.08; z-index: 1; }
+        .dorm-header-content { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: center; align-items: center; position: relative; }
+        .logo span { background: linear-gradient(135deg, #1e3a8a 0%, #dc2626 50%, #3b82f6 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: gradientShift 3s ease-in-out infinite; position: relative; z-index: 2; font-weight: 800; }
+        @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        .breadcrumbs { position: absolute; right: 2rem; top: 50%; transform: translateY(-50%); color: #e2e8f0; font-size: 0.9rem; }
+        .breadcrumbs a { color: #e2e8f0; text-decoration: none; }
+        .breadcrumbs a:hover { color: #fff; }
+        .back-btn { position: absolute; top: 1rem; left: 1rem; background: rgba(255,255,255,0.15); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; z-index: 3; }
+        .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* Main layout */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+
+        /* Cards */
+        .apartment-card, .booking-card, .room-details, .reviews-section, .location-section { background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        .apartment-title { font-size: 2.5rem; font-weight: 800; color: #1f2937; margin-bottom: 0.5rem; }
+        .rating-section { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .stars { color: #fbbf24; font-size: 1.2rem; }
+        .review-count { color: #6b7280; font-size: 1rem; font-weight: 500; }
+        .badges { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .badge { background: #f1f5f9; color: #475569; padding: 0.75rem 1.25rem; border-radius: 25px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; border: 1px solid #e2e8f0; transition: all 0.3s ease; }
+        .badge:hover { background: #e2e8f0; transform: translateY(-1px); }
+
+        /* Gallery */
+        .main-image { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; margin-bottom: 1.5rem; cursor: pointer; transition: transform 0.3s ease, opacity 0.3s ease; }
+        .main-image:hover { transform: scale(1.02); }
+        .gallery-thumbnails { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .thumbnail { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .thumbnail:hover { transform: translateY(-2px); border-color: #dc2626; }
+        .gallery-tabs { display: flex; gap: 2rem; border-bottom: 2px solid #f1f5f9; }
+        .gallery-tab { color: #6b7280; text-decoration: none; font-size: 1rem; font-weight: 600; padding: 1rem 0; border-bottom: 3px solid transparent; transition: all 0.3s ease; }
+        .gallery-tab.active { color: #dc2626; border-bottom-color: #dc2626; }
+        .gallery-tab:hover { color: #dc2626; }
+
+        /* Booking */
+        .booking-card { height: fit-content; position: sticky; top: 2rem; }
+        .price-section { margin-bottom: 2rem; text-align: center; }
+        .current-price { font-size: 3rem; font-weight: 800; color: #1f2937; margin-bottom: 0.5rem; }
+        .price-period { color: #6b7280; font-size: 1.1rem; margin-bottom: 1rem; }
+        .original-price { color: #9ca3af; text-decoration: line-through; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .info-icon { color: #6b7280; font-size: 1rem; cursor: pointer; transition: color 0.3s ease; }
+        .info-icon:hover { color: #dc2626; }
+        .advance-rent-btn { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 2rem; transition: all 0.3s ease; font-size: 1rem; }
+        .advance-rent-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59,130,246,0.3); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-input { width: 100%; padding: 1rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease; background: #fafafa; }
+        .form-input:focus { outline: none; border-color: #3b82f6; background: white; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        .checkbox-group { margin-bottom: 2rem; }
+        .checkbox-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
+        .checkbox { margin-top: 0.25rem; transform: scale(1.2); }
+        .checkbox-label { font-size: 0.9rem; color: #374151; line-height: 1.5; }
+        .checkbox-label a { color: #dc2626; text-decoration: none; }
+        .checkbox-label a:hover { text-decoration: underline; }
+        .action-buttons { display: flex; flex-direction: column; gap: 1rem; }
+        .btn-primary { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(220,38,38,0.3); }
+        .btn-secondary { background: white; color: #dc2626; border: 2px solid #dc2626; padding: 1rem 2rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-secondary:hover { background: #dc2626; color: white; transform: translateY(-2px); }
+        .guarantee-btn { background: #f8fafc; color: #6b7280; border: 1px solid #e5e7eb; padding: 1rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; margin-top: 1rem; }
+        .guarantee-btn:hover { background: #f1f5f9; color: #374151; }
+
+        /* Room details */
+        .section-title { font-size: 1.8rem; font-weight: 700; color: #1f2937; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem; }
+        .section-title i { color: #dc2626; }
+        .room-specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .spec-item { background: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; transition: all 0.3s ease; }
+        .spec-item:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .spec-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; margin-bottom: 1rem; }
+        .spec-title { font-size: 1.1rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem; }
+        .spec-desc { color: #6b7280; font-size: 0.9rem; line-height: 1.5; }
+        .amenities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+        .amenity-item { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e5e7eb; transition: all 0.3s ease; }
+        .amenity-item:hover { background: #f1f5f9; transform: translateX(4px); }
+        .amenity-icon { color: #dc2626; font-size: 1.1rem; }
+        .amenity-text { color: #374151; font-weight: 500; }
+
+        /* Location */
+        .location-info { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-bottom: 2rem; }
+        .address-card { background: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid #e5e7eb; }
+        .address-card h3 { color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; }
+        .address-card p { color: #6b7280; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+        .address-card i { color: #dc2626; width: 20px; }
+        .map { width: 100%; height: 300px; background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%); display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 1.1rem; font-weight: 500; position: relative; border-radius: 12px; }
+        .map::before { content: '📍 Interactive Map - Anfa, Casablanca'; text-align: center; }
+        .map-overlay { position: absolute; top: 1rem; right: 1rem; }
+        .map-btn { background: rgba(255,255,255,0.9); color: #374151; border: none; padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; backdrop-filter: blur(10px); }
+        .map-btn:hover { background: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        /* Reviews */
+        .reviews-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .write-review-btn { background: #3b82f6; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .write-review-btn:hover { background: #2563eb; transform: translateY(-1px); }
+        .review-item { margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e5e7eb; }
+        .review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .review-avatar { width: 50px; height: 50px; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.2rem; }
+        .review-info { flex: 1; }
+        .reviewer-name { font-weight: 600; color: #1f2937; margin-bottom: 0.25rem; }
+        .review-date { color: #6b7280; font-size: 0.85rem; }
+        .review-stars { color: #fbbf24; font-size: 1rem; }
+        .review-text { color: #374151; line-height: 1.6; margin-bottom: 1rem; }
+        .review-actions { display: flex; gap: 1rem; }
+        .review-action { color: #6b7280; text-decoration: none; font-size: 0.85rem; transition: color 0.3s ease; }
+        .review-action:hover { color: #dc2626; }
+
+        /* Modals and lightbox (from Izdihar) */
+        .modal { display: none; position: fixed; z-index: 1000; inset: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .modal-content { background: white; margin: 5% auto; padding: 2rem; border-radius: 16px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalSlideIn 0.3s ease; }
+        .booking-modal-content { max-width: 800px; width: 95%; }
+        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-50px);} to { opacity: 1; transform: translateY(0);} }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; color: #1f2937; }
+        .close { color: #6b7280; font-size: 2rem; font-weight: bold; cursor: pointer; transition: color 0.3s ease; }
+        .close:hover { color: #dc2626; }
+        .success-message { background: #d1fae5; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
+        .error-message { background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none; }
+        /* Booking modal: Date picker + form styling */
+        .date-selection-section { margin-bottom: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e5e7eb; }
+        .date-selection-header { margin-bottom: 1.5rem; }
+        .date-title h4 { color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .date-title p { color: #6b7280; font-size: 0.9rem; margin: 0; }
+        .date-inputs { display: flex; gap: 1rem; margin-bottom: 2rem; }
+        .date-input-group { flex: 1; }
+        .date-label { display: block; color: #374151; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .date-input { width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; background: white; cursor: pointer; transition: all 0.3s ease; }
+        .date-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        .date-input.active { border-color: #1e40af; background: #eff6ff; }
+        .calendar-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+        .calendar { background: white; border-radius: 12px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .calendar-nav { background: #f3f4f6; border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #374151; transition: all 0.3s ease; }
+        .calendar-nav:hover { background: #e5e7eb; color: #1f2937; }
+        .month-year { display: flex; gap: 0.5rem; }
+        .month-year select { border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; background: white; color: #374151; font-weight: 600; cursor: pointer; }
+        .month-year select:focus { outline: none; border-color: #3b82f6; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+        .day-header { text-align: center; font-weight: 600; color: #6b7280; font-size: 0.8rem; padding: 0.5rem 0; }
+        .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; font-size: 0.9rem; color: #374151; transition: all 0.3s ease; position: relative; }
+        .calendar-day:hover { background: #f3f4f6; }
+        .calendar-day.other-month { color: #d1d5db; }
+        .calendar-day.selected { background: #3b82f6; color: white; }
+        .calendar-day.in-range { background: #dbeafe; color: #1e40af; }
+        .calendar-day.start-date, .calendar-day.end-date { background: #1e40af; color: white; font-weight: 600; }
+        .calendar-day.disabled { color: #d1d5db; cursor: not-allowed; }
+        .calendar-day.disabled:hover { background: transparent; }
+        .date-actions { display: flex; justify-content: flex-end; gap: 1rem; align-items: center; }
+        .clear-dates-btn { background: none; border: none; color: #6b7280; text-decoration: underline; cursor: pointer; font-size: 0.9rem; transition: color 0.3s ease; }
+        .clear-dates-btn:hover { color: #374151; }
+        .apply-dates-btn { background: #f59e0b; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .apply-dates-btn:hover { background: #d97706; transform: translateY(-1px); }
+        .apply-dates-btn:disabled { background: #d1d5db; cursor: not-allowed; transform: none; }
+        /* Modal form controls */
+        .modal .form-group { margin-bottom: 1rem; }
+        .modal .form-input { background: #fff; }
+        .modal .btn-primary { width: 100%; }
+        /* Review rating */
+        .rating-input { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .star-input { font-size: 2rem; color: #e5e7eb; cursor: pointer; transition: color 0.3s ease; }
+        .star-input:hover, .star-input.active { color: #fbbf24; }
+        /* Responsive booking modal */
+        @media (max-width: 768px) {
+            .calendar-container { grid-template-columns: 1fr; }
+            .date-inputs { flex-direction: column; }
+            .date-actions { flex-direction: column; align-items: stretch; }
+            .apply-dates-btn { width: 100%; }
+        }
+        .image-lightbox-modal { display: block; position: fixed; z-index: 10000; inset: 0; background-color: rgba(0,0,0,0.95); backdrop-filter: blur(10px); animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .lightbox-content { position: relative; margin: auto; padding: 20px; width: 90%; max-width: 1000px; top: 50%; transform: translateY(-50%); text-align: center; }
+        .lightbox-image { max-width: 100%; max-height: 80vh; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10001; transition: color 0.3s ease; background: rgba(0,0,0,0.5); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .lightbox-close:hover { color: #ef4444; background: rgba(0,0,0,0.8); }
+        .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); color: white; font-size: 30px; cursor: pointer; padding: 15px 20px; background: rgba(0,0,0,0.5); border-radius: 50%; transition: background 0.3s ease; user-select: none; }
+        .lightbox-nav:hover { background: rgba(0,0,0,0.8); }
+        .lightbox-prev { left: 30px; }
+        .lightbox-next { right: 30px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) { .main-container { grid-template-columns: 1fr; padding: 1rem; } .booking-card { position: static; } }
+        @media (max-width: 768px) { .dorm-header-content { flex-direction: column; gap: 1rem; text-align:center; } .breadcrumbs { position: static; transform: none; margin-top: 0.5rem; } .apartment-title { font-size: 2rem; } .gallery-thumbnails { justify-content: center; } .room-specs, .amenities-grid, .location-info { grid-template-columns: 1fr; } .btn-primary, .btn-secondary { padding: 0.875rem 1.5rem; font-size: 1rem; } .thumbnail { width: 80px; height: 80px; } }
+        @media (max-width: 480px) { .main-container { padding: 0.5rem; } .apartment-card, .booking-card, .room-details, .reviews-section { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dorm-header">
+        <button class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="dorm-header-content">
+            <a href="index.html" class="logo" style="text-decoration:none; color:inherit; font-size:2rem;"><span>RoastMyDorm</span></a>
+            <div class="breadcrumbs">
+                <a href="index.html">Home</a> > <a href="casablanca-dorms.html">Casablanca</a> > Luxury Studio - Anfa
+            </div>
+        </div>
+    </header>
+
+    <!-- Overview + Booking -->
+    <div class="main-container">
+        <div class="apartment-card">
+            <h1 class="apartment-title">Luxury Studio with AC, Anfa</h1>
+            <div class="rating-section"><div class="stars">★★★★★</div><span class="review-count">(45 reviews)</span></div>
+            <div class="badges">
+                <div class="badge"><i class="fas fa-user-graduate"></i> Premium Student Stay</div>
+                <div class="badge"><i class="fas fa-check-circle"></i> On-site Verification</div>
+                <div class="badge"><i class="fas fa-map-marker-alt"></i> 8 min to Hassan II</div>
+            </div>
+            <img src="app Msik.png" alt="Luxury Studio - Anfa" class="main-image" onclick="openImageModal()">
+            <div class="gallery-thumbnails">
+                <img src="app Msik 2.png" alt="Living Area" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="app Msik 3.png" alt="Kitchen" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="app Msik 4.png" alt="Bedroom" class="thumbnail" onclick="changeMainImage(this)">
+                <img src="app Msik 5.png" alt="Bathroom" class="thumbnail" onclick="changeMainImage(this)">
+            </div>
+            <div class="gallery-tabs">
+                <a href="#" class="gallery-tab active">Photos (4)</a>
+                <a href="#" class="gallery-tab">Videos (0)</a>
+                <a href="#" class="gallery-tab">3D Views (0)</a>
+                <a href="#" class="gallery-tab">Virtual Tour (0)</a>
+            </div>
+        </div>
+
+        <div class="booking-card">
+            <div class="price-section">
+                <div class="current-price">4,200 MAD</div>
+                <div class="price-period">per month</div>
+                <div class="original-price">4,500 MAD <i class="fas fa-info-circle info-icon" onclick="showPriceInfo()"></i></div>
+            </div>
+            <button class="advance-rent-btn" onclick="showAdvanceRentInfo()"><span>Advance rent 1,600 MAD</span><i class="fas fa-arrow-right"></i></button>
+
+            <div class="form-group"><label class="form-label">First Name *</label><input type="text" class="form-input" placeholder="Enter your first name" required></div>
+            <div class="form-group"><label class="form-label">Last Name *</label><input type="text" class="form-input" placeholder="Enter your last name" required></div>
+            <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-input" placeholder="Enter your email" required></div>
+            <div class="form-group"><label class="form-label">Phone Number *</label><input type="tel" class="form-input" placeholder="Enter your phone number" required></div>
+
+            <div class="checkbox-group"><div class="checkbox-item"><input type="checkbox" class="checkbox" id="privacy" required><label for="privacy" class="checkbox-label">I agree to the <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a></label></div></div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="openBookingModal()"><i class="fas fa-calendar-check"></i> Book Now</button>
+                <button class="btn-secondary" onclick="openContactModal()"><i class="fas fa-phone"></i> Contact Landlord</button>
+            </div>
+            <button class="guarantee-btn" onclick="showGuaranteeInfo()"><span>Lower Price Guarantee</span><i class="fas fa-chevron-down"></i></button>
+        </div>
+    </div>
+
+    <!-- Room Details -->
+    <div class="main-container">
+        <div class="room-details">
+            <h2 class="section-title"><i class="fas fa-home"></i> Room Details & Amenities</h2>
+            <p style="color: #6b7280; margin: 0 0 1.5rem 0;">
+                Le Maître Du Foncier offers you a luxury studio for rent,
+                 it is 64m including 20m of terrace located on the third floor facing south in a well-maintained building with elevator and underground garage..
+.
+            </p>
+            <div class="room-specs">
+                <div class="spec-item"><div class="spec-icon"><i class="fas fa-bed"></i></div><div class="spec-title">Studio Layout</div><div class="spec-desc">Open-plan living and sleeping area with premium finishes.</div></div>
+                <div class="spec-item"><div class="spec-icon"><i class="fas fa-bath"></i></div><div class="spec-title">1 Bathroom</div><div class="spec-desc">Modern bathroom with quality fixtures and storage.</div></div>
+                <div class="spec-item"><div class="spec-icon"><i class="fas fa-utensils"></i></div><div class="spec-title">Modern Kitchen</div><div class="spec-desc">Fully equipped kitchenette with modern appliances.</div></div>
+                <div class="spec-item"><div class="spec-icon"><i class="fas fa-thermometer-half"></i></div><div class="spec-title">Air Conditioning</div><div class="spec-desc">Efficient AC for year-round comfort.</div></div>
+                <div class="spec-item"><div class="spec-icon"><i class="fas fa-wifi"></i></div><div class="spec-title">Premium WiFi</div><div class="spec-desc">High-speed internet included in the rent.</div></div>
+                <div class="spec-item"><div class="spec-icon"><i class="fas fa-car"></i></div><div class="spec-title">Private Parking</div><div class="spec-desc">Secure parking available for residents.</div></div>
+            </div>
+            <h3 style="margin: 2rem 0 1rem 0; color: #1f2937; font-size: 1.3rem;">Additional Amenities</h3>
+            <div class="amenities-grid">
+                <div class="amenity-item"><i class="fas fa-shield-alt amenity-icon"></i><span class="amenity-text">24/7 Security</span></div>
+                <div class="amenity-item"><i class="fas fa-tshirt amenity-icon"></i><span class="amenity-text">In-Unit Laundry</span></div>
+                <div class="amenity-item"><i class="fas fa-users amenity-icon"></i><span class="amenity-text">Common Areas</span></div>
+                <div class="amenity-item"><i class="fas fa-store amenity-icon"></i><span class="amenity-text">Luxury Shopping Nearby</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location & Map -->
+    <div class="main-container">
+        <div class="location-section">
+            <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> Location & Map</h2>
+            <div class="location-info">
+                <div class="address-card">
+                    <h3>Address</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> M'Sik, Casablanca, Morocco</p>
+                    <p><i class="fas fa-university"></i> 8 minutes walk to Hassan II University</p>
+                    <p><i class="fas fa-bus"></i> 2 minutes walk to public transport</p>
+                    <p><i class="fas fa-shopping-cart"></i> 3 minutes walk to luxury shopping</p>
+                </div>
+                <div class="map-container">
+                    <div id="map" class="map"></div>
+                    <div class="map-overlay"><button class="map-btn" onclick="openFullMap()"><i class="fas fa-expand"></i> View Full Map</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="main-container">
+        <div class="reviews-section">
+            <div class="reviews-header"><h2 class="section-title"><i class="fas fa-star"></i> Reviews (45)</h2><button class="write-review-btn" onclick="openReviewModal()"><i class="fas fa-pen"></i> Write a Review</button></div>
+            <div class="review-item"><div class="review-header"><div class="review-avatar">L</div><div class="review-info"><div class="reviewer-name">Layla M.</div><div class="review-date">1 week ago</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">Absolutely amazing! AC works perfectly and the amenities are top-notch.</p><div class="review-actions"><a href="#" class="review-action">Helpful (10)</a><a href="#" class="review-action">Reply</a></div>
+            <div class="review-item"><div class="review-header"><div class="review-avatar">K</div><div class="review-info"><div class="reviewer-name">Karim B.</div><div class="review-date">2 weeks ago</div></div><div class="review-stars">★★★★★</div></div><p class="review-text">Premium accommodation in the heart of Anfa. Beautiful finishes and great security.</p><div class="review-actions"><a href="#" class="review-action">Helpful (6)</a><a href="#" class="review-action">Reply</a></div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal"><div class="modal-content booking-modal-content"><div class="modal-header"><h3 class="modal-title">Book Your Stay</h3><span class="close" onclick="closeModal('bookingModal')">&times;</span></div><div class="success-message" id="bookingSuccess">Booking request submitted successfully!</div><div class="error-message" id="bookingError">Please fill in all required fields.</div><div class="date-selection-section"><div class="date-selection-header"><div class="date-title"><h4>Select your dates</h4><p>Minimum stay: 30 days</p></div></div><div class="date-inputs"><div class="date-input-group"><label class="date-label">MOVE IN</label><input type="text" class="date-input" id="moveInDate" placeholder="Date" readonly></div><div class="date-input-group"><label class="date-label">MOVE OUT</label><input type="text" class="date-input" id="moveOutDate" placeholder="Date" readonly></div></div><div class="calendar-container"><div class="calendar"><div class="calendar-header"><button class="calendar-nav" onclick="changeMonth(-1)">‹</button><div class="month-year"><select id="month1" onchange="updateCalendar()"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select><select id="year1" onchange="updateCalendar()"><option value="2024">2024</option><option value="2025" selected>2025</option><option value="2026">2026</option></select></div></div><div class="calendar-grid" id="calendar1"><div class="day-header">MON</div><div class="day-header">TUE</div><div class="day-header">WED</div><div class="day-header">THU</div><div class="day-header">FRI</div><div class="day-header">SAT</div><div class="day-header">SUN</div></div></div><div class="calendar"><div class="calendar-header"><div class="month-year"><select id="month2" onchange="updateCalendar()"><option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option></select><select id="year2" onchange="updateCalendar()"><option value="2024">2024</option><option value="2025" selected>2025</option><option value="2026">2026</option></select></div><button class="calendar-nav" onclick="changeMonth(1)">›</button></div><div class="calendar-grid" id="calendar2"><div class="day-header">MON</div><div class="day-header">TUE</div><div class="day-header">WED</div><div class="day-header">THU</div><div class="day-header">FRI</div><div class="day-header">SAT</div><div class="day-header">SUN</div></div></div></div><div class="date-actions"><button class="clear-dates-btn" onclick="clearDates()">Clear dates</button><button class="apply-dates-btn" onclick="applyDates()">Apply dates</button></div></div><form id="bookingForm" style="display:none;"><div class="form-group"><label class="form-label">Number of Guests *</label><select class="form-input" required><option value="">Select number of guests</option><option value="1">1 Guest</option><option value="2">2 Guests</option></select></div><div class="form-group"><label class="form-label">Special Requests</label><textarea class="form-input" placeholder="Any special requests or requirements?"></textarea></div><button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-calendar-check"></i> Confirm Booking</button></form></div></div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 class="modal-title">Contact Landlord</h3><span class="close" onclick="closeModal('contactModal')">&times;</span></div><div class="success-message" id="contactSuccess">Message sent successfully!</div><div class="error-message" id="contactError">Please fill in all required fields.</div><form id="contactForm"><div class="form-group"><label class="form-label">Subject *</label><input type="text" class="form-input" placeholder="What is this about?" required></div><div class="form-group"><label class="form-label">Message *</label><textarea class="form-input" placeholder="Your message to the landlord" required></textarea></div><div class="form-group"><label class="form-label">Your Email *</label><input type="email" class="form-input" placeholder="Your email address" required></div><button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-paper-plane"></i> Send Message</button></form></div></div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 class="modal-title">Write a Review</h3><span class="close" onclick="closeModal('reviewModal')">&times;</span></div><div class="success-message" id="reviewSuccess">Review submitted successfully!</div><div class="error-message" id="reviewError">Please fill in all required fields.</div><form id="reviewForm"><div class="form-group"><label class="form-label">Overall Rating *</label><div class="rating-input"><span class="star-input" onclick="setRating(1)">★</span><span class="star-input" onclick="setRating(2)">★</span><span class="star-input" onclick="setRating(3)">★</span><span class="star-input" onclick="setRating(4)">★</span><span class="star-input" onclick="setRating(5)">★</span></div></div><div class="form-group"><label class="form-label">Review Title *</label><input type="text" class="form-input" placeholder="Summarize your experience" required></div><div class="form-group"><label class="form-label">Your Review *</label><textarea class="form-input" placeholder="Share your experience with other students" required></textarea></div><div class="form-group"><label class="form-label">Your Name *</label><input type="text" class="form-input" placeholder="Your name" required></div><button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-star"></i> Submit Review</button></form></div></div>
+
+    <script>
+        // Gallery interactions
+        function changeMainImage(thumbnail){ const img=document.querySelector('.main-image'); if(img && thumbnail){ img.src=thumbnail.src; img.alt=thumbnail.alt; img.style.opacity='0.7'; setTimeout(()=>{ img.style.opacity='1'; },150);} }
+        function openImageModal(){ const img=document.querySelector('.main-image'); if(img){ const lb=document.createElement('div'); lb.className='image-lightbox-modal'; lb.innerHTML=`<div class="lightbox-content"><span class="lightbox-close">&times;</span><img src="${img.src}" alt="${img.alt}" class="lightbox-image"><div class="lightbox-nav lightbox-prev" onclick="navigateImage(-1)">‹</div><div class="lightbox-nav lightbox-next" onclick="navigateImage(1)">›</div></div>`; document.body.appendChild(lb); document.body.style.overflow='hidden'; lb.querySelector('.lightbox-close').onclick=()=>{ document.body.removeChild(lb); document.body.style.overflow='auto'; }; lb.onclick=(e)=>{ if(e.target===lb){ document.body.removeChild(lb); document.body.style.overflow='auto'; } }; } }
+        function navigateImage(dir){ const el=document.querySelector('.lightbox-image'); if(el){ const images=['cover 2.png','cover.png','cover 3.png','dormart.png']; let i=images.indexOf(el.src.split('/').pop()); i+=dir; if(i<0) i=images.length-1; if(i>=images.length) i=0; el.src=images[i]; } }
+        document.querySelectorAll('.gallery-tab').forEach(t=>{ t.addEventListener('click',function(e){ e.preventDefault(); document.querySelectorAll('.gallery-tab').forEach(x=>x.classList.remove('active')); this.classList.add('active'); }); });
+
+        // Modals
+        function openModal(id){ document.getElementById(id).style.display='block'; document.body.style.overflow='hidden'; }
+        function closeModal(id){ document.getElementById(id).style.display='none'; document.body.style.overflow='auto'; document.querySelectorAll('.success-message, .error-message').forEach(m=>m.style.display='none'); }
+        function openBookingModal(){ openModal('bookingModal'); initializeDatePicker(); document.querySelector('.date-selection-section').style.display='block'; document.querySelector('#bookingForm').style.display='none'; }
+        function openContactModal(){ openModal('contactModal'); }
+        function openReviewModal(){ openModal('reviewModal'); }
+        window.onclick=function(e){ if(e.target.classList && e.target.classList.contains('modal')){ e.target.style.display='none'; document.body.style.overflow='auto'; } }
+
+        // Forms
+        function showMessage(id){ document.getElementById(id).style.display='block'; setTimeout(()=>{ document.getElementById(id).style.display='none'; },3000); }
+        document.getElementById('bookingForm').addEventListener('submit', function(e){ e.preventDefault(); showMessage('bookingSuccess'); });
+        document.getElementById('contactForm').addEventListener('submit', function(e){ e.preventDefault(); showMessage('contactSuccess'); });
+        document.getElementById('reviewForm').addEventListener('submit', function(e){ e.preventDefault(); showMessage('reviewSuccess'); });
+        function setRating(r){ document.querySelectorAll('.star-input').forEach((s,i)=>{ if(i<r) s.classList.add('active'); else s.classList.remove('active'); }); }
+
+        // Info
+        function showPriceInfo(){ alert('Original price: 4,500 MAD/month\nCurrent price: 4,200 MAD/month\nYou save: 300 MAD/month'); }
+        function showAdvanceRentInfo(){ alert('Advance rent is typically 50% of the monthly rent and is required to secure your booking.'); }
+        function showGuaranteeInfo(){ alert('We guarantee the lowest price! If you find the same apartment for less elsewhere, we will match the price and give you an additional 5% discount.'); }
+
+        // Map (open Google Maps)
+        function openFullMap(){ const address='MSik, Casablanca, Morocco'; const url=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`; window.open(url,'_blank'); }
+        function initializeMap(){ const el=document.getElementById('map'); if(el){ el.addEventListener('click', openFullMap); el.style.cursor='pointer'; el.addEventListener('mouseenter', function(){ this.style.transform='scale(1.02)'; this.style.transition='transform 0.3s ease'; }); el.addEventListener('mouseleave', function(){ this.style.transform='scale(1)'; }); } }
+        document.addEventListener('DOMContentLoaded', initializeMap);
+
+        // Date picker
+        let selectedStartDate=null, selectedEndDate=null; let currentDate=new Date(); let currentMonth1=currentDate.getMonth(); let currentYear1=currentDate.getFullYear(); let currentMonth2=currentDate.getMonth()+1; let currentYear2=currentDate.getFullYear();
+        function initializeDatePicker(){ if(currentMonth2>11){ currentMonth2=0; currentYear2++; } document.getElementById('month1').value=currentMonth1; document.getElementById('year1').value=currentYear1; document.getElementById('month2').value=currentMonth2; document.getElementById('year2').value=currentYear2; updateCalendar(); }
+        function updateCalendar(){ const m1=+document.getElementById('month1').value, y1=+document.getElementById('year1').value, m2=+document.getElementById('month2').value, y2=+document.getElementById('year2').value; renderCalendar('calendar1',m1,y1); renderCalendar('calendar2',m2,y2); if(y1===y2 && m1===m2){ let nm=m2+1, ny=y2; if(nm>11){ nm=0; ny++; } document.getElementById('month2').value=nm; document.getElementById('year2').value=ny; renderCalendar('calendar2',nm,ny); } }
+        function renderCalendar(id,month,year){ const cal=document.getElementById(id); cal.querySelectorAll('.calendar-day')?.forEach(d=>d.remove()); const first=new Date(year,month,1), last=new Date(year,month+1,0), days=last.getDate(), start=first.getDay(); for(let i=0;i<start;i++){ const e=document.createElement('div'); e.className='calendar-day other-month'; cal.appendChild(e);} for(let d=1; d<=days; d++){ const el=document.createElement('div'); el.className='calendar-day'; el.textContent=d; el.onclick=()=>selectDate(d,month,year); const today=new Date(); const cur=new Date(year,month,d); if(cur < today.setHours(0,0,0,0)) el.classList.add('disabled'); if(selectedStartDate && isSameDate(d,month,year,selectedStartDate)) el.classList.add('start-date'); else if(selectedEndDate && isSameDate(d,month,year,selectedEndDate)) el.classList.add('end-date'); else if(isDateInRange(d,month,year)) el.classList.add('in-range'); cal.appendChild(el);} }
+        function selectDate(day,month,year){ const sel=new Date(year,month,day); const today=new Date(); today.setHours(0,0,0,0); if(sel<today) return; if(!selectedStartDate || (selectedStartDate && selectedEndDate)){ selectedStartDate=sel; selectedEndDate=null; document.getElementById('moveInDate').value=formatDate(sel); document.getElementById('moveOutDate').value=''; } else { if(sel<=selectedStartDate){ selectedEndDate=selectedStartDate; selectedStartDate=sel; } else { selectedEndDate=sel; } document.getElementById('moveOutDate').value=formatDate(selectedEndDate); } updateCalendar(); }
+        function isSameDate(d,m,y,date){ return date.getDate()===d && date.getMonth()===m && date.getFullYear()===y; }
+        function isDateInRange(d,m,y){ if(!selectedStartDate || !selectedEndDate) return false; const cur=new Date(y,m,d); return cur>selectedStartDate && cur<selectedEndDate; }
+        function formatDate(date){ const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`; }
+        function changeMonth(dir){ let m=+document.getElementById('month1').value, y=+document.getElementById('year1').value; if(dir===-1){ m--; if(m<0){ m=11; y--; } } else { m++; if(m>11){ m=0; y++; } } document.getElementById('month1').value=m; document.getElementById('year1').value=y; updateCalendar(); }
+        function clearDates(){ selectedStartDate=null; selectedEndDate=null; document.getElementById('moveInDate').value=''; document.getElementById('moveOutDate').value=''; updateCalendar(); }
+        function applyDates(){ if(selectedStartDate && selectedEndDate){ const diff=(selectedEndDate - selectedStartDate)/(1000*3600*24); if(diff<30){ alert('Minimum stay is 30 days. Please select a longer period.'); return; } document.querySelector('.date-selection-section').style.display='none'; document.querySelector('#bookingForm').style.display='block'; } else { alert('Please select both move-in and move-out dates.'); } }
+
+        // UX
+        document.addEventListener('keydown', function(e){ const lb=document.querySelector('.image-lightbox-modal'); if(lb){ if(e.key==='Escape'){ document.body.removeChild(lb); document.body.style.overflow='auto'; } if(e.key==='ArrowLeft'){ navigateImage(-1);} if(e.key==='ArrowRight'){ navigateImage(1);} } });
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(b=>{ b.addEventListener('click', function(){ if(this.type==='submit'){ const t=this.innerHTML; this.innerHTML='<span class="loading"></span> Processing...'; this.disabled=true; setTimeout(()=>{ this.innerHTML=t; this.disabled=false; },2000); } }); });
+    </script>
+</body>
+</html>
