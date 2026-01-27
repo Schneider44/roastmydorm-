@@ -325,20 +325,20 @@ body {
 
 /* How It Works Section */
 .how-it-works {
-    padding: 50px 0;
+    padding: 80px 0;
     background: var(--white);
 }
 
 .process-cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-    margin-bottom: 40px;
+    gap: 30px;
+    margin-bottom: 60px;
 }
 
 .process-card {
     background: var(--white);
-    padding: 30px 20px;
+    padding: 40px 30px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     text-align: center;
@@ -350,14 +350,14 @@ body {
 }
 
 .card-icon {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     background: var(--light-blue);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 18px;
+    margin: 0 auto 25px;
 }
 
 .card-icon i {
@@ -366,15 +366,15 @@ body {
 }
 
 .process-card h3 {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--dark-grey);
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 .process-card p {
     color: var(--light-grey);
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.5;
 }
 
