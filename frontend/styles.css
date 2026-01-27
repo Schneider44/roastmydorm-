@@ -81,9 +81,7 @@ body {
 }
 
 .nav-logo {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
