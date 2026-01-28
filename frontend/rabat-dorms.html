@@ -669,8 +669,74 @@
         </div>
         </main>
         
-        <!-- Footer - Inside container for flexbox -->
+        <!-- Footer -->
         <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="footer-logo">
+                            <h3>RoastMyDorm</h3>
+                            <p>Your trusted platform for finding the perfect student accommodation in Morocco's top cities.</p>
+                        </div>
+                        <div class="footer-social">
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="casablanca-dorms.html">Casablanca</a></li>
+                            <li><a href="rabat-dorms.html">Rabat</a></li>
+                            <li><a href="marrakech-dorms.html">Marrakech</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>For Students</h4>
+                        <ul class="footer-links">
+                            <li><a href="#">How to Apply</a></li>
+                            <li><a href="#">Student Guide</a></li>
+                            <li><a href="#">Safety Tips</a></li>
+                            <li><a href="#">Moving Checklist</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>For Landlords</h4>
+                        <ul class="footer-links">
+                            <li><a href="#">List Your Property</a></li>
+                            <li><a href="#">Landlord Portal</a></li>
+                            <li><a href="#">Pricing Guide</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact Info</h4>
+                        <div class="contact-info">
+                            <p><i class="fas fa-envelope"></i> info@roastmydorm.com</p>
+                            <p><i class="fas fa-phone"></i> +212 6 00 00 00 00</p>
+                            <p><i class="fas fa-map-marker-alt"></i> Rabat, Morocco</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-bottom-content">
+                        <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
+                        <div class="footer-bottom-links">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Cookie Policy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
 
@@ -1139,6 +1205,21 @@
         rating : 4.6,
         reviews : 25,
         image :"ap agdal.jpg",
+        available : true 
+    },
+
+
+    {
+        id:38,
+        title :"Shared Apartement | Agdal",
+        location:"Agdal,Rabat",
+        price:"4000 Mad/Month",
+        pricevalue:"4000",
+        roomtype:"Shared",
+        amenity:"Furnished",
+        rating : 4.5,
+        reviews: 15,
+        image:"agdal2.jpg",
         available : true 
     }
 
@@ -1683,6 +1764,9 @@
                    case 37:
                     window.location.href='Agdal ap.html';
                     break;
+            case 38:
+                window.location.href='Agdal.html';
+                break;
                 default:
                     alert(`Viewing details for dorm ${dormId}. This would open a detailed dorm page with photos, amenities, landlord contact, and payment options.`);
             }
