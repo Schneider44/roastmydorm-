@@ -32,11 +32,14 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 1rem;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             transition: all 0.3s ease;
             margin-left: 10px;
+            min-height: 44px;
         }
         
         .search-btn:hover {
@@ -89,21 +92,47 @@
         
         .hero-search {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: stretch;
             gap: 10px;
             margin-top: 20px;
+            position: relative;
+            width: 100%;
         }
-        
-        @media (max-width: 768px) {
+
+        #schoolSearchInput {
+            width: 100%;
+            min-height: 44px;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .search-btn {
+            width: 100%;
+            min-height: 44px;
+            margin-left: 0 !important;
+            margin-top: 0 !important;
+            justify-content: center;
+        }
+
+        @media (min-width: 481px) {
             .hero-search {
-                flex-direction: column;
-                align-items: stretch;
+                flex-direction: row;
+                align-items: center;
+                width: auto;
             }
-            
+
+            #schoolSearchInput {
+                flex: 1;
+                width: auto;
+            }
+
             .search-btn {
-                margin-left: 0;
-                margin-top: 10px;
-                justify-content: center;
+                width: auto;
+                margin-left: 10px !important;
+                margin-top: 0 !important;
             }
         }
 
@@ -793,14 +822,14 @@
             <div class="nav-logo">
                 <span>RoastMyDorm</span>
             </div>
-            <div class="nav-menu">
+            <div class="nav-menu" id="navMenu">
                 <a href="../how-it-works.html" class="nav-link">
                     <i class="fas fa-question-circle"></i>
                     How It Works
                 </a>
                 <button class="nav-btn" onclick="showSignInModal()">Sign In</button>
             </div>
-            <div class="hamburger">
+            <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -900,7 +929,7 @@
                             <div class="city-preview-info">
                                 <h4>Casablanca</h4>
                                 <p>12 verified dorms available - Near HEC, FST, ENCG
-                                    💰 Avg Rent: 2,200–4,000 MAD
+                                    💰 Avg Rent: 2,200-4,000 MAD
                                     ⭐ Rating: 4.4 / 5</p>
                                 </p>
                             </div>
@@ -912,7 +941,7 @@
                             <div class="city-preview-info">
                                 <h4>Rabat</h4>
                                 <p>12 verified dorms available  - Near UM5, ENA, ENSIAS
-                                   💰 Avg Rent: 2,200–4,500 MAD
+                                   💰 Avg Rent: 2,200-5,000 MAD
                                    ⭐ Rating: 4.4 / 5</p>
                             </div>
                         </a>
@@ -922,8 +951,8 @@
                             </div>
                             <div class="city-preview-info">
                                 <h4>Marrakech</h4>
-                                <p>14 verified dorms available - Near Cadi Ayyad, FSTG , ENCG , ISPTS
-                                    💰 Avg Rent: 2,000–4,000 MAD
+                                <p>14 verified dorms available - Near Cadi Ayyad, FSTG , ENCG , ISPITS
+                                    💰 Avg Rent: 2,000-4,000 MAD
                                     ⭐ Rating: 4.4 / 5 </p>
                             </div>
                         </a>
@@ -1208,58 +1237,40 @@
 
     <!-- Live Chat Widget -->
     <div class="chat-widget">
-        <button class="chat-toggle" onclick="toggleChat()">
+        <button class="chat-toggle" onclick="toggleChatWindow()" title="Open Chat Support">
             <i class="fas fa-comments"></i>
             <div class="chat-badge" id="chatBadge">1</div>
         </button>
-        
-        <div class="chat-window" id="chatWindow">
+    </div>
+
+    <!-- Chat Support Modal -->
+    <div id="chatModal" class="chat-modal">
+        <div class="chat-window-modal">
             <div class="chat-header">
                 <div class="chat-header-info">
                     <h3>RoastMyDorm Support</h3>
                     <p>We're here to help! 👋</p>
                 </div>
-                <button class="chat-close" onclick="toggleChat()">
+                <button class="chat-close" onclick="toggleChatWindow()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
             <div class="chat-messages" id="chatMessages">
-                <!-- Welcome message -->
-                <div class="chat-message support">
-                    <div class="message-avatar support">S</div>
-                    <div class="message-bubble support">
-                        Hi 👋 How can we help you with finding or renting a dorm?
-                        <div class="message-time">Just now</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chat-support-options">
-                <div class="support-options-title">Quick Actions:</div>
-                <div class="support-options-grid">
-                    <button class="support-option-btn" onclick="handleQuickAction('email')">
-                        <i class="fas fa-envelope"></i> Email
-                    </button>
-                    <button class="support-option-btn" onclick="handleQuickAction('faq')">
-                        <i class="fas fa-question-circle"></i> FAQ
-                    </button>
-                    <button class="support-option-btn" onclick="handleQuickAction('phone')">
-                        <i class="fas fa-phone"></i> Call
-                    </button>
+                <div class="message bot-message">
+                    <p>Hello! Welcome to RoastMyDorm Support. How can we help you today?</p>
                 </div>
             </div>
             
             <div class="chat-input-container">
-                <textarea 
+                <input 
+                    type="text" 
                     class="chat-input" 
                     id="chatInput" 
                     placeholder="Type your message..."
-                    rows="1"
-                    onkeypress="handleKeyPress(event)"
-                    oninput="autoResize(this)"
-                ></textarea>
-                <button class="chat-send" onclick="sendMessage()" id="sendBtn">
+                    onkeypress="handleChatKeyPress(event)"
+                />
+                <button class="chat-send-btn" onclick="sendChatMessage()">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
@@ -1877,11 +1888,64 @@
             landlordChat.autoResize(textarea);
         }
 
+        // Chat Support Modal Functions
+        function toggleChatWindow() {
+            const chatModal = document.getElementById('chatModal');
+            chatModal.classList.toggle('active');
+        }
+
+        function sendChatMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (message === '') return;
+            
+            // Add user message
+            const chatMessages = document.getElementById('chatMessages');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message user-message';
+            userMessageDiv.innerHTML = `<p>${escapeHtml(message)}</p>`;
+            chatMessages.appendChild(userMessageDiv);
+            
+            // Clear input
+            chatInput.value = '';
+            chatInput.focus();
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Simulate bot response
+            setTimeout(() => {
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.className = 'message bot-message';
+                botMessageDiv.innerHTML = `<p>Thanks for your message! Our team will get back to you shortly.</p>`;
+                chatMessages.appendChild(botMessageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // Close modal when clicking outside
         window.onclick = function(event) { 
-            const modal = document.getElementById('landlordChatModal');
-            if (event.target === modal) {
+            const landlordModal = document.getElementById('landlordChatModal');
+            if (event.target === landlordModal) {
                 closeLandlordChat();
+            }
+            const chatModal = document.getElementById('chatModal');
+            if (event.target === chatModal) {
+                toggleChatWindow();
             }
         }
 
@@ -2628,6 +2692,35 @@
             // For now, just close the modal
             closeSignInModal();
         }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            const navbar = document.querySelector('.navbar');
+            
+            if (!navbar.contains(event.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close mobile menu when clicking nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('hamburger').classList.remove('active');
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
     </script>
 </body>
 </html> 
