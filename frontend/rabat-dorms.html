@@ -458,17 +458,21 @@
             .page-wrapper {
                 display: flex;
                 flex-direction: column;
-                min-height: 100vh;
+                min-height: auto;
             }
             
             .main-content {
-                flex: 1;
+                flex: 1 0 auto;
+            }
+            
+            .footer {
+                flex-shrink: 0;
             }
             
             html, body {
                 display: flex;
                 flex-direction: column;
-                height: 100%;
+                height: auto;
             }
             
             .city-dorms-container {
