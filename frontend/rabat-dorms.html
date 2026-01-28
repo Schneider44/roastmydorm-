@@ -455,6 +455,16 @@
         }
         
         @media (max-width:768px){
+            .page-wrapper {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            
+            .main-content {
+                flex: 1;
+            }
+            
             html, body {
                 display: flex;
                 flex-direction: column;
@@ -548,7 +558,8 @@
         </div>
     </nav>
 
-    <div class="city-dorms-container">
+    <div class="page-wrapper">
+        <main class="main-content city-dorms-container">
         <!-- Light Blue Header Section -->
         <div class="city-header">
             <div class="city-header-content">
@@ -656,6 +667,7 @@
                 </div>
             </div>
         </div>
+        </main>
         
         <!-- Footer - Inside container for flexbox -->
         <footer class="footer">
@@ -1672,6 +1684,9 @@
             }
         };
     </script>
+
+    </footer>
+    </div>
 
     <style>
         .footer {
