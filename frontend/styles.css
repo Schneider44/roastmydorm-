@@ -3546,8 +3546,8 @@ body {
     }
 }
 
-/* ===== MOBILE PHONE ONLY (max-width: 480px) ===== */
-@media (max-width: 480px) {
+/* ===== MOBILE PHONE ONLY (max-width: 768px) ===== */
+@media (max-width: 768px) {
     /* Navbar fixes for mobile */
     .nav-container {
         height: 60px;
