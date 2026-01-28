@@ -3548,6 +3548,46 @@ body {
 
 /* ===== MOBILE PHONE ONLY (max-width: 480px) ===== */
 @media (max-width: 480px) {
+    /* Navbar fixes for mobile */
+    .nav-container {
+        height: 60px;
+        padding: 0 10px;
+    }
+    
+    .nav-logo {
+        font-size: 1.1rem;
+        gap: 5px;
+        margin: 0;
+    }
+    
+    .nav-logo i {
+        font-size: 1.2rem;
+    }
+    
+    .nav-logo-img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .nav-menu {
+        gap: 8px;
+        margin-left: auto;
+    }
+    
+    .nav-link {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        margin-right: 0;
+    }
+    
+    .nav-social {
+        gap: 8px;
+    }
+    
+    .social-icon {
+        font-size: 1.3rem;
+    }
+    
     /* Scale down for phones only */
     .hero-title {
         font-size: 2.5rem;
@@ -3559,23 +3599,6 @@ body {
     
     .hero-buttons {
         flex-direction: column;
-    }
-    
-    .nav-logo {
-        font-size: 1.3rem;
-    }
-    
-    .nav-logo i {
-        font-size: 1.5rem;
-    }
-    
-    .nav-logo-img {
-        width: 24px;
-        height: 24px;
-    }
-    
-    .nav-menu {
-        gap: 15px;
     }
     
     .hero-container {
