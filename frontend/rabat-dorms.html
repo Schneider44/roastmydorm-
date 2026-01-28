@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root{--bg:#ffffff;--text:#111827;--muted:#6b7280;--card:#ffffff;--border:#e5e7eb}
-        .city-dorms-container { min-height: 100vh; background: var(--bg); padding-top: 70px; }
+        .city-dorms-container { min-height: 100vh; background: var(--bg); padding-top: 70px; display: flex; flex-direction: column; }
         .city-header { background:#ffffff; color: var(--text); padding:2.5rem 0 2rem; text-align: left; border-bottom:1px solid var(--border); }
         
         .city-header-content { position: relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 2rem; }
@@ -655,15 +655,15 @@
         const rabatDorms = [
             {
                 id: 1,
-                title: "Modern Studio | Near Mohammed V | Al Irfane ",
+                title: "Shared Apartement | Near Mohammed V | Al Irfane ",
                 location: "Al Irfane , Rabat | 3 min walk to Mohammed V Univ.",
                 price: "4,500 MAD/month",
                 priceValue: 2500,
-                roomType: "shared studio",
+                roomType: "shared",
                 amenity: "Premium Location",
                 rating: 4.6,
                 reviews: 31,
-                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+                image: "irfane studio.png",
                 available: true
             },
             {
@@ -676,7 +676,8 @@
                 amenity: "All Bills Included",
                 rating: 4.3,
                 reviews: 22,
-                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"
+                image: "app hassan.png",
+                available : true
             },
             {
                 id: 3,
@@ -688,7 +689,7 @@
                 amenity: "Garden View",
                 rating: 4.7,
                 reviews: 28,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400"
+                image: "app sale.png"
             },
             {
                 id: 4,
@@ -700,7 +701,8 @@
                 amenity: "Cultural Heritage",
                 rating: 4.1,
                 reviews: 19,
-                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400"
+                image: "sale el jadida app.png",
+                available : true
             },
             {
                 id: 5,
@@ -712,7 +714,7 @@
                 amenity: "Premium Location",
                 rating: 4.4,
                 reviews: 25,
-                image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400",
+                image: "massira rabat.png",
                 available: false
             },
             {
@@ -725,7 +727,7 @@
                 amenity: "3 bedrooms",
                 rating: 3.9,
                 reviews: 16,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+                image: "locean.png",
                 available: true
             },
             {
@@ -738,7 +740,7 @@
                 amenity: "Private Garden",
                 rating: 4.8,
                 reviews: 35,
-                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
+                image: "Hay Al Fath.png",
                 available: true
             },
             {
@@ -1551,13 +1553,13 @@
                     window.location.href = 'Al Irfane Studio.html';
                     break;
                 case 2:
-                    window.location.href = 'shared-room-3-bedrooms-rabat.html';
+                    window.location.href = 'Hassan.html';
                     break;
                 case 3:
-                    window.location.href = 'modern-apartment-rabat.html';
+                    window.location.href = 'In Boutana sale.html';
                     break;
                 case 4:
-                    window.location.href = 'cozy-room-rabat.html';
+                    window.location.href = 'sale el jadida app.html';
                     break;
                 case 5:
                     window.location.href = 'massira rabat.html';
@@ -1740,6 +1742,7 @@
             color: white;
             padding: 3rem 0 0;
             margin-top: auto;
+            width: 100%;
         }
         
         .footer-container {
@@ -1875,6 +1878,30 @@
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer {
+                padding: 2rem 0 0;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .footer-section h3 {
+                font-size: 1.2rem;
+            }
+            
+            .footer-bottom {
+                padding: 1rem 0;
             }
         }
     </style>
