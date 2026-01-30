@@ -453,25 +453,28 @@
             cursor: not-allowed;
             opacity: 0.7;
         }
+
+        /* Flexbox layout for proper footer positioning */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
         
         @media (max-width:768px){
             .page-wrapper {
-                display: flex;
-                flex-direction: column;
                 min-height: auto;
             }
             
-            .main-content {
-                flex: 1 0 auto;
-            }
-            
-            .footer {
-                flex-shrink: 0;
-            }
-            
-            html, body {
-                display: flex;
-                flex-direction: column;
+            .html, body {
                 height: auto;
             }
             
@@ -690,7 +693,7 @@
                             <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
                         </div>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>Quick Links</h4>
                         <ul class="footer-links">
@@ -700,7 +703,7 @@
                             <li><a href="marrakech-dorms.html">Marrakech</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>For Students</h4>
                         <ul class="footer-links">
@@ -710,7 +713,7 @@
                             <li><a href="#">Moving Checklist</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>For Landlords</h4>
                         <ul class="footer-links">
@@ -720,7 +723,7 @@
                             <li><a href="#">Support Center</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>Contact Info</h4>
                         <div class="contact-info">
@@ -1073,11 +1076,11 @@
             title : "Place Al Joulane Studio | Student Friendly | Place Al joulane",
             location : "Place Al Joulane , Rabat | 3 min walk to Mohmed V university",
             price :"5,000 Mad/Month",
-            priceValue : "5000",
-            roomType : "Studio",
+            priceValue : 5000,
+            roomType : "studio",
             amenity :"Cozy & Quiet",
-            rating :"4.5",
-            reviews :"5",
+            rating : 4.5,
+            reviews : 5,
             image :" Joulane.png",
             available : true
         },
@@ -1086,11 +1089,11 @@
             title : "Yaccoub Mansour Studio | Student friendly | Yaccoub Mnasour ",
             location : "Yaccoub Mansour , Rabat | 3 min walk to Mohamed V University",
             price : "1,900 Mad/Month",
-            pricevalue : "1900",
-            roomtype :"Studio",
+            priceValue : 1900,
+            roomType : "studio",
             amenity :"Cozy & Quiet",
-            rating :"4.5",
-            reviews :"5",
+            rating : 4.5,
+            reviews : 5,
             image :" yaacoub studio.png",
             available : true
         },
@@ -1099,11 +1102,11 @@
             title : "Studio Agdal | Student friendly | Agdal",
             location : "Agdal, Rabat | 3 min walk to Mohamed V University",
             price : "1,900 Mad/Month",
-            pricevalue : "1900",
-            roomtype :"Studio",
+            priceValue : 1900,
+            roomType : "studio",
             amenity :"Cozy & Quiet",
-            rating :"4.5",
-            reviews :"5",
+            rating : 4.5,
+            reviews : 5,
             image :" studio agdal.png",
             available : true
         },
@@ -1112,24 +1115,24 @@
             title :"Apartement Kebibat | kebibat",
             location : "Kebibat , Rabat | 5 min walk to UIR",
             price : "4,500 MAD/MONTH",
-            pricevalue: "4500",
-            roomtype : "Shared",
+            priceValue: 4500,
+            roomType : "shared",
             amenity: "Quiet",
-            rating:"4.5",
-            reviews:"5",
+            rating: 4.5,
+            reviews: 5,
             image :"kebibat app 4.png",
             available: true
         },
         {
             id:31,
-            title :"Apartement Bouitate | Modern Apartement",
+            title :"Apartement Bouitatea | Modern Apartement",
             location : "Bouitate , Rabat | 5 min walk to UIR , ISPITS",
             price :"3,200 MAD/MONTH",
-            pricevalue :"3200",
-            roomtype: "Shared",
+            priceValue : 3200,
+            roomType: "shared",
             amenity :"Furnished",
-            rating :"4,0",
-            reviews :"5",
+            rating : 4.0,
+            reviews : 5,
             image :"Bouitate app 2.png",
             available : true
         },
@@ -1138,11 +1141,11 @@
             title : "Apartement Dyur Jamae | Shared Apartement",
             location :"Yaacoub Mnasour , Dyur Jamae , Rabat| 5 min walk to ISPITS",
             price : "4,000 MAD/MONTH",
-            pricevalue :"4000",
-            roomtype :"Shared",
+            priceValue : 4000,
+            roomType : "shared",
             amenity :"Furnished",
-            rating :"4,0",
-            reviews :"10",
+            rating : 4.0,
+            reviews : 10,
             image :"yaacoub m1.png",
             available : true
         },
@@ -1151,11 +1154,11 @@
             title :"Apartement Al Manzah | Shared Apartement", 
             location :"Al Manzah , Rabat | 5 min walk to ",
             price : "4,000 MAD/MONTH",
-            pricevalue :"4000",
-            roomtype :"Shared",
+            priceValue : 4000,
+            roomType : "shared",
             amenity : "Furnished",
-            rating :"4,0",
-            reviews :"10",
+            rating : 4.0,
+            reviews : 10,
             image :"manzah app.png",
             available : true 
         },
@@ -1164,8 +1167,8 @@
         title :"Studio in Agdal | Student Friendly",
         location :"Agdal , Avenue Abtal , Rabat| 2 min walk to Univ Mohmed V ",
         price :"4,000 Mad/Month",
-        pricevalue :"4000",
-        roomtype :"Single",
+        priceValue : 4000,
+        roomType : "single",
         amenity :"Furnished",
         rating : 4.0,
         reviews : 10,
@@ -1177,8 +1180,8 @@
         title : "Modern Apartement in Agdal | Shared Apartement",
         location :"Agdal , Avenue Abtal , Rabat| 2 min walk to Univ Mohmed V",
         price :"4,000 Mad/Month",
-        pricevalue :"4000",
-        roomtype :"Shared",
+        priceValue : 4000,
+        roomType : "shared",
         amenity :"Quiet",
         rating : 4.0,
         reviews : 5,
@@ -1190,8 +1193,8 @@
         title : "Shared Apartement | Near UIR | L'occean",
         location :"L'occean , Rabat ",
         price:"4000 Mad/Month",
-        pricevalue :"4000",
-        roomtype :"Shared",
+        priceValue : 4000,
+        roomType : "shared",
         amenity :"Quiet",
         rating : 4.0,
         reviews : 10,
@@ -1204,8 +1207,8 @@
         title :"Studio in Agadl / Student Friendly",
         location:"Agdal, Rabat",
         price :"6000 Mad/Month",
-        pricevalue:"6000",
-        roomtype :"Single",
+        priceValue: 6000,
+        roomType : "single",
         amenity :"Furnished",
         rating : 4.6,
         reviews : 25,
@@ -1219,12 +1222,25 @@
         title :"Shared Apartement | Agdal",
         location:"Agdal,Rabat",
         price:"4000 Mad/Month",
-        pricevalue:"4000",
-        roomtype:"Shared",
+        priceValue: 4000,
+        roomType: "shared",
         amenity:"Furnished",
         rating : 4.5,
         reviews: 15,
         image:"agdal2.jpg",
+        available : true 
+    },
+    {
+        id:39,
+        title :"Friendly Studio | Near UM5 | Agdal",
+        location :"Agdal , Rabat",
+        price :"5500 Mad/Month",
+        pricevalue :"5500",
+        roomtype:"Single",
+        amenity :"Furnished",
+        rating : 4.7,
+        reviews : 10,
+        image :"rabat agdal.jpg",
         available : true 
     }
 
@@ -1772,6 +1788,9 @@
             case 38:
                 window.location.href='Agdal.html';
                 break;
+                case 39:
+                    window.location.href='Rabat Agdal.html';
+                    break;
                 default:
                     alert(`Viewing details for dorm ${dormId}. This would open a detailed dorm page with photos, amenities, landlord contact, and payment options.`);
             }

@@ -576,25 +576,28 @@
             margin-bottom: 1rem;
             opacity: 0.5;
         }
+
+        /* Flexbox layout for proper footer positioning */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
         
         @media (max-width:768px){
             .page-wrapper {
-                display: flex;
-                flex-direction: column;
                 min-height: auto;
             }
             
-            .main-content {
-                flex: 1 0 auto;
-            }
-            
-            .footer {
-                flex-shrink: 0;
-            }
-            
-            html, body {
-                display: flex;
-                flex-direction: column;
+            .html, body {
                 height: auto;
             }
             
