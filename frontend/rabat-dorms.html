@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabat Dorms - RoastMyDorm</title>
-    <meta name="description" content="Find student housing in Rabat. Browse dorms, view details, and contact landlords directly.">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png"> 
+    <title>Rabat Student Housing - RoastMyDorm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -22,22 +19,24 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #ffffff;
-            color: #111827;
+            color: #1a1a1a;
         }
 
         :root {
-            --bg: #ffffff;
-            --text: #111827;
-            --muted: #6b7280;
-            --card: #ffffff;
-            --border: #e5e7eb;
-            --primary: #3b82f6;
-            --success: #10b981;
+            --primary: #10b981;
+            --secondary: #0f766e;
+            --slate: #1e293b;
+            --gray-light: #f8fafc;
+            --gray-border: #e2e8f0;
+            --text: #1a1a1a;
+            --muted: #64748b;
+            --navy-blue: #1e293b;
+            --red: #dc2626;
         }
 
-        /* ===== MAIN LAYOUT ===== */
+        /* PAGE WRAPPER - FLEXBOX FOUNDATION */
         .page-wrapper {
             display: flex;
             flex-direction: column;
@@ -50,287 +49,214 @@
             width: 100%;
         }
 
-        .footer {
+        footer {
             flex-shrink: 0;
             width: 100%;
         }
 
-        /* ===== NAVBAR ===== */
-        .navbar {
-            background: #ffffff;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 0;
+        /* ===== DESKTOP: HEADER & SEARCH ===== */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-border);
+            padding: 1.5rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .nav-container {
-            max-width: 1200px;
+        .header-content {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 2rem;
         }
 
-        .nav-logo a {
-            font-size: 1.5rem;
+        .logo {
+            font-size: 1.8rem;
             font-weight: 800;
-            color: var(--text);
+            color: var(--navy-blue);
             text-decoration: none;
+            background: linear-gradient(135deg, var(--navy-blue) 0%, var(--red) 50%, var(--navy-blue) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .nav-btn {
-            background: var(--text);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 0.4rem;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 2px;
-            background: var(--text);
-        }
-
-        /* ===== CITY HEADER ===== */
-        .city-header {
-            background: #ffffff;
-            border-bottom: 1px solid var(--border);
-            padding: 2.5rem 2rem;
-        }
-
-        .city-header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .city-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .city-subtitle {
-            font-size: 1rem;
-            color: var(--muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-            max-width: 900px;
-        }
-
-        .city-stats {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-card {
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            background: var(--gray-light);
+            border: 1px solid var(--gray-border);
+            border-radius: 24px;
+            padding: 0.75rem 1.25rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: #f9fafb;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-        }
-
-        .stat-number {
-            font-size: 1.1rem;
-            font-weight: 800;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--muted);
-        }
-
-        /* ===== SEARCH FILTER SECTION ===== */
-        .search-filter-section {
-            background: #ffffff;
-            border-bottom: 1px solid var(--border);
-            padding: 1.5rem 2rem;
-        }
-
-        .search-filter-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .search-filter-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 1rem;
-            align-items: flex-end;
-            background: #f9fafb;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1rem;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .filter-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .filter-input {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.7rem;
-            font-size: 0.95rem;
-            color: var(--text);
-        }
-
-        .filter-input::placeholder {
-            color: #9ca3af;
-        }
-
-        .budget-slider {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: 0.75rem;
         }
 
-        .price-input-box {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.7rem;
+        .search-bar input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
             font-size: 0.95rem;
             color: var(--text);
         }
 
-        .search-btn {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
+        .search-bar input::placeholder {
+            color: var(--muted);
         }
 
-        .search-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        /* ===== DORMS CONTENT ===== */
-        .dorms-content {
-            flex: 1 0 auto;
-            width: 100%;
-            background: #ffffff;
-            padding: 2rem;
-        }
-
-        .dorms-content-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .dorms-header {
+        /* ===== FILTER TAGS ===== */
+        .filter-tags {
             display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            gap: 1rem;
+            padding: 2rem 2rem 3rem;
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+            border-bottom: 2px solid var(--primary);
         }
 
-        .back-button {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-        }
-
-        .back-button:hover {
-            opacity: 0.8;
-        }
-
-        .dorms-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text);
-            flex: 1;
-            text-align: center;
-        }
-
-        /* ===== DORMS GRID ===== */
-        .dorms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            width: 100%;
-        }
-
-        .dorm-card {
+        .tag {
             background: white;
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            border: 2px solid var(--gray-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover,
+        .tag.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* ===== DESKTOP GRID LAYOUT ===== */
+        .listings-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        /* ===== LISTING CARD ===== */
+        .listing-card {
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
             height: 100%;
         }
 
-        .dorm-card:hover {
+        .listing-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
             transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
-        .dorm-image {
+        .card-image-wrapper {
+            position: relative;
             width: 100%;
-            height: 220px;
+            height: 240px;
+            background: var(--gray-light);
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
             background-size: cover;
             background-position: center;
-            position: relative;
+            border-radius: 12px 12px 0 0;
         }
 
-        .dorm-content {
-            padding: 1.5rem;
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .card-save {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-save:hover {
+            background: white;
+            color: #e11d48;
+        }
+
+        .card-content {
+            padding: 1.25rem;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
-        .dorm-title {
-            font-size: 1.1rem;
+        .card-title {
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             line-height: 1.3;
         }
 
-        .dorm-location {
+        .card-location {
             font-size: 0.85rem;
             color: var(--muted);
             margin-bottom: 0.75rem;
@@ -339,807 +265,766 @@
             gap: 0.4rem;
         }
 
-        .dorm-price-large {
-            font-size: 1rem;
+        .card-price {
+            font-size: 1.4rem;
             font-weight: 800;
-            color: var(--text);
-            margin-bottom: 0.75rem;
+            color: var(--slate);
+            margin-bottom: 0.5rem;
         }
 
-        .dorm-rating {
+        .card-price-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .card-amenities {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .amenity-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--gray-light);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--secondary);
+        }
+
+        .card-rating {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
         .stars {
             color: #fbbf24;
-            font-size: 0.95rem;
         }
 
-        .rating-text {
+        .card-status {
             font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .dorm-amenity {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text);
-            margin-bottom: 0.75rem;
-        }
-
-        .availability-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            color: var(--primary);
+            font-weight: 600;
             margin-bottom: 1rem;
         }
 
-        .availability-badge.available {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .availability-badge.booked {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .booking-btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        .card-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
             margin-top: auto;
         }
 
-        .book-now-btn,
-        .waitlist-btn,
-        .view-details-btn {
-            width: 100%;
-            padding: 0.7rem;
-            border: none;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .book-now-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-
-        .book-now-btn:hover {
+        .card-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
-        .waitlist-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
+        /* ===== MOBILE: FEED LAYOUT ===== */
+        .bottom-nav {
+            display: none;
+            background: white;
+            border-top: 1px solid var(--gray-border);
+            padding: 0.75rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 50;
         }
 
-        .waitlist-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .view-details-btn {
-            background: var(--text);
-            color: white;
-        }
-
-        .view-details-btn:hover {
-            opacity: 0.9;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            color: #f3f4f6;
-            margin-top: auto;
-            padding: 3rem 2rem 1rem;
-        }
-
-        .footer-container {
-            max-width: 1200px;
+        .bottom-nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 500px;
             margin: 0 auto;
         }
 
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                gap: 1rem;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+
+            .filter-tags {
+                padding: 1.5rem 1rem 2rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                display: flex;
+            }
+
+            .listings-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+                padding: 0;
+                margin-bottom: 80px;
+            }
+
+            .listings-container {
+                padding: 0;
+            }
+
+            .listing-card {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .card-image-wrapper {
+                height: 200px;
+            }
+
+            .card-content {
+                padding: 1rem;
+            }
+
+            .bottom-nav {
+                display: block;
+            }
+
+            .card-button {
+                padding: 0.65rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 0.75rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .search-bar {
+                max-width: 100%;
+                border-radius: 16px;
+                padding: 0.6rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .card-image-wrapper {
+                height: 180px;
+            }
+
+            .card-title {
+                font-size: 0.95rem;
+            }
+
+            .card-price {
+                font-size: 1.2rem;
+            }
+
+            .card-content {
+                padding: 0.9rem;
+            }
+
+            .listings-grid {
+                margin-bottom: 70px;
+            }
+        }
+
+        /* ===== BOOKING MODAL ===== */
+        .booking-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            overflow-y: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .booking-modal.active {
+            display: flex;
+        }
+
+        .booking-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .booking-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--gray-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-header h2 {
+            font-size: 1.5rem;
+            color: var(--slate);
+        }
+
+        .booking-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--muted);
+        }
+
+        .booking-body {
+            padding: 2rem;
+        }
+
+        .dorm-preview {
+            background: var(--gray-light);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .dorm-preview-image {
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .dorm-preview-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--slate);
+        }
+
+        .dorm-preview-info p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .dorm-preview-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* PROGRESS STEPS */
+        .booking-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .booking-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: var(--gray-border);
+            z-index: 0;
+        }
+
+        .booking-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-light);
+            border: 2px solid var(--gray-border);
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--muted);
+            transition: all 0.3s ease;
+        }
+
+        .booking-step.active .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .booking-step.completed .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        /* STEP CONTENT */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--slate);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .price-summary {
+            background: var(--gray-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .price-summary-total {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--gray-border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--gray-light);
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-area p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: var(--gray-light);
+            border: 1px solid var(--gray-border);
+            color: var(--slate);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-border);
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--slate);
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 3rem;
+        }
+
         .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
             padding-bottom: 2rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .footer-section {
-            display: flex;
-            flex-direction: column;
-        }
-
         .footer-section h4 {
-            font-size: 1rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: white;
         }
 
-        .footer-logo h3 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-
-        .footer-logo p {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: #d1d5db;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.7rem;
-        }
-
-        .footer-links a {
-            color: #d1d5db;
+        .footer-section a {
+            display: block;
+            color: #cbd5e1;
             text-decoration: none;
             font-size: 0.9rem;
+            margin-bottom: 0.5rem;
             transition: color 0.3s ease;
         }
 
-        .footer-links a:hover {
-            color: #f59e0b;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: #f59e0b;
-            transform: translateY(-3px);
-        }
-
-        .contact-info p {
-            font-size: 0.9rem;
-            color: #d1d5db;
-            margin-bottom: 0.7rem;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-        }
-
-        .contact-info i {
-            color: #f59e0b;
-            width: 20px;
-            text-align: center;
+        .footer-section a:hover {
+            color: var(--primary);
         }
 
         .footer-bottom {
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer-bottom-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .footer-bottom-content p {
+            text-align: center;
+            color: #94a3b8;
             font-size: 0.85rem;
-            color: #9ca3af;
         }
 
-        .footer-bottom-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .footer-bottom-links a {
-            color: #9ca3af;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-bottom-links a:hover {
-            color: #f59e0b;
-        }
-
-        /* ===== TABLET (1025px and below) ===== */
-        @media (max-width: 1024px) {
-            .nav-container {
-                padding: 0 1rem;
-            }
-
-            .city-header {
-                padding: 2rem 1rem;
-            }
-
-            .city-title {
-                font-size: 1.5rem;
-            }
-
-            .search-filter-section {
-                padding: 1rem;
-            }
-
-            .search-filter-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .dorms-content {
-                padding: 1.5rem;
-            }
-
-            .dorms-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
-
-            .footer-content {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1.5rem;
-            }
-
-            .footer-container {
-                padding: 2.5rem 1.5rem 1rem;
-            }
-        }
-
-        /* ===== MOBILE (768px and below) ===== */
         @media (max-width: 768px) {
-            .page-wrapper {
-                min-height: 100vh;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .nav-menu {
-                display: none;
-            }
-
-            .nav-container {
-                padding: 0 1rem;
-            }
-
-            .city-stats {
-                display: none;
-            }
-
-            .city-header {
-                padding: 1.25rem 1rem;
-            }
-
-            .city-header-content {
-                padding: 0;
-            }
-
-            .city-title {
-                font-size: 1.25rem;
-                margin-bottom: 0.4rem;
-            }
-
-            .city-subtitle {
-                font-size: 0.8rem;
-                margin-bottom: 1rem;
-            }
-
-            .search-filter-section {
-                padding: 1rem;
-            }
-
-            .search-filter-container {
-                padding: 0;
-            }
-
-            .search-filter-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-                padding: 0.75rem;
-                border-radius: 8px;
-            }
-
-            .filter-label {
-                font-size: 0.7rem;
-            }
-
-            .filter-input {
-                padding: 0.6rem;
-                font-size: 0.85rem;
-            }
-
-            .budget-slider {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.5rem;
-            }
-
-            .price-input-box {
-                padding: 0.6rem;
-                font-size: 0.85rem;
-            }
-
-            .search-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.85rem;
-            }
-
-            .dorms-content {
-                padding: 1rem 0.75rem;
-                flex: 1 0 auto;
-            }
-
-            .dorms-content-container {
-                padding: 0;
-            }
-
-            .dorms-header {
-                flex-direction: column;
-                gap: 0.75rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .back-button {
-                align-self: flex-start;
-                font-size: 0.9rem;
-            }
-
-            .dorms-title {
-                font-size: 1.1rem;
-                text-align: left;
-                flex: unset;
-            }
-
-            .dorms-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-
-            .dorm-image {
-                height: 180px;
-            }
-
-            .dorm-content {
-                padding: 1rem;
-            }
-
-            .dorm-title {
-                font-size: 0.95rem;
-            }
-
-            .dorm-location {
-                font-size: 0.8rem;
-            }
-
-            .dorm-price-large {
-                font-size: 0.9rem;
-            }
-
-            .dorm-rating {
-                font-size: 0.8rem;
-            }
-
-            .stars {
-                font-size: 0.9rem;
-            }
-
-            .dorm-amenity {
-                font-size: 0.8rem;
-            }
-
-            .availability-badge {
-                font-size: 0.7rem;
-            }
-
-            .book-now-btn,
-            .waitlist-btn,
-            .view-details-btn {
-                padding: 0.6rem;
-                font-size: 0.8rem;
-            }
-
-            /* Footer Mobile */
-            .footer {
-                padding: 1.5rem 1rem;
+            footer {
+                padding: 2rem 1rem 1rem;
             }
 
             .footer-content {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-                margin-bottom: 1.2rem;
-                padding-bottom: 1.2rem;
-            }
-
-            .footer-section {
-                text-align: center;
-            }
-
-            .footer-section h4 {
-                font-size: 0.9rem;
-                margin-bottom: 0.7rem;
-            }
-
-            .footer-logo h3 {
-                font-size: 1rem;
-            }
-
-            .footer-logo p {
-                font-size: 0.8rem;
-            }
-
-            .footer-links {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 0.8rem;
-            }
-
-            .footer-links li {
-                margin-bottom: 0;
-            }
-
-            .footer-links a {
-                font-size: 0.8rem;
-            }
-
-            .footer-social {
-                justify-content: center;
-            }
-
-            .social-link {
-                width: 36px;
-                height: 36px;
-            }
-
-            .contact-info {
-                text-align: center;
-            }
-
-            .contact-info p {
-                font-size: 0.8rem;
-                justify-content: center;
-            }
-
-            .footer-bottom-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.5rem;
-            }
-
-            .footer-bottom-content p {
-                font-size: 0.75rem;
-            }
-
-            .footer-bottom-links {
-                justify-content: center;
-                gap: 0.8rem;
-            }
-
-            .footer-bottom-links a {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* ===== EXTRA SMALL (480px and below) ===== */
-        @media (max-width: 480px) {
-            .nav-logo a {
-                font-size: 1.2rem;
-            }
-
-            .city-title {
-                font-size: 1.1rem;
-            }
-
-            .city-subtitle {
-                font-size: 0.75rem;
-            }
-
-            .dorms-header {
-                gap: 0.5rem;
-            }
-
-            .dorm-image {
-                height: 150px;
-            }
-
-            .dorm-content {
-                padding: 0.9rem;
-            }
-
-            .booking-btn-container {
-                gap: 0.35rem;
-            }
-
-            .book-now-btn,
-            .waitlist-btn,
-            .view-details-btn {
-                padding: 0.55rem;
-                font-size: 0.75rem;
+                gap: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="index.html">RoastMyDorm</a>
-            </div>
-            <div class="nav-menu">
-                <button class="nav-btn">Sign In</button>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Page Wrapper -->
     <div class="page-wrapper">
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- City Header -->
-            <div class="city-header">
-                <div class="city-header-content">
-                    <h1 class="city-title">Rabat: Premier Student Accommodation</h1>
-                    <p class="city-subtitle">Capital city with prestigious universities and rich cultural heritage offering exceptional academic opportunities.</p>
-                    <div class="city-stats">
-                        <div class="stat-card">
-                            <span class="stat-number">39</span>
-                            <span class="stat-label">Available Listings</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">4.5/5</span>
-                            <span class="stat-label">Average Rating</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">1,500+</span>
-                            <span class="stat-label">Happy Students</span>
-                        </div>
+            <!-- HEADER -->
+            <header class="header">
+                <div class="header-content">
+                    <a href="index.html" class="logo">RoastMyDorm</a>
+                    <div class="search-bar">
+                        <i class="fas fa-search" style="color: var(--muted);"></i>
+                        <input type="text" placeholder="Search by location, price..." id="searchInput">
                     </div>
+                    <button style="background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: none;" class="desktop-only">
+                        <i class="fas fa-sliders-h"></i> Filters
+                    </button>
                 </div>
+            </header>
+
+            <!-- FILTER TAGS -->
+            <div class="filter-tags" id="filterTags">
+                <div class="tag active" data-filter="all">All</div>
+                <div class="tag" data-filter="studio">Studio</div>
+                <div class="tag" data-filter="shared">Shared</div>
+                <div class="tag" data-filter="budget">Budget</div>
+                <div class="tag" data-filter="premium">Premium</div>
             </div>
 
-            <!-- Search & Filter Section -->
-            <div class="search-filter-section">
-                <div class="search-filter-container">
-                    <div class="search-filter-grid">
-                        <div class="filter-group">
-                            <label class="filter-label">Check Date</label>
-                            <input type="text" class="filter-input" id="dateInput" placeholder="Select Date" readonly>
-                        </div>
-                        <div class="filter-group">
-                            <label class="filter-label">Room Type</label>
-                            <input type="text" class="filter-input" id="roomTypeInput" placeholder="All Types" readonly>
-                        </div>
-                        <div class="filter-group">
-                            <label class="filter-label">Budget (MAD)</label>
-                            <div class="budget-slider">
-                                <input type="number" class="price-input-box" id="minPriceInput" placeholder="Min" value="1000" min="1000" max="5000">
-                                <input type="number" class="price-input-box" id="maxPriceInput" placeholder="Max" value="5000" min="1000" max="5000">
-                            </div>
-                        </div>
-                        <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Search</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dorms Content -->
-            <div class="dorms-content">
-                <div class="dorms-content-container">
-                    <div class="dorms-header">
-                        <a href="index.html" class="back-button">
-                            <i class="fas fa-arrow-left"></i>
-                            Back
-                        </a>
-                        <h2 class="dorms-title">Student Rentals in Rabat</h2>
-                        <div></div>
-                    </div>
-                    <div id="dorms-grid" class="dorms-grid"></div>
-                </div>
+            <!-- LISTINGS -->
+            <div class="listings-container">
+                <div class="listings-grid" id="listingsGrid"></div>
             </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-container">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <div class="footer-logo">
-                            <h3>RoastMyDorm</h3>
-                            <p>Your trusted platform for finding the perfect student accommodation in Morocco.</p>
-                        </div>
-                        <div class="footer-social">
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        </div>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Quick Links</h4>
-                        <ul class="footer-links">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="casablanca-dorms.html">Casablanca</a></li>
-                            <li><a href="marrakech-dorms.html">Marrakech</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>For Students</h4>
-                        <ul class="footer-links">
-                            <li><a href="#">How to Apply</a></li>
-                            <li><a href="#">Safety Tips</a></li>
-                            <li><a href="#">Support</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>For Landlords</h4>
-                        <ul class="footer-links">
-                            <li><a href="#">List Property</a></li>
-                            <li><a href="#">Dashboard</a></li>
-                            <li><a href="#">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Contact</h4>
-                        <div class="contact-info">
-                            <p><i class="fas fa-envelope"></i> info@roastmydorm.com</p>
-                            <p><i class="fas fa-phone"></i> +212 6 00 00 00 00</p>
-                            <p><i class="fas fa-map-marker-alt"></i> Rabat, Morocco</p>
-                        </div>
-                    </div>
+        <!-- MOBILE BOTTOM NAV -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-items">
+                <a class="nav-item active" onclick="showTab('explore')">
+                    <i class="fas fa-compass" style="font-size: 1.5rem;"></i>
+                    Explore
+                </a>
+                <a class="nav-item" onclick="showTab('saved')">
+                    <i class="fas fa-heart" style="font-size: 1.5rem;"></i>
+                    Saved
+                </a>
+                <a class="nav-item" onclick="showTab('profile')">
+                    <i class="fas fa-user" style="font-size: 1.5rem;"></i>
+                    Profile
+                </a>
+            </div>
+        </nav>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
                 </div>
-                <div class="footer-bottom">
-                    <div class="footer-bottom-content">
-                        <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
-                        <div class="footer-bottom-links">
-                            <a href="#">Privacy</a>
-                            <a href="#">Terms</a>
-                            <a href="#">Cookies</a>
-                        </div>
-                    </div>
+                <div class="footer-section">
+                    <h4>For Students</h4>
+                    <a href="#">How It Works</a>
+                    <a href="#">Safety Tips</a>
+                    <a href="#">Support</a>
                 </div>
+                <div class="footer-section">
+                    <h4>For Landlords</h4>
+                    <a href="#">List Property</a>
+                    <a href="#">Dashboard</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
             </div>
         </footer>
     </div>
 
     <script>
-        const rabatDorms = [
-            { id: 1, title: "Shared Apartment | Al Irfane", location: "Al Irfane, Rabat", price: "4,500 MAD/month", priceValue: 4500, roomType: "shared", amenity: "Premium Location", rating: 4.6, reviews: 31, image: "irfane studio.png", available: true },
-            { id: 2, title: "Shared Apartment | Hassan", location: "Hassan, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "shared", amenity: "All Bills Included", rating: 4.3, reviews: 22, image: "app hassan.png", available: true },
-            { id: 3, title: "Luxury Apartment | In Boutana", location: "In Boutana, Sale", price: "2,800 MAD/month", priceValue: 2800, roomType: "apartment", amenity: "Garden View", rating: 4.7, reviews: 28, image: "app sale.png", available: true },
-            { id: 4, title: "Traditional Room | Sale el Jadida", location: "Sale el Jadida", price: "3,500 MAD/month", priceValue: 3500, roomType: "shared", amenity: "Cultural Heritage", rating: 4.1, reviews: 19, image: "sale el jadida app.png", available: true },
-            { id: 5, title: "Shared Apartment | El Massira", location: "El Massira, Rabat", price: "3,300 MAD/month", priceValue: 3300, roomType: "apartment", amenity: "Premium Location", rating: 4.4, reviews: 25, image: "massira rabat.png", available: false },
-            { id: 6, title: "Budget Studio | L'ocean", location: "L'ocean, Rabat", price: "1,500 MAD/month", priceValue: 1500, roomType: "studio", amenity: "3 bedrooms", rating: 3.9, reviews: 16, image: "locean.png", available: true },
-            { id: 7, title: "Shared Apartment | Hay Al Fath", location: "Hay Al Fath, Rabat", price: "3,500 MAD/month", priceValue: 3500, roomType: "house", amenity: "Private Garden", rating: 4.8, reviews: 35, image: "Hay Al Fath.png", available: true },
-            { id: 8, title: "Cozy Room | Hay al Mouadda", location: "Hay al Mouadda, Rabat", price: "1,200 MAD/month", priceValue: 1200, roomType: "shared", amenity: "Shared Kitchen", rating: 3.8, reviews: 12, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400", available: true },
-            { id: 9, title: "Executive Studio | Temara", location: "Temara, Rabat", price: "3,000 MAD/month", priceValue: 3000, roomType: "studio", amenity: "Ocean View", rating: 4.9, reviews: 42, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400", available: true },
-            { id: 10, title: "Student Residence | Agdal", location: "Agdal, Rabat", price: "2,100 MAD/month", priceValue: 2100, roomType: "single", amenity: "24/7 Security", rating: 4.5, reviews: 38, image: "https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400", available: true },
-            { id: 11, title: "Shared Apartment | Sale el jadida", location: "Sale el jadida", price: "1,800 MAD/month", priceValue: 1800, roomType: "shared", amenity: "Furnished", rating: 4.2, reviews: 24, image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400", available: true },
-            { id: 12, title: "Modern Apartment | L'occean", location: "L'occean, Rabat", price: "5,000 MAD/month", priceValue: 5000, roomType: "apartment", amenity: "Fully Furnished", rating: 4.6, reviews: 29, image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400", available: true },
-            { id: 13, title: "Budget Room | Agdal", location: "Agdal, Rabat", price: "1,000 MAD/month", priceValue: 1000, roomType: "shared", amenity: "Transport Access", rating: 3.7, reviews: 15, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400", available: true },
-            { id: 14, title: "Luxury Villa | Souissi", location: "Souissi, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "house", amenity: "Swimming Pool", rating: 4.9, reviews: 45, image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400", available: true },
-            { id: 15, title: "Cozy Studio | Hassan", location: "Hassan, Rabat", price: "2,300 MAD/month", priceValue: 2300, roomType: "studio", amenity: "Historic Area", rating: 4.3, reviews: 21, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400", available: true },
-            { id: 16, title: "Dormitory | Agdal", location: "Agdal, Rabat", price: "1,400 MAD/month", priceValue: 1400, roomType: "single", amenity: "Study Room", rating: 4.0, reviews: 18, image: "https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400", available: true },
-            { id: 17, title: "Shared Apartment | Medina", location: "Medina, Rabat", price: "1,900 MAD/month", priceValue: 1900, roomType: "shared", amenity: "Traditional", rating: 4.1, reviews: 20, image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400", available: true },
-            { id: 18, title: "Modern Studio | Hay Riad", location: "Hay Riad, Rabat", price: "2,700 MAD/month", priceValue: 2700, roomType: "studio", amenity: "Beach Access", rating: 4.7, reviews: 33, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400", available: true },
-            { id: 19, title: "Budget Apartment | Hassan", location: "Hassan, Rabat", price: "2,100 MAD/month", priceValue: 2100, roomType: "apartment", amenity: "Balcony", rating: 4.2, reviews: 26, image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400", available: true },
-            { id: 20, title: "Luxury Studio | Agdal", location: "Agdal, Rabat", price: "3,000 MAD/month", priceValue: 3000, roomType: "studio", amenity: "Gym Access", rating: 4.8, reviews: 41, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400", available: true },
-            { id: 21, title: "Shared House | Temara", location: "Temara, Rabat", price: "1,600 MAD/month", priceValue: 1600, roomType: "shared", amenity: "Quiet", rating: 4.0, reviews: 17, image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400", available: true },
-            { id: 22, title: "Shared Apartment | Occean", location: "Occean, Rabat", price: "3,500 MAD/month", priceValue: 3500, roomType: "single", amenity: "Library", rating: 3.9, reviews: 14, image: "https://images.unsplash.com/photo-1555854877-bab0e827d52f?w=400", available: true },
-            { id: 23, title: "Modern Apartment | Souissi", location: "Souissi, Rabat", price: "3,200 MAD/month", priceValue: 3200, roomType: "apartment", amenity: "Parking", rating: 4.6, reviews: 36, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400", available: true },
-            { id: 24, title: "Budget Studio | Medina", location: "Medina, Rabat", price: "1,700 MAD/month", priceValue: 1700, roomType: "studio", amenity: "Market Access", rating: 3.8, reviews: 13, image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400", available: true },
-            { id: 25, title: "Luxury House | Hay Riad", location: "Hay Riad, Rabat", price: "3,800 MAD/month", priceValue: 3800, roomType: "house", amenity: "Terrace", rating: 4.9, reviews: 48, image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400", available: false },
-            { id: 26, title: "Student Apartment | Hay Nahda", location: "Hay Nahda, Rabat", price: "2,400 MAD/month", priceValue: 2400, roomType: "apartment", amenity: "Quiet", rating: 4.2, reviews: 18, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400", available: true },
-            { id: 27, title: "Studio | Place Al Joulane", location: "Place Al Joulane, Rabat", price: "5,000 MAD/month", priceValue: 5000, roomType: "studio", amenity: "Cozy", rating: 4.5, reviews: 5, image: "Joulane.png", available: true },
-            { id: 28, title: "Studio | Yaccoub Mansour", location: "Yaccoub Mansour, Rabat", price: "1,900 MAD/month", priceValue: 1900, roomType: "studio", amenity: "Quiet", rating: 4.5, reviews: 5, image: "yaacoub studio.png", available: true },
-            { id: 29, title: "Studio Agdal", location: "Agdal, Rabat", price: "1,900 MAD/month", priceValue: 1900, roomType: "studio", amenity: "Cozy", rating: 4.5, reviews: 5, image: "studio agdal.png", available: true },
-            { id: 30, title: "Apartment Kebibat", location: "Kebibat, Rabat", price: "4,500 MAD/month", priceValue: 4500, roomType: "shared", amenity: "Quiet", rating: 4.5, reviews: 5, image: "kebibat app 4.png", available: true },
-            { id: 31, title: "Modern Apartment | Bouitatea", location: "Bouitate, Rabat", price: "3,200 MAD/month", priceValue: 3200, roomType: "shared", amenity: "Furnished", rating: 4.0, reviews: 5, image: "Bouitate app 2.png", available: true },
-            { id: 32, title: "Shared Apartment | Dyur Jamae", location: "Yaacoub Mnasour, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "shared", amenity: "Furnished", rating: 4.0, reviews: 10, image: "yaacoub m1.png", available: true },
-            { id: 33, title: "Apartment | Al Manzah", location: "Al Manzah, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "shared", amenity: "Furnished", rating: 4.0, reviews: 10, image: "manzah app.png", available: true },
-            { id: 34, title: "Studio in Agdal", location: "Agdal, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "single", amenity: "Furnished", rating: 4.0, reviews: 10, image: "agdal app1.png", available: true },
-            { id: 35, title: "Modern Apartment | Agdal", location: "Agdal, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "shared", amenity: "Quiet", rating: 4.0, reviews: 5, image: "agdal ap1.jpg", available: false },
-            { id: 36, title: "Shared Apartment | L'occean", location: "L'occean, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "shared", amenity: "Quiet", rating: 4.0, reviews: 10, image: "loccean.png", available: true },
-            { id: 37, title: "Studio in Agdal", location: "Agdal, Rabat", price: "6,000 MAD/month", priceValue: 6000, roomType: "single", amenity: "Furnished", rating: 4.6, reviews: 25, image: "ap agdal.jpg", available: true },
-            { id: 38, title: "Shared Apartment | Agdal", location: "Agdal, Rabat", price: "4,000 MAD/month", priceValue: 4000, roomType: "shared", amenity: "Furnished", rating: 4.5, reviews: 15, image: "agdal2.jpg", available: true },
-            { id: 39, title: "Friendly Studio | Agdal", location: "Agdal, Rabat", price: "5,500 MAD/month", priceValue: 5500, roomType: "single", amenity: "Furnished", rating: 4.7, reviews: 10, image: "rabat agdal.jpg", available: true }
+        // Dorm Listings Data
+        const dorms = [
+            { id: 1, title: "Modern Shared Apt | Al Irfane", location: "Al Irfane, Rabat", price: 4500, type: "shared", image: "irfane studio.png", amenities: ["wifi", "gym", "laundry"], rating: 4.6, reviews: 31, verified: true, available: true, page: "Al Irfane Studio.html" },
+            { id: 2, title: "Cozy Studio | Hassan", location: "Hassan, Rabat", price: 4000, type: "studio", image: "app hassan.png", amenities: ["wifi", "laundry"], rating: 4.3, reviews: 22, verified: true, available: true, page: "Hassan.html" },
+            { id: 5, title: "Premium Apt | Agdal", location: "Agdal, Rabat", price: 3300, type: "shared", image: "massira rabat.png", amenities: ["wifi", "gym", "laundry"], rating: 4.4, reviews: 25, verified: true, available: false, page: "Agdal ap.html" },
+            { id: 6, title: "Premium APT | Yaccoub Mansour", location: "Yaacoub Mansour, Rabat", price: 1500, type: "Apartement", image: "yaacoub m1.png", amenities: ["wifi"], rating: 3.9, reviews: 16, verified: true, available: true, page: "yaacoub app 2.html" },
+            { id: 7, title: "Studio | Agdal", location: "Agdal, Rabat", price: 3500, type: "shared", image: "agdal Studio.png", amenities: ["wifi", "gym", "laundry"], rating: 4.8, reviews: 35, verified: true, available: true, page: "Studio Agdal.html" },
+            { id: 8, title: "Premium Apartement in Agdal", location: "Agdal, Rabat", price: 1200, type: "shared", image: " agdal app1.png", amenities: ["wifi"], rating: 3.8, reviews: 12, verified: false, available: true, page: "Agdal app.html" },
+            { id: 9, title: "Executive Apartement | Agdal", location: "Agdal, Rabat", price: 3000, type: "studio", image: "agdal ap1.jpg", amenities: ["wifi", "gym"], rating: 4.9, reviews: 42, verified: true, available: true, page: "Agdal app2.html" },
+            { id: 10, title: "Student Dorm | Agdal", location: "Agdal, Rabat", price: 2100, type: "studio", image: "rabat agdal.jpg", amenities: ["wifi", "laundry"], rating: 4.5, reviews: 38, verified: true, available: true, page: "Rabat Agdal.html" },
+           
         ];
+
+        let currentFilter = 'all';
+        let savedListings = JSON.parse(localStorage.getItem('savedListings')) || [];
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadDorms();
-            document.getElementById('searchBtn').addEventListener('click', filterDorms);
+            renderListings(dorms);
+            setupFilters();
+            setupSearch();
         });
 
-        function loadDorms() {
-            displayDorms(rabatDorms);
-        }
-
-        function filterDorms() {
-            let minPrice = parseInt(document.getElementById('minPriceInput').value) || 1000;
-            let maxPrice = parseInt(document.getElementById('maxPriceInput').value) || 5000;
-
-            let filtered = rabatDorms.filter(dorm => dorm.priceValue >= minPrice && dorm.priceValue <= maxPrice);
-            displayDorms(filtered);
-        }
-
-        function displayDorms(dorms) {
-            const grid = document.getElementById('dorms-grid');
+        // Render Listings
+        function renderListings(listings) {
+            const grid = document.getElementById('listingsGrid');
             grid.innerHTML = '';
 
-            if (dorms.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6b7280;"><i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i><h3>No dorms found</h3></div>';
-                return;
-            }
-
-            dorms.forEach(dorm => {
+            listings.forEach(dorm => {
+                const isSaved = savedListings.includes(dorm.id);
                 const card = document.createElement('div');
-                card.className = 'dorm-card';
-                const available = dorm.available !== false;
+                card.className = 'listing-card';
+
+                const amenityIcons = {
+                    'wifi': '<i class="fas fa-wifi"></i>',
+                    'gym': '<i class="fas fa-dumbbell"></i>',
+                    'laundry': '<i class="fas fa-water"></i>'
+                };
+
+                const amenitiesHTML = dorm.amenities.map(a => `<div class="amenity-icon" title="${a}">${amenityIcons[a]}</div>`).join('');
 
                 card.innerHTML = `
-                    <div class="dorm-image" style="background-image: url('${dorm.image}')"></div>
-                    <div class="dorm-content">
-                        <h3 class="dorm-title">${dorm.title}</h3>
-                        <div class="dorm-location"><i class="fas fa-map-marker-alt" style="font-size: 0.7rem;"></i> ${dorm.location}</div>
-                        <div class="dorm-price-large">${dorm.price}</div>
-                        <div class="dorm-rating">
-                            <div class="stars">${'★'.repeat(Math.floor(dorm.rating))}${'☆'.repeat(5 - Math.floor(dorm.rating))}</div>
-                            <span class="rating-text">${dorm.rating} (${dorm.reviews})</span>
+                    <div class="card-image-wrapper">
+                        <div class="card-image" style="background-image: url('${dorm.image}')"></div>
+                        ${dorm.verified ? '<div class="card-badge"><i class="fas fa-check-circle"></i> Verified</div>' : ''}
+                        <button class="card-save" onclick="toggleSave(${dorm.id}, event)">
+                            <i class="fas fa-heart" style="color: ${isSaved ? '#e11d48' : 'currentColor'};"></i>
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${dorm.title}</h3>
+                        <div class="card-location"><i class="fas fa-map-marker-alt"></i> ${dorm.location}</div>
+                        <div class="card-price">د.م ${dorm.price.toLocaleString()}</div>
+                        <div class="card-price-label">per month</div>
+                        <div class="card-amenities">${amenitiesHTML}</div>
+                        <div class="card-rating">
+                            <span class="stars">${'★'.repeat(Math.floor(dorm.rating))}${'☆'.repeat(5 - Math.floor(dorm.rating))}</span>
+                            <span>${dorm.rating} (${dorm.reviews})</span>
                         </div>
-                        <div class="dorm-amenity"><i class="fas fa-check-circle" style="color: #10b981; font-size: 0.8rem;"></i> ${dorm.amenity}</div>
-                        <span class="availability-badge ${available ? 'available' : 'booked'}">${available ? 'Available Now' : 'Booked'}</span>
-                        <div class="booking-btn-container">
-                            ${available ? `<button class="book-now-btn" onclick="alert('Booking: ${dorm.title}')"><i class="fas fa-calendar-check"></i> Book Now</button>` : `<button class="waitlist-btn" onclick="alert('Added to waitlist')"><i class="fas fa-bell"></i> Waitlist</button>`}
-                            <button class="view-details-btn" onclick="alert('Details for: ${dorm.title}')">View Details</button>
-                        </div>
+                        <div class="card-status">${dorm.available ? '✓ Available Now' : '× Sold Out'}</div>
+                        <button class="card-button" onclick="openBooking(${dorm.id})">${dorm.available ? 'View & Book' : 'Join Waitlist'}</button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        // Filter Setup
+        function setupFilters() {
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    tags.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    filterListings();
+                });
+            });
+        }
+
+        // Filter Listings
+        function filterListings() {
+            let filtered = dorms;
+            if (currentFilter !== 'all') {
+                filtered = dorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 2000) || (currentFilter === 'premium' && d.price > 3500));
+            }
+            renderListings(filtered);
+        }
+
+        // Search
+        function setupSearch() {
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const filtered = dorms.filter(d => d.title.toLowerCase().includes(query) || d.location.toLowerCase().includes(query));
+                renderListings(filtered);
+            });
+        }
+
+        // Toggle Save
+        function toggleSave(id, event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (savedListings.includes(id)) {
+                savedListings = savedListings.filter(s => s !== id);
+            } else {
+                savedListings.push(id);
+            }
+            localStorage.setItem('savedListings', JSON.stringify(savedListings));
+            renderListings(currentFilter === 'all' ? dorms : filterListings());
+        }
+
+        // View & Book - Navigate to dorm page
+        function openBooking(id) {
+            const dorm = dorms.find(d => d.id === id);
+            if (dorm && dorm.page) {
+                window.location.href = dorm.page;
+            } else {
+                alert("Dorm page not found");
+            }
+        }
+
+        // Mobile Navigation
+        function showTab(tab) {
+            if (tab === 'saved') {
+                const savedDorms = dorms.filter(d => savedListings.includes(d.id));
+                renderListings(savedDorms);
+            } else if (tab === 'explore') {
+                renderListings(dorms);
+            } else if (tab === 'profile') {
+                alert('Profile Page - Coming Soon');
+            }
         }
     </script>
 </body>
