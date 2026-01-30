@@ -624,25 +624,28 @@
             cursor: not-allowed;
             opacity: 0.7;
         }
+
+        /* Flexbox layout for proper footer positioning */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1 0 auto;
+        }
+
+        .footer {
+            flex-shrink: 0;
+        }
         
         @media (max-width: 768px) {
             .page-wrapper {
-                display: flex;
-                flex-direction: column;
                 min-height: auto;
             }
             
-            .main-content {
-                flex: 1 0 auto;
-            }
-            
-            .footer {
-                flex-shrink: 0;
-            }
-            
-            html, body {
-                display: flex;
-                flex-direction: column;
+            .html, body {
                 height: auto;
             }
             
@@ -871,7 +874,7 @@
                             <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
                         </div>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>Quick Links</h4>
                         <ul class="footer-links">
@@ -881,7 +884,7 @@
                             <li><a href="marrakech-dorms.html">Marrakech</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>For Students</h4>
                         <ul class="footer-links">
@@ -891,7 +894,7 @@
                             <li><a href="#">Moving Checklist</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>For Landlords</h4>
                         <ul class="footer-links">
@@ -901,7 +904,7 @@
                             <li><a href="#">Support Center</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="footer-section">
                         <h4>Contact Info</h4>
                         <div class="contact-info">
@@ -911,7 +914,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="footer-bottom">
                     <div class="footer-bottom-content">
                         <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
@@ -929,164 +932,10 @@
     <script>
         // Marrakech dorm data
         const marrakechDorms = [
+           
+                
             {
                 id: 1,
-                title: " SHARED | Izdihar Apartment",
-                location: "Izdihar, Marrakech | 10 min walk to Cadi Ayyad Univ.",
-                price: "2,100 MAD/month",
-                priceValue: 2100,
-                roomType: "apartment",
-                amenity: "Cultural Heritage",
-                rating: 4.4,
-                reviews: 19,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-                available: true
-            },
-            {
-                id: 2,
-                title: "Modern Studio | AC & WiFi | izdihaar",
-                location: "izdihar, Marrakech | 10 min walk to Cadi Ayyad Univ.",
-                price: "2,400 MAD/month",
-                priceValue: 2400,
-                roomType: "studio",
-                amenity: "Premium Location",
-                rating: 4.7,
-                reviews: 27,
-                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
-                available: false
-            },
-            {
-                id: 3,
-                title: "Cozy Room | Medina Style | Medina",
-                location: "Medina, Marrakech | 12 min walk to Cadi Ayyad Univ.",
-                price: "1,800 MAD/month",
-                priceValue: 1800,
-                roomType: "single",
-                amenity: "Historic Location",
-                rating: 4.2,
-                reviews: 15,
-                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
-                available: true
-            },
-            {
-                id: 4,
-                title: "Shared Apartment | 2 Bedrooms | Mabrouka",
-                location: "Mabrouka, Marrakech | 8 min walk to Cadi Ayyad Univ.",
-                price: "2,000 MAD/month",
-                priceValue: 2000,
-                roomType: "shared",
-                amenity: "All Bills Included",
-                rating: 4.3,
-                reviews: 23,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-                available: true
-            },
-            {
-                id: 5,
-                title: "Luxury Studio | Garden View | Gueliz",
-                location: "Gueliz, Marrakech | 4 min walk to Cadi Ayyad Univ.",
-                price: "2,600 MAD/month",
-                priceValue: 2600,
-                roomType: "studio",
-                amenity: "Garden View",
-                rating: 4.8,
-                reviews: 32,
-                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
-                available: false
-            },
-            {
-                id: 6,
-                title: "Budget Room | Shared Bath | Semlalia",
-                location: "Semlalia, Marrakech | 15 min walk to Cadi Ayyad Univ.",
-                price: "1,200 MAD/month",
-                priceValue: 1200,
-                roomType: "single",
-                amenity: "Shared Kitchen",
-                rating: 3.9,
-                reviews: 11,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-                available: true
-            },
-            {
-                id: 7,
-                title: "Shared Apartement | 3 Rooms | Jenan Awrad",
-                location: "Medina, Marrakech | 20 min walk to Cadi Ayyad Univ.",
-                price: "5,000 MAD/month",
-                priceValue: 3200,
-                roomType: "apartment",
-                amenity: "Private Courtyard",
-                rating: 4.9,
-                reviews: 41,
-                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
-                available: true
-            },
-            {
-                id: 8,
-                title: "Modern Apartment | Marjane Dyur Nakhil",
-                location: "Marjane Dyur Nakhil, Marrakech | 6 min walk to Cadi Ayyad Univ.",
-                price: "4,000 MAD/month",
-                priceValue: 2800,
-                roomType: "apartment",
-                amenity: "3 Bedrooms",
-                rating: 4.6,
-                reviews: 29,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-                available: false
-            },
-            {
-                id: 9,
-                title: "Apartment | Balcony & AC | Route de Fès",
-                location: "Route de Fès, Marrakech | 9 min to Cadi Ayyad Univ.",
-                price: "2,000 MAD/month",
-                priceValue: 2300,
-                roomType: "apartment",
-                amenity: "3 rooms",
-                rating: 4.4,
-                reviews: 21,
-                image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=400",
-                available: true
-            },
-            {
-                id: 10,
-                title: "Studio | Furnished | Izdihar",
-                location: "Daoudiate, Marrakech | 7 min bus to Cadi Ayyad Univ.",
-                price: "4,000 MAD/month",
-                priceValue: 1900,
-                roomType: "shared apartment",
-                amenity: "2 Bedrooms",
-                rating: 4.1,
-                reviews: 14,
-                image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400",
-                available: false
-            },
-            {
-                id: 11,
-                title: "Modern Apartment | 3 Bedrooms | Route Asfi",
-                location: "Route Asfi, Marrakech | 5 min walk to Cadi Ayyad Univ.",
-                price: "4,000 MAD/month",
-                priceValue: 3200,
-                roomType: "apartment",
-                amenity: "Spacious Living",
-                rating: 4.5,
-                reviews: 28,
-                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
-                available: true
-            },
-            {
-                id: 12,
-                title: "Apartement | Near Cadi Ayad Semlalia | Izdihar",
-                location: "Izdihar, Marrakech | 8 min walk to Cadi Ayyad Univ.",
-                price: "4,000 MAD/month",
-                priceValue: 4000,
-                roomType: "studio",
-                amenity: "Modern Facilities",
-                rating: 4.6,
-                reviews: 31,
-                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400",
-                available: false
-            },
-            {
-                id: 13,
                 title: "Luxury Apartment | 2 Bedrooms | Hay Mabrouka",
                 location: "Hay Mbrouka, Marrakech | 7 min walk to FST Univ.",
                 price: "4,000 MAD/month",
@@ -1096,23 +945,11 @@
                 rating: 4.7,
                 reviews: 35,
                 image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
-                available: true
+                available: true,
+                page: "Hay mabrouka app.html"
             },
             {
-                id: 14,
-                title: "Budget Shared Room | Near Cadi Ayad Univ | Charaf ",
-                location: "Charf , Marrakech | 6 min walk to Cadi Ayyad Univ.",
-                price: "3,800 MAD/month",
-                priceValue: 3800,
-                roomType: "shared",
-                amenity: "All Inclusive",
-                rating: 4.2,
-                reviews: 22,
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
-                available: true
-            },
-            {
-                id: 15,
+                id: 2,
                 title: "Budget Shared Room | Near HEEC | Al Ouhda 5 ",
                 location: "Al Ouhda 5 , Marrakech | 2 min walk to HEEC.",
                 price: "3,000 MAD/month",
@@ -1122,10 +959,11 @@
                 rating: 4.2,
                 reviews: 22,
                 image: "Al Ouhda 5.png",
-                available: true
+                available: true,
+                page: "Al Ouhda 5.html"
             },
             {
-                id : 16,
+                id : 3,
                 title : "Modern  Shared Apartement | Near FST | Gueliz",
                 location :"Gueliz , Marrakech | 5 min walk to Fst , ISPTS",
                 price :"3,950 MAD/MONTH",
@@ -1135,10 +973,11 @@
                 rating : 4.4,
                 reviews : 5,
                 image :"Gueliz app.png",
-                available : true 
+                available : true,
+                page: "Gueliz app.html"
             },
             {
-                id:17,
+                id:4,
                 title :"Shared Apartement | Near Cady Ayyad Univ | Saada",
                 location :"Saada , Marrakech | 5 min Drive to Cady Ayyad Univ",
                 price :"4,000 MAD/MONTH",
@@ -1148,10 +987,11 @@
                 rating :4.4,
                 reviews : 5,
                 image :"saada app.png",
-                available : true
+                available : true,
+                page: "saada app2.html"
             },
             {
-                id:18,
+                id:5,
                 title :"Shared Apartement | Near FST | Zohour Targa, Salma 1",
                 location :"Zohour Targa, Salma 1,Marrakech",
                 price :"3,800 MAD/MONTH",
@@ -1161,10 +1001,11 @@
                 rating :4.5,
                 reviews: 5,
                 image:"targa app6.png",
-                available : true
+                available : true,
+                page: "Targa app.html"
             } ,
             {
-                id:19,
+                id:6,
                 title :"Shared Apartement | Near FST | Doha Gates of Marrakech",
                 location :"Doha gates of marrakech , Marrakech",
                 price :"4,000MAD/MONTH",
@@ -1174,10 +1015,11 @@
                 rating :4.4,
                 reviews : 5,
                 image :"mabrouka app1.png",
-                available : true
+                available : true,
+                page: "Abwab Marrakech.html"
             },
             {
-                id:20,
+                id:7,
                 title :"Shared Apartement | Near Univ | Dyur Marjane",
                 location :"Dyur Marjane , Route de Casablanca , Marrakech",
                 price:"3,000 MAD/MONTH",
@@ -1187,11 +1029,12 @@
                 rating :4.4,
                 reviews : 5,
                 image :"dyur marjane app1.png",
-                available : true
+                available : true,
+                page: "Dyur Marjane app.html"
             },
             {
 
-            id: 21,
+            id: 8,
             title :"Shared Apartement | Near FST | Izdihar",
             location :"Izdihar , Marrakech",
             price :"4000 Mad/Month",
@@ -1204,7 +1047,7 @@
             available : false 
             },
             {
-                id:22,
+                id:9,
                 title :"Shared Apartement | Near FST | Mabrouka",
                 location :"Mabrouka , Marrakech",
                 price:"4000 Mad/Month",
@@ -1214,10 +1057,11 @@
                 rating : 4.0,
                 reviews : 10,
                 image :"mabrouka st1.png",
-                available : true 
+                available : true,
+                page: "Hay mabrouka app.html"
             },
             {
-                id:23,
+                id:10,
                 title :"Shared Apartement | Near FST | Azzouzia",
                 location :"Bassatin Targa , Azzouzia , Marrakech",
                 price :"2800 Mad/Month",
@@ -1227,7 +1071,8 @@
                 rating : 4.0,
                 reviews : 10,
                 image :"targa ap1.png",
-                available : true 
+                available : true,
+                page: "Targa app.html"
             }
 
 
@@ -1662,74 +1507,46 @@
 
         // Make viewDormDetails globally available
         window.viewDormDetails = function(dormId) {
+            const dorm = marrakechDorms.find(d => d.id === dormId);
+            if (dorm && dorm.page) {
+                window.location.href = dorm.page;
+            } else {
+                alert("Dorm page not found");
+            }
+        };
+
+        // Old switch statement - no longer used
+        /*
+        function viewDormDetails_old(dormId) {
             switch(dormId) {
                 case 1:
-                    window.location.href = 'Izdihar apartement.html';
-                    break;
-                case 2:
-                    window.location.href = 'modern-studio-cadi-ayyad.html';
-                    break;
-                case 3:
-                    window.location.href = 'cozy-room-medina-marrakech.html';
-                    break;
-                case 4:
-                    window.location.href = 'shared-apartment-2-bedrooms-marrakech.html';
-                    break;
-                case 5:
-                    window.location.href = 'luxury-studio-gueliz.html';
-                    break;
-                case 6:
-                    window.location.href = 'semlaliya.html';
-                    break;
-                case 7:
-                    window.location.href = 'Jenan Awrad app.html';
-                    break;
-                case 8:
-                    window.location.href = 'Dyur Marjane Nakhil.html';
-                    break;
-                case 9:
-                    window.location.href = 'Route fes app.html';
-                    break;
-                case 10:
-                     window.location.href='izdihar.html';
-                        break;
-                case 11:
-                    window.location.href = 'Route Asfi.html';
-                    break;
-                case 12:
-                    window.location.href = 'Izdihar app.html';
-                    break;
-                case 13:
                     window.location.href = 'Hay mabrouka app.html';
                     break;
-                case 14:
-                    window.location.href = 'Charaf.html';
-                        break;
-                case 15:
+                case 2:
                     window.location.href = 'Al Ouhda 5.html';
                     break;
-                 case 16:
+                 case 3:
                     window.location.href='Gueliz app.html';
                     break;   
-                    case 17 :
+                    case 4 :
                         window.location.href='saada app2.html';
                         break;
-                     case 18:
+                     case 5:
                         window.location.href='Targa app.html';
                         break;   
-                     case 19 :
+                     case 6 :
                         window.location.href='Abwab Marrakech.html';
                         break;   
-                        case 20:
+                        case 7:
                         window.location.href='Dyur Marjane app.html';
                         break;
-                        case 21:
+                        case 8:
                         window.location.href='izdihar 2.html';
                         break ;
-                        case 22 :
+                        case 9:
                         window.location.href='mabrouka studio.html';
                         break;
-                        case 23:
+                        case 10:
                             window.location.href='targa.html';
                             break;
 
