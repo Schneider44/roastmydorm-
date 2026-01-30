@@ -9,7 +9,13 @@
     <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        html, body { height: 100%; margin: 0; padding: 0; }
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
         :root{--bg:#ffffff;--text:#111827;--muted:#6b7280;--card:#ffffff;--border:#e5e7eb}
         .city-dorms-container { min-height: 100vh; background: var(--bg); padding-top: 70px; display: flex; flex-direction: column; }
         .city-header { background:#ffffff; color: var(--text); padding:2.5rem 0 2rem; text-align: left; border-bottom:1px solid var(--border); }
@@ -292,6 +298,51 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
+            min-height: 1000px;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .pagination-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .pagination-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .page-info {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #374151;
+            min-width: 80px;
+            text-align: center;
         }
         
         .dorm-card { background:#ffffff; border-radius:10px; overflow:hidden; border:1px solid var(--border); box-shadow:none; transition: transform .15s ease; }
@@ -531,6 +582,21 @@
             .dorms-grid {
                 grid-template-columns: 1fr;
             }
+
+            .pagination-container {
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .pagination-btn {
+                padding: 0.65rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .page-info {
+                font-size: 0.9rem;
+                min-width: 70px;
+            }
             
             .dorms-header {
                 flex-direction: column;
@@ -539,6 +605,373 @@
             }
             
             .dorms-title { font-size:1rem; }
+        }
+
+        /* ===== MOBILE ONLY (max-width: 480px) ===== */
+        @media (max-width: 480px) {
+            html, body {
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .page-wrapper {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                width: 100%;
+            }
+
+            .main-content {
+                flex: 1 0 auto;
+                width: 100%;
+            }
+
+            .footer {
+                flex-shrink: 0;
+                width: 100%;
+            }
+
+            .city-dorms-container {
+                min-height: auto;
+                padding-top: 60px;
+            }
+
+            .city-header {
+                padding: 1rem 0;
+            }
+
+            .city-header-content {
+                padding: 0 0.75rem;
+            }
+
+            .city-title {
+                font-size: 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .city-subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 1rem;
+            }
+
+            .city-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stat-card {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .stat-number {
+                font-size: 0.95rem;
+            }
+
+            .stat-label {
+                font-size: 0.7rem;
+            }
+
+            .search-filter-section {
+                padding: 0.5rem 0;
+            }
+
+            .search-filter-container {
+                padding: 0 0.5rem;
+            }
+
+            .search-filter-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+
+            .filter-group {
+                gap: 0.25rem;
+            }
+
+            .filter-label {
+                font-size: 0.7rem;
+                margin-left: 0.15rem;
+            }
+
+            .filter-input {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .budget-slider {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .price-input-wrapper {
+                gap: 0.25rem;
+            }
+
+            .price-input-label {
+                font-size: 0.65rem;
+            }
+
+            .price-input-box {
+                padding: 0.6rem 2.5rem 0.6rem 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .price-currency {
+                right: 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            .search-btn {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .dorms-content {
+                padding: 0.75rem 0 1.5rem;
+            }
+
+            .dorms-content-container {
+                padding: 0 0.5rem;
+            }
+
+            .dorms-header {
+                flex-direction: column;
+                gap: 0.75rem;
+                text-align: center;
+                padding: 0 0.5rem;
+            }
+
+            .back-button {
+                justify-content: center;
+            }
+
+            .dorms-title {
+                font-size: 0.95rem;
+            }
+
+            .dorms-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .pagination-container {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem 0.75rem;
+                margin-top: 0.5rem;
+            }
+
+            .pagination-btn {
+                width: 100%;
+                padding: 0.65rem 1rem;
+                font-size: 0.85rem;
+                justify-content: center;
+            }
+
+            .page-info {
+                font-size: 0.85rem;
+                order: -1;
+                width: 100%;
+                padding-bottom: 0.5rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .dorm-card {
+                border-radius: 8px;
+            }
+
+            .dorm-image {
+                height: 180px;
+            }
+
+            .dorm-content {
+                padding: 1rem;
+            }
+
+            .dorm-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .dorm-location {
+                font-size: 0.85rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .dorm-price-large {
+                font-size: 0.9rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .dorm-rating {
+                gap: 0.25rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .stars {
+                font-size: 1rem;
+            }
+
+            .rating-text {
+                font-size: 0.8rem;
+            }
+
+            .dorm-amenity {
+                font-size: 0.85rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .amenity-icon {
+                width: 14px;
+                height: 14px;
+                font-size: 8px;
+            }
+
+            .availability-badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+                margin-top: 0.4rem;
+            }
+
+            .booking-btn-container {
+                gap: 0.4rem;
+                margin-top: 0.5rem;
+            }
+
+            .book-now-btn,
+            .waitlist-btn,
+            .booked-btn,
+            .view-details-btn {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            /* Footer Mobile Overrides */
+            .footer {
+                padding: 1.5rem 0 0.75rem;
+            }
+
+            .footer-container {
+                max-width: 100%;
+                padding: 0 0.75rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .footer-section {
+                text-align: center;
+            }
+
+            .footer-section h4 {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .footer-logo h3 {
+                font-size: 1rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .footer-logo p {
+                font-size: 0.8rem;
+                margin-bottom: 0.75rem;
+                line-height: 1.4;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+
+            .footer-links li {
+                margin-bottom: 0.4rem;
+            }
+
+            .footer-links a {
+                font-size: 0.8rem;
+            }
+
+            .footer-social {
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .social-link {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+
+            .contact-info {
+                text-align: center;
+            }
+
+            .contact-info p {
+                font-size: 0.8rem;
+                gap: 0.4rem;
+            }
+
+            .contact-info i {
+                width: 14px;
+                font-size: 0.85rem;
+            }
+
+            .footer-bottom {
+                padding-top: 0.75rem;
+                margin-top: 0.75rem;
+            }
+
+            .footer-bottom-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .footer-bottom-content p {
+                font-size: 0.75rem;
+                margin: 0;
+            }
+
+            .footer-bottom-links {
+                gap: 0.5rem;
+                justify-content: center;
+            }
+
+            .footer-bottom-links a {
+                font-size: 0.7rem;
+            }
+
+            /* Date Picker Mobile */
+            .date-picker {
+                max-width: calc(100vw - 1rem);
+            }
+
+            .date-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 0.25rem;
+                padding: 0.75rem;
+            }
+
+            .date-cell {
+                padding: 0.35rem;
+                font-size: 0.75rem;
+            }
+
+            /* Room Dropdown Mobile */
+            .room-dropdown {
+                max-width: calc(100vw - 1rem);
+            }
+
+            .room-option {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -672,6 +1105,17 @@
                 
                 <div id="dorms-grid" class="dorms-grid">
                     <!-- Dorms will be loaded here -->
+                </div>
+                
+                <!-- Pagination Controls -->
+                <div id="pagination-container" class="pagination-container">
+                    <button id="prev-page" class="pagination-btn" onclick="previousPage()">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <div id="page-info" class="page-info">Page 1 of 2</div>
+                    <button id="next-page" class="pagination-btn" onclick="nextPage()">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1525,7 +1969,10 @@
                         <p style="color: #6b7280;">Try adjusting your filters to see more results.</p>
                     </div>
                 `;
+                document.getElementById('pagination-container').style.display = 'none';
                 return;
+            } else {
+                document.getElementById('pagination-container').style.display = 'flex';
             }
 
             dorms.forEach(dorm => {
@@ -1596,8 +2043,56 @@
             console.log(`Showing ${count} dorms matching your criteria`);
         }
 
+        // Pagination Variables
+        let currentPage = 1;
+        const dormsPerPage = 19;
+        let currentDisplayDorms = rabatDorms;
+
+        // Navigate to Previous Page
+        window.previousPage = function() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayCurrentPage();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        // Navigate to Next Page
+        window.nextPage = function() {
+            const totalPages = Math.ceil(currentDisplayDorms.length / dormsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayCurrentPage();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        // Display Current Page
+        function displayCurrentPage() {
+            const totalPages = Math.ceil(currentDisplayDorms.length / dormsPerPage);
+            const start = (currentPage - 1) * dormsPerPage;
+            const end = start + dormsPerPage;
+            const pageItems = currentDisplayDorms.slice(start, end);
+
+            displayFilteredDorms(pageItems);
+            updatePaginationControls(totalPages);
+        }
+
+        // Update Pagination Controls
+        function updatePaginationControls(totalPages) {
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            const pageInfo = document.getElementById('page-info');
+
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
         function loadDorms() {
-            displayFilteredDorms(rabatDorms);
+            currentPage = 1;
+            currentDisplayDorms = rabatDorms;
+            displayCurrentPage();
         }
 
         // Book Now Function
