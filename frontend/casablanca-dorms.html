@@ -606,12 +606,12 @@
     <script>
         // Dorm Listings Data for Casablanca
         const dorms = [
-            { id: 1, title: "Modern Studio | Anfa", location: "Anfa, Casablanca", price: 3800, type: "studio", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400", amenities: ["wifi", "gym", "laundry"], rating: 4.6, reviews: 28, verified: true, available: true, page: "luxury-studio-anfa.html" },
-            { id: 2, title: "Budget Shared Room | Maarif", location: "Maarif, Casablanca", price: 2500, type: "shared", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400", amenities: ["wifi", "laundry"], rating: 4.1, reviews: 18, verified: true, available: true, page: "modern-apartment-maarif.html" },
-            { id: 3, title: "Luxury Studio | Gueliz", location: "Gueliz, Casablanca", price: 4200, type: "studio", image: "luxury-studio-gueliz.png", amenities: ["wifi", "gym", "laundry"], rating: 4.5, reviews: 32, verified: true, available: true, page: "luxury-studio-gueliz.html" },
-            { id: 4, title: "Modern Apartment | Hassan", location: "Hassan, Casablanca", price: 3500, type: "shared", image: "modern-apartment-hassan.png", amenities: ["wifi", "laundry"], rating: 4.3, reviews: 24, verified: true, available: true, page: "modern-apartment-hassan.html" },
-            { id: 5, title: "Executive Studio | Rabat", location: "Rabat, Casablanca", price: 4500, type: "studio", image: "luxury-studio-rabat.png", amenities: ["wifi", "gym", "laundry"], rating: 4.7, reviews: 35, verified: true, available: true, page: "luxury-studio-rabat.html" },
-            { id: 6, title: "Luxury Villa | Souissi", location: "Souissi, Casablanca", price: 5500, type: "premium", image: "luxury-villa-souissi.png", amenities: ["wifi", "gym", "laundry"], rating: 4.8, reviews: 42, verified: true, available: false, page: "luxury-villa-souissi.html" },
+            { id: 1, title: "Shared Apartment | 2 Bedrooms | Maarif", location: "Maarif, Casablanca", price: 2500, type: "shared", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400", amenities: ["wifi", "laundry"], rating: 4.1, reviews: 18, verified: true, available: true, page: "shared-apartment-maarif.html" },
+            { id: 2, title: "Single Room | En-suite Bath | Hay Riad", location: "Hay Riad, Casablanca", price: 3000, type: "shared", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400", amenities: ["wifi", "laundry"], rating: 4.0, reviews: 15, verified: true, available: true, page: "single-room-hay-riad.html" },
+            { id: 3, title: "Luxury Studio | AC & Parking | Anfa", location: "Anfa, Casablanca", price: 3500, type: "studio", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400", amenities: ["wifi", "gym", "laundry"], rating: 4.8, reviews: 31, verified: true, available: true, page: "luxury-studio-anfa.html" },
+            { id: 4, title: "Cozy Room | Near Campus | Ain Sebaa", location: "Ain Sebaa, Casablanca", price: 2800, type: "shared", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400", amenities: ["wifi", "laundry"], rating: 4.2, reviews: 20, verified: true, available: true, page: "cozy-room-ain-sebaa.html" },
+            { id: 5, title: "Sharing Studio | Ain Sebaa", location: "Ain Sebaa, Casablanca", price: 2200, type: "studio", image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400", amenities: ["wifi"], rating: 3.9, reviews: 14, verified: true, available: true, page: "sharing studio ain sebaa.html" },
+            { id: 6, title: "Modern Studio | Near Hassan II | Ain Diab", location: "Ain Diab, Casablanca", price: 2800, type: "studio", image: "https://images.unsplash.com/photo-1540932239986-310128078e6c?w=400", amenities: ["wifi", "gym", "laundry"], rating: 4.5, reviews: 23, verified: true, available: true, page: "modern-studio-hassan-ii.html" },
         ];
 
         let currentFilter = 'all';
@@ -685,7 +685,7 @@
         function filterListings() {
             let filtered = dorms;
             if (currentFilter !== 'all') {
-                filtered = dorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 2500) || (currentFilter === 'premium' && d.price > 4200));
+                filtered = dorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 2500) || (currentFilter === 'premium' && d.price > 3200));
             }
             renderListings(filtered);
         }
