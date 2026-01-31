@@ -1378,16 +1378,15 @@
         <!-- Hero Gallery -->
         <div class="hero-gallery">
             <div class="gallery-main">
-                <div class="main-image" id="mainImage" onclick="openGallery(0)" style="background-image: url('targa ap1.png');">
+                <div class="main-image" id="mainImage" onclick="openGallery(0)" style="background-image: url('targa ap2.png');">
                     <button class="view-all-btn" onclick="event.stopPropagation(); openGallery(0)">
-                        <i class="fas fa-images"></i> View All Photos (4)
+                        <i class="fas fa-images"></i> View All Photos (3)
                     </button>
                 </div>
                 <div class="thumbnails">
-                    <div class="thumbnail" style="background-image: url('targa ap1.png')" onclick="event.stopPropagation(); openGallery(1)"></div>
-                    <div class="thumbnail" style="background-image: url('targa ap2.png')" onclick="event.stopPropagation(); openGallery(2)"></div>
-                    <div class="thumbnail" style="background-image: url('targa ap3.png')" onclick="event.stopPropagation(); openGallery(3)"></div>
-                    <div class="thumbnail" style="background-image: url('targa ap4.png')" onclick="event.stopPropagation(); openGallery(4)"></div>"
+                    <div class="thumbnail" style="background-image: url('targa ap2.png')" onclick="event.stopPropagation(); openGallery(1)"></div>
+                    <div class="thumbnail" style="background-image: url('targa ap3.png')" onclick="event.stopPropagation(); openGallery(2)"></div>
+                    <div class="thumbnail" style="background-image: url('targa ap4.png')" onclick="event.stopPropagation(); openGallery(3)"></div>
                 </div>
             </div>
         </div>
@@ -1774,52 +1773,78 @@ Price: 2800 DH
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="footer-section">
-                <h4>About</h4>
-                <ul class="footer-links">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">How It Works</a></li>
-                    <li><a href="#">Our Team</a></li>
-                    <li><a href="#">Careers</a></li>
-                </ul>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>RoastMyDorm</h3>
+                        <p>Your trusted platform for finding the perfect student accommodation in Morocco's top cities.</p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="casablanca-dorms.html">Casablanca</a></li>
+                        <li><a href="rabat-dorms.html">Rabat</a></li>
+                        <li><a href="marrakech-dorms.html">Marrakech</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Students</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">How to Apply</a></li>
+                        <li><a href="#">Student Guide</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Moving Checklist</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>For Landlords</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">List Your Property</a></li>
+                        <li><a href="#">Landlord Portal</a></li>
+                        <li><a href="#">Pricing Guide</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> info@roastmydorm.com</p>
+                        <p><i class="fas fa-phone"></i> +212 6 00 00 00 00</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Morocco</p>
+                    </div>
+                </div>
             </div>
-            <div class="footer-section">
-                <h4>For Students</h4>
-                <ul class="footer-links">
-                    <li><a href="#">Browse Listings</a></li>
-                    <li><a href="#">Student Guide</a></li>
-                    <li><a href="#">Safety Tips</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 RoastMyDorm. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
             </div>
-            <div class="footer-section">
-                <h4>For Landlords</h4>
-                <ul class="footer-links">
-                    <li><a href="#">List Your Property</a></li>
-                    <li><a href="#">Landlord Portal</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Support</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Connect</h4>
-                <ul class="footer-links">
-                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
-                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
-                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            © <span id="currentYear"></span> RoastMyDorm. All rights reserved.
         </div>
     </footer>
 
     <script>
         // Gallery functionality
         const galleryImages = [
-            'targa ap1.png',
+
+            'targa ap.png',
             'targa ap2.png',
             'targa ap3.png',
             'targa ap4.png'

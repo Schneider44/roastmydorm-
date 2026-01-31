@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabat Student Housing - RoastMyDorm</title>
+    <title>Marrakech Student Housing - RoastMyDorm</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -465,296 +465,6 @@
             }
         }
 
-        /* ===== BOOKING MODAL ===== */
-        .booking-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            overflow-y: auto;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .booking-modal.active {
-            display: flex;
-        }
-
-        .booking-content {
-            background: white;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 600px;
-            margin: auto;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .booking-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--gray-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .booking-header h2 {
-            font-size: 1.5rem;
-            color: var(--slate);
-        }
-
-        .booking-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--muted);
-        }
-
-        .booking-body {
-            padding: 2rem;
-        }
-
-        .dorm-preview {
-            background: var(--gray-light);
-            padding: 1.25rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-        }
-
-        .dorm-preview-image {
-            width: 100px;
-            height: 100px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-
-        .dorm-preview-info h3 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--slate);
-        }
-
-        .dorm-preview-info p {
-            font-size: 0.9rem;
-            color: var(--muted);
-            margin-bottom: 0.4rem;
-        }
-
-        .dorm-preview-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* PROGRESS STEPS */
-        .booking-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .booking-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 25%;
-            right: 25%;
-            height: 2px;
-            background: var(--gray-border);
-            z-index: 0;
-        }
-
-        .booking-step {
-            flex: 1;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: var(--gray-light);
-            border: 2px solid var(--gray-border);
-            border-radius: 50%;
-            margin: 0 auto 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--muted);
-            transition: all 0.3s ease;
-        }
-
-        .booking-step.active .step-number {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .booking-step.completed .step-number {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.85rem;
-            color: var(--muted);
-            font-weight: 600;
-        }
-
-        /* STEP CONTENT */
-        .step-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .step-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--slate);
-            font-size: 0.95rem;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--gray-border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .price-summary {
-            background: var(--gray-light);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-        }
-
-        .price-summary-total {
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-
-        .upload-area {
-            border: 2px dashed var(--gray-border);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: var(--gray-light);
-        }
-
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .upload-area i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-area p {
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        .booking-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn-secondary {
-            flex: 1;
-            background: var(--gray-light);
-            border: 1px solid var(--gray-border);
-            color: var(--slate);
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: var(--gray-border);
-        }
-
-        .btn-primary {
-            flex: 1;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .success-message {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
         /* ===== FOOTER ===== */
         footer {
             background: var(--slate);
@@ -894,18 +604,17 @@
     </div>
 
     <script>
-        // Dorm Listings Data
+        // Dorm Listings Data for Marrakech
         const dorms = [
-            { id: 1, title: "Modern Shared Apt | Al Irfane", location: "Al Irfane, Rabat", price: 4500, type: "shared", image: "irfane studio.png", amenities: ["wifi", "gym", "laundry"], rating: 4.6, reviews: 31, verified: true, available: true, page: "Al Irfane Studio.html" },
-            { id: 2, title: "Cozy Studio | Hassan", location: "Hassan, Rabat", price: 4500, type: "studio", image: "app hassan.png", amenities: ["wifi", "laundry"], rating: 4.3, reviews: 22, verified: true, available: true, page: "Hassan.html" },
-            { id: 5, title: "Premium Apt | Agdal", location: "Agdal, Rabat", price: 6000, type: "shared", image: "massira rabat.png", amenities: ["wifi", "gym", "laundry"], rating: 4.4, reviews: 25, verified: true, available: false, page: "Agdal ap.html" },
-            { id: 6, title: "Premium APT | Yaccoub Mansour", location: "Yaacoub Mansour, Rabat", price: 4000, type: "Apartement", image: "yaacoub m1.png", amenities: ["wifi"], rating: 3.9, reviews: 16, verified: true, available: true, page: "yaacoub app 2.html" },
-            { id: 7, title: "Studio | Agdal", location: "Agdal, Rabat", price: 4500, type: "shared", image: "agdal Studio.png", amenities: ["wifi", "gym", "laundry"], rating: 4.8, reviews: 35, verified: true, available: true, page: "Studio Agdal.html" },
-            { id: 8, title: "Premium Apartement in Agdal", location: "Agdal, Rabat", price: 4000, type: "shared", image: " agdal app1.png", amenities: ["wifi"], rating: 3.8, reviews: 12, verified: false, available: true, page: "Agdal app.html" },
-            { id: 9, title: "Executive Apartement | Agdal", location: "Agdal, Rabat", price: 4000, type: "studio", image: "agdal ap1.jpg", amenities: ["wifi", "gym"], rating: 4.9, reviews: 42, verified: true, available: true, page: "Agdal app2.html" },
-            { id: 10, title: "Student Dorm | Agdal", location: "Agdal, Rabat", price: 5500, type: "studio", image: "rabat agdal.jpg", amenities: ["wifi", "laundry"], rating: 4.5, reviews: 38, verified: true, available: true, page: "Rabat Agdal.html" },
-            { id: 11, title: "Student Studio | Agdal", location: "Agdal, Rabat", price: 5500, type: "studio", image: "Agdal stu6.png", amenities: ["wifi", "laundry"], rating: 4.7, reviews: 3, verified: true, available: true, page: "Agdal stu.html" },
-           
+            { id: 1, title: "Budget Shared Room | Al Ouhda 5", location: "Al Ouhda 5, Marrakech", price: 3000, type: "shared", image: "Al Ouhda 5.png", amenities: ["wifi", "laundry"], rating: 4.2, reviews: 22, verified: true, available: true, page: "Al Ouhda 5.html" },
+            { id: 2, title: "Modern Shared Apt | Gueliz", location: "Gueliz, Marrakech", price: 3950, type: "shared", image: "Gueliz app.png", amenities: ["wifi", "gym"], rating: 4.4, reviews: 25, verified: true, available: true, page: "Gueliz app.html" },
+            { id: 3, title: "Shared Apt | Saada", location: "Saada, Marrakech", price: 4000, type: "shared", image: "saada app.png", amenities: ["wifi", "laundry"], rating: 4.4, reviews: 20, verified: true, available: true, page: "saada app2.html" },
+            { id: 4, title: "Shared Apt | Targa", location: "Zohour Targa, Marrakech", price: 3800, type: "shared", image: "targa app6.png", amenities: ["wifi", "gym"], rating: 4.5, reviews: 28, verified: true, available: true, page: "Targa app.html" },
+            { id: 5, title: "Shared Apt | Doha Gates", location: "Doha Gates, Marrakech", price: 4000, type: "shared", image: "mabrouka app1.png", amenities: ["wifi", "laundry"], rating: 4.4, reviews: 18, verified: true, available: true, page: "Abwab Marrakech.html" },
+            { id: 6, title: "Shared Apt | Dyur Marjane", location: "Dyur Marjane, Marrakech", price: 3000, type: "shared", image: "dyur marjane app1.png", amenities: ["wifi", "gym"], rating: 4.4, reviews: 24, verified: true, available: true, page: "Dyur Marjane app.html" },
+            { id: 7, title: "Shared Apt | Izdihar", location: "Izdihar, Marrakech", price: 4000, type: "shared", image: "izdihar app1.png", amenities: ["wifi", "laundry"], rating: 4.5, reviews: 30, verified: true, available: false, page: "Izdihar app.html" },
+            { id: 8, title: "Shared Apt | Mabrouka", location: "Mabrouka, Marrakech", price: 4000, type: "shared", image: "mabrouka st1.png", amenities: ["wifi", "gym"], rating: 4.0, reviews: 19, verified: true, available: true, page: "mabrouka studio.html" },
+            { id: 9, title: "Shared Apt | Azzouzia", location: "Azzouzia, Marrakech", price: 2800, type: "shared", image: "targa ap1.png", amenities: ["wifi"], rating: 4.0, reviews: 22, verified: true, available: true, page: "Targa app.html" },
         ];
 
         let currentFilter = 'all';
@@ -979,7 +688,7 @@
         function filterListings() {
             let filtered = dorms;
             if (currentFilter !== 'all') {
-                filtered = dorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 2000) || (currentFilter === 'premium' && d.price > 3500));
+                filtered = dorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 3000) || (currentFilter === 'premium' && d.price > 3800));
             }
             renderListings(filtered);
         }
