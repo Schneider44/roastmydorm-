@@ -3,396 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shared Apartment - Ain Sebaa - RoastMyDorm</title>
-    <meta name="description" content="Shared Apartment with 2 bedrooms in Maarif, Casablanca. Perfect for students with WiFi, kitchen, and laundry facilities.">
-    <link rel="stylesheet" href="styles.css">
+    <title>The Luxury Studio| Central Campus Living - Ain Sabaa , Avenue Abtal - Rabat - RoastMyDorm</title>
+    <meta name="description" content="Premium student apartment in Ain Sabaa, Casablanca. Modern facilities, close to Universite Hassan II.">
     <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        .dorm-detail-page {
-            min-height: 100vh;
-            background: #f8fafc;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            line-height: 1.6; 
+            color: #1f2937; 
+            background: #ffffff; 
         }
         
-        .dorm-header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 2rem 0;
-            position: relative;
-            overflow: hidden;
+        h1, h2, h3, h4, h5, h6, .cta-button {
+            font-family: 'Poppins', sans-serif;
         }
-        
-        .dorm-header::before {
-            content: '';
-            position: absolute;
+
+        /* Header */
+        .header { 
+            background: #ffffff; 
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('cover.png') center/cover;
-            opacity: 0.1;
-            z-index: 1;
+            z-index: 100;
         }
         
-        .dorm-header-content {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        .header-container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 0 2rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
         }
         
-        .dorm-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            text-decoration: none; 
+            font-family: 'Poppins', sans-serif;
         }
         
-        .dorm-location {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 1rem;
+        .logo span { 
+            background: linear-gradient(135deg, #00a8a8 0%, #007a7a 100%); 
+            background-clip: text; 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
         }
         
-        .dorm-rating {
+        .nav-actions {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1.1rem;
+            gap: 1rem;
         }
         
-        .dorm-price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #10b981;
-            margin-top: 1rem;
+        .nav-btn {
+            background: transparent;
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
         
-        .dorm-content {
-            max-width: 1200px;
+        .nav-btn:hover {
+            background: #f3f4f6;
+        }
+        
+        .nav-btn.primary {
+            background: #00a8a8;
+            color: white;
+            border-color: #00a8a8;
+        }
+        
+        .nav-btn.primary:hover {
+            background: #007a7a;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            background: #f9fafb;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .breadcrumbs-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .breadcrumbs a {
+            color: #00a8a8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .breadcrumbs a:hover {
+            color: #007a7a;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1fr 400px;
+            gap: 3rem;
+            align-items: start;
         }
-        
-        .dorm-gallery {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        /* Hero Image Gallery */
+        .hero-gallery {
+            grid-column: 1 / -1;
             margin-bottom: 2rem;
         }
         
         .gallery-main {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-        
-        .gallery-main img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
-        
-        .gallery-thumbnails {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 2fr 1fr;
+            gap: 0.5rem;
+            height: 500px;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .main-image {
+            cursor: pointer;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .thumbnails {
+            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
         }
         
-        .gallery-thumb {
-            border-radius: 6px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .gallery-thumb:hover {
-            transform: scale(1.05);
-        }
-        
-        .gallery-thumb img {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-        }
-        
-        /* Image Lightbox Styles */
-        .gallery-main, .gallery-thumb {
+        .thumbnail {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             cursor: pointer;
             position: relative;
-        }
-        
-        .gallery-main::after, .gallery-thumb::after {
-            content: '🔍';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 8px;
-            border-radius: 50%;
-            font-size: 14px;
-            opacity: 0;
             transition: opacity 0.3s ease;
         }
         
-        .gallery-main:hover::after, .gallery-thumb:hover::after {
-            opacity: 1;
+        .thumbnail:hover {
+            opacity: 0.8;
         }
         
-        .image-lightbox {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(5px);
-        }
-        
-        .lightbox-content {
-            position: relative;
-            margin: auto;
-            padding: 20px;
-            width: 90%;
-            max-width: 800px;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
-        }
-        
-        .lightbox-image {
-            max-width: 100%;
-            max-height: 70vh;
+        .view-all-btn {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255,255,255,0.95);
+            color: #1f2937;
+            padding: 0.75rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10001;
-            transition: color 0.3s ease;
-        }
-        
-        .lightbox-close:hover {
-            color: #ef4444;
-        }
-        
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
-            padding: 10px 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-        
-        .lightbox-nav:hover {
-            background: rgba(0, 0, 0, 0.8);
-        }
-        
-        .lightbox-prev {
-            left: 30px;
-        }
-        
-        .lightbox-next {
-            right: 30px;
-        }
-        
-        .lightbox-counter {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-        }
-        
-        .dorm-details {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .detail-section {
-            margin-bottom: 2rem;
-        }
-        
-        .detail-section h3 {
-            color: #1f2937;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-        
-        .amenities-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-        }
-        
-        .amenity-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            background: #f8fafc;
-            border-radius: 6px;
-        }
-        
-        .amenity-item i {
-            color: #10b981;
-            width: 20px;
-        }
-        
-        .dorm-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .contact-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        
-        .contact-card h3 {
-            margin-bottom: 1rem;
-            color: #1f2937;
-        }
-        
-        .contact-btn {
-            background: #ef4444;
-            color: white;
+            font-weight: 600;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
         }
         
-        .contact-btn:hover {
-            background: #dc2626;
+        .view-all-btn:hover {
+            background: white;
+            transform: translateY(-2px);
         }
-        
-        .contact-info {
+
+        /* Left Column - Main Content */
+        .main-content {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: #6b7280;
+            gap: 2rem;
         }
-        
-        .map-container {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .map-container h3 {
+
+        /* Title & Pricing Section */
+        .title-section {
             margin-bottom: 1rem;
-            color: #1f2937;
         }
         
-        #map {
-            height: 300px;
-            border-radius: 8px;
-            width: 100%;
-        }
-        
-        .reviews-section {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .review-item {
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1rem 0;
-        }
-        
-        .review-item:last-child {
-            border-bottom: none;
-        }
-        
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .title-section h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #111827;
             margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
         
-        .review-author {
-            font-weight: 600;
-            color: #1f2937;
-        }
-        
-        .review-date {
+        .title-section .subtitle {
+            font-size: 1.125rem;
             color: #6b7280;
-            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
         }
         
-        .review-rating {
+        .price-tag {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .price-tag .price {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #00a8a8;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .price-tag .period {
+            font-size: 1.125rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .metadata {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        
+        .metadata-item i {
+            color: #00a8a8;
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rating .stars {
             color: #fbbf24;
+        }
+        
+        .rating .score {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Sticky Booking Widget */
+        .booking-widget {
+            position: sticky;
+            top: 100px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+        
+        .widget-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .widget-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00a8a8;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 0.25rem;
+        }
+        
+        .widget-price-info {
+            font-size: 0.875rem;
+            color: #6b7280;
             margin-bottom: 0.5rem;
         }
         
-        .review-text {
-            color: #4b5563;
-            line-height: 1.6;
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #ecfdf5;
+            color: #065f46;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
         }
         
-        .back-btn {
+        .verified-badge i {
+            color: #10b981;
+        }
+        
+        .calendar-widget {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            display: none; /* Initially hidden */
+            animation: slideDown 0.3s ease;
+        }
+        
+        .calendar-widget.show {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .calendar-close-btn {
             position: absolute;
-            top: 2rem;
-            left: 2rem;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: transparent;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            color: #6b7280;
+            font-size: 1.25rem;
             cursor: pointer;
-            transition: background 0.2s;
-            z-index: 3;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
         }
         
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .calendar-close-btn:hover {
+            background: #e5e7eb;
+            color: #111827;
         }
         
-        /* Landlord Chat Modal Styles */
-        .landlord-chat-modal {
+        /* Review Form Modal */
+        .review-modal {
             display: none;
             position: fixed;
             z-index: 10000;
@@ -401,926 +370,1985 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .landlord-chat-container {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 400px;
-            height: 600px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .landlord-chat-header {
-            background: #10b981;
-            color: white;
-            padding: 1rem;
-            display: flex;
+            backdrop-filter: blur(4px);
             align-items: center;
-            gap: 1rem;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
         }
-
-        .landlord-avatar {
-            width: 40px;
-            height: 40px;
+        
+        .review-modal.show {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .review-modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .review-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .review-modal-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+        
+        .review-modal-close {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+        
+        .review-modal-close:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+        
+        .review-form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .review-form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .review-form-group input,
+        .review-form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
+        }
+        
+        .review-form-group input:focus,
+        .review-form-group textarea:focus {
+            outline: none;
+            border-color: #00a8a8;
+            box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.1);
+        }
+        
+        .review-form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .star-rating-input {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .star-rating-input .stars {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .star-rating-input .star {
+            font-size: 2rem;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .star-rating-input .star:hover,
+        .star-rating-input .star.active {
+            color: #fbbf24;
+        }
+        
+        .star-rating-input .rating-text {
+            margin-left: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .review-form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .review-submit-btn {
+            flex: 1;
+            background: #00a8a8;
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .review-submit-btn:hover {
+            background: #009494;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 168, 168, 0.3);
+        }
+        
+        .review-cancel-btn {
+            padding: 0.875rem 1.5rem;
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .review-cancel-btn:hover {
+            background: #f9fafb;
+            border-color: #9ca3af;
+        }
+        
+        /* Sign-In Modal Styles */
+        .signin-modal {
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
         }
 
-        .landlord-info h3 {
+        .signin-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .signin-content {
+            position: relative;
+            background-color: white;
+            padding: 0;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .signin-modal.show .signin-content {
+            transform: scale(1);
+        }
+
+        .signin-header {
+            position: relative;
+            background: linear-gradient(135deg, #00a8a8 0%, #007a7a 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+        }
+
+        .signin-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .signin-header p {
             margin: 0;
-            font-size: 1.1rem;
+            opacity: 0.9;
+            font-size: 0.95rem;
         }
 
-        .landlord-info p {
-            margin: 0;
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .landlord-chat-close {
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 16px;
             background: none;
             border: none;
             color: white;
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
-            margin-left: auto;
-            padding: 0.5rem;
+            padding: 0;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+            line-height: 1;
         }
 
-        .landlord-chat-close:hover {
+        .close-modal:hover {
             background: rgba(255, 255, 255, 0.2);
         }
 
-        .landlord-chat-messages {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
+        .signin-options {
+            padding: 32px;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 24px;
         }
 
-        .landlord-message {
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-end;
+        .signin-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .landlord-message.student {
-            flex-direction: row-reverse;
+        .signin-option:hover {
+            border-color: #00a8a8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 168, 168, 0.15);
         }
 
-        .landlord-message-avatar {
-            width: 32px;
-            height: 32px;
+        .option-icon {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-            flex-shrink: 0;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
         }
 
-        .landlord-message-avatar.student {
-            background: #3b82f6;
+        .gmail-option .option-icon {
+            background: #ea4335;
             color: white;
         }
 
-        .landlord-message-avatar.landlord {
+        .id-option .option-icon {
             background: #10b981;
             color: white;
         }
 
-        .landlord-message-bubble {
-            max-width: 70%;
-            padding: 0.75rem 1rem;
-            border-radius: 18px;
-            position: relative;
-        }
-
-        .landlord-message-bubble.student {
-            background: #3b82f6;
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .landlord-message-bubble.landlord {
-            background: #f3f4f6;
+        .signin-option h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #1f2937;
-            border-bottom-left-radius: 4px;
+            font-family: 'Poppins', sans-serif;
         }
 
-        .landlord-message-time {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 0.25rem;
-        }
-
-        .landlord-chat-input-container {
-            padding: 1rem;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-end;
-        }
-
-        .landlord-chat-input {
-            flex: 1;
-            border: 1px solid #d1d5db;
-            border-radius: 20px;
-            padding: 0.75rem 1rem;
-            resize: none;
-            outline: none;
-            font-family: inherit;
+        .signin-option p {
+            margin: 0 0 20px 0;
+            color: #6b7280;
             font-size: 0.9rem;
-            max-height: 100px;
         }
 
-        .landlord-chat-input:focus {
-            border-color: #10b981;
-        }
-
-        .landlord-chat-send {
-            background: #10b981;
-            color: white;
+        .signin-btn {
+            width: 100%;
+            padding: 12px 24px;
             border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: background 0.2s;
+            gap: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
         }
 
-        .landlord-chat-send:hover {
+        .gmail-btn {
+            background: #ea4335;
+            color: white;
+        }
+
+        .gmail-btn:hover {
+            background: #d33b2c;
+        }
+
+        .id-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .id-btn:hover {
             background: #059669;
         }
 
-        .landlord-typing-indicator {
+        /* Gmail Form Styles */
+        .email-form {
+            margin-top: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00a8a8;
+            box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.1);
+        }
+
+        .send-verification-btn {
+            background: #00a8a8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .send-verification-btn:hover {
+            background: #009494;
+        }
+
+        .verification-status {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+        }
+
+        .status-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #065f46;
+            margin-bottom: 12px;
+        }
+
+        .status-message i {
+            color: #10b981;
+        }
+
+        .verification-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .resend-btn, .demo-btn {
+            padding: 8px 16px;
+            border: 1px solid #10b981;
+            background: white;
+            color: #10b981;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .resend-btn:hover, .demo-btn:hover {
+            background: #10b981;
+            color: white;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .calendar-nav {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 1.25rem;
+            padding: 0.25rem 0.5rem;
+            transition: color 0.3s ease;
+        }
+        
+        .calendar-nav:hover {
+            color: #00a8a8;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
             gap: 0.5rem;
-            font-style: italic;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day.available {
+            background: #e0f2f1;
+            color: #00a8a8;
+            font-weight: 600;
+        }
+        
+        .calendar-day:hover.available {
+            background: #b2dfdb;
+        }
+        
+        .calendar-day.unavailable {
+            color: #d1d5db;
+            cursor: not-allowed;
+        }
+        
+        .calendar-day.header {
+            font-weight: 600;
+            color: #6b7280;
+            cursor: default;
+            background: transparent;
+        }
+        
+        .cta-button {
+            width: 100%;
+            background: #00a8a8;
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,168,168,0.3);
+        }
+        
+        .cta-button:hover {
+            background: #007a7a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,168,168,0.4);
+        }
+        
+        .secondary-cta {
+            width: 100%;
+            background: white;
+            color: #00a8a8;
+            border: 2px solid #00a8a8;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .secondary-cta:hover {
+            background: #f0fdfa;
+        }
+
+        /* Specs & Amenities */
+        .specs-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .spec-chip {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .spec-chip i {
+            color: #00a8a8;
+            font-size: 1.25rem;
+        }
+        
+        .spec-chip .label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .spec-chip .value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .amenities-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .amenity-item i {
+            color: #00a8a8;
+            font-size: 1.125rem;
+        }
+        
+        .amenity-item span {
+            font-size: 0.95rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        /* Description Section */
+        .description-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .description-text {
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        
+        .description-text p {
+            margin-bottom: 1rem;
+        }
+        
+        .map-container {
+            margin-top: 2rem;
+            height: 400px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-placeholder {
+            text-align: center;
             color: #6b7280;
         }
+        
+        .map-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: white;
+            border: 2px solid #00a8a8;
+            color: #00a8a8;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .map-btn:hover {
+            background: #00a8a8;
+            color: white;
+        }
 
-        .landlord-typing-dots {
+        /* Reviews Section */
+        .reviews-section {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .review-summary {
             display: flex;
-            gap: 2px;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
         }
-
-        .landlord-typing-dot {
-            width: 4px;
-            height: 4px;
-            background: #6b7280;
+        
+        .review-score {
+            text-align: center;
+        }
+        
+        .review-score .score-large {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #111827;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1;
+        }
+        
+        .review-score .stars-large {
+            font-size: 1.5rem;
+            color: #fbbf24;
+            margin: 0.5rem 0;
+        }
+        
+        .review-score .count {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .review-breakdown {
+            flex: 1;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .breakdown-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            width: 60px;
+        }
+        
+        .breakdown-bar {
+            flex: 1;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .breakdown-fill {
+            height: 100%;
+            background: #fbbf24;
+            transition: width 0.3s ease;
+        }
+        
+        .testimonials {
+            margin-top: 2rem;
+        }
+        
+        .testimonial {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            animation: landlord-typing 1.4s infinite ease-in-out;
+            background: linear-gradient(135deg, #00a8a8 0%, #007a7a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+        
+        .testimonial-info {
+            flex: 1;
+        }
+        
+        .testimonial-name {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .testimonial-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .testimonial-stars {
+            color: #fbbf24;
+        }
+        
+        .testimonial-text {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        
+        .review-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .review-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #00a8a8;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .review-btn.primary {
+            background: #00a8a8;
+            color: white;
+        }
+        
+        .review-btn.primary:hover {
+            background: #007a7a;
+        }
+        
+        .review-btn.secondary {
+            background: white;
+            color: #00a8a8;
+        }
+        
+        .review-btn.secondary:hover {
+            background: #f0fdfa;
         }
 
-        .landlord-typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .landlord-typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes landlord-typing {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
+        /* Footer */
+        .footer {
+            background: #111827;
+            color: #e5e7eb;
+            margin-top: 4rem;
+            padding: 3rem 0 1rem;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        
+        .footer-section h4 {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+            font-size: 0.875rem;
         }
 
+        /* Lightbox Modal */
+        .lightbox-modal {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .lightbox-modal #lightbox-prev:hover,
+        .lightbox-modal #lightbox-next:hover {
+            background: rgba(0,0,0,0.7) !important;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .lightbox-modal #lightbox-close:hover {
+            background: rgba(0,0,0,0.7) !important;
+            transform: scale(1.1);
+        }
+        
         @media (max-width: 768px) {
-            .dorm-content {
-                grid-template-columns: 1fr;
-                padding: 1rem;
+            .lightbox-modal #lightbox-prev {
+                left: 10px !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 28px !important;
             }
             
-            .dorm-title {
+            .lightbox-modal #lightbox-next {
+                right: 10px !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 28px !important;
+            }
+            
+            .lightbox-modal #lightbox-close {
+                top: 10px !important;
+                right: 10px !important;
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 32px !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-widget {
+                position: relative;
+                top: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-main {
+                grid-template-columns: 1fr;
+                height: 400px;
+            }
+            
+            .thumbnails {
+                flex-direction: row;
+                height: 100px;
+            }
+            
+            .title-section h1 {
                 font-size: 2rem;
             }
             
-            .gallery-thumbnails {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .amenities-grid {
+            .specs-grid {
                 grid-template-columns: 1fr;
             }
-
-            .landlord-chat-container {
-                width: calc(100% - 40px);
-                height: calc(100% - 40px);
-                bottom: 20px;
-                right: 20px;
+            
+            .amenities-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .review-summary {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-social">
-                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo"><span>RoastMyDorm</span></a>
+            <div class="nav-actions">
+                <button class="nav-btn"><i class="fas fa-search"></i></button>
+                <button class="nav-btn">Book a Tour</button>
+                <button class="nav-btn primary">Apply Now</button>
             </div>
-            <div class="nav-logo">
-                <a href="index.html" style="text-decoration: none; color: inherit;">
-                    <span>RoastMyDorm</span>
-                </a>
-            </div>
-            <div class="nav-menu">
-                <button class="nav-btn">Sign In</button>
-            </div>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs">
+        <div class="breadcrumbs-container">
+            <a href="index.html">Home</a> > <a href="casablanca-dorms.html">Explore</a> > <a href="casablanca-dorms.html">Casablanca</a> > The Modern Loft
         </div>
     </nav>
 
-    <div class="dorm-detail-page">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb" style="background: #f8fafc; padding: 1rem 2rem; border-bottom: 1px solid #e5e7eb;">
-            <div style="max-width: 1200px; margin: 0 auto;">
-                <a href="index.html" style="color: #6b7280; text-decoration: none;">Home</a>
-                <span style="margin: 0 0.5rem; color: #9ca3af;">></span>
-                <a href="casablanca-dorms.html" style="color: #6b7280; text-decoration: none;">Casablanca Dorms</a>
-                <span style="margin: 0 0.5rem; color: #9ca3af;">></span>
-                <span style="color: #1f2937; font-weight: 500;">Shared Apartment - Ain Sebaa-2 Bedrooms</span>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Hero Gallery -->
+        <div class="hero-gallery">
+            <div class="gallery-main">
+                <div class="main-image" id="mainImage" onclick="openGallery(0)" style="background-image: url('Ain sabaa app.png');">
+                    <button class="view-all-btn" onclick="event.stopPropagation(); openGallery(0)">
+                        <i class="fas fa-images"></i> View All Photos (4)
+                    </button>
+                </div>
+                <div class="thumbnails">
+                    <div class="thumbnail" style="background-image: url('Ain Sabaa app 2.png')" onclick="event.stopPropagation(); openGallery(1)"></div>
+                    <div class="thumbnail" style="background-image: url('ain sabaa app 3.png')" onclick="event.stopPropagation(); openGallery(2)"></div>
+                    <div class="thumbnail" style="background-image: url('ain sabaa app 4.png')" onclick="event.stopPropagation(); openGallery(3)"></div>
+                    <div class="thumbnail" style="background-image: url('ain sabaa app 5.png')" onclick="event.stopPropagation(); openGallery(4)"></div>"
+                   
+                </div>
             </div>
         </div>
 
-        <!-- Header -->
-        <div class="dorm-header">
-            <button class="back-btn" onclick="history.back()">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <div class="dorm-header-content">
-                <h1 class="dorm-title">Shared Apartment - Ain Sebaa- 2 Bedrooms</h1>
-                <p class="dorm-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Ain Sebaa, Casablanca • 10 min walk to Hassan II University
-                </p>
-                <div class="dorm-rating">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <span>4.2/5 (18 reviews)</span>
+        <!-- Left Column - Main Content -->
+        <div class="main-content">
+            <!-- Title & Pricing -->
+            <div class="title-section">
+                <h1>The Modern Studio | Central Campus Living</h1>
+                <p class="subtitle">Premium Apartement in Ain Sabaa , Casablanca | 2 min walk to Univ Hassan II  </p>
+                
+                <div class="price-tag">
+                    <span class="price">4,000 MAD</span>
+                    <span class="period">/month</span>
                 </div>
-                <div class="dorm-price">2,200 MAD/month</div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="dorm-content">
-            <!-- Left Column -->
-            <div class="main-content">
-                <!-- Image Gallery -->
-                <div class="dorm-gallery">
-                    <h3>Photos</h3>
-                    <div class="gallery-main" onclick="openLightbox('Ain Sabaa app.png')">
-                        <img id="mainImage" src="Ain Sabaa app.png" alt="Shared Apartment Main View">
+                
+                <div class="metadata">
+                    <div class="metadata-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <a href="#map" style="color: #00a8a8; text-decoration: none;">View on Map</a>
                     </div>
-                    <div class="gallery-thumbnails">
-                        <div class="gallery-thumb" onclick="changeMainImage('Ain Sabaa app 2.png'); openLightbox('Ain Sabaa app 2.png')">
-                            <img src="Ain Sabaa app 2.png" alt="Living Room">
-                        </div>
-                        <div class="gallery-thumb" onclick="changeMainImage('ain sabaa app 3.png'); openLightbox('ain sabaa app 3.png')">
-                            <img src="ain sabaa app 3.png" alt="Kitchen">
-                        </div>
-                        <div class="gallery-thumb" onclick="changeMainImage('ain sabaa app 4.png'); openLightbox('ain sabaa app 4.png')">
-                            <img src="ain sabaa app 4.png" alt="Bedroom 1">
-                        </div>
-                        <div class="gallery-thumb" onclick="changeMainImage('ain sabaa app 5.png'); openLightbox('ain sabaa app 5.png')">
-                            <img src="ain sabaa app 5.png" alt="Bedroom 2">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dorm Details -->
-                <div class="dorm-details">
-                    <div class="detail-section">
-                        <h3>About this place</h3>
-                        <p>This spacious 2-bedroom shared apartment in Maarif is perfect for students who want to live with a roommate. The apartment features a large living room with sea views, modern kitchen, and two comfortable bedrooms.</p>
-                        <p>Located in the heart of Maarif district, you'll have easy access to shopping centers, restaurants, and public transportation. The apartment is well-maintained and comes fully furnished with all necessary amenities.</p>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>Amenities</h3>
-                        <div class="amenities-grid">
-                            <div class="amenity-item">
-                                <i class="fas fa-wifi"></i>
-                                <span>Free High-Speed WiFi</span>
-                            </div>
-                            <div class="amenity-item">
-                                <i class="fas fa-utensils"></i>
-                                <span>Fully Equipped Kitchen</span>
-                            </div>
-                            <div class="amenity-item">
-                                <i class="fas fa-washing-machine"></i>
-                                <span>Laundry Facilities</span>
-                            </div>
-                            <div class="amenity-item">
-                                <i class="fas fa-bed"></i>
-                                <span>2 Bedrooms</span>
-                            </div>
-                            <div class="amenity-item">
-                                <i class="fas fa-couch"></i>
-                                <span>Living Room</span>
-                            </div>
-                            <div class="amenity-item">
-                                <i class="fas fa-tv"></i>
-                                <span>Smart TV</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>What's included</h3>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> All utilities (water, electricity, internet)</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Furniture and appliances</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Weekly cleaning service</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check" style="color: #10b981; margin-right: 0.5rem;"></i> Maintenance support</li>
-                        </ul>
-                    </div>
-
-                    <div class="detail-section">
-                        <h3>House rules</h3>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-times" style="color: #ef4444; margin-right: 0.5rem;"></i> No smoking</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-times" style="color: #ef4444; margin-right: 0.5rem;"></i> No pets</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-clock" style="color: #f59e0b; margin-right: 0.5rem;"></i> Quiet hours: 11 PM - 7 AM</li>
-                            <li style="margin-bottom: 0.5rem;"><i class="fas fa-users" style="color: #3b82f6; margin-right: 0.5rem;"></i> Maximum 1 guest per person</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Reviews Section -->
-                <div class="reviews-section">
-                    <h3>Student Reviews (18)</h3>
-                    
-                    <div class="review-item">
-                        <div class="review-header">
-                            <span class="review-author">Sara M.</span>
-                            <span class="review-date">1 month ago</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <p class="review-text">Great shared apartment! The living room has amazing sea views and the kitchen is well-equipped. My roommate and I get along well. The location in Maarif is perfect for shopping and dining.</p>
-                    </div>
-
-                    <div class="review-item">
-                        <div class="review-header">
-                            <span class="review-author">Omar K.</span>
-                            <span class="review-date">2 months ago</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="review-text">Perfect for students! The apartment is spacious and well-maintained. The landlord is very responsive and helpful. Great value for money in Maarif area.</p>
-                    </div>
-
-                    <div class="review-item">
-                        <div class="review-header">
-                            <span class="review-author">Aicha L.</span>
-                            <span class="review-date">3 months ago</span>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <p class="review-text">Good apartment overall. The bedrooms are comfortable and the shared spaces are clean. The WiFi is fast and reliable. Would recommend for students looking for shared accommodation.</p>
+                    <div class="metadata-item rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="score">4.8</span>
+                        <span>(52 reviews)</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Sidebar -->
-            <div class="dorm-sidebar">
-                <!-- Contact Card -->
-                <div class="contact-card">
-                    <h3>Contact Landlord</h3>
-                    <button class="contact-btn" onclick="contactLandlord()">
-                        <i class="fas fa-phone"></i> Call Now
-                    </button>
-                    <button class="contact-btn" onclick="openLandlordChat({
-                        id: 'landlord_2',
-                        name: 'Fatima',
-                        availability: 'Available 8 AM - 8 PM',
-                        phone: '+212 6 23 45 67 89',
-                        email: 'fatima.benali@email.com'
-                    }, {
-                        id: 'listing_2',
-                        title: 'Shared Apartment - 2 Bedrooms',
-                        price: '2,200 MAD/month'
-                    })" style="background: #3b82f6;">
-                        <i class="fas fa-envelope"></i> Send Message
-                    </button>
-                    <button class="contact-btn" onclick="window.location.href='review-form.html'" style="background: #f59e0b;">
-                        <i class="fas fa-star"></i> Write Review
-                    </button>
-                    <div class="contact-info">
-                        <p><i class="fas fa-user"></i> Fatima Benali</p>
-                        <p><i class="fas fa-phone"></i> +212 6 23 45 67 89</p>
-                        <p><i class="fas fa-envelope"></i> fatima.benali@email.com</p>
-                        <p><i class="fas fa-clock"></i> Available 8 AM - 8 PM</p>
+            <!-- Specs & Amenities -->
+            <div class="specs-section">
+                <h2 class="section-title">Key Specifications</h2>
+                <div class="specs-grid">
+                    <div class="spec-chip">
+                        <i class="fas fa-bed"></i>
+                        <div>
+                            <div class="label">Bedroom</div>
+                            <div class="value">2 Bedrooms</div>
+                        </div>
+                    </div>
+                    <div class="spec-chip">
+                        <i class="fas fa-bath"></i>
+                        <div>
+                            <div class="label">Bathroom</div>
+                            <div class="value">1 Ensuite</div>
+                        </div>
+                    </div>
+                    <div class="spec-chip">
+                        <i class="fas fa-ruler-combined"></i>
+                        <div>
+                            <div class="label">Square Footage</div>
+                            <div class="value">60 sq ft</div>
+                        </div>
+                    </div>
+                    <div class="spec-chip">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <div class="label">Lease</div>
+                            <div class="value">6 Months</div>
+                        </div>
+                    </div>
+                    <div class="spec-chip">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <div class="label">Move-In</div>
+                            <div class="value">FEB 1st</div>
+                        </div>
+                    </div>
+                    <div class="spec-chip">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <div class="label">Furnished</div>
+                            <div class="value">Yes</div>
+                        </div>
                     </div>
                 </div>
+                
+                <h3 class="section-title" style="margin-top: 2rem;">Amenities</h3>
+                <div class="amenities-list">
+                    <div class="amenity-item">
+                        <i class="fas fa-wifi"></i>
+                        <span>High-Speed Wi-Fi</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-dumbbell"></i>
+                        <span>Fitness Center Access</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-tshirt"></i>
+                        <span>In-unit Laundry</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>24/7 Security</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-snowflake"></i>
+                        <span>Air Conditioning</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-parking"></i>
+                        <span>Parking Available</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-tv"></i>
+                        <span>Smart TV Included</span>
+                    </div>
+                    <div class="amenity-item">
+                        <i class="fas fa-utensils"></i>
+                        <span>Fully Equipped Kitchen</span>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Map -->
-                <div class="map-container">
-                    <h3>Location</h3>
-                    <div id="map"></div>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #6b7280;">
-                        <i class="fas fa-walking"></i> 10 min walk to Hassan II University<br>
-                        <i class="fas fa-bus"></i> 3 min walk to bus stop<br>
-                        <i class="fas fa-store"></i> 5 min walk to shopping center
+            <!-- Description & Map -->
+            <div class="description-section">
+                <h2 class="section-title">About This Space</h2>
+                <div class="description-text">
+                    <p>
+                        Located in a quiet and well-connected neighborhood, this 56 sq m apartment on the third floor comprises: 1 bedroom,
+                         a living room, a kitchen, and 1 bathroom. The rent is 6,000 dirhams per month. Building management fees are included in the rent.
+                    </p>
+                    <p>
+                        The space features a contemporary open-plan design with a fully equipped kitchen, comfortable 
+                        sleeping area, and a modern ensuite bathroom. Large windows flood the space with natural light, 
+                        creating an airy and welcoming atmosphere perfect for both studying and relaxing.
+                    </p>
+                    <p>
+                        Located in a vibrant neighborhood with easy access to university departments, local cafes, 
+                        restaurants, and student hotspots. The area is well-connected with public transportation, 
+                        making it easy to explore all that Marrakech has to offer.
+                    </p>
+                    <p>
+                        <strong>Walkability:</strong> The property is within a 5-minute walk to Mohmed V Univ'S
+                        main campus, with easy access to the (UIR) and other key 
+                        departments. Nearby amenities include grocery stores, pharmacies, and recreational facilities.
                     </p>
                 </div>
+                
+                <div class="map-container" id="map">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: #00a8a8; margin-bottom: 1rem;"></i>
+                        <p style="font-size: 1.125rem; margin-bottom: 0.5rem;">Ain Sabaa , Casablanca</p>
+                        <p style="color: #6b7280;">5 min walk to Mohmed V univ's</p>
+                    </div>
+                    <button class="map-btn" onclick="openFullMap()">
+                        <i class="fas fa-expand"></i> View Full Map
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <h2 class="section-title">Student Reviews</h2>
+                <div class="review-summary">
+                    <div class="review-score">
+                        <div class="score-large">4.8</div>
+                        <div class="stars-large">★★★★★</div>
+                        <div class="count">Based on 52 reviews</div>
+                    </div>
+                    <div class="review-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">5 stars</span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 75%;"></div>
+                            </div>
+                            <span style="font-size: 0.875rem; color: #6b7280;">75%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">4 stars</span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 20%;"></div>
+                            </div>
+                            <span style="font-size: 0.875rem; color: #6b7280;">20%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">3 stars</span>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width: 5%;"></div>
+                            </div>
+                            <span style="font-size: 0.875rem; color: #6b7280;">5%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonials">
+                    <div class="testimonial">
+                        <div class="testimonial-header">
+                            <div class="testimonial-avatar">LJ</div>
+                            <div class="testimonial-info">
+                                <div class="testimonial-name">Liam J.</div>
+                                <div class="testimonial-date">March 15, 2024</div>
+                            </div>
+                            <div class="testimonial-stars">★★★★★</div>
+                        </div>
+                        <div class="testimonial-text">
+                            Excellent location and modern facilities! The apartment is well-maintained and the 
+                            proximity to the university makes it perfect for students. Highly recommend!
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial">
+                        <div class="testimonial-header">
+                            <div class="testimonial-avatar">CS</div>
+                            <div class="testimonial-info">
+                                <div class="testimonial-name">Chloe S.</div>
+                                <div class="testimonial-date">February 28, 2024</div>
+                            </div>
+                            <div class="testimonial-stars">★★★★☆</div>
+                        </div>
+                        <div class="testimonial-text">
+                            Great apartment with all the amenities you need. The landlord is responsive and helpful. 
+                            The only minor issue was the WiFi speed during peak hours, but overall a fantastic place to live!
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="review-actions">
+                    <button class="review-btn primary" onclick="writeReview()">
+                        <i class="fas fa-pen"></i> Write a Review
+                    </button>
+                    <button class="review-btn secondary" onclick="viewAllReviews()">
+                        View All (52) <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Navigation Footer -->
-        <div class="navigation-footer" style="background: #f8fafc; padding: 2rem; border-top: 1px solid #e5e7eb; margin-top: 2rem;">
-            <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
-                <h3 style="margin-bottom: 1rem; color: #1f2937;">Explore More Options</h3>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn-secondary" onclick="window.location.href='casablanca-dorms.html'" style="padding: 12px 24px; border: 2px solid #3b82f6; color: #3b82f6; background: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-building"></i> All Casablanca Dorms
+        <!-- Right Column - Sticky Booking Widget -->
+        <aside class="booking-widget">
+            <div class="widget-header">
+                <div class="widget-price">3,000 MAD</div>
+                <div class="widget-price-info">per month • All bills included</div>
+                <div class="verified-badge">
+                    <i class="fas fa-check-circle"></i>
+                    Verified Listing
+                </div>
+            </div>
+            
+            <div class="calendar-widget" id="calendarWidget" style="position: relative;">
+                <button class="calendar-close-btn" onclick="hideSchedule()" title="Close calendar">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="calendar-header">
+                    <button class="calendar-nav" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <strong style="font-family: 'Poppins', sans-serif;">September 2024</strong>
+                    <button class="calendar-nav" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar days will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <button class="cta-button" onclick="scheduleTour()">
+                <i class="fas fa-calendar-check"></i> Schedule a Virtual Tour
+            </button>
+            
+            <button class="secondary-cta" onclick="messageLandlord()">
+                <i class="fas fa-envelope"></i> Message Landlord
+            </button>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.875rem; color: #6b7280; text-align: center;">
+                <i class="fas fa-info-circle" style="color: #00a8a8;"></i>
+                Available dates highlighted in teal
+            </div>
+        </aside>
+    </div>
+
+    <!-- Sign-In Modal -->
+    <div id="signInModal" class="signin-modal" onclick="if(event.target.id === 'signInModal') closeSignInModal();">
+        <div class="signin-content" onclick="event.stopPropagation();">
+            <div class="signin-header">
+                <h2>Sign In to Write a Review</h2>
+                <p>Choose your verification method to continue</p>
+                <button class="close-modal" onclick="closeSignInModal()">&times;</button>
+            </div>
+            
+            <div class="signin-options">
+                <!-- Gmail Sign In Option -->
+                <div class="signin-option gmail-option" id="gmailOption">
+                    <div class="option-icon">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <h3>Sign in with Gmail</h3>
+                    <p>We'll send a verification link to your email</p>
+                    
+                    <!-- Email Input Form (Initially Hidden) -->
+                    <div class="email-form" id="gmailEmailForm" style="display: none;">
+                        <div class="form-group">
+                            <input type="email" id="gmailEmailInput" placeholder="Enter your Gmail address" required>
+                            <button class="send-verification-btn" onclick="sendVerificationEmail()">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Verification
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification Status -->
+                    <div class="verification-status" id="verificationStatus" style="display: none;">
+                        <div class="status-message">
+                            <i class="fas fa-envelope"></i>
+                            <span>Verification email sent! Check your inbox.</span>
+                        </div>
+                        <div class="verification-actions">
+                            <button class="resend-btn" onclick="resendVerification()">
+                                <i class="fas fa-redo"></i>
+                                Resend Email
+                            </button>
+                            <button class="demo-btn" onclick="demoEmailVerification()">
+                                <i class="fas fa-check"></i>
+                                Demo: Verify Email
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Initial Button -->
+                    <button class="signin-btn gmail-btn" id="gmailSignIn" onclick="showGmailForm()">
+                        <i class="fab fa-google"></i>
+                        Continue with Gmail
                     </button>
-                    <button class="btn-secondary" onclick="window.location.href='rabat-dorms.html'" style="padding: 12px 24px; border: 2px solid #10b981; color: #10b981; background: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-map-marker-alt"></i> Rabat Dorms
-                    </button>
-                    <button class="btn-secondary" onclick="window.location.href='marrakech-dorms.html'" style="padding: 12px 24px; border: 2px solid #f59e0b; color: #f59e0b; background: white; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-sun"></i> Marrakech Dorms
-                    </button>
-                    <button class="btn-primary" onclick="window.location.href='index.html'" style="padding: 12px 24px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-home"></i> Back to Home
+                </div>
+                
+                <!-- Student ID Scan Option -->
+                <div class="signin-option id-option">
+                    <div class="option-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>Verify with Student ID</h3>
+                    <p>Scan your student ID for instant verification</p>
+                    <button class="signin-btn id-btn" id="idScanBtn" onclick="signInWithIDScan()">
+                        <i class="fas fa-camera"></i>
+                        Scan Student ID
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Image Lightbox -->
-    <div id="imageLightbox" class="image-lightbox">
-        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-        <div class="lightbox-content">
-            <img id="lightboxImage" class="lightbox-image" src="" alt="">
-            <div class="lightbox-counter">
-                <span id="lightboxCounter">1 / 1</span>
-            </div>
-        </div>
-        <div class="lightbox-nav lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</div>
-        <div class="lightbox-nav lightbox-next" onclick="changeLightboxImage(1)">&#10095;</div>
-    </div>
-
-    <!-- Landlord Chat Modal -->
-    <div id="landlordChatModal" class="landlord-chat-modal">
-        <div class="landlord-chat-container">
-            <div class="landlord-chat-header">
-                <div class="landlord-avatar" id="landlordAvatar">F</div>
-                <div class="landlord-info">
-                    <h3 id="landlordName">Fatima</h3>
-                    <p id="landlordStatus">Available 8 AM - 8 PM</p>
-                </div>
-                <button class="landlord-chat-close" onclick="closeLandlordChat()">
+    <!-- Review Modal -->
+    <div id="reviewModal" class="review-modal" onclick="if(event.target.id === 'reviewModal') closeReviewModal();">
+        <div class="review-modal-content" onclick="event.stopPropagation();">
+            <div class="review-modal-header">
+                <h2>Write a Review</h2>
+                <button class="review-modal-close" onclick="closeReviewModal()" title="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
-            <div class="landlord-chat-messages" id="landlordChatMessages">
-                <!-- Messages will be loaded here -->
-            </div>
-            
-            <div class="landlord-chat-input-container">
-                <textarea 
-                    class="landlord-chat-input" 
-                    id="landlordChatInput" 
-                    placeholder="Type your message..."
-                    rows="1"
-                    onkeypress="handleLandlordKeyPress(event)"
-                    oninput="autoResizeLandlordInput(this)"
-                ></textarea>
-                <button class="landlord-chat-send" onclick="sendLandlordMessage()" id="landlordSendBtn">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
+            <form id="reviewForm" onsubmit="submitReview(event);">
+                <div class="review-form-group">
+                    <label for="reviewName">Your Name *</label>
+                    <input type="text" id="reviewName" name="name" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="review-form-group">
+                    <label>Your Rating *</label>
+                    <div class="star-rating-input">
+                        <div class="stars">
+                            <span class="star" onclick="setStarRating(1)" onmouseover="hoverStar(1)" onmouseout="unhoverStar()">☆</span>
+                            <span class="star" onclick="setStarRating(2)" onmouseover="hoverStar(2)" onmouseout="unhoverStar()">☆</span>
+                            <span class="star" onclick="setStarRating(3)" onmouseover="hoverStar(3)" onmouseout="unhoverStar()">☆</span>
+                            <span class="star" onclick="setStarRating(4)" onmouseover="hoverStar(4)" onmouseout="unhoverStar()">☆</span>
+                            <span class="star" onclick="setStarRating(5)" onmouseover="hoverStar(5)" onmouseout="unhoverStar()">☆</span>
+                        </div>
+                        <span class="rating-text"></span>
+                    </div>
+                    <input type="hidden" id="selectedRating" value="0" required>
+                </div>
+                
+                <div class="review-form-group">
+                    <label for="reviewText">Your Review *</label>
+                    <textarea id="reviewText" name="review" placeholder="Share your experience with this apartment. What did you like? What could be improved?" required minlength="10"></textarea>
+                    <small style="color: #6b7280; font-size: 0.875rem;">Minimum 10 characters</small>
+                </div>
+                
+                <div class="review-form-actions">
+                    <button type="button" class="review-cancel-btn" onclick="closeReviewModal()">Cancel</button>
+                    <button type="submit" class="review-submit-btn">Submit Review</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>About</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>For Students</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Browse Listings</a></li>
+                    <li><a href="#">Student Guide</a></li>
+                    <li><a href="#">Safety Tips</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>For Landlords</h4>
+                <ul class="footer-links">
+                    <li><a href="#">List Your Property</a></li>
+                    <li><a href="#">Landlord Portal</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Connect</h4>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © <span id="currentYear"></span> RoastMyDorm. All rights reserved.
+        </div>
+    </footer>
+
     <script>
-        // Image gallery functionality
-        function changeMainImage(imageSrc) {
-            document.getElementById('mainImage').src = imageSrc;
-        }
-
-        // Contact functions
-        function contactLandlord() {
-            alert('Calling Fatima Benali at +212 6 23 45 67 89');
-        }
-
-        // Landlord Chat System
-        class LandlordChat {
-            constructor() {
-                this.currentChatId = null;
-                this.currentLandlord = null;
-                this.currentListing = null;
-                this.messages = [];
-                this.isOpen = false;
-                this.init();
-            }
-
-            init() {
-                // Initialize chat system
-            }
-
-            openChat(landlordInfo, listingInfo) {
-                this.currentLandlord = landlordInfo;
-                this.currentListing = listingInfo;
-                this.currentChatId = this.generateChatId();
-                
-                // Update header with landlord info
-                document.getElementById('landlordName').textContent = landlordInfo.name;
-                document.getElementById('landlordStatus').textContent = landlordInfo.availability || 'Available';
-                document.getElementById('landlordAvatar').textContent = landlordInfo.name.charAt(0).toUpperCase();
-                
-                // Show modal
-                document.getElementById('landlordChatModal').style.display = 'block';
-                document.body.style.overflow = 'hidden';
-                this.isOpen = true;
-                
-                // Load chat history
-                this.loadChatHistory();
-                
-                // Focus input
-                document.getElementById('landlordChatInput').focus();
-            }
-
-            closeChat() {
-                document.getElementById('landlordChatModal').style.display = 'none';
-                document.body.style.overflow = 'auto';
-                this.isOpen = false;
-                this.currentChatId = null;
-                this.currentLandlord = null;
-                this.currentListing = null;
-                this.messages = [];
-            }
-
-            generateChatId() {
-                const studentId = this.getCurrentStudentId();
-                const landlordId = this.currentLandlord.id;
-                const listingId = this.currentListing.id;
-                return `${studentId}_${landlordId}_${listingId}`;
-            }
-
-            getCurrentStudentId() {
-                return 'student_' + Date.now();
-            }
-
-            sendMessage() {
-                const input = document.getElementById('landlordChatInput');
-                const message = input.value.trim();
-                
-                if (!message) return;
-
-                const messageData = {
-                    id: Date.now(),
-                    text: message,
-                    sender: 'student',
-                    senderId: this.getCurrentStudentId(),
-                    timestamp: new Date().toISOString(),
-                    chatId: this.currentChatId,
-                    listingId: this.currentListing.id,
-                    landlordId: this.currentLandlord.id
-                };
-
-                this.addMessageToUI(messageData);
-                this.saveMessageToFirebase(messageData);
-                
-                input.value = '';
-                this.autoResize(input);
-                this.simulateLandlordResponse();
-            }
-
-            addMessageToUI(message) {
-                const messagesContainer = document.getElementById('landlordChatMessages');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `landlord-message ${message.sender}`;
-                
-                const avatar = document.createElement('div');
-                avatar.className = `landlord-message-avatar ${message.sender}`;
-                avatar.textContent = message.sender === 'student' ? 'S' : this.currentLandlord.name.charAt(0).toUpperCase();
-                
-                const bubble = document.createElement('div');
-                bubble.className = `landlord-message-bubble ${message.sender}`;
-                bubble.innerHTML = `
-                    ${message.text}
-                    <div class="landlord-message-time">${this.formatTime(message.timestamp)}</div>
-                `;
-                
-                messageDiv.appendChild(avatar);
-                messageDiv.appendChild(bubble);
-                messagesContainer.appendChild(messageDiv);
-                
-                this.scrollToBottom();
-            }
-
-            simulateLandlordResponse() {
-                this.showTypingIndicator();
-                
-                setTimeout(() => {
-                    this.hideTypingIndicator();
-                    const response = this.generateLandlordResponse();
-                    const responseData = {
-                        id: Date.now(),
-                        text: response,
-                        sender: 'landlord',
-                        senderId: this.currentLandlord.id,
-                        timestamp: new Date().toISOString(),
-                        chatId: this.currentChatId,
-                        listingId: this.currentListing.id,
-                        landlordId: this.currentLandlord.id
-                    };
-                    
-                    this.addMessageToUI(responseData);
-                    this.saveMessageToFirebase(responseData);
-                }, 1500 + Math.random() * 2000);
-            }
-
-            generateLandlordResponse() {
-                const responses = [
-                    "Hello! Thanks for your interest in my property. How can I help you?",
-                    "Hi there! I'm available to answer any questions about the apartment.",
-                    "Hello! Are you interested in scheduling a viewing?",
-                    "Hi! The apartment is still available. Would you like to know more details?",
-                    "Hello! I can provide more photos or arrange a virtual tour if you'd like.",
-                    "Hi there! The rent includes all utilities and WiFi. Any other questions?",
-                    "Hello! I'm flexible with move-in dates. What works best for you?",
-                    "Hi! The apartment is fully furnished and ready to move in. Interested?"
-                ];
-                return responses[Math.floor(Math.random() * responses.length)];
-            }
-
-            showTypingIndicator() {
-                const messagesContainer = document.getElementById('landlordChatMessages');
-                const typingDiv = document.createElement('div');
-                typingDiv.className = 'landlord-message landlord';
-                typingDiv.id = 'landlordTypingIndicator';
-                typingDiv.innerHTML = `
-                    <div class="landlord-message-avatar landlord">${this.currentLandlord.name.charAt(0).toUpperCase()}</div>
-                    <div class="landlord-message-bubble landlord">
-                        <div class="landlord-typing-indicator">
-                            ${this.currentLandlord.name} is typing
-                            <div class="landlord-typing-dots">
-                                <div class="landlord-typing-dot"></div>
-                                <div class="landlord-typing-dot"></div>
-                                <div class="landlord-typing-dot"></div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                messagesContainer.appendChild(typingDiv);
-                this.scrollToBottom();
-            }
-
-            hideTypingIndicator() {
-                const typingIndicator = document.getElementById('landlordTypingIndicator');
-                if (typingIndicator) {
-                    typingIndicator.remove();
-                }
-            }
-
-            loadChatHistory() {
-                const messagesContainer = document.getElementById('landlordChatMessages');
-                messagesContainer.innerHTML = '';
-                
-                const welcomeMessage = {
-                    id: Date.now(),
-                    text: `Hello! I'm ${this.currentLandlord.name}, the landlord for this property. How can I help you today?`,
-                    sender: 'landlord',
-                    timestamp: new Date().toISOString()
-                };
-                
-                this.addMessageToUI(welcomeMessage);
-            }
-
-            saveMessageToFirebase(messageData) {
-                console.log('Saving message to Firebase:', messageData);
-                
-                try {
-                    const existingMessages = JSON.parse(localStorage.getItem(`landlord_chat_${this.currentChatId}`) || '[]');
-                    existingMessages.push(messageData);
-                    localStorage.setItem(`landlord_chat_${this.currentChatId}`, JSON.stringify(existingMessages));
-                } catch (error) {
-                    console.error('Error saving message:', error);
-                }
-            }
-
-            formatTime(timestamp) {
-                const now = new Date();
-                const time = new Date(timestamp);
-                const diff = now - time;
-                
-                if (diff < 60000) return 'Just now';
-                if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-                if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-                return time.toLocaleDateString();
-            }
-
-            scrollToBottom() {
-                const messagesContainer = document.getElementById('landlordChatMessages');
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-
-            autoResize(textarea) {
-                textarea.style.height = 'auto';
-                textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
-            }
-
-            handleKeyPress(event) {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    this.sendMessage();
-                }
-            }
-        }
-
-        // Initialize landlord chat
-        let landlordChat;
-        document.addEventListener('DOMContentLoaded', function() {
-            landlordChat = new LandlordChat();
-        });
-
-        // Global functions
-        function openLandlordChat(landlordInfo, listingInfo) {
-            landlordChat.openChat(landlordInfo, listingInfo);
-        }
-
-        function closeLandlordChat() {
-            landlordChat.closeChat();
-        }
-
-        function sendLandlordMessage() {
-            landlordChat.sendMessage();
-        }
-
-        function handleLandlordKeyPress(event) {
-            landlordChat.handleKeyPress(event);
-        }
-
-        function autoResizeLandlordInput(textarea) {
-            landlordChat.autoResize(textarea);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('landlordChatModal');
-            if (event.target === modal) {
-                closeLandlordChat();
-            }
-        }
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && landlordChat.isOpen) {
-                closeLandlordChat();
-            }
-        });
-
-        // Image Lightbox functionality
-        let currentLightboxImages = [
-            'ain sabaa app.png',
+        // Gallery functionality
+        const galleryImages = [
+            'Ain Sabaa app.png',
             'Ain Sabaa app 2.png',
             'ain sabaa app 3.png',
             'ain sabaa app 4.png',
             'ain sabaa app 5.png'
+            
+            
         ];
-        let currentLightboxIndex = 0;
-
-        function openLightbox(imageSrc) {
-            currentLightboxIndex = currentLightboxImages.indexOf(imageSrc);
-            if (currentLightboxIndex === -1) currentLightboxIndex = 0;
-
-            const lightbox = document.getElementById('imageLightbox');
-            const lightboxImage = document.getElementById('lightboxImage');
-            const lightboxCounter = document.getElementById('lightboxCounter');
-
-            lightboxImage.src = currentLightboxImages[currentLightboxIndex];
-            lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
-            lightbox.style.display = 'block';
+        
+        let currentImageIndex = 0;
+        
+        function openGallery(index = 0) {
+            if (index < 0 || index >= galleryImages.length) {
+                index = 0;
+            }
+            currentImageIndex = index;
+            updateMainImage();
+            showLightbox();
+        }
+        
+        function updateMainImage() {
+            const mainImage = document.getElementById('mainImage');
+            if (mainImage) {
+                mainImage.style.backgroundImage = `url('${galleryImages[currentImageIndex]}')`;
+            }
+        }
+        
+        let currentModal = null;
+        
+        function showLightbox() {
+            // Remove existing modal if any
+            if (currentModal) {
+                currentModal.remove();
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'lightbox-modal';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:10000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px)';
+            
+            modal.innerHTML = `
+                <div style="position:relative;max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
+                    <span id="lightbox-close" style="position:absolute;top:20px;right:20px;font-size:40px;color:#fff;cursor:pointer;z-index:10001;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;">&times;</span>
+                    <img id="lightbox-img" src="${galleryImages[currentImageIndex]}" alt="Gallery image" style="max-width:100%;max-height:90vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);object-fit:contain;">
+                    <div id="lightbox-prev" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;cursor:pointer;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">‹</div>
+                    <div id="lightbox-next" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;cursor:pointer;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">›</div>
+                    <div id="lightbox-count" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:1rem;background:rgba(0,0,0,0.7);padding:0.5rem 1rem;border-radius:20px;">${currentImageIndex + 1} / ${galleryImages.length}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            currentModal = modal;
             document.body.style.overflow = 'hidden';
-
-            // Show/hide navigation arrows
-            const prevBtn = document.querySelector('.lightbox-prev');
-            const nextBtn = document.querySelector('.lightbox-next');
             
-            if (currentLightboxImages.length > 1) {
-                prevBtn.style.display = 'block';
-                nextBtn.style.display = 'block';
+            const closeModal = () => {
+                if (modal && modal.parentNode) {
+                    modal.remove();
+                    currentModal = null;
+                    document.body.style.overflow = '';
+                    document.removeEventListener('keydown', handleKeyPress);
+                }
+            };
+            
+            const handleKeyPress = (e) => {
+                if (e.key === 'Escape') closeModal();
+                if (e.key === 'ArrowLeft') navGallery(-1);
+                if (e.key === 'ArrowRight') navGallery(1);
+            };
+            
+            const navGallery = (direction) => {
+                currentImageIndex += direction;
+                if (currentImageIndex < 0) currentImageIndex = galleryImages.length - 1;
+                if (currentImageIndex >= galleryImages.length) currentImageIndex = 0;
+                
+                const img = document.getElementById('lightbox-img');
+                const count = document.getElementById('lightbox-count');
+                if (img) img.src = galleryImages[currentImageIndex];
+                if (count) count.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
+            };
+            
+            modal.querySelector('#lightbox-close').addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            modal.querySelector('#lightbox-prev').addEventListener('click', (e) => {
+                e.stopPropagation();
+                navGallery(-1);
+            });
+            modal.querySelector('#lightbox-next').addEventListener('click', (e) => {
+                e.stopPropagation();
+                navGallery(1);
+            });
+            
+            document.addEventListener('keydown', handleKeyPress);
+        }
+        
+        // Check if user is authenticated
+        function isAuthenticated() {
+            // Check for auth token in localStorage (standard way to store JWT tokens)
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token') || sessionStorage.getItem('authToken');
+            const user = localStorage.getItem('user') || sessionStorage.getItem('user');
+            
+            // Return true if token exists (in a real app, you'd validate the token)
+            return !!(token || user);
+        }
+        
+        function getCurrentUser() {
+            const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
+            if (userStr) {
+                try {
+                    return JSON.parse(userStr);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+        
+        function writeReview() {
+            // Check if user is authenticated
+            if (!isAuthenticated()) {
+                // Show sign-in modal directly
+                showSignInModal();
+                return;
+            }
+            
+            // User is authenticated, show review form
+            openReviewForm();
+        }
+        
+        function openReviewForm() {
+            const modal = document.getElementById('reviewModal');
+            if (modal) {
+                // Pre-fill name if available
+                const user = getCurrentUser();
+                if (user) {
+                    const nameField = document.getElementById('reviewName');
+                    if (nameField) {
+                        nameField.value = user.name || user.firstName + ' ' + (user.lastName || '') || '';
+                    }
+                }
+                
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+        
+        // Sign-In Modal Functions
+        function showSignInModal() {
+            const modal = document.getElementById('signInModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                
+                // Add animation
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
+            }
+        }
+
+        function closeSignInModal() {
+            const modal = document.getElementById('signInModal');
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                    // Reset form if visible
+                    resetGmailForm();
+                }, 300);
+            }
+        }
+        
+        // Gmail Sign-In Flow
+        let currentEmail = '';
+        let verificationSent = false;
+        let verificationTimer = null;
+
+        function showGmailForm() {
+            const emailForm = document.getElementById('gmailEmailForm');
+            const signInBtn = document.getElementById('gmailSignIn');
+            
+            if (signInBtn) signInBtn.style.display = 'none';
+            if (emailForm) emailForm.style.display = 'block';
+            
+            // Focus on email input
+            setTimeout(() => {
+                const emailInput = document.getElementById('gmailEmailInput');
+                if (emailInput) emailInput.focus();
+            }, 100);
+        }
+
+        function sendVerificationEmail() {
+            const emailInput = document.getElementById('gmailEmailInput');
+            const email = emailInput ? emailInput.value.trim() : '';
+            
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            currentEmail = email;
+            verificationSent = true;
+            
+            // Hide email form, show verification status
+            const emailForm = document.getElementById('gmailEmailForm');
+            const verificationStatus = document.getElementById('verificationStatus');
+            
+            if (emailForm) emailForm.style.display = 'none';
+            if (verificationStatus) verificationStatus.style.display = 'block';
+            
+            // In a real app, you would send the verification email here
+            console.log('Verification email sent to:', email);
+        }
+
+        function resendVerification() {
+            if (currentEmail) {
+                // Resend verification email
+                console.log('Resending verification email to:', currentEmail);
+                alert('Verification email resent! Please check your inbox.');
+            }
+        }
+        
+        function demoEmailVerification() {
+            if (verificationSent && currentEmail) {
+                simulateEmailVerification();
             } else {
-                prevBtn.style.display = 'none';
-                nextBtn.style.display = 'none';
+                alert('Please send a verification email first');
             }
         }
-
-        function closeLightbox() {
-            const lightbox = document.getElementById('imageLightbox');
-            lightbox.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function changeLightboxImage(direction) {
-            if (currentLightboxImages.length <= 1) return;
-
-            currentLightboxIndex += direction;
+        
+        function simulateEmailVerification() {
+            // Simulate successful email verification
+            const statusMessage = document.querySelector('#verificationStatus .status-message span');
+            const statusIcon = document.querySelector('#verificationStatus .status-message i');
             
-            if (currentLightboxIndex >= currentLightboxImages.length) {
-                currentLightboxIndex = 0;
-            } else if (currentLightboxIndex < 0) {
-                currentLightboxIndex = currentLightboxImages.length - 1;
+            if (statusMessage) {
+                statusMessage.textContent = `Email verified successfully! Welcome to RoastMyDorm, ${currentEmail}`;
             }
-
-            const lightboxImage = document.getElementById('lightboxImage');
-            const lightboxCounter = document.getElementById('lightboxCounter');
+            if (statusIcon) {
+                statusIcon.className = 'fas fa-check-circle';
+            }
             
-            lightboxImage.src = currentLightboxImages[currentLightboxIndex];
-            lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
+            // Save user to localStorage (simulating successful login)
+            const user = {
+                email: currentEmail,
+                name: currentEmail.split('@')[0],
+                verified: true
+            };
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('authToken', 'demo-token-' + Date.now());
+            
+            // Close sign-in modal and open review form
+            setTimeout(() => {
+                closeSignInModal();
+                setTimeout(() => {
+                    openReviewForm();
+                }, 300);
+            }, 1500);
         }
 
-        // Close lightbox when clicking outside the image
-        document.getElementById('imageLightbox').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLightbox();
-            }
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            const lightbox = document.getElementById('imageLightbox');
-            if (lightbox.style.display === 'block') {
-                if (e.key === 'Escape') {
-                    closeLightbox();
-                } else if (e.key === 'ArrowLeft') {
-                    changeLightboxImage(-1);
-                } else if (e.key === 'ArrowRight') {
-                    changeLightboxImage(1);
+        // ID Scan Sign In
+        function signInWithIDScan() {
+            // For demo purposes, simulate ID scan success
+            const demoUser = {
+                email: 'student@university.edu',
+                name: 'Student User',
+                verified: true
+            };
+            localStorage.setItem('user', JSON.stringify(demoUser));
+            localStorage.setItem('authToken', 'demo-token-' + Date.now());
+            
+            closeSignInModal();
+            setTimeout(() => {
+                openReviewForm();
+            }, 300);
+        }
+        
+        function resetGmailForm() {
+            const emailForm = document.getElementById('gmailEmailForm');
+            const signInBtn = document.getElementById('gmailSignIn');
+            const verificationStatus = document.getElementById('verificationStatus');
+            const emailInput = document.getElementById('gmailEmailInput');
+            
+            if (emailForm) emailForm.style.display = 'none';
+            if (signInBtn) signInBtn.style.display = 'block';
+            if (verificationStatus) verificationStatus.style.display = 'none';
+            if (emailInput) emailInput.value = '';
+            
+            currentEmail = '';
+            verificationSent = false;
+        }
+        
+        // Close modals with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const signInModal = document.getElementById('signInModal');
+                if (signInModal && signInModal.classList.contains('show')) {
+                    closeSignInModal();
+                    return;
+                }
+                
+                const reviewModal = document.getElementById('reviewModal');
+                if (reviewModal && reviewModal.classList.contains('show')) {
+                    closeReviewModal();
                 }
             }
         });
-
-        // Initialize map
+        
+        function closeReviewModal() {
+            const modal = document.getElementById('reviewModal');
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = ''; // Restore scrolling
+                // Reset form after a short delay to allow animation
+                setTimeout(() => {
+                    resetReviewForm();
+                }, 300);
+            }
+        }
+        
+        function resetReviewForm() {
+            document.getElementById('reviewName').value = '';
+            document.getElementById('reviewText').value = '';
+            currentSelectedRating = 0;
+            currentHoverRating = 0;
+            updateStars();
+            document.getElementById('selectedRating').value = 0;
+            updateRatingText(0);
+        }
+        
+        let currentHoverRating = 0;
+        let currentSelectedRating = 0;
+        
+        function setStarRating(rating) {
+            currentSelectedRating = rating;
+            updateStars();
+            document.getElementById('selectedRating').value = rating;
+            updateRatingText(rating);
+        }
+        
+        function hoverStar(rating) {
+            currentHoverRating = rating;
+            updateStars();
+        }
+        
+        function unhoverStar() {
+            currentHoverRating = 0;
+            updateStars();
+        }
+        
+        function updateStars() {
+            const stars = document.querySelectorAll('.star-rating-input .star');
+            const ratingToShow = currentHoverRating > 0 ? currentHoverRating : currentSelectedRating;
+            stars.forEach((star, index) => {
+                if (index < ratingToShow) {
+                    star.classList.add('active');
+                    star.textContent = '★';
+                } else {
+                    star.classList.remove('active');
+                    star.textContent = '☆';
+                }
+            });
+        }
+        
+        function updateRatingText(rating) {
+            const ratingText = document.querySelector('.star-rating-input .rating-text');
+            if (ratingText) {
+                if (rating === 0) {
+                    ratingText.textContent = '';
+                } else {
+                    ratingText.textContent = rating + ' / 5';
+                }
+            }
+        }
+        
+        function submitReview(event) {
+            event.preventDefault();
+            const name = document.getElementById('reviewName').value.trim();
+            const text = document.getElementById('reviewText').value.trim();
+            const rating = parseInt(document.getElementById('selectedRating').value) || 0;
+            
+            if (!name) {
+                alert('Please enter your name.');
+                return;
+            }
+            
+            if (rating === 0) {
+                alert('Please select a rating by clicking on the stars.');
+                return;
+            }
+            
+            if (!text || text.length < 10) {
+                alert('Please write a review with at least 10 characters.');
+                return;
+            }
+            
+            // Here you would normally send this to your backend
+            alert(`Thank you, ${name}! Your ${rating}-star review has been submitted. It will be reviewed before being published.`);
+            
+            // Close modal and reset form
+            closeReviewModal();
+        }
+        
+        function viewAllReviews() {
+            alert('All reviews page would open here. Showing all 52 reviews.');
+        }
+        
+        // Calendar navigation
+        let currentMonth = 8; // September (0-indexed, so 8 = September)
+        let currentYear = 2024;
+        
+        // Available dates for booking (example dates)
+        const availableDates = [11, 13, 15, 18, 20, 22, 25, 27, 29];
+        
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendar();
+        }
+        
+        function updateCalendar() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            const header = document.querySelector('.calendar-header strong');
+            if (header) {
+                header.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            }
+            
+            generateCalendarGrid();
+        }
+        
+        function generateCalendarGrid() {
+            const grid = document.getElementById('calendarGrid');
+            if (!grid) return;
+            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            // Header days
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            let html = '';
+            
+            // Add header
+            dayNames.forEach(day => {
+                html += `<div class="calendar-day header">${day}</div>`;
+            });
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div class="calendar-day unavailable"></div>`;
+            }
+            
+            // Add days of the month
+            // For now, using hardcoded available dates for September 2024
+            // In production, this would come from an API
+            const currentAvailableDates = (currentMonth === 8 && currentYear === 2024) 
+                ? availableDates 
+                : []; // For other months, you'd fetch available dates
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isAvailable = currentAvailableDates.includes(day);
+                const classNames = isAvailable ? 'calendar-day available' : 'calendar-day unavailable';
+                html += `<div class="${classNames}" ${isAvailable ? 'onclick="selectDate(' + day + ')"' : ''}>${day}</div>`;
+            }
+            
+            grid.innerHTML = html;
+        }
+        
+        function selectDate(day) {
+            const date = new Date(currentYear, currentMonth, day);
+            const dateStr = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            alert(`Date selected: ${dateStr}. This would proceed to booking.`);
+        }
+        
+        // Action functions
+        function scheduleTour() {
+            const calendarWidget = document.getElementById('calendarWidget');
+            if (calendarWidget) {
+                calendarWidget.classList.add('show');
+                // Scroll to calendar smoothly
+                calendarWidget.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        
+        function hideSchedule() {
+            const calendarWidget = document.getElementById('calendarWidget');
+            if (calendarWidget) {
+                calendarWidget.classList.remove('show');
+            }
+        }
+        
+        function messageLandlord() {
+            alert('Messaging system would open here. You can contact the landlord directly.');
+        }
+        
+        function openFullMap() {
+            const address = encodeURIComponent('Ain Sabaa  , Casablanca , Morocco');
+            window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
+        }
+        
+        // Initialize calendar on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Maarif, Casablanca coordinates (approximate)
-            const map = L.map('map').setView([33.5731, -7.5898], 15);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            // Add markers
-            L.marker([33.5731, -7.5898]).addTo(map)
-                .bindPopup('Hassan II University')
-                .openPopup();
-
-            L.marker([33.5725, -7.5905]).addTo(map)
-                .bindPopup('Shared Apartment - Maarif')
-                .openPopup();
+            updateCalendar();
+            
+            // Set current year
+            const yearElement = document.getElementById('currentYear');
+            if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
+            }
+            
+            // Smooth scroll for map link
+            const mapLink = document.querySelector('a[href="#map"]');
+            if (mapLink) {
+                mapLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const mapElement = document.getElementById('map');
+                    if (mapElement) {
+                        mapElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
         });
     </script>
 </body>
 </html>
+
