@@ -15,12 +15,25 @@ const userSchema = new mongoose.Schema({
     trim: true,
     maxlength: 50
   },
+  username: {
+    type: String,
+    unique: true,
+    sparse: true,
+    lowercase: true,
+    trim: true,
+    maxlength: 30,
+    match: [/^[a-z0-9_]+$/, 'Username can only contain lowercase letters, numbers, and underscores']
+  },
   email: {
     type: String,
     required: true,
     unique: true,
     lowercase: true,
     trim: true
+  },
+  bio: {
+    type: String,
+    maxlength: 500
   },
   password: {
     type: String,
@@ -37,6 +50,7 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   verificationToken: String,
+  verificationExpires: Date,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   

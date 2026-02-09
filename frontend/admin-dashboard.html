@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Dashboard - RoastMyDorm</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <!-- Login Overlay -->
+  <div id="login-overlay" class="login-overlay">
+    <div class="login-container">
+      <div class="login-header">
+        <i class="fas fa-shield-halved"></i>
+        <h1>Admin Dashboard</h1>
+        <p>RoastMyDorm Administration</p>
+      </div>
+      <form id="admin-login-form" class="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="redasneijder@gmail.com">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="RedaSch06">
+        </div>
+        <div class="form-error" id="login-error"></div>
+        <button type="submit" class="btn-primary" id="login-btn">
+          <span>Sign In</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Admin Layout -->
+  <div id="admin-app" class="admin-layout hidden">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-fire"></i>
+          <span>RoastMyDorm</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item active" data-page="dashboard">
+            <a href="#dashboard">
+              <i class="fas fa-chart-pie"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="users">
+            <a href="#users">
+              <i class="fas fa-users"></i>
+              <span>Users</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="dorms">
+            <a href="#dorms">
+              <i class="fas fa-building"></i>
+              <span>Dorms</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="reviews">
+            <a href="#reviews">
+              <i class="fas fa-star"></i>
+              <span>Reviews</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="roommates">
+            <a href="#roommates">
+              <i class="fas fa-user-group"></i>
+              <span>Roommates</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="analytics">
+            <a href="#analytics">
+              <i class="fas fa-chart-line"></i>
+              <span>Analytics</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="reports">
+            <a href="#reports">
+              <i class="fas fa-flag"></i>
+              <span>Reports</span>
+              <span class="badge" id="reports-badge">0</span>
+            </a>
+          </li>
+          <li class="nav-item" data-page="settings">
+            <a href="#settings">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="admin-profile">
+          <img src="" alt="" id="admin-avatar" class="avatar">
+          <div class="admin-info">
+            <span class="admin-name" id="admin-name">Admin</span>
+            <span class="admin-role">Administrator</span>
+          </div>
+        </div>
+        <button class="logout-btn" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="page-title" id="page-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search..." id="global-search">
+          </div>
+          <button class="notification-btn" id="notification-btn">
+            <i class="fas fa-bell"></i>
+            <span class="notification-dot"></span>
+          </button>
+          <button class="refresh-btn" id="refresh-btn" title="Refresh Data">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <div class="page-content" id="page-content">
+        <!-- Dashboard Page -->
+        <section class="page dashboard-page active" id="dashboard-page">
+          <!-- Stats Cards -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon users">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-total-users">0</h3>
+                <p>Total Users</p>
+              </div>
+              <div class="stat-change positive" id="stat-users-change">
+                <i class="fas fa-arrow-up"></i>
+                <span>0%</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon dorms">
+                <i class="fas fa-building"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-total-dorms">0</h3>
+                <p>Active Dorms</p>
+              </div>
+              <div class="stat-badge pending" id="stat-pending-dorms">
+                <span>0 pending</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon reviews">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-total-reviews">0</h3>
+                <p>Total Reviews</p>
+              </div>
+              <div class="stat-change positive" id="stat-reviews-change">
+                <i class="fas fa-arrow-up"></i>
+                <span>+0 this week</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon reports">
+                <i class="fas fa-flag"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="stat-pending-reports">0</h3>
+                <p>Pending Reports</p>
+              </div>
+              <div class="stat-badge urgent" id="stat-reports-urgent">
+                <span>Needs attention</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>User Growth</h3>
+                <select id="growth-period" class="period-select">
+                  <option value="7">Last 7 Days</option>
+                  <option value="30" selected>Last 30 Days</option>
+                  <option value="90">Last 90 Days</option>
+                </select>
+              </div>
+              <div class="chart-container">
+                <canvas id="user-growth-chart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Reviews Activity</h3>
+                <select id="reviews-period" class="period-select">
+                  <option value="7">Last 7 Days</option>
+                  <option value="30" selected>Last 30 Days</option>
+                </select>
+              </div>
+              <div class="chart-container">
+                <canvas id="reviews-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Section -->
+          <div class="activity-grid">
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3>Recent Signups</h3>
+                <a href="#users" class="view-all">View All</a>
+              </div>
+              <div class="activity-list" id="recent-signups">
+                <div class="loading-placeholder">
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <span>Loading...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3>Recent Reviews</h3>
+                <a href="#reviews" class="view-all">View All</a>
+              </div>
+              <div class="activity-list" id="recent-reviews">
+                <div class="loading-placeholder">
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <span>Loading...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="activity-card">
+              <div class="activity-header">
+                <h3>Top Dorms</h3>
+                <a href="#dorms" class="view-all">View All</a>
+              </div>
+              <div class="activity-list" id="top-dorms">
+                <div class="loading-placeholder">
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <span>Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Users Page -->
+        <section class="page users-page" id="users-page">
+          <div class="page-toolbar">
+            <div class="toolbar-left">
+              <div class="search-filter">
+                <i class="fas fa-search"></i>
+                <input type="text" id="users-search" placeholder="Search users...">
+              </div>
+              <select id="users-type-filter" class="filter-select">
+                <option value="">All Types</option>
+                <option value="student">Students</option>
+                <option value="landlord">Landlords</option>
+              </select>
+              <select id="users-status-filter" class="filter-select">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="banned">Banned</option>
+              </select>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn-secondary" id="export-users-btn">
+                <i class="fas fa-download"></i>
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table" id="users-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all-users"></th>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Type</th>
+                  <th>University</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <tr class="loading-row">
+                  <td colspan="8">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      <span>Loading users...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="users-pagination">
+            <button class="pagination-btn" id="users-prev" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-info">Page <span id="users-current-page">1</span> of <span id="users-total-pages">1</span></span>
+            <button class="pagination-btn" id="users-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Dorms Page -->
+        <section class="page dorms-page" id="dorms-page">
+          <div class="page-toolbar">
+            <div class="toolbar-left">
+              <div class="search-filter">
+                <i class="fas fa-search"></i>
+                <input type="text" id="dorms-search" placeholder="Search dorms...">
+              </div>
+              <select id="dorms-city-filter" class="filter-select">
+                <option value="">All Cities</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Marrakech">Marrakech</option>
+              </select>
+              <select id="dorms-status-filter" class="filter-select">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn-primary" id="add-dorm-btn">
+                <i class="fas fa-plus"></i>
+                <span>Add Dorm</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pending Dorms Alert -->
+          <div class="alert-banner warning" id="pending-dorms-alert" style="display: none;">
+            <i class="fas fa-clock"></i>
+            <span><strong id="pending-count">0</strong> dorms awaiting approval</span>
+            <button class="btn-small" id="review-pending-btn">Review Now</button>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table" id="dorms-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all-dorms"></th>
+                  <th>Dorm</th>
+                  <th>City</th>
+                  <th>Rent</th>
+                  <th>Rating</th>
+                  <th>Reviews</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dorms-table-body">
+                <tr class="loading-row">
+                  <td colspan="8">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      <span>Loading dorms...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="dorms-pagination">
+            <button class="pagination-btn" id="dorms-prev" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-info">Page <span id="dorms-current-page">1</span> of <span id="dorms-total-pages">1</span></span>
+            <button class="pagination-btn" id="dorms-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Reviews Page -->
+        <section class="page reviews-page" id="reviews-page">
+          <div class="page-toolbar">
+            <div class="toolbar-left">
+              <div class="search-filter">
+                <i class="fas fa-search"></i>
+                <input type="text" id="reviews-search" placeholder="Search reviews...">
+              </div>
+              <select id="reviews-status-filter" class="filter-select">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="flagged">Flagged</option>
+              </select>
+              <select id="reviews-rating-filter" class="filter-select">
+                <option value="">All Ratings</option>
+                <option value="5">5 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="3">3 Stars</option>
+                <option value="2">2 Stars</option>
+                <option value="1">1 Star</option>
+              </select>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn-secondary" id="bulk-approve-btn" disabled>
+                <i class="fas fa-check"></i>
+                <span>Approve Selected</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Flagged Reviews Alert -->
+          <div class="alert-banner danger" id="flagged-reviews-alert" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span><strong id="flagged-count">0</strong> reviews flagged for review</span>
+            <button class="btn-small" id="review-flagged-btn">Review Now</button>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table" id="reviews-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="select-all-reviews"></th>
+                  <th>Review</th>
+                  <th>Dorm</th>
+                  <th>Rating</th>
+                  <th>Author</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reviews-table-body">
+                <tr class="loading-row">
+                  <td colspan="8">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      <span>Loading reviews...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="reviews-pagination">
+            <button class="pagination-btn" id="reviews-prev" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-info">Page <span id="reviews-current-page">1</span> of <span id="reviews-total-pages">1</span></span>
+            <button class="pagination-btn" id="reviews-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Roommates Page -->
+        <section class="page roommates-page" id="roommates-page">
+          <div class="page-toolbar">
+            <div class="toolbar-left">
+              <div class="search-filter">
+                <i class="fas fa-search"></i>
+                <input type="text" id="roommates-search" placeholder="Search profiles...">
+              </div>
+              <select id="roommates-city-filter" class="filter-select">
+                <option value="">All Cities</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Marrakech">Marrakech</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="mini-stat">
+              <span class="mini-stat-value" id="roommates-total">0</span>
+              <span class="mini-stat-label">Total Profiles</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-value" id="roommates-active">0</span>
+              <span class="mini-stat-label">Active</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-value" id="roommates-matches">0</span>
+              <span class="mini-stat-label">Total Matches</span>
+            </div>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table" id="roommates-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Location</th>
+                  <th>University</th>
+                  <th>Budget</th>
+                  <th>Matches</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="roommates-table-body">
+                <tr class="loading-row">
+                  <td colspan="7">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      <span>Loading profiles...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination" id="roommates-pagination">
+            <button class="pagination-btn" id="roommates-prev" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-info">Page <span id="roommates-current-page">1</span> of <span id="roommates-total-pages">1</span></span>
+            <button class="pagination-btn" id="roommates-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Analytics Page -->
+        <section class="page analytics-page" id="analytics-page">
+          <div class="analytics-tabs">
+            <button class="tab-btn active" data-tab="overview">Overview</button>
+            <button class="tab-btn" data-tab="traffic">Traffic</button>
+            <button class="tab-btn" data-tab="engagement">Engagement</button>
+            <button class="tab-btn" data-tab="market">Market Insights</button>
+          </div>
+
+          <div class="analytics-content">
+            <!-- Overview Tab -->
+            <div class="tab-panel active" id="overview-tab">
+              <div class="analytics-stats-grid">
+                <div class="analytics-stat-card">
+                  <i class="fas fa-eye"></i>
+                  <div class="analytics-stat-value" id="analytics-pageviews">0</div>
+                  <div class="analytics-stat-label">Page Views</div>
+                  <div class="analytics-stat-change" id="analytics-pageviews-change">+0%</div>
+                </div>
+                <div class="analytics-stat-card">
+                  <i class="fas fa-users"></i>
+                  <div class="analytics-stat-value" id="analytics-visitors">0</div>
+                  <div class="analytics-stat-label">Unique Visitors</div>
+                </div>
+                <div class="analytics-stat-card">
+                  <i class="fas fa-user-plus"></i>
+                  <div class="analytics-stat-value" id="analytics-new-users">0</div>
+                  <div class="analytics-stat-label">New Users</div>
+                  <div class="analytics-stat-change" id="analytics-users-change">+0%</div>
+                </div>
+                <div class="analytics-stat-card">
+                  <i class="fas fa-percent"></i>
+                  <div class="analytics-stat-value" id="analytics-retention">0%</div>
+                  <div class="analytics-stat-label">Retention Rate</div>
+                </div>
+              </div>
+
+              <div class="charts-grid">
+                <div class="chart-card wide">
+                  <div class="chart-header">
+                    <h3>Traffic Overview</h3>
+                    <select id="traffic-period" class="period-select">
+                      <option value="7">Last 7 Days</option>
+                      <option value="30" selected>Last 30 Days</option>
+                      <option value="90">Last 90 Days</option>
+                    </select>
+                  </div>
+                  <div class="chart-container large">
+                    <canvas id="traffic-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Traffic Tab -->
+            <div class="tab-panel" id="traffic-tab">
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Top Pages</h3>
+                  </div>
+                  <div class="top-list" id="top-pages-list">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Device Breakdown</h3>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="device-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Traffic Sources</h3>
+                  </div>
+                  <div class="top-list" id="traffic-sources-list">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Top Searched Cities</h3>
+                  </div>
+                  <div class="top-list" id="top-cities-list">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Engagement Tab -->
+            <div class="tab-panel" id="engagement-tab">
+              <div class="charts-grid">
+                <div class="chart-card wide">
+                  <div class="chart-header">
+                    <h3>Reviews Activity</h3>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="engagement-reviews-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Average Rating Trend</h3>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="rating-trend-chart"></canvas>
+                  </div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>User Cohort Retention</h3>
+                  </div>
+                  <div class="cohort-table" id="cohort-table">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Market Insights Tab -->
+            <div class="tab-panel" id="market-tab">
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Average Rent by City</h3>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="rent-by-city-chart"></canvas>
+                  </div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Demand by City</h3>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="demand-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="charts-grid">
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Top Universities</h3>
+                  </div>
+                  <div class="top-list" id="top-universities-list">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-card">
+                  <div class="chart-header">
+                    <h3>Highest Rated Dorms</h3>
+                  </div>
+                  <div class="top-list" id="top-rated-list">
+                    <div class="loading-placeholder">
+                      <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reports Page -->
+        <section class="page reports-page" id="reports-page">
+          <div class="page-toolbar">
+            <div class="toolbar-left">
+              <select id="reports-status-filter" class="filter-select">
+                <option value="">All Status</option>
+                <option value="pending" selected>Pending</option>
+                <option value="under_review">Under Review</option>
+                <option value="resolved">Resolved</option>
+                <option value="dismissed">Dismissed</option>
+              </select>
+              <select id="reports-type-filter" class="filter-select">
+                <option value="">All Types</option>
+                <option value="review">Reviews</option>
+                <option value="dorm">Dorms</option>
+                <option value="user">Users</option>
+              </select>
+              <select id="reports-priority-filter" class="filter-select">
+                <option value="">All Priorities</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="mini-stat urgent">
+              <span class="mini-stat-value" id="reports-pending-count">0</span>
+              <span class="mini-stat-label">Pending</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-value" id="reports-review-count">0</span>
+              <span class="mini-stat-label">Under Review</span>
+            </div>
+            <div class="mini-stat success">
+              <span class="mini-stat-value" id="reports-resolved-count">0</span>
+              <span class="mini-stat-label">Resolved</span>
+            </div>
+          </div>
+
+          <div class="reports-list" id="reports-list">
+            <div class="loading-placeholder">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Loading reports...</span>
+            </div>
+          </div>
+
+          <div class="pagination" id="reports-pagination">
+            <button class="pagination-btn" id="reports-prev" disabled>
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="pagination-info">Page <span id="reports-current-page">1</span> of <span id="reports-total-pages">1</span></span>
+            <button class="pagination-btn" id="reports-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Settings Page -->
+        <section class="page settings-page" id="settings-page">
+          <div class="settings-tabs">
+            <button class="tab-btn active" data-settings-tab="general">General</button>
+            <button class="tab-btn" data-settings-tab="moderation">Moderation</button>
+            <button class="tab-btn" data-settings-tab="features">Features</button>
+            <button class="tab-btn" data-settings-tab="security">Security</button>
+          </div>
+
+          <div class="settings-content">
+            <!-- General Settings -->
+            <div class="settings-panel active" id="general-settings">
+              <div class="settings-group">
+                <h3>Site Information</h3>
+                <div class="setting-item">
+                  <label>Site Name</label>
+                  <input type="text" id="setting-site-name" value="RoastMyDorm">
+                </div>
+                <div class="setting-item">
+                  <label>Support Email</label>
+                  <input type="email" id="setting-support-email" value="support@roastmydorm.com">
+                </div>
+                <div class="setting-item">
+                  <label>Timezone</label>
+                  <select id="setting-timezone">
+                    <option value="Africa/Casablanca">Africa/Casablanca</option>
+                    <option value="Europe/Paris">Europe/Paris</option>
+                    <option value="UTC">UTC</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <h3>Maintenance Mode</h3>
+                <div class="setting-item toggle">
+                  <label>Enable Maintenance Mode</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-maintenance-mode">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <label>Maintenance Message</label>
+                  <textarea id="setting-maintenance-message">We are performing scheduled maintenance. Please check back soon.</textarea>
+                </div>
+              </div>
+
+              <button class="btn-primary save-settings" id="save-general-settings">
+                <i class="fas fa-save"></i>
+                <span>Save Changes</span>
+              </button>
+            </div>
+
+            <!-- Moderation Settings -->
+            <div class="settings-panel" id="moderation-settings">
+              <div class="settings-group">
+                <h3>Review Moderation</h3>
+                <div class="setting-item toggle">
+                  <label>Auto-approve Reviews</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-auto-approve-reviews">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Require Photo for Reviews</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-require-photo">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <label>Minimum Review Length</label>
+                  <input type="number" id="setting-min-review-length" value="50" min="0">
+                </div>
+                <div class="setting-item">
+                  <label>Max Reviews Per User Per Day</label>
+                  <input type="number" id="setting-max-reviews-per-day" value="5" min="1">
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <h3>Content Filters</h3>
+                <div class="setting-item toggle">
+                  <label>Enable Profanity Filter</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-profanity-filter" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Enable Spam Filter</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-spam-filter" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <button class="btn-primary save-settings" id="save-moderation-settings">
+                <i class="fas fa-save"></i>
+                <span>Save Changes</span>
+              </button>
+            </div>
+
+            <!-- Features Settings -->
+            <div class="settings-panel" id="features-settings">
+              <div class="settings-group">
+                <h3>Feature Flags</h3>
+                <div class="setting-item toggle">
+                  <label>Roommate Matching</label>
+                  <label class="switch">
+                    <input type="checkbox" id="feature-roommate-matching" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Landlord Chat</label>
+                  <label class="switch">
+                    <input type="checkbox" id="feature-landlord-chat" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Q&A System</label>
+                  <label class="switch">
+                    <input type="checkbox" id="feature-qna" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Blog</label>
+                  <label class="switch">
+                    <input type="checkbox" id="feature-blog" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Compare Dorms</label>
+                  <label class="switch">
+                    <input type="checkbox" id="feature-compare-dorms" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Price Alerts</label>
+                  <label class="switch">
+                    <input type="checkbox" id="feature-price-alerts" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <button class="btn-primary save-settings" id="save-features-settings">
+                <i class="fas fa-save"></i>
+                <span>Save Changes</span>
+              </button>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-panel" id="security-settings">
+              <div class="settings-group">
+                <h3>Authentication</h3>
+                <div class="setting-item">
+                  <label>Max Login Attempts</label>
+                  <input type="number" id="setting-max-login-attempts" value="5" min="1">
+                </div>
+                <div class="setting-item">
+                  <label>Lockout Duration (minutes)</label>
+                  <input type="number" id="setting-lockout-duration" value="30" min="1">
+                </div>
+                <div class="setting-item">
+                  <label>Session Timeout (minutes)</label>
+                  <input type="number" id="setting-session-timeout" value="60" min="1">
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <h3>Verification</h3>
+                <div class="setting-item toggle">
+                  <label>Require Email Verification</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-require-email-verification" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-item toggle">
+                  <label>Allow Social Login</label>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-social-login" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="settings-group">
+                <h3>Cache</h3>
+                <button class="btn-secondary" id="clear-cache-btn">
+                  <i class="fas fa-broom"></i>
+                  <span>Clear All Cache</span>
+                </button>
+              </div>
+
+              <button class="btn-primary save-settings" id="save-security-settings">
+                <i class="fas fa-save"></i>
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <!-- User Detail Modal -->
+  <div class="modal" id="user-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>User Details</h2>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body" id="user-modal-body">
+        <!-- Dynamic content -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-danger" id="user-ban-btn">Ban User</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dorm Detail Modal -->
+  <div class="modal" id="dorm-modal">
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h2>Dorm Details</h2>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body" id="dorm-modal-body">
+        <!-- Dynamic content -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-primary" id="dorm-save-btn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Detail Modal -->
+  <div class="modal" id="review-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Review Details</h2>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body" id="review-modal-body">
+        <!-- Dynamic content -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-success" id="review-approve-btn">Approve</button>
+        <button class="btn-danger" id="review-delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Detail Modal -->
+  <div class="modal" id="report-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Report Details</h2>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body" id="report-modal-body">
+        <!-- Dynamic content -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-warning" id="report-dismiss-btn">Dismiss</button>
+        <button class="btn-primary" id="report-resolve-btn">Resolve</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirm-modal">
+    <div class="modal-content small">
+      <div class="modal-header">
+        <h2 id="confirm-title">Confirm Action</h2>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message">Are you sure you want to proceed?</p>
+        <div class="confirm-input-group" id="confirm-input-group" style="display: none;">
+          <label id="confirm-input-label">Reason</label>
+          <textarea id="confirm-input"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal>Cancel</button>
+        <button class="btn-danger" id="confirm-action-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/admin.js"></script>
+</body>
+</html>

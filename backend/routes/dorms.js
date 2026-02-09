@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Dorm = require('../models/Dorm');
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // GET /api/dorms - Get all dorms with filters
 router.get('/', async (req, res) => {

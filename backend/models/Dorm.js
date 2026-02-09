@@ -8,6 +8,12 @@ const dormSchema = new mongoose.Schema({
     trim: true,
     maxlength: 100
   },
+  slug: {
+    type: String,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
   description: {
     type: String,
     required: true,
@@ -294,6 +300,46 @@ dormSchema.methods.getPublicData = function() {
   delete dormObject.moderationNotes;
   return dormObject;
 };
+
+// Generate slug from name and city
+dormSchema.statics.generateSlug = function(name, city) {
+  const baseSlug = `${name}-${city}`
+    .toLowerCase()
+    .replace(/[àáâãäå]/g, 'a')
+    .replace(/[èéêë]/g, 'e')
+    .replace(/[ìíîï]/g, 'i')
+    .replace(/[òóôõö]/g, 'o')
+    .replace(/[ùúûü]/g, 'u')
+    .replace(/[ñ]/g, 'n')
+    .replace(/[ç]/g, 'c')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .trim();
+  return baseSlug;
+};
+
+// Pre-save hook to generate slug
+dormSchema.pre('save', async function(next) {
+  if (!this.slug && this.name && this.location?.address?.city) {
+    let baseSlug = this.constructor.generateSlug(this.name, this.location.address.city);
+    let slug = baseSlug;
+    let counter = 1;
+    
+    // Check for existing slugs and add counter if needed
+    while (await this.constructor.findOne({ slug, _id: { $ne: this._id } })) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+    
+    this.slug = slug;
+  }
+  next();
+});
+
+// Index for slug
+dormSchema.index({ slug: 1 });
 
 module.exports = mongoose.model('Dorm', dormSchema);
 

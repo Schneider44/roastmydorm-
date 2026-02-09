@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const StudentDorm = require('../models/StudentDorm');
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 // GET /api/student-dorms - Get dorms by city with filters
 router.get('/', async (req, res) => {

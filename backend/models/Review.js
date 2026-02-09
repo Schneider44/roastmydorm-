@@ -151,6 +151,11 @@ const reviewSchema = new mongoose.Schema({
     }
   }],
   
+  // Vote counts for upvote/downvote system
+  upvoteCount: { type: Number, default: 0 },
+  downvoteCount: { type: Number, default: 0 },
+  voteScore: { type: Number, default: 0 },
+  
   // Analytics
   views: { type: Number, default: 0 },
   shares: { type: Number, default: 0 }

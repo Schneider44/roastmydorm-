@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Housing Blog | Tips & Guides | RoastMyDorm</title>
+    <meta name="description" content="Discover student housing tips, dorm reviews, roommate advice, and guides for finding the perfect accommodation in Morocco. Expert insights for students.">
+    <meta name="keywords" content="student housing Morocco, dorm tips, roommate advice, university accommodation, student living guide">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Student Housing Blog | RoastMyDorm">
+    <meta property="og:description" content="Expert tips and guides for finding the perfect student housing in Morocco">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.roastmydorm.com/blog">
+    <meta property="og:image" content="https://www.roastmydorm.com/images/blog-og.jpg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Student Housing Blog | RoastMyDorm">
+    <meta name="twitter:description" content="Expert tips and guides for finding the perfect student housing in Morocco">
+    
+    <link rel="canonical" href="https://www.roastmydorm.com/blog">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/seo-utils.js" defer></script>
+    
+    <style>
+        .blog-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 24px;
+            text-align: center;
+            color: white;
+        }
+
+        .blog-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .blog-hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 48px;
+        }
+
+        .blog-main {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .blog-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Category Navigation */
+        .category-nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            background: white;
+            color: #374151;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        /* Featured Post */
+        .featured-post {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .featured-content {
+            padding: 32px;
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .featured-title {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .featured-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .featured-title a:hover {
+            color: #667eea;
+        }
+
+        .featured-excerpt {
+            color: #6b7280;
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Blog Cards */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .blog-card-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 20px;
+        }
+
+        .blog-card-category {
+            color: #667eea;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .blog-card-title {
+            font-size: 1.125rem;
+            color: #1f2937;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .blog-card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .blog-card-title a:hover {
+            color: #667eea;
+        }
+
+        .blog-card-excerpt {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .blog-card-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+
+        /* Sidebar */
+        .sidebar-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .sidebar-title {
+            font-size: 1.125rem;
+            color: #1f2937;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .popular-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .popular-item {
+            display: flex;
+            gap: 12px;
+        }
+
+        .popular-thumb {
+            width: 70px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .popular-info {
+            flex: 1;
+        }
+
+        .popular-title {
+            font-size: 0.875rem;
+            color: #374151;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .popular-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .popular-title a:hover {
+            color: #667eea;
+        }
+
+        .popular-date {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 6px 14px;
+            background: #f3f4f6;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .tag:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .newsletter-form input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .newsletter-form button {
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .newsletter-form button:hover {
+            opacity: 0.9;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 48px;
+        }
+
+        .pagination-btn {
+            padding: 10px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover,
+        .pagination-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            text-align: center;
+            padding: 60px;
+            color: #6b7280;
+        }
+
+        .loading-spinner i {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .blog-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-sidebar {
+                order: -1;
+            }
+
+            .blog-hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-content {
+                padding: 20px;
+            }
+
+            .featured-title {
+                font-size: 1.5rem;
+            }
+
+            .featured-image {
+                height: 250px;
+            }
+
+            .category-nav {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 8px;
+            }
+
+            .category-btn {
+                flex-shrink: 0;
+            }
+        }
+    </style>
+
+    <!-- JSON-LD for Blog -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "RoastMyDorm Student Housing Blog",
+        "description": "Tips, guides, and advice for finding student housing in Morocco",
+        "url": "https://www.roastmydorm.com/blog",
+        "publisher": {
+            "@type": "Organization",
+            "name": "RoastMyDorm",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.roastmydorm.com/roastmydorm_logo-removebg-preview.png"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="roastmydorm_logo-removebg-preview.png" alt="RoastMyDorm">
+                <span>RoastMyDorm</span>
+            </a>
+            <div class="nav-links">
+                <a href="how-it-works.html" class="nav-link">How It Works</a>
+                <a href="for-students.html" class="nav-link">For Students</a>
+                <a href="blog.html" class="nav-link active">Blog</a>
+                <a href="find-roommate-profile.html" class="nav-link">Find Roommate</a>
+                <button class="sign-in-btn" onclick="window.location.href='login.html'">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="blog-hero">
+        <h1>Student Housing Blog</h1>
+        <p>Tips, guides, and insights for finding the perfect student accommodation in Morocco</p>
+    </section>
+
+    <main class="blog-container">
+        <!-- Category Navigation -->
+        <div class="category-nav" id="category-nav">
+            <button class="category-btn active" data-category="all">All Posts</button>
+            <button class="category-btn" data-category="tips">Housing Tips</button>
+            <button class="category-btn" data-category="guides">Guides</button>
+            <button class="category-btn" data-category="reviews">Reviews</button>
+            <button class="category-btn" data-category="roommates">Roommates</button>
+            <button class="category-btn" data-category="cities">City Guides</button>
+        </div>
+
+        <div class="blog-layout">
+            <div class="blog-main">
+                <!-- Featured Post -->
+                <article class="featured-post" id="featured-post">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading featured post...</p>
+                    </div>
+                </article>
+
+                <!-- Blog Grid -->
+                <div class="blog-grid" id="blog-grid">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading posts...</p>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination"></div>
+            </div>
+
+            <aside class="blog-sidebar">
+                <!-- Search -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Search</h3>
+                    <input type="text" class="search-input" placeholder="Search articles..." id="blog-search">
+                </div>
+
+                <!-- Popular Posts -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Popular Posts</h3>
+                    <div class="popular-list" id="popular-posts">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Popular Tags</h3>
+                    <div class="tag-cloud" id="tag-cloud">
+                        <a href="?tag=dorm-reviews" class="tag">Dorm Reviews</a>
+                        <a href="?tag=roommate-tips" class="tag">Roommate Tips</a>
+                        <a href="?tag=casablanca" class="tag">Casablanca</a>
+                        <a href="?tag=rabat" class="tag">Rabat</a>
+                        <a href="?tag=budget" class="tag">Budget Living</a>
+                        <a href="?tag=safety" class="tag">Safety</a>
+                        <a href="?tag=moving" class="tag">Moving Tips</a>
+                        <a href="?tag=student-life" class="tag">Student Life</a>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Newsletter</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 12px;">
+                        Get the latest housing tips delivered to your inbox.
+                    </p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>RoastMyDorm</h4>
+                <p>Find and review student housing in Morocco.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="how-it-works.html">How It Works</a>
+                <a href="for-students.html">For Students</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-section">
+                <h4>Cities</h4>
+                <a href="casablanca-dorms.html">Casablanca</a>
+                <a href="rabat-dorms.html">Rabat</a>
+                <a href="marrakech-dorms.html">Marrakech</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RoastMyDorm. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentPage = 1;
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // Load blog posts
+        async function loadPosts() {
+            try {
+                const params = new URLSearchParams({
+                    page: currentPage,
+                    limit: 6
+                });
+
+                if (currentCategory !== 'all') {
+                    params.append('category', currentCategory);
+                }
+                if (searchQuery) {
+                    params.append('search', searchQuery);
+                }
+
+                const response = await fetch(`/api/blog?${params}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    renderFeaturedPost(data.data.posts[0]);
+                    renderBlogGrid(data.data.posts.slice(1));
+                    renderPagination(data.data.pagination);
+                }
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                showDemoContent();
+            }
+        }
+
+        // Load popular posts
+        async function loadPopularPosts() {
+            try {
+                const response = await fetch('/api/blog/popular?limit=4');
+                const data = await response.json();
+
+                if (data.success) {
+                    renderPopularPosts(data.data);
+                }
+            } catch (error) {
+                console.error('Error loading popular posts:', error);
+                showDemoPopular();
+            }
+        }
+
+        function renderFeaturedPost(post) {
+            if (!post) {
+                showDemoContent();
+                return;
+            }
+
+            const container = document.getElementById('featured-post');
+            container.innerHTML = `
+                <img src="${post.featuredImage || 'images/blog-placeholder.jpg'}" 
+                     alt="${escapeHtml(post.title)}" class="featured-image">
+                <div class="featured-content">
+                    <span class="featured-badge">${post.category}</span>
+                    <h2 class="featured-title">
+                        <a href="/blog/${post.slug}">${escapeHtml(post.title)}</a>
+                    </h2>
+                    <p class="featured-excerpt">${escapeHtml(post.excerpt)}</p>
+                    <div class="post-meta">
+                        <div class="post-author">
+                            <img src="${post.author?.profilePicture || 'images/default-avatar.png'}" 
+                                 alt="${post.author?.firstName}" class="author-avatar">
+                            <span>${post.author?.firstName} ${post.author?.lastName}</span>
+                        </div>
+                        <span><i class="far fa-calendar"></i> ${formatDate(post.publishedAt)}</span>
+                        <span><i class="far fa-clock"></i> ${post.readTime} min read</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBlogGrid(posts) {
+            const container = document.getElementById('blog-grid');
+            
+            if (!posts || posts.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">No posts found.</p>';
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <article class="blog-card">
+                    <img src="${post.featuredImage || 'images/blog-placeholder.jpg'}" 
+                         alt="${escapeHtml(post.title)}" class="blog-card-image">
+                    <div class="blog-card-content">
+                        <div class="blog-card-category">${post.category}</div>
+                        <h3 class="blog-card-title">
+                            <a href="/blog/${post.slug}">${escapeHtml(post.title)}</a>
+                        </h3>
+                        <p class="blog-card-excerpt">${escapeHtml(post.excerpt)}</p>
+                        <div class="blog-card-meta">
+                            <span>${formatDate(post.publishedAt)}</span>
+                            <span>${post.readTime} min read</span>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderPopularPosts(posts) {
+            const container = document.getElementById('popular-posts');
+            
+            container.innerHTML = posts.map(post => `
+                <div class="popular-item">
+                    <img src="${post.featuredImage || 'images/blog-placeholder.jpg'}" 
+                         alt="${escapeHtml(post.title)}" class="popular-thumb">
+                    <div class="popular-info">
+                        <div class="popular-title">
+                            <a href="/blog/${post.slug}">${escapeHtml(post.title)}</a>
+                        </div>
+                        <div class="popular-date">${formatDate(post.publishedAt)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            
+            html += `<button class="pagination-btn" onclick="changePage(${currentPage - 1})" 
+                     ${currentPage === 1 ? 'disabled' : ''}>
+                     <i class="fas fa-chevron-left"></i>
+                     </button>`;
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                if (i === 1 || i === pagination.totalPages || 
+                    (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" 
+                             onclick="changePage(${i})">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += '<span style="padding: 0 8px;">...</span>';
+                }
+            }
+            
+            html += `<button class="pagination-btn" onclick="changePage(${currentPage + 1})" 
+                     ${currentPage === pagination.totalPages ? 'disabled' : ''}>
+                     <i class="fas fa-chevron-right"></i>
+                     </button>`;
+            
+            container.innerHTML = html;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            loadPosts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Demo content for development
+        function showDemoContent() {
+            const demoFeatured = {
+                title: '10 Things to Check Before Signing a Dorm Lease',
+                slug: '10-things-check-before-signing-dorm-lease',
+                category: 'Housing Tips',
+                excerpt: 'Moving into student housing is exciting, but before you sign that lease, make sure you know what to look for. From checking appliances to understanding your rights as a tenant, here\'s our complete guide.',
+                featuredImage: 'images/blog-featured-1.jpg',
+                author: { firstName: 'Sarah', lastName: 'Ahmed', profilePicture: 'images/author-1.jpg' },
+                publishedAt: new Date().toISOString(),
+                readTime: 8
+            };
+
+            const demoPosts = [
+                {
+                    title: 'Best Student Neighborhoods in Casablanca',
+                    slug: 'best-student-neighborhoods-casablanca',
+                    category: 'City Guides',
+                    excerpt: 'Looking for housing in Casablanca? Here are the top neighborhoods for students, ranked by price, safety, and proximity to universities.',
+                    featuredImage: 'images/blog-casa.jpg',
+                    publishedAt: new Date(Date.now() - 86400000).toISOString(),
+                    readTime: 6
+                },
+                {
+                    title: 'How to Find the Perfect Roommate',
+                    slug: 'how-to-find-perfect-roommate',
+                    category: 'Roommates',
+                    excerpt: 'Sharing an apartment can save you money and make student life more fun. Here\'s how to find a roommate who\'s actually compatible.',
+                    featuredImage: 'images/blog-roommate.jpg',
+                    publishedAt: new Date(Date.now() - 172800000).toISOString(),
+                    readTime: 5
+                },
+                {
+                    title: 'Budget-Friendly Dorm Decoration Ideas',
+                    slug: 'budget-dorm-decoration-ideas',
+                    category: 'Tips',
+                    excerpt: 'Transform your dorm room without breaking the bank. These affordable decoration ideas will make your space feel like home.',
+                    featuredImage: 'images/blog-decor.jpg',
+                    publishedAt: new Date(Date.now() - 259200000).toISOString(),
+                    readTime: 4
+                },
+                {
+                    title: 'Student Rights: What Landlords Cannot Do',
+                    slug: 'student-rights-landlord-restrictions',
+                    category: 'Guides',
+                    excerpt: 'Know your rights as a student tenant in Morocco. This guide covers what landlords can and cannot legally do.',
+                    featuredImage: 'images/blog-rights.jpg',
+                    publishedAt: new Date(Date.now() - 345600000).toISOString(),
+                    readTime: 7
+                }
+            ];
+
+            renderFeaturedPost(demoFeatured);
+            renderBlogGrid(demoPosts);
+            renderPagination({ totalPages: 1 });
+        }
+
+        function showDemoPopular() {
+            const popularPosts = [
+                { title: 'Complete Guide to Student Housing in Morocco', slug: 'complete-guide-student-housing-morocco', featuredImage: 'images/blog-guide.jpg', publishedAt: new Date().toISOString() },
+                { title: 'Top 5 Mistakes When Renting Your First Dorm', slug: 'top-5-mistakes-renting-first-dorm', featuredImage: 'images/blog-mistakes.jpg', publishedAt: new Date(Date.now() - 86400000).toISOString() },
+                { title: 'Rabat vs Casablanca: Which is Better for Students?', slug: 'rabat-vs-casablanca-students', featuredImage: 'images/blog-compare.jpg', publishedAt: new Date(Date.now() - 172800000).toISOString() },
+                { title: 'Essential Packing List for Your Dorm Move', slug: 'essential-packing-list-dorm-move', featuredImage: 'images/blog-packing.jpg', publishedAt: new Date(Date.now() - 259200000).toISOString() }
+            ];
+            renderPopularPosts(popularPosts);
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                currentPage = 1;
+                loadPosts();
+            });
+        });
+
+        let searchTimeout;
+        document.getElementById('blog-search').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value;
+                currentPage = 1;
+                loadPosts();
+            }, 500);
+        });
+
+        document.getElementById('newsletter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input').value;
+            alert('Thanks for subscribing! Check your email for confirmation.');
+            e.target.reset();
+        });
+
+        // Utility functions
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPosts();
+            loadPopularPosts();
+        });
+    </script>
+</body>
+</html>

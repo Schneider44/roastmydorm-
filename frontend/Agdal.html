@@ -1414,7 +1414,7 @@
                         <a href="#map" style="color: #00a8a8; text-decoration: none;">View on Map</a>
                     </div>
                     <div class="metadata-item rating">
-                        <span class="stars">★★★★★</span>
+                        <span class="stars">?????</span>
                         <span class="score">4.8</span>
                         <span>(52 reviews)</span>
                     </div>
@@ -1546,116 +1546,52 @@
             <!-- Reviews Section -->
             <div class="reviews-section">
                 <h2 class="section-title">Student Reviews</h2>
-                <div class="review-summary">
-                    <div class="review-score">
-                        <div class="score-large">4.8</div>
-                        <div class="stars-large">★★★★★</div>
-                        <div class="count">Based on 52 reviews</div>
-                    </div>
-                    <div class="review-breakdown">
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">5 stars</span>
-                            <div class="breakdown-bar">
-                                <div class="breakdown-fill" style="width: 75%;"></div>
-                            </div>
-                            <span style="font-size: 0.875rem; color: #6b7280;">75%</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">4 stars</span>
-                            <div class="breakdown-bar">
-                                <div class="breakdown-fill" style="width: 20%;"></div>
-                            </div>
-                            <span style="font-size: 0.875rem; color: #6b7280;">20%</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span class="breakdown-label">3 stars</span>
-                            <div class="breakdown-bar">
-                                <div class="breakdown-fill" style="width: 5%;"></div>
-                            </div>
-                            <span style="font-size: 0.875rem; color: #6b7280;">5%</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonials">
-                    <div class="testimonial">
-                        <div class="testimonial-header">
-                            <div class="testimonial-avatar">LJ</div>
-                            <div class="testimonial-info">
-                                <div class="testimonial-name">Liam J.</div>
-                                <div class="testimonial-date">March 15, 2024</div>
-                            </div>
-                            <div class="testimonial-stars">★★★★★</div>
-                        </div>
-                        <div class="testimonial-text">
-                            Excellent location and modern facilities! The apartment is well-maintained and the 
-                            proximity to the university makes it perfect for students. Highly recommend!
-                        </div>
-                    </div>
-                    
-                    <div class="testimonial">
-                        <div class="testimonial-header">
-                            <div class="testimonial-avatar">CS</div>
-                            <div class="testimonial-info">
-                                <div class="testimonial-name">Chloe S.</div>
-                                <div class="testimonial-date">February 28, 2024</div>
-                            </div>
-                            <div class="testimonial-stars">★★★★☆</div>
-                        </div>
-                        <div class="testimonial-text">
-                            Great apartment with all the amenities you need. The landlord is responsive and helpful. 
-                            The only minor issue was the WiFi speed during peak hours, but overall a fantastic place to live!
-                        </div>
-                    </div>
-                </div>
+                <p class="no-reviews-yet" style="color: #6b7280; font-style: italic; text-align: center; padding: 2rem 0;">No reviews yet. Be the first to share your experience!</p>
                 
                 <div class="review-actions">
                     <button class="review-btn primary" onclick="writeReview()">
                         <i class="fas fa-pen"></i> Write a Review
                     </button>
-                    <button class="review-btn secondary" onclick="viewAllReviews()">
-                        View All (52) <i class="fas fa-arrow-right"></i>
-                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Right Column - Sticky Booking Widget -->
-        <aside class="booking-widget">
-            <div class="widget-header">
-                <div class="widget-price">4,000 MAD</div>
-                <div class="widget-price-info">per month • All bills included</div>
-                <div class="verified-badge">
-                    <i class="fas fa-check-circle"></i>
-                    Verified Listing
+        <!-- Right Column - Contact Landlord Card -->
+        <aside class="booking-widget" style="max-width: 400px;">
+            <div class="contact-card" style="background: white; padding: 24px; border-radius: 12px;">
+                <h2 style="color: #0056b3; margin-top: 0; display: flex; align-items: center; gap: 10px; font-family: 'Poppins', sans-serif; font-size: 1.25rem;">
+                    <i class="fas fa-phone"></i> Contact the Landlord
+                </h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Get in touch directly or fill out the form below.</p>
+
+                <div class="direct-contact" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb;">
+                    <p style="margin: 0 0 12px 0;"><strong>Call:</strong> +212 6 00 00 00 00</p>
+                    <a href="https://wa.me/212600000000" class="btn-whatsapp" style="display: flex; align-items: center; justify-content: center; padding: 12px 20px; border-radius: 8px; background-color: #25D366; color: white; text-decoration: none; font-weight: 600; gap: 8px;">
+                        <i class="fab fa-whatsapp"></i> Message on WhatsApp
+                    </a>
+                    <p style="font-size: 12px; color: #6b7280; font-style: italic; margin-top: 8px;">Available for quick chats and photos.</p>
                 </div>
-            </div>
-            
-            <div class="calendar-widget" id="calendarWidget" style="position: relative;">
-                <button class="calendar-close-btn" onclick="hideSchedule()" title="Close calendar">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="calendar-header">
-                    <button class="calendar-nav" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                    <strong style="font-family: 'Poppins', sans-serif;">September 2024</strong>
-                    <button class="calendar-nav" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="calendar-grid" id="calendarGrid">
-                    <!-- Calendar days will be generated by JavaScript -->
-                </div>
-            </div>
-            
-            <button class="cta-button" onclick="scheduleTour()">
-                <i class="fas fa-calendar-check"></i> Schedule a Virtual Tour
-            </button>
-            
-            <button class="secondary-cta" onclick="messageLandlord()">
-                <i class="fas fa-envelope"></i> Message Landlord
-            </button>
-            
-            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.875rem; color: #6b7280; text-align: center;">
-                <i class="fas fa-info-circle" style="color: #00a8a8;"></i>
-                Available dates highlighted in teal
+
+                <form id="landlord-contact-form" onsubmit="submitInquiry(event)">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Full Name</label>
+                        <input type="text" placeholder="Your Name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Phone Number</label>
+                        <input type="tel" placeholder="Your Phone Number" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Email Address</label>
+                        <input type="email" placeholder="email@example.com" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Message/Notes</label>
+                        <textarea placeholder="Hi! I'm interested in the property..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit; height: 80px; resize: vertical;"></textarea>
+                    </div>
+                    <button type="submit" style="display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px 20px; border-radius: 8px; background-color: #0056b3; color: white; border: none; cursor: pointer; font-size: 16px; font-weight: 600; gap: 8px;">
+                        <i class="fas fa-paper-plane"></i> Submit Inquiry
+                    </button>
+                </form>
             </div>
         </aside>
     </div>
@@ -1749,11 +1685,11 @@
                     <label>Your Rating *</label>
                     <div class="star-rating-input">
                         <div class="stars">
-                            <span class="star" onclick="setStarRating(1)" onmouseover="hoverStar(1)" onmouseout="unhoverStar()">☆</span>
-                            <span class="star" onclick="setStarRating(2)" onmouseover="hoverStar(2)" onmouseout="unhoverStar()">☆</span>
-                            <span class="star" onclick="setStarRating(3)" onmouseover="hoverStar(3)" onmouseout="unhoverStar()">☆</span>
-                            <span class="star" onclick="setStarRating(4)" onmouseover="hoverStar(4)" onmouseout="unhoverStar()">☆</span>
-                            <span class="star" onclick="setStarRating(5)" onmouseover="hoverStar(5)" onmouseout="unhoverStar()">☆</span>
+                            <span class="star" onclick="setStarRating(1)" onmouseover="hoverStar(1)" onmouseout="unhoverStar()">?</span>
+                            <span class="star" onclick="setStarRating(2)" onmouseover="hoverStar(2)" onmouseout="unhoverStar()">?</span>
+                            <span class="star" onclick="setStarRating(3)" onmouseover="hoverStar(3)" onmouseout="unhoverStar()">?</span>
+                            <span class="star" onclick="setStarRating(4)" onmouseover="hoverStar(4)" onmouseout="unhoverStar()">?</span>
+                            <span class="star" onclick="setStarRating(5)" onmouseover="hoverStar(5)" onmouseout="unhoverStar()">?</span>
                         </div>
                         <span class="rating-text"></span>
                     </div>
@@ -1815,7 +1751,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            © <span id="currentYear"></span> RoastMyDorm. All rights reserved.
+            � <span id="currentYear"></span> RoastMyDorm. All rights reserved.
         </div>
     </footer>
 
@@ -1867,8 +1803,8 @@
                 <div style="position:relative;max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
                     <span id="lightbox-close" style="position:absolute;top:20px;right:20px;font-size:40px;color:#fff;cursor:pointer;z-index:10001;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;">&times;</span>
                     <img id="lightbox-img" src="${galleryImages[currentImageIndex]}" alt="Gallery image" style="max-width:100%;max-height:90vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);object-fit:contain;">
-                    <div id="lightbox-prev" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;cursor:pointer;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">‹</div>
-                    <div id="lightbox-next" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;cursor:pointer;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">›</div>
+                    <div id="lightbox-prev" style="position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;cursor:pointer;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">�</div>
+                    <div id="lightbox-next" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;cursor:pointer;background:rgba(0,0,0,0.5);border-radius:50%;transition:all 0.3s;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">�</div>
                     <div id="lightbox-count" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:1rem;background:rgba(0,0,0,0.7);padding:0.5rem 1rem;border-radius:20px;">${currentImageIndex + 1} / ${galleryImages.length}</div>
                 </div>
             `;
@@ -2001,6 +1937,7 @@
         let currentEmail = '';
         let verificationSent = false;
         let verificationTimer = null;
+        const API_URL = 'http://localhost:5000/api';
 
         function showGmailForm() {
             const emailForm = document.getElementById('gmailEmailForm');
@@ -2016,7 +1953,7 @@
             }, 100);
         }
 
-        function sendVerificationEmail() {
+        async function sendVerificationEmail() {
             const emailInput = document.getElementById('gmailEmailInput');
             const email = emailInput ? emailInput.value.trim() : '';
             
@@ -2025,64 +1962,171 @@
                 return;
             }
             
-            currentEmail = email;
-            verificationSent = true;
+            // Show loading state
+            const sendBtn = document.querySelector('.send-verification-btn');
+            const originalText = sendBtn.innerHTML;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            sendBtn.disabled = true;
             
-            // Hide email form, show verification status
-            const emailForm = document.getElementById('gmailEmailForm');
-            const verificationStatus = document.getElementById('verificationStatus');
-            
-            if (emailForm) emailForm.style.display = 'none';
-            if (verificationStatus) verificationStatus.style.display = 'block';
-            
-            // In a real app, you would send the verification email here
-            console.log('Verification email sent to:', email);
+            try {
+                const response = await fetch(`${API_URL}/auth/send-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentEmail = email;
+                    verificationSent = true;
+                    
+                    // Hide email form, show verification with code input
+                    const emailForm = document.getElementById('gmailEmailForm');
+                    const verificationStatus = document.getElementById('verificationStatus');
+                    
+                    if (emailForm) emailForm.style.display = 'none';
+                    if (verificationStatus) {
+                        verificationStatus.style.display = 'block';
+                        verificationStatus.innerHTML = `
+                            <div class="status-message">
+                                <i class="fas fa-envelope"></i>
+                                <span>Verification code sent to ${email}</span>
+                            </div>
+                            <div class="code-input-form" style="margin-top: 15px;">
+                                <input type="text" id="verificationCodeInput" placeholder="Enter 6-digit code" 
+                                       maxlength="6" style="padding: 12px; font-size: 18px; text-align: center; letter-spacing: 5px; width: 100%; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+                            </div>
+                            <div class="verification-actions" style="margin-top: 15px;">
+                                <button class="verify-code-btn" onclick="verifyCode()" style="background: #0056b3; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%;">
+                                    <i class="fas fa-check"></i> Verify Code
+                                </button>
+                                <button class="resend-btn" onclick="resendVerification()" style="background: transparent; color: #666; padding: 10px; border: none; cursor: pointer; margin-top: 10px;">
+                                    <i class="fas fa-redo"></i> Resend Code
+                                </button>
+                            </div>
+                        `;
+                    }
+                } else {
+                    alert(data.message || 'Error sending verification email');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to send verification email. Please try again.');
+            } finally {
+                sendBtn.innerHTML = originalText;
+                sendBtn.disabled = false;
+            }
         }
 
-        function resendVerification() {
-            if (currentEmail) {
-                // Resend verification email
-                console.log('Resending verification email to:', currentEmail);
-                alert('Verification email resent! Please check your inbox.');
+        async function verifyCode() {
+            const codeInput = document.getElementById('verificationCodeInput');
+            const code = codeInput ? codeInput.value.trim() : '';
+            
+            if (!code || code.length !== 6) {
+                alert('Please enter the 6-digit verification code');
+                return;
+            }
+            
+            const verifyBtn = document.querySelector('.verify-code-btn');
+            const originalText = verifyBtn.innerHTML;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            verifyBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/verify-code`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: currentEmail, 
+                        code: code,
+                        name: currentEmail.split('@')[0]
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Save user data
+                    localStorage.setItem('user', JSON.stringify(data.data.user));
+                    localStorage.setItem('authToken', data.data.accessToken);
+                    if (data.data.refreshToken) {
+                        localStorage.setItem('refreshToken', data.data.refreshToken);
+                    }
+                    
+                    // Show success
+                    const verificationStatus = document.getElementById('verificationStatus');
+                    if (verificationStatus) {
+                        verificationStatus.innerHTML = `
+                            <div class="status-message" style="color: #28a745;">
+                                <i class="fas fa-check-circle" style="font-size: 48px;"></i>
+                                <span style="display: block; margin-top: 10px; font-size: 18px;">Email verified successfully!</span>
+                            </div>
+                        `;
+                    }
+                    
+                    // Close modal and open review form
+                    setTimeout(() => {
+                        closeSignInModal();
+                        setTimeout(() => {
+                            openReviewForm();
+                        }, 300);
+                    }, 1500);
+                } else {
+                    alert(data.message || 'Invalid verification code');
+                    verifyBtn.innerHTML = originalText;
+                    verifyBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to verify code. Please try again.');
+                verifyBtn.innerHTML = originalText;
+                verifyBtn.disabled = false;
+            }
+        }
+
+        async function resendVerification() {
+            if (!currentEmail) {
+                alert('Please enter your email first');
+                return;
+            }
+            
+            const resendBtn = document.querySelector('.resend-btn');
+            const originalText = resendBtn.innerHTML;
+            resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            resendBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/auth/resend-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: currentEmail })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('New verification code sent! Check your email.');
+                } else {
+                    alert(data.message || 'Error resending code');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to resend code. Please try again.');
+            } finally {
+                resendBtn.innerHTML = originalText;
+                resendBtn.disabled = false;
             }
         }
         
         function demoEmailVerification() {
-            if (verificationSent && currentEmail) {
-                simulateEmailVerification();
-            } else {
-                alert('Please send a verification email first');
-            }
+            // Deprecated - now using real verification
+            alert('Please use the real verification code sent to your email');
         }
         
         function simulateEmailVerification() {
-            // Simulate successful email verification
-            const statusMessage = document.querySelector('#verificationStatus .status-message span');
-            const statusIcon = document.querySelector('#verificationStatus .status-message i');
-            
-            if (statusMessage) {
-                statusMessage.textContent = `Email verified successfully! Welcome to RoastMyDorm, ${currentEmail}`;
-            }
-            if (statusIcon) {
-                statusIcon.className = 'fas fa-check-circle';
-            }
-            
-            // Save user to localStorage (simulating successful login)
-            const user = {
-                email: currentEmail,
-                name: currentEmail.split('@')[0],
-                verified: true
-            };
-            localStorage.setItem('user', JSON.stringify(user));
-            localStorage.setItem('authToken', 'demo-token-' + Date.now());
-            
-            // Close sign-in modal and open review form
-            setTimeout(() => {
-                closeSignInModal();
-                setTimeout(() => {
-                    openReviewForm();
-                }, 300);
-            }, 1500);
+            // Deprecated - kept for backwards compatibility
+            demoEmailVerification();
         }
 
         // ID Scan Sign In
@@ -2181,10 +2225,10 @@
             stars.forEach((star, index) => {
                 if (index < ratingToShow) {
                     star.classList.add('active');
-                    star.textContent = '★';
+                    star.textContent = '?';
                 } else {
                     star.classList.remove('active');
-                    star.textContent = '☆';
+                    star.textContent = '?';
                 }
             });
         }
@@ -2324,6 +2368,16 @@
         
         function messageLandlord() {
             alert('Messaging system would open here. You can contact the landlord directly.');
+        }
+        
+        function submitInquiry(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Show success message
+            alert('Thank you for your inquiry! The landlord will contact you shortly.');
+            form.reset();
         }
         
         function openFullMap() {

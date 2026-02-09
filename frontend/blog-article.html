@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Blog Post | RoastMyDorm</title>
+    <meta name="description" id="meta-description" content="">
+    <meta name="keywords" id="meta-keywords" content="">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="">
+    <meta property="og:description" id="og-description" content="">
+    <meta property="og:type" content="article">
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:image" id="og-image" content="">
+    <meta property="article:published_time" id="og-published" content="">
+    <meta property="article:author" id="og-author" content="">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitter-title" content="">
+    <meta name="twitter:description" id="twitter-description" content="">
+    <meta name="twitter:image" id="twitter-image" content="">
+    
+    <link rel="canonical" id="canonical-url" href="">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/seo-utils.js" defer></script>
+    
+    <style>
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .article-category {
+            color: #667eea;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .article-category a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .article-category a:hover {
+            text-decoration: underline;
+        }
+
+        .article-title {
+            font-size: 2.75rem;
+            color: #1f2937;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .article-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-info {
+            text-align: left;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .author-name a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .author-name a:hover {
+            color: #667eea;
+        }
+
+        .author-title {
+            font-size: 0.875rem;
+        }
+
+        .article-date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .article-featured-image {
+            width: 100%;
+            border-radius: 16px;
+            margin-bottom: 48px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .article-content {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .article-content h2 {
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-top: 48px;
+            margin-bottom: 24px;
+        }
+
+        .article-content h3 {
+            font-size: 1.375rem;
+            color: #1f2937;
+            margin-top: 32px;
+            margin-bottom: 16px;
+        }
+
+        .article-content p {
+            margin-bottom: 24px;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin-bottom: 24px;
+            padding-left: 24px;
+        }
+
+        .article-content li {
+            margin-bottom: 12px;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid #667eea;
+            padding-left: 24px;
+            margin: 32px 0;
+            font-style: italic;
+            color: #6b7280;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 32px 0;
+        }
+
+        .article-content a {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .article-content a:hover {
+            color: #5a67d8;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 48px;
+        }
+
+        .toc-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            color: #667eea;
+        }
+
+        /* Share Buttons */
+        .share-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 48px 0;
+            padding: 24px 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .share-label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .share-btn.facebook { background: #1877f2; }
+        .share-btn.twitter { background: #1da1f2; }
+        .share-btn.linkedin { background: #0a66c2; }
+        .share-btn.whatsapp { background: #25d366; }
+        .share-btn.copy {
+            background: #6b7280;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Author Bio */
+        .author-bio {
+            display: flex;
+            gap: 24px;
+            padding: 32px;
+            background: #f9fafb;
+            border-radius: 16px;
+            margin: 48px 0;
+        }
+
+        .author-bio-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-bio-content h4 {
+            font-size: 1.25rem;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .author-bio-content p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .author-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .author-social a {
+            color: #6b7280;
+            font-size: 1.25rem;
+            transition: color 0.2s;
+        }
+
+        .author-social a:hover {
+            color: #667eea;
+        }
+
+        /* Related Posts */
+        .related-posts {
+            margin-top: 64px;
+        }
+
+        .related-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .related-card-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .related-card-content {
+            padding: 16px;
+        }
+
+        .related-card-title {
+            font-size: 1rem;
+            color: #1f2937;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .related-card-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .related-card-title a:hover {
+            color: #667eea;
+        }
+
+        .related-card-date {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 64px;
+        }
+
+        .comments-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+
+        .comment-form {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 16px;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .comment-form button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .comment-form button:hover {
+            opacity: 0.9;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 32px;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #667eea;
+        }
+
+        .breadcrumb-separator {
+            color: #d1d5db;
+        }
+
+        /* Loading */
+        .loading-state {
+            text-align: center;
+            padding: 100px 20px;
+            color: #6b7280;
+        }
+
+        .loading-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 2rem;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .author-social {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="roastmydorm_logo-removebg-preview.png" alt="RoastMyDorm">
+                <span>RoastMyDorm</span>
+            </a>
+            <div class="nav-links">
+                <a href="how-it-works.html" class="nav-link">How It Works</a>
+                <a href="for-students.html" class="nav-link">For Students</a>
+                <a href="blog.html" class="nav-link active">Blog</a>
+                <a href="find-roommate-profile.html" class="nav-link">Find Roommate</a>
+                <button class="sign-in-btn" onclick="window.location.href='login.html'">Sign In</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="article-container" id="article-container">
+        <div class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading article...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>RoastMyDorm</h4>
+                <p>Find and review student housing in Morocco.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="how-it-works.html">How It Works</a>
+                <a href="for-students.html">For Students</a>
+                <a href="blog.html">Blog</a>
+            </div>
+            <div class="footer-section">
+                <h4>Cities</h4>
+                <a href="casablanca-dorms.html">Casablanca</a>
+                <a href="rabat-dorms.html">Rabat</a>
+                <a href="marrakech-dorms.html">Marrakech</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 RoastMyDorm. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JSON-LD (will be populated dynamically) -->
+    <script type="application/ld+json" id="article-schema"></script>
+
+    <script>
+        // Get slug from URL
+        const pathParts = window.location.pathname.split('/');
+        const slug = pathParts[pathParts.length - 1].replace('.html', '') || 
+                     new URLSearchParams(window.location.search).get('slug');
+
+        // Load article
+        async function loadArticle() {
+            try {
+                const response = await fetch(`/api/blog/${slug}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    showError('Article not found');
+                    return;
+                }
+
+                renderArticle(data.data.post);
+                loadRelatedPosts(data.data.post.relatedPosts || data.data.post.category);
+
+            } catch (error) {
+                console.error('Error loading article:', error);
+                showDemoArticle();
+            }
+        }
+
+        function renderArticle(post) {
+            // Update meta tags
+            document.getElementById('page-title').textContent = `${post.seo?.metaTitle || post.title} | RoastMyDorm`;
+            document.getElementById('meta-description').content = post.seo?.metaDescription || post.excerpt;
+            document.getElementById('meta-keywords').content = post.seo?.keywords?.join(', ') || '';
+            
+            // Open Graph
+            document.getElementById('og-title').content = post.seo?.metaTitle || post.title;
+            document.getElementById('og-description').content = post.seo?.metaDescription || post.excerpt;
+            document.getElementById('og-url').content = `https://www.roastmydorm.com/blog/${post.slug}`;
+            document.getElementById('og-image').content = post.seo?.ogImage || post.featuredImage;
+            document.getElementById('og-published').content = post.publishedAt;
+            document.getElementById('og-author').content = `${post.author?.firstName} ${post.author?.lastName}`;
+            
+            // Twitter
+            document.getElementById('twitter-title').content = post.seo?.metaTitle || post.title;
+            document.getElementById('twitter-description').content = post.seo?.metaDescription || post.excerpt;
+            document.getElementById('twitter-image').content = post.seo?.ogImage || post.featuredImage;
+            
+            // Canonical
+            document.getElementById('canonical-url').href = `https://www.roastmydorm.com/blog/${post.slug}`;
+
+            // Generate JSON-LD
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": post.title,
+                "description": post.excerpt,
+                "image": post.featuredImage,
+                "author": {
+                    "@type": "Person",
+                    "name": `${post.author?.firstName} ${post.author?.lastName}`
+                },
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "RoastMyDorm",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.roastmydorm.com/roastmydorm_logo-removebg-preview.png"
+                    }
+                },
+                "datePublished": post.publishedAt,
+                "dateModified": post.updatedAt || post.publishedAt,
+                "mainEntityOfPage": {
+                    "@type": "WebPage",
+                    "@id": `https://www.roastmydorm.com/blog/${post.slug}`
+                }
+            };
+            document.getElementById('article-schema').textContent = JSON.stringify(schema);
+
+            // Render content
+            const container = document.getElementById('article-container');
+            const pageUrl = encodeURIComponent(`https://www.roastmydorm.com/blog/${post.slug}`);
+            const pageTitle = encodeURIComponent(post.title);
+
+            container.innerHTML = `
+                <!-- Breadcrumb -->
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="index.html">Home</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="blog.html">Blog</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="blog.html?category=${post.category?.toLowerCase()}">${post.category}</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span>${truncate(post.title, 30)}</span>
+                </nav>
+
+                <!-- Article Header -->
+                <header class="article-header">
+                    <div class="article-category">
+                        <a href="blog.html?category=${post.category?.toLowerCase()}">${post.category}</a>
+                    </div>
+                    <h1 class="article-title">${escapeHtml(post.title)}</h1>
+                    <div class="article-meta">
+                        <div class="article-author">
+                            <img src="${post.author?.profilePicture || 'images/default-avatar.png'}" 
+                                 alt="${post.author?.firstName}" class="author-avatar">
+                            <div class="author-info">
+                                <div class="author-name">
+                                    <a href="/user/${post.author?.username || post.author?._id}">
+                                        ${post.author?.firstName} ${post.author?.lastName}
+                                    </a>
+                                </div>
+                                <div class="author-title">Staff Writer</div>
+                            </div>
+                        </div>
+                        <div class="article-date">
+                            <i class="far fa-calendar"></i>
+                            ${formatDate(post.publishedAt)}
+                        </div>
+                        <div class="article-read-time">
+                            <i class="far fa-clock"></i>
+                            ${post.readTime} min read
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Featured Image -->
+                <img src="${post.featuredImage || 'images/blog-placeholder.jpg'}" 
+                     alt="${escapeHtml(post.title)}" 
+                     class="article-featured-image">
+
+                <!-- Table of Contents -->
+                ${post.tableOfContents ? `
+                    <nav class="toc">
+                        <div class="toc-title">Table of Contents</div>
+                        <ol class="toc-list">
+                            ${post.tableOfContents.map((item, i) => `
+                                <li><a href="#section-${i}">${escapeHtml(item)}</a></li>
+                            `).join('')}
+                        </ol>
+                    </nav>
+                ` : ''}
+
+                <!-- Article Content -->
+                <article class="article-content">
+                    ${post.content}
+                </article>
+
+                <!-- Share Buttons -->
+                <div class="share-buttons">
+                    <span class="share-label">Share this article:</span>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=${pageUrl}" 
+                       class="share-btn facebook" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}" 
+                       class="share-btn twitter" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}" 
+                       class="share-btn linkedin" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://wa.me/?text=${pageTitle}%20${pageUrl}" 
+                       class="share-btn whatsapp" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <button class="share-btn copy" onclick="copyLink()" aria-label="Copy link">
+                        <i class="fas fa-link"></i>
+                    </button>
+                </div>
+
+                <!-- Author Bio -->
+                ${post.author ? `
+                    <div class="author-bio">
+                        <img src="${post.author.profilePicture || 'images/default-avatar.png'}" 
+                             alt="${post.author.firstName}" class="author-bio-avatar">
+                        <div class="author-bio-content">
+                            <h4>About ${post.author.firstName} ${post.author.lastName}</h4>
+                            <p>${post.author.bio || 'Contributing writer at RoastMyDorm, helping students find their perfect housing.'}</p>
+                            <div class="author-social">
+                                <a href="/user/${post.author.username || post.author._id}" aria-label="View profile">
+                                    <i class="fas fa-user"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <!-- Related Posts -->
+                <section class="related-posts">
+                    <h2 class="related-title">Related Articles</h2>
+                    <div class="related-grid" id="related-grid">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comments Section -->
+                <section class="comments-section">
+                    <h2 class="comments-title">Comments</h2>
+                    <div class="comment-form">
+                        <textarea placeholder="Share your thoughts..." id="comment-input"></textarea>
+                        <button onclick="submitComment()">Post Comment</button>
+                    </div>
+                    <div id="comments-list"></div>
+                </section>
+            `;
+        }
+
+        async function loadRelatedPosts(categoryOrPosts) {
+            try {
+                let posts;
+                if (Array.isArray(categoryOrPosts)) {
+                    posts = categoryOrPosts;
+                } else {
+                    const response = await fetch(`/api/blog/recent?category=${categoryOrPosts}&limit=3`);
+                    const data = await response.json();
+                    posts = data.success ? data.data : [];
+                }
+
+                renderRelatedPosts(posts);
+            } catch (error) {
+                console.error('Error loading related posts:', error);
+                showDemoRelated();
+            }
+        }
+
+        function renderRelatedPosts(posts) {
+            const container = document.getElementById('related-grid');
+            
+            if (!posts || posts.length === 0) {
+                container.innerHTML = '<p>No related articles found.</p>';
+                return;
+            }
+
+            container.innerHTML = posts.slice(0, 3).map(post => `
+                <article class="related-card">
+                    <img src="${post.featuredImage || 'images/blog-placeholder.jpg'}" 
+                         alt="${escapeHtml(post.title)}" class="related-card-image">
+                    <div class="related-card-content">
+                        <h3 class="related-card-title">
+                            <a href="/blog/${post.slug}">${escapeHtml(post.title)}</a>
+                        </h3>
+                        <div class="related-card-date">${formatDate(post.publishedAt)}</div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function showError(message) {
+            document.getElementById('article-container').innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h2>${message}</h2>
+                    <p><a href="blog.html">Back to Blog</a></p>
+                </div>
+            `;
+        }
+
+        function showDemoArticle() {
+            const demoPost = {
+                title: '10 Things to Check Before Signing a Dorm Lease',
+                slug: '10-things-check-before-signing-dorm-lease',
+                category: 'Housing Tips',
+                excerpt: 'Moving into student housing is exciting, but before you sign that lease, make sure you know what to look for.',
+                featuredImage: 'images/blog-featured-1.jpg',
+                author: { 
+                    firstName: 'Sarah', 
+                    lastName: 'Ahmed', 
+                    profilePicture: 'images/author-1.jpg',
+                    bio: 'Sarah is a housing expert and contributing writer at RoastMyDorm with 5 years of experience helping students find their perfect dorm.'
+                },
+                publishedAt: new Date().toISOString(),
+                readTime: 8,
+                tableOfContents: [
+                    'Check the Lease Terms',
+                    'Inspect All Appliances',
+                    'Document Existing Damage',
+                    'Verify Utilities',
+                    'Know Your Rights'
+                ],
+                content: `
+                    <p>Finding the right student housing can be stressful, but signing a lease without doing proper due diligence can lead to even bigger headaches. Before you commit to your next dorm or apartment, here are 10 essential things you need to check.</p>
+
+                    <h2 id="section-0">1. Check the Lease Terms</h2>
+                    <p>The lease is a legally binding contract. Read every word carefully. Pay attention to:</p>
+                    <ul>
+                        <li>Length of the lease (is it tied to the academic year?)</li>
+                        <li>Early termination penalties</li>
+                        <li>Subletting policies</li>
+                        <li>Rent increase clauses</li>
+                    </ul>
+
+                    <h2 id="section-1">2. Inspect All Appliances</h2>
+                    <p>Test everything before you sign. Turn on the stove, check the refrigerator temperature, run the washing machine if there is one. Broken appliances are the landlord's responsibility to fix, but only if they were documented before move-in.</p>
+
+                    <h2 id="section-2">3. Document Existing Damage</h2>
+                    <p>Take photos and videos of the entire property. Note any:</p>
+                    <ul>
+                        <li>Wall damage or stains</li>
+                        <li>Floor scratches</li>
+                        <li>Broken fixtures</li>
+                        <li>Mold or water damage</li>
+                    </ul>
+                    <p>Send these to your landlord in writing and keep copies. This protects your security deposit when you move out.</p>
+
+                    <h2 id="section-3">4. Verify Utilities</h2>
+                    <p>Understand exactly what's included in your rent. Ask about:</p>
+                    <ul>
+                        <li>Water and electricity</li>
+                        <li>Internet and cable</li>
+                        <li>Heating and cooling costs</li>
+                        <li>Trash collection</li>
+                    </ul>
+
+                    <blockquote>
+                        "The biggest mistake students make is not reading the fine print about utilities. Those surprise bills can really hurt your budget." - Former RA, Mohammed V University
+                    </blockquote>
+
+                    <h2 id="section-4">5. Know Your Rights</h2>
+                    <p>As a tenant in Morocco, you have legal protections. Landlords cannot:</p>
+                    <ul>
+                        <li>Enter without proper notice</li>
+                        <li>Withhold security deposits without cause</li>
+                        <li>Discriminate based on protected characteristics</li>
+                        <li>Retaliate against tenants who report issues</li>
+                    </ul>
+
+                    <h2>Conclusion</h2>
+                    <p>Taking the time to thoroughly check these 10 things before signing your lease can save you from major headaches later. Remember, it's always better to ask questions upfront than to discover problems after you've moved in.</p>
+
+                    <p>Have questions about student housing? Check out our other guides or <a href="find-roommate-profile.html">find a roommate</a> to split costs!</p>
+                `
+            };
+
+            renderArticle(demoPost);
+            showDemoRelated();
+        }
+
+        function showDemoRelated() {
+            const relatedPosts = [
+                { title: 'Best Student Neighborhoods in Casablanca', slug: 'best-student-neighborhoods-casablanca', featuredImage: 'images/blog-casa.jpg', publishedAt: new Date().toISOString() },
+                { title: 'How to Find the Perfect Roommate', slug: 'how-to-find-perfect-roommate', featuredImage: 'images/blog-roommate.jpg', publishedAt: new Date(Date.now() - 86400000).toISOString() },
+                { title: 'Budget-Friendly Dorm Decoration Ideas', slug: 'budget-dorm-decoration-ideas', featuredImage: 'images/blog-decor.jpg', publishedAt: new Date(Date.now() - 172800000).toISOString() }
+            ];
+            renderRelatedPosts(relatedPosts);
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+
+        function submitComment() {
+            const input = document.getElementById('comment-input');
+            const content = input.value.trim();
+            
+            if (!content) {
+                alert('Please write a comment first.');
+                return;
+            }
+
+            // Check if logged in
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!user._id) {
+                alert('Please sign in to comment.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Submit comment logic would go here
+            alert('Comment submitted! (Demo mode)');
+            input.value = '';
+        }
+
+        // Utility functions
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function truncate(str, len) {
+            return str.length > len ? str.substring(0, len) + '...' : str;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadArticle);
+    </script>
+</body>
+</html>
