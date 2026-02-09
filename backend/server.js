@@ -196,6 +196,7 @@ app.use('/api/blog', require('./routes/blog'));
 app.use('/api/questions', require('./routes/questions'));
 app.use('/api/badges', require('./routes/badges'));
 app.use('/api/seo', require('./routes/seo'));
+app.use('/api/verification', require('./routes/verification'));
 
 // Admin Dashboard Routes
 app.use('/api/admin', require('./routes/admin'));
