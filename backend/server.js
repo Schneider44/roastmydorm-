@@ -81,6 +81,7 @@ const allowedOrigins = [
   process.env.CLIENT_URL || 'http://localhost:3000',
   'http://localhost:3000',
   'http://localhost:5173', // Vite default
+  'http://localhost:63519', // npx serve
   // Add production domains here
 ];
 

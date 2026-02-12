@@ -1,8 +1,3 @@
-// RoommateProfile Model Schema
-// For MongoDB with Mongoose, Firebase, or Prisma
-
-// MongoDB/Mongoose Example:
-/*
 const mongoose = require('mongoose');
 
 const roommateProfileSchema = new mongoose.Schema({
@@ -101,23 +96,17 @@ const roommateProfileSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   }
 });
 
 module.exports = mongoose.model('RoommateProfile', roommateProfileSchema);
-*/
 
 // Prisma Example (schema.prisma):
 /*
-model RoommateProfile {
-  id               String   @id @default(uuid())
-  userId           String   @unique
-  name             String
-  age              Int
-  university       String
-  location         String
-  cleanlinessLevel Int      @db.SmallInt
-  sleepSchedule    String
   studyHabits      String
   socialLevel      String
   personality      String
@@ -195,25 +184,5 @@ export interface RoommateProfile {
   updatedAt?: Date;
 }
 */
-
-// Export as plain object for reference
-module.exports = {
-  schema: {
-    required: ['name', 'age', 'university', 'location', 'cleanlinessLevel', 
-               'sleepSchedule', 'studyHabits', 'socialLevel', 'personality',
-               'smokingPreference', 'petsTolerance', 'budgetMin', 'budgetMax', 'bio'],
-    optional: ['profilePhoto', 'interests'],
-    enums: {
-      sleepSchedule: ['Early Bird (10 PM - 6 AM)', 'Regular (11 PM - 7 AM)', 
-                     'Night Owl (1 AM - 9 AM)', 'Flexible'],
-      studyHabits: ['Quiet study preferred', 'Study with music', 
-                   'Study groups', 'Mixed (quiet & groups)'],
-      socialLevel: ['Very Social', 'Social', 'Moderate', 'Quiet'],
-      personality: ['Introvert', 'Extrovert', 'Ambivert'],
-      smokingPreference: ['No smoking', 'Occasionally', 'Regularly'],
-      petsTolerance: ['Love pets', 'Neutral', 'No pets']
-    }
-  }
-};
 
 
