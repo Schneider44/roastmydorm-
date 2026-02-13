@@ -5,6 +5,9 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 const path = require('path');
 require('dotenv').config();
 
@@ -32,6 +35,15 @@ app.use(helmet({
 
 // Disable X-Powered-By header
 app.disable('x-powered-by');
+
+// NoSQL Injection Prevention
+app.use(mongoSanitize());
+
+// XSS Protection - Sanitize user input
+app.use(xss());
+
+// HTTP Parameter Pollution Prevention
+app.use(hpp());
 
 // Compression for response optimization
 app.use(compression({
