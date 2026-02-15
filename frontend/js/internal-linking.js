@@ -294,19 +294,18 @@ class InternalLinker {
             {
                 title: 'Popular Cities',
                 links: [
-                    { label: 'Casablanca Housing', url: '/city/casablanca-student-housing' },
-                    { label: 'Rabat Housing', url: '/city/rabat-student-housing' },
-                    { label: 'Marrakech Housing', url: '/city/marrakech-student-housing' },
-                    { label: 'Fes Housing', url: '/city/fes-student-housing' }
+                    { label: 'Casablanca Housing', url: '/city/casablanca-dorms.html' },
+                    { label: 'Rabat Housing', url: '/city/rabat-dorms.html' },
+                    { label: 'Marrakech Housing', url: '/city/marrakech-dorms.html' }
                 ]
             },
             {
                 title: 'Top Universities',
                 links: [
-                    { label: 'Mohammed V University', url: '/university/mohammed-v-dorms' },
-                    { label: 'Hassan II University', url: '/university/hassan-ii-dorms' },
-                    { label: 'Cadi Ayyad University', url: '/university/cadi-ayyad-dorms' },
-                    { label: 'Al Akhawayn University', url: '/university/al-akhawayn-dorms' }
+                    { label: 'Mohammed V University', url: '/university/mohammed-v-dorms.html' },
+                    { label: 'Hassan II University', url: '/university/maarouf.html.html' },
+                    { label: 'Cadi Ayyad University', url: '/university/Fadl.html' },
+                    { label: 'UIR', url: '/Rabat ocean.html' }
                 ]
             },
             {

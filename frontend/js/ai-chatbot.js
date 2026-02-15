@@ -11,7 +11,7 @@ class RoastMyDormChatbot {
         this.options = {
             containerId: options.containerId || 'roastmydorm-chatbot',
             position: options.position || 'bottom-right',
-            primaryColor: options.primaryColor || '#10b981',
+            primaryColor: options.primaryColor || '#e70909',
             platformName: options.platformName || 'RoastMyDorm',
             supportEmail: options.supportEmail || 'support@roastmydorm.com',
             ...options
@@ -159,7 +159,7 @@ class RoastMyDormChatbot {
             }
             .rmd-chat-toggle:hover {
                 transform: scale(1.1);
-                box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+                box-shadow: 0 6px 25px rgba(211, 13, 13, 0.99);
             }
             .rmd-chat-toggle svg {
                 width: 28px;
@@ -220,7 +220,7 @@ class RoastMyDormChatbot {
             }
 
             .rmd-chat-header {
-                background: linear-gradient(135deg, ${this.options.primaryColor} 0%, #0f766e 100%);
+                background: linear-gradient(135deg, ${this.options.primaryColor} 0%, #d41f12 100%);
                 color: white;
                 padding: 16px 20px;
                 display: flex;
@@ -461,7 +461,7 @@ class RoastMyDormChatbot {
                 flex-shrink: 0;
             }
             .rmd-send-btn:hover {
-                background: #0f766e;
+                background: #e00f0f;
                 transform: scale(1.05);
             }
             .rmd-send-btn svg {
