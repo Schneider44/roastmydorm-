@@ -29,12 +29,23 @@ router.post('/send', verificationLimiter, async (req, res) => {
       });
     }
 
-    // Validate email format
+
+    // Validate email format and university domain
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
         success: false,
         message: 'Invalid email format'
+      });
+    }
+    // Only allow .ac.ma or specific university domains
+    const allowedDomains = [
+      'ensias.ma', 'emi.ac.ma', 'uhp.ac.ma', 'um5.ac.ma', 'uca.ma', 'uca.ac.ma', 'usmba.ac.ma', 'uae.ac.ma', 'uca.ac.ma', 'uit.ac.ma', 'univh2c.ma', 'univh2c.ac.ma', 'univhassan2.ma', 'univhassan2.ac.ma', 'univhassan1.ma', 'univhassan1.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ma', 'univ-oujda.ma', 'univ-chouaib.ma', 'univ-chouaib.ac.ma', 'ac.ma', 'edu.ma', 'uca.ma', 'uca.ac.ma', 'uae.ac.ma', 'usmba.ac.ma', 'umi.ac.ma', 'ump.ac.ma', 'univh2c.ac.ma', 'univhassan2.ac.ma', 'univhassan1.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'univ-ibntofail.ac.ma', 'univ-oujda.ac.ma', 'univ-chouaib.ac.ma', 'ac.ma', 'edu.ma']
+    const emailDomain = email.split('@')[1].toLowerCase();
+    if (!allowedDomains.some(domain => emailDomain.endsWith(domain))) {
+      return res.status(400).json({
+        success: false,
+        message: 'Only university emails are allowed.'
       });
     }
 

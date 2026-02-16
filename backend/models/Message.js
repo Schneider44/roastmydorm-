@@ -77,7 +77,14 @@ const messageSchema = new mongoose.Schema({
     default: false
   },
   moderationNotes: String,
-  
+
+  // Safety flags and reporting
+  flags: [{ type: String }], // e.g. ["payment_request","whatsapp_deposit"]
+  isReported: {
+    type: Boolean,
+    default: false
+  },
+
   // Analytics
   responseTime: Number, // in minutes
   isUrgent: {

@@ -8,6 +8,7 @@ const AdminAction = require('../models/AdminAction');
 /**
  * Check if user is admin
  */
+
 const isAdmin = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({
@@ -15,14 +16,12 @@ const isAdmin = (req, res, next) => {
       message: 'Authentication required'
     });
   }
-
-  if (req.user.userType !== 'admin') {
+  if (req.user.role !== 'admin') {
     return res.status(403).json({
       success: false,
       message: 'Admin access required'
     });
   }
-
   next();
 };
 

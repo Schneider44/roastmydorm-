@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings & Verification</title>
+  <link rel="stylesheet" href="find-roommate.css">
+  <style>
+    .verified-badge { color: #2ecc71; font-weight: bold; }
+    .avatar-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #eee; }
+    .section { margin-bottom: 2rem; }
+    .btn { padding: 0.5em 1.2em; border-radius: 4px; border: none; background: #3498db; color: #fff; cursor: pointer; }
+    .btn[disabled] { background: #aaa; }
+    .warning { color: #e67e22; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <h2>Profile Settings</h2>
+  <div class="section">
+    <h3>Profile Image</h3>
+    <img id="avatarPreview" class="avatar-preview" src="" alt="Avatar" style="display:none;">
+    <form id="avatarForm" enctype="multipart/form-data">
+      <input type="file" name="avatar" accept="image/png,image/jpeg,image/webp" required>
+      <button class="btn" type="submit">Upload Avatar</button>
+    </form>
+    <div id="avatarMsg"></div>
+  </div>
+  <div class="section">
+    <h3>Email Verification</h3>
+    <div id="emailStatus"></div>
+    <button class="btn" id="startEmailVerify">Start Email Verification</button>
+    <div id="verifyEmailSection" style="display:none;">
+      <input type="text" id="verifyCode" placeholder="Enter code">
+      <button class="btn" id="submitVerifyCode">Verify</button>
+      <span class="warning" id="verifyMsg"></span>
+    </div>
+  </div>
+  <script src="find-roommate.js"></script>
+  <script>
+    // JWT token assumed in localStorage.jwt
+    const jwt = localStorage.getItem('jwt');
+    // Load profile info
+    fetch('/api/users/me', { headers: { Authorization: 'Bearer ' + jwt } })
+      .then(r => r.json()).then(data => {
+        if (data.data?.avatarUrl) {
+          document.getElementById('avatarPreview').src = data.data.avatarUrl;
+          document.getElementById('avatarPreview').style.display = '';
+        }
+        if (data.data?.emailVerified) {
+          document.getElementById('emailStatus').innerHTML = '<span class="verified-badge">Verified</span>';
+          document.getElementById('startEmailVerify').disabled = true;
+        }
+      });
+    // Avatar upload
+    document.getElementById('avatarForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const fd = new FormData(form);
+      const res = await fetch('/api/profiles/me/avatar', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + jwt },
+        body: fd
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('avatarPreview').src = data.avatarUrl;
+        document.getElementById('avatarPreview').style.display = '';
+        document.getElementById('avatarMsg').textContent = 'Avatar updated!';
+      } else {
+        document.getElementById('avatarMsg').textContent = data.error || 'Upload failed.';
+      }
+    };
+    // Email verification
+    document.getElementById('startEmailVerify').onclick = async () => {
+      const res = await fetch('/api/verification/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + jwt },
+        body: JSON.stringify({ email: '' }) // backend will use user email
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('verifyEmailSection').style.display = '';
+        document.getElementById('verifyMsg').textContent = 'Code sent to your email.';
+      } else {
+        document.getElementById('verifyMsg').textContent = data.message || 'Failed to send code.';
+      }
+    };
+    document.getElementById('submitVerifyCode').onclick = async () => {
+      const code = document.getElementById('verifyCode').value;
+      const res = await fetch('/api/verification/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + jwt },
+        body: JSON.stringify({ code })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('emailStatus').innerHTML = '<span class="verified-badge">Verified</span>';
+        document.getElementById('verifyMsg').textContent = 'Email verified!';
+        document.getElementById('startEmailVerify').disabled = true;
+      } else {
+        document.getElementById('verifyMsg').textContent = data.message || 'Verification failed.';
+      }
+    };
+  </script>
+</body>
+</html>

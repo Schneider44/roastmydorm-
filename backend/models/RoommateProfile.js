@@ -76,27 +76,24 @@ const roommateProfileSchema = new mongoose.Schema({
     type: String,
     maxlength: 500
   },
-  profilePhoto: {
-    type: String, // URL or base64
+  avatarUrl: {
+    type: String,
     default: null
   },
-  isConfirmed: {
+  isVerified: {
     type: Boolean,
     default: false
   },
-  confirmedWith: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'RoommateProfile',
-    default: null
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  verificationLevel: {
+    type: String,
+    enum: ['none', 'email', 'phone', 'id'],
+    default: 'none'
   },
   updatedAt: {
     type: Date,
     default: Date.now
   },
+  // ...existing code...
   isActive: {
     type: Boolean,
     default: true

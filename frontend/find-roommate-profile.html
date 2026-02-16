@@ -3,270 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Roommate Profile - RoastMyDorm</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/roommate.css">
+    <title>Create Your Profile - RoastMyDorm</title>
+    <link rel="stylesheet" href="find-roommate-profile.css">
     <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="profile-page-body">
-    <!-- Navigation -->
-    <nav class="profile-nav">
-        <div class="nav-content">
+<body>
+    <div class="page-wrapper">
+        <!-- Particle Background -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
             <a href="index.html" class="nav-logo">
-                <div class="logo-box">R</div>
-                <span>RoastMyDorm</span>
+                <div class="nav-logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span>Roast<em>My</em>Dorm</span>
             </a>
-            <a href="find-roommate-matches.html" class="nav-browse-btn">
-                <i class="fas fa-search"></i> Browse Matches
-            </a>
-        </div>
-    </nav>
-
-    <!-- Hero Header -->
-    <div class="profile-hero">
-        <div class="profile-hero-content">
-            <div class="profile-hero-icon">
-                <i class="fas fa-user-circle"></i>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="find-roommate.html#how-it-works" class="nav-link">How it works</a>
+                <a href="find-roommate.html#features" class="nav-link">Features</a>
+                <a href="#" class="nav-link" data-route="browse">Browse</a>
+                <a href="find-roommate.html#safety" class="nav-link">Safety</a>
             </div>
-            <h1 id="form-title" class="profile-hero-title">Create Your Roommate Profile</h1>
-            <p class="profile-hero-subtitle">Tell us about yourself and find your perfect match!</p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-        </div>
-    </div>
+            <button class="nav-cta" data-route="browse">Browse Roommates</button>
+        </nav>
 
-    <div class="roommate-container">
-        <div class="profile-form-modern">
-
-            <form id="profile-form">
-                <!-- Basic Information -->
-                <div class="form-section-modern">
-                    <div class="section-header">
-                        <div class="section-icon"><i class="fas fa-user"></i></div>
-                        <h2>Basic Information</h2>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-container">
+                <!-- Left Side: Form -->
+                <div class="form-section">
+                    <!-- Hero Header -->
+                    <div class="hero-header">
+                        <h1>Create Your Roommate Profile</h1>
+                        <p>Fill out your profile so we can help you find the perfect roommate match.</p>
+                        <span class="step-label"><i class="fas fa-check-circle"></i> Step 1 of 1: Complete your roommate profile</span>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label-modern">
-                            <i class="fas fa-camera"></i> Profile Photo
-                        </label>
-                        <div class="photo-upload-container">
-                            <div class="photo-preview-wrapper">
-                                <img id="photo-preview" src="" alt="Profile" class="photo-preview">
-                                <div class="photo-placeholder" id="photo-placeholder">
-                                    <i class="fas fa-user"></i>
-                                    <span>Add Photo</span>
+                    <!-- Main Form Card -->
+                    <div class="form-card">
+                        <form id="profileForm">
+                            <!-- Section 1: Basic Information -->
+                            <div class="form-section-block">
+                                <h2 class="section-title">
+                                    <span class="section-icon"><i class="fas fa-user"></i></span>
+                                    Basic Information
+                                </h2>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="fullName">Full Name <span class="required">*</span></label>
+                                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <select id="gender" name="gender">
+                                            <option value="">Select gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Prefer not to say</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age">Age</label>
+                                        <input type="number" id="age" name="age" placeholder="e.g., 21" min="16" max="99">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="city">City <span class="required">*</span></label>
+                                        <select id="city" name="city" required>
+                                            <option value="">Select city</option>
+                                            <option value="casablanca">Casablanca</option>
+                                            <option value="rabat">Rabat</option>
+                                            <option value="marrakech">Marrakech</option>
+                                            <option value="fes">Fès</option>
+                                            <option value="tangier">Tangier</option>
+                                            <option value="agadir">Agadir</option>
+                                            <option value="meknes">Meknès</option>
+                                            <option value="oujda">Oujda</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="neighborhood">Neighborhood</label>
+                                        <input type="text" id="neighborhood" name="neighborhood" placeholder="e.g., Hay Riad, Agdal">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="university">University <span class="required">*</span></label>
+                                        <select id="university" name="university" required>
+                                            <option value="">Select university</option>
+                                            <option value="um5">Mohammed V University</option>
+                                            <option value="um6p">UM6P</option>
+                                            <option value="uir">UIR</option>
+                                            <option value="uca">Cadi Ayyad University</option>
+                                            <option value="hassan2">Hassan II University</option>
+                                            <option value="uae">Abdelmalek Essaâdi University</option>
+                                            <option value="emsi">EMSI</option>
+                                            <option value="ensa">ENSA</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <label for="profile-photo" class="photo-upload-btn">
-                                    <i class="fas fa-camera"></i>
-                                    <input type="file" id="profile-photo" accept="image/*" onchange="handlePhotoChange(event)" hidden>
-                                </label>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="age">Age *</label>
-                            <input type="number" id="age" name="age" min="18" max="35" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="university">University *</label>
-                            <input type="text" id="university" name="university" placeholder="e.g., Université Mohammed V" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="location">Location *</label>
-                            <input type="text" id="location" name="location" placeholder="e.g., Rabat, Casablanca" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lifestyle & Habits -->
-                <div class="form-section-modern">
-                    <div class="section-header">
-                        <div class="section-icon"><i class="fas fa-bed"></i></div>
-                        <h2>Lifestyle & Habits</h2>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label-modern" for="cleanliness">
-                            <i class="fas fa-sparkles"></i> Cleanliness Level: 
-                            <span class="cleanliness-badge" id="cleanliness-value">3</span>/5
-                        </label>
-                        <div class="slider-container">
-                            <input type="range" id="cleanliness" name="cleanlinessLevel" min="1" max="5" value="3" oninput="updateCleanliness(this.value)" class="range-slider-modern">
-                            <div class="slider-labels">
-                                <span><i class="fas fa-times-circle"></i> Messy</span>
-                                <span><i class="fas fa-check-circle"></i> Very Clean</span>
+                            <!-- Section 2: Budget & Move-In Date -->
+                            <div class="form-section-block">
+                                <h2 class="section-title">
+                                    <span class="section-icon"><i class="fas fa-wallet"></i></span>
+                                    Budget & Move-In Date
+                                </h2>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="minBudget">Min MAD <span class="required">*</span></label>
+                                        <input type="number" id="minBudget" name="minBudget" placeholder="1000" min="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="maxBudget">Max MAD</label>
+                                        <input type="number" id="maxBudget" name="maxBudget" placeholder="5000" min="0">
+                                    </div>
+                                </div>
+                                <div class="budget-slider-container">
+                                    <input type="range" id="budgetSlider" min="1000" max="5000" value="3000" step="100">
+                                    <div class="slider-labels">
+                                        <span>1000 MAD</span>
+                                        <span class="slider-value" id="sliderValue">3000 MAD</span>
+                                        <span>5000 MAD</span>
+                                    </div>
+                                </div>
+                                <div class="form-grid" style="margin-top: 20px;">
+                                    <div class="form-group">
+                                        <label for="moveInDate">Move-In Date <span class="required">*</span></label>
+                                        <input type="date" id="moveInDate" name="moveInDate" required>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="cleanliness-stars" id="cleanliness-stars">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+
+                            <!-- Section 3: Lifestyle & Preferences -->
+                            <div class="form-section-block">
+                                <h2 class="section-title">
+                                    <span class="section-icon"><i class="fas fa-heart"></i></span>
+                                    Lifestyle & Preferences
+                                </h2>
+                                <div class="lifestyle-grid">
+                                    <!-- Sleep Schedule -->
+                                    <div class="preference-group">
+                                        <label class="preference-label">Sleep Schedule</label>
+                                        <div class="radio-options">
+                                            <label class="radio-option">
+                                                <input type="radio" name="sleepSchedule" value="early">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-sun"></i> Early Bird</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="sleepSchedule" value="night">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-moon"></i> Night Owl</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cleanliness -->
+                                    <div class="preference-group">
+                                        <label class="preference-label">Cleanliness</label>
+                                        <div class="radio-options">
+                                            <label class="radio-option">
+                                                <input type="radio" name="cleanliness" value="very-clean">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-broom"></i> Very Clean</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="cleanliness" value="balanced">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-balance-scale"></i> Balanced</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Smoker -->
+                                    <div class="preference-group">
+                                        <label class="preference-label">Smoker?</label>
+                                        <div class="radio-options">
+                                            <label class="radio-option">
+                                                <input type="radio" name="smoker" value="non-smoker">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-ban"></i> Non-smoker</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="smoker" value="smoker">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-smoking"></i> Smoker</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Guests -->
+                                    <div class="preference-group">
+                                        <label class="preference-label">Guests</label>
+                                        <div class="radio-options">
+                                            <label class="radio-option">
+                                                <input type="radio" name="guests" value="rarely">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text">Rarely</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="guests" value="sometimes">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text">Sometimes</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="guests" value="often">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text">Often</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Noise Level -->
+                                    <div class="preference-group">
+                                        <label class="preference-label">Noise Level</label>
+                                        <div class="radio-options">
+                                            <label class="radio-option">
+                                                <input type="radio" name="noiseLevel" value="quiet">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-volume-mute"></i> Quiet</span>
+                                            </label>
+                                            <label class="radio-option">
+                                                <input type="radio" name="noiseLevel" value="moderate">
+                                                <span class="radio-custom"></span>
+                                                <span class="radio-text"><i class="fas fa-volume-low"></i> Moderate</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+
+                            <!-- Section 4: About You -->
+                            <div class="form-section-block">
+                                <h2 class="section-title">
+                                    <span class="section-icon"><i class="fas fa-comment-alt"></i></span>
+                                    About You
+                                </h2>
+                                <div class="form-group-full">
+                                    <label for="bio">Bio / Languages</label>
+                                    <textarea id="bio" name="bio" rows="4" placeholder="e.g., English, French. Tell us a bit about yourself..."></textarea>
+                                </div>
+                                <p class="disclaimer">
+                                    <i class="fas fa-shield-alt"></i>
+                                    By creating a profile, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                                </p>
+                            </div>
+                        </form>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="sleepSchedule">Sleep Schedule *</label>
-                            <select id="sleepSchedule" name="sleepSchedule" required>
-                                <option value="Early Bird (10 PM - 6 AM)">Early Bird (10 PM - 6 AM)</option>
-                                <option value="Regular (11 PM - 7 AM)" selected>Regular (11 PM - 7 AM)</option>
-                                <option value="Night Owl (1 AM - 9 AM)">Night Owl (1 AM - 9 AM)</option>
-                                <option value="Flexible">Flexible</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="studyHabits">Study Habits *</label>
-                            <select id="studyHabits" name="studyHabits" required>
-                                <option value="Quiet study preferred" selected>Quiet study preferred</option>
-                                <option value="Study with music">Study with music</option>
-                                <option value="Study groups">Study groups</option>
-                                <option value="Mixed (quiet & groups)">Mixed (quiet & groups)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="socialLevel">Social Level *</label>
-                            <select id="socialLevel" name="socialLevel" required>
-                                <option value="Very Social">Very Social</option>
-                                <option value="Social">Social</option>
-                                <option value="Moderate" selected>Moderate</option>
-                                <option value="Quiet">Quiet</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="personality">Personality *</label>
-                            <select id="personality" name="personality" required>
-                                <option value="Introvert">Introvert</option>
-                                <option value="Extrovert">Extrovert</option>
-                                <option value="Ambivert" selected>Ambivert</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Preferences -->
-                <div class="form-section-modern">
-                    <div class="section-header">
-                        <div class="section-icon"><i class="fas fa-heart"></i></div>
-                        <h2>Preferences</h2>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Interests (Select multiple)</label>
-                        <div class="interests-grid" id="interests-container">
-                            <!-- Interests will be populated by JavaScript -->
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="smokingPreference">Smoking Preference *</label>
-                            <select id="smokingPreference" name="smokingPreference" required>
-                                <option value="No smoking" selected>No smoking</option>
-                                <option value="Occasionally">Occasionally</option>
-                                <option value="Regularly">Regularly</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="petsTolerance">Pets Tolerance *</label>
-                            <select id="petsTolerance" name="petsTolerance" required>
-                                <option value="Love pets">Love pets</option>
-                                <option value="Neutral" selected>Neutral</option>
-                                <option value="No pets">No pets</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="budgetMin">Budget Min (MAD) *</label>
-                            <input type="number" id="budgetMin" name="budgetMin" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="budgetMax">Budget Max (MAD) *</label>
-                            <input type="number" id="budgetMax" name="budgetMax" min="0" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bio -->
-                <div class="form-section-modern">
-                    <div class="section-header">
-                        <div class="section-icon"><i class="fas fa-pen"></i></div>
-                        <h2>About You</h2>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label-modern" for="bio">
-                            <i class="fas fa-comment-dots"></i> Bio *
-                        </label>
-                        <textarea id="bio" name="bio" rows="4" placeholder="Tell potential roommates about yourself, your interests, what you're looking for..." required class="textarea-modern"></textarea>
-                        <div class="char-count"><span id="bio-count">0</span>/500 characters</div>
-                    </div>
-                </div>
-
-                <!-- Submit -->
-                <div class="form-actions-modern">
-                    <button type="button" onclick="window.location.href='find-roommate-matches.html'" class="btn-secondary-modern">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button type="submit" class="btn-primary-modern">
-                        <i class="fas fa-save"></i> Save Profile
-                        <i class="fas fa-arrow-right"></i>
+                    <!-- Back Button -->
+                    <button class="btn btn-back" data-route="browse">
+                        <i class="fas fa-arrow-left"></i> Back to Browse
                     </button>
                 </div>
-            </form>
-        </div>
+
+                <!-- Right Side: Visual & Contact -->
+                <div class="visual-section">
+                    <!-- Contact Preference Card -->
+                    <div class="contact-card">
+                        <h3><i class="fas fa-phone-alt"></i> Contact Preference</h3>
+                        <div class="contact-options">
+                            <label class="radio-option">
+                                <input type="radio" name="contactPreference" value="in-app" checked>
+                                <span class="radio-custom"></span>
+                                <span class="radio-text"><i class="fas fa-comments"></i> In-app chat</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="contactPreference" value="whatsapp">
+                                <span class="radio-custom"></span>
+                                <span class="radio-text"><i class="fab fa-whatsapp"></i> WhatsApp later</span>
+                            </label>
+                        </div>
+                        <button type="submit" form="profileForm" class="btn btn-primary btn-full">
+                            <i class="fas fa-user-plus"></i> Create Profile
+                        </button>
+                    </div>
+
+                    <!-- Phone Mockup -->
+                    <div class="phone-mockup">
+                        <div class="phone-frame">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen">
+                                <div class="phone-header">
+                                    <div class="phone-logo">
+                                        <i class="fas fa-home"></i>
+                                        <span>RoastMyDorm</span>
+                                    </div>
+                                </div>
+                                <div class="phone-content">
+                                    <div class="profile-preview-card">
+                                        <div class="preview-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="preview-info">
+                                            <h4>Adam</h4>
+                                            <p>Social & Outgoing</p>
+                                        </div>
+                                        <span class="preview-badge">85%<br><small>MATCH</small></span>
+                                    </div>
+                                    <div class="preview-details">
+                                        <div class="preview-tag"><i class="fas fa-check"></i> Night Owl</div>
+                                        <div class="preview-tag"><i class="fas fa-check"></i> Clean</div>
+                                    </div>
+                                    <div class="preview-budget">
+                                        <i class="fas fa-wallet"></i> #2000 MAD
+                                    </div>
+                                    <div class="preview-buttons">
+                                        <button class="btn btn-primary btn-sm">Create My Profile</button>
+                                        <button class="btn btn-blue btn-sm">Browse</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Decorative Student Illustration -->
+                        <div class="illustration-bg">
+                            <div class="desk-scene">
+                                <div class="student-figure">
+                                    <div class="student-head"></div>
+                                    <div class="student-body"></div>
+                                </div>
+                                <div class="desk"></div>
+                                <div class="lamp">
+                                    <div class="lamp-light"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <script src="js/roommate-data.js"></script>
-    <script src="js/roommate-profile.js"></script>
-    <script>
-        // Update cleanliness stars
-        function updateCleanliness(value) {
-            document.getElementById('cleanliness-value').textContent = value;
-            const stars = document.getElementById('cleanliness-stars');
-            stars.innerHTML = '';
-            for (let i = 0; i < 5; i++) {
-                const star = document.createElement('i');
-                star.className = i < value ? 'fas fa-star' : 'far fa-star';
-                stars.appendChild(star);
-            }
-        }
-        
-        // Update bio character count
-        document.getElementById('bio').addEventListener('input', function(e) {
-            document.getElementById('bio-count').textContent = e.target.value.length;
-        });
-        
-        // Update progress bar
-        function updateProgress() {
-            const form = document.getElementById('profile-form');
-            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            let filled = 0;
-            inputs.forEach(input => {
-                if (input.value.trim() !== '') filled++;
-            });
-            const progress = (filled / inputs.length) * 100;
-            document.getElementById('progress-fill').style.width = progress + '%';
-        }
-        
-        // Add event listeners for progress
-        document.getElementById('profile-form').addEventListener('input', updateProgress);
-        document.getElementById('profile-form').addEventListener('change', updateProgress);
-        updateProgress();
-    </script>
+    <script src="find-roommate-profile.js"></script>
 </body>
 </html>
 

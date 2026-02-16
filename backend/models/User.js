@@ -55,10 +55,29 @@ const userSchema = new mongoose.Schema({
   resetPasswordExpires: Date,
   
   // User Type & Role
-  userType: {
+  role: {
     type: String,
-    enum: ['student', 'landlord', 'admin'],
-    default: 'student'
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
+
+  emailVerified: {
+    type: Boolean,
+    default: false
+  },
+
+  phone: {
+    type: String
+  },
+
+  phoneVerified: {
+    type: Boolean,
+    default: false
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now
   },
   
   // Student Information

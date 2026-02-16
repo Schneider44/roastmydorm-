@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="find-roommate.css">
+  <style>
+    .report-card { border: 1px solid #eee; border-radius: 6px; padding: 1em; margin-bottom: 1em; }
+    .status-open { color: #e67e22; }
+    .status-reviewing { color: #2980b9; }
+    .status-resolved { color: #27ae60; }
+    .btn { padding: 0.4em 1em; border-radius: 4px; border: none; background: #3498db; color: #fff; cursor: pointer; margin-right: 0.5em; }
+    .btn[disabled] { background: #aaa; }
+  </style>
+</head>
+<body>
+  <h2>Admin Reports Dashboard</h2>
+  <div id="reports"></div>
+  <script>
+    const jwt = localStorage.getItem('jwt');
+    async function loadReports() {
+      const res = await fetch('/api/admin/reports', { headers: { Authorization: 'Bearer ' + jwt } });
+      const data = await res.json();
+      if (!data.success) return document.getElementById('reports').textContent = 'Failed to load reports.';
+      document.getElementById('reports').innerHTML = data.reports.map(r => `
+        <div class="report-card">
+          <b>Status:</b> <span class="status-${r.status}">${r.status}</span><br>
+          <b>Type:</b> ${r.targetType}<br>
+          <b>Reason:</b> ${r.reason}<br>
+          <b>Details:</b> ${r.description || ''}<br>
+          <b>Reporter:</b> ${r.reporter}<br>
+          <b>Created:</b> ${new Date(r.createdAt).toLocaleString()}<br>
+          <button class="btn" onclick="updateStatus('${r._id}','reviewing')">Mark Reviewing</button>
+          <button class="btn" onclick="updateStatus('${r._id}','resolved')">Resolve</button>
+        </div>
+      `).join('');
+    }
+    async function updateStatus(id, status) {
+      const note = prompt('Admin note (optional):');
+      await fetch('/api/admin/reports/' + id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + jwt },
+        body: JSON.stringify({ status, adminNote: note })
+      });
+      loadReports();
+    }
+    loadReports();
+  </script>
+</body>
+</html>

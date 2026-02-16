@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Roommate - RoastMyDorm</title>
+    <link rel="stylesheet" href="find-roommate.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Particle Background -->
+        <div class="particles" id="particles"></div>
+
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <a href="index.html" class="nav-logo">
+                <div class="nav-logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span>Roast<em>My</em>Dorm</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="#how-it-works" class="nav-link">How it works</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#" class="nav-link" data-route="browse">Browse</a>
+                <a href="#safety" class="nav-link">Safety</a>
+            </div>
+            <button class="nav-cta" data-route="create">Create Profile</button>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Find Your Perfect Roommate — Not Just a <span class="highlight">Room.</span></h1>
+                    <p>Moving to a new city in Morocco is easier when you're not alone. RoastMyDorm matches students by lifestyle, budget, move-in date, and campus — so you can live better and study better.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" data-route="create">Create My Profile</button>
+                        <button class="btn btn-secondary" data-route="browse">Browse Roommates</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-card">
+                        <div class="hero-card-image">
+                            <img src="Students _ Community.png" alt="Young roommates" class="hero-image">
+                        </div>
+                        <div class="profile-overlay">
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="profile-info">
+                                    <h4>Adam</h4>
+                                    <p>Social & Outgoing</p>
+                                </div>
+                                <span class="match-badge">85%<br><small>MATCH</small></span>
+                            </div>
+                            <div class="profile-traits">
+                                <div class="trait-row">
+                                    <span class="trait-tag">Solgilo Geek</span>
+                                    <span class="trait-tag">Mom. onMisov</span>
+                                    <i class="fas fa-check trait-check"></i>
+                                </div>
+                                <div class="trait-row">
+                                    <span class="trait-budget"># 2000 MAD</span>
+                                    <div class="trait-checks">
+                                        <i class="fas fa-check"></i>
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile-buttons">
+                                <button class="btn btn-primary btn-sm" data-route="create">Create My Profile</button>
+                                <button class="btn btn-outline btn-sm" data-route="browse">Browse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works" id="how-it-works">
+            <div class="section-container">
+                <div class="section-header">
+                    <h2>How it works</h2>
+                    <p>3 easy steps to meet your future roommate.</p>
+                </div>
+
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step-item">
+                        <div class="step-circle orange">1</div>
+                        <span class="step-label">Create Your Profile</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <div class="step-circle blue">2</div>
+                        <span class="step-label">Find Your Perfect Roommate</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-item">
+                        <div class="step-circle green">3</div>
+                        <span class="step-label">Chat & Confirm</span>
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="feature-cards" id="features">
+                    <!-- Card 1 -->
+                    <div class="feature-card">
+                        <div class="card-header">
+                            <span class="card-number orange">1</span>
+                            <h3>Create <span>Your Profile</span></h3>
+                        </div>
+                        <p class="card-desc">Tell us who you are and what you're looking for.</p>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Budget range</li>
+                            <li><i class="fas fa-check"></i> City or neighborhood</li>
+                            <li><i class="fas fa-check"></i> Move-in date</li>
+                            <li><i class="fas fa-check"></i> University</li>
+                            <li><i class="fas fa-check"></i> Lifestyle preferences</li>
+                        </ul>
+                        <div class="card-preview card-preview-1">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <button class="btn btn-primary" data-route="create">Create My Profile</button>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="feature-card">
+                        <div class="card-header">
+                            <span class="card-number blue">2</span>
+                            <h3>Find Your Perfect <span>Roommate</span></h3>
+                        </div>
+                        <p class="card-desc">Browse and match with students who fit your vibe.</p>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Suggested matches</li>
+                            <li><i class="fas fa-check"></i> Filters: budget, city, university, move-in-date</li>
+                            <li><i class="fas fa-check"></i> Compatibility badges (≥85% <i class="fas fa-envelope"></i>)</li>
+                            <li><i class="fas fa-check"></i> View full roommate profile before messaging</li>
+                        </ul>
+                        <div class="card-preview card-preview-2">
+                            <div class="mini-profile">
+                                <div class="mini-header">
+                                    <div class="mini-avatar"><i class="fas fa-user"></i></div>
+                                    <div class="mini-info">
+                                        <strong>Sara</strong>
+                                        <small>Study-Focused</small>
+                                    </div>
+                                    <span class="mini-badge">88%<br>MATCH</span>
+                                </div>
+                                <div class="mini-tags">
+                                    <span><i class="fas fa-check"></i> Soolm Freak</span>
+                                    <span><i class="fas fa-check"></i> Clam Freak</span>
+                                </div>
+                                <div class="mini-budget">
+                                    <i class="fas fa-heart"></i> # 3300 MAD
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-blue" data-route="browse">Find Matches</button>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="feature-card">
+                        <div class="card-header">
+                            <span class="card-number green">3</span>
+                            <h3>Chat & <span>Confirm</span></h3>
+                        </div>
+                        <p class="card-desc">Connect safely and agree on the details.</p>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> In-app chat (recommended)</li>
+                            <li><i class="fas fa-check"></i> Discuss expectations</li>
+                            <li><i class="fas fa-check"></i> Schedule a safe meet-up</li>
+                            <li><i class="fas fa-check"></i> Report/block if needed</li>
+                        </ul>
+                        <div class="card-preview card-preview-3">
+                            <div class="chat-preview">
+                                <div class="chat-header-mini">
+                                    <div class="mini-avatar"><i class="fas fa-user"></i></div>
+                                    <div>
+                                        <strong>Sara</strong>
+                                        <small>Study-Focused</small>
+                                    </div>
+                                    <span class="chat-badge">85%</span>
+                                </div>
+                                <div class="chat-bubbles">
+                                    <div class="bubble received">Hey! I saw your profile 👋</div>
+                                    <div class="bubble sent">Hi Sara! Nice to meet you!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-green" data-route="chat">Start Chat</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <section class="footer-section" id="safety">
+            <div class="footer-container">
+                <div class="section-header">
+                    <h2>Your Safety Matters</h2>
+                    <p>We prioritize your security throughout the roommate-finding process.</p>
+                </div>
+                <div class="safety-features">
+                    <div class="safety-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Verified Profiles</span>
+                    </div>
+                    <div class="safety-item">
+                        <i class="fas fa-user-check"></i>
+                        <span>Identity Verification</span>
+                    </div>
+                    <div class="safety-item">
+                        <i class="fas fa-flag"></i>
+                        <span>Report System</span>
+                    </div>
+                    <div class="safety-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Chat</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="find-roommate.js"></script>
+</body>
+</html>

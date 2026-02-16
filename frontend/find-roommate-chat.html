@@ -3,261 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat - RoastMyDorm</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/roommate.css">
-    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
-    <style>
-        /* Creative Chat Theme - Ocean glass + gradients */
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(1200px 600px at -10% -10%, #c7d2fe55, transparent 50%),
-                radial-gradient(1000px 500px at 110% -10%, #a7f3d055, transparent 50%),
-                linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-        }
-
-        .chat-container {
-            background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(148,163,184,0.25);
-            border-radius: 18px;
-            box-shadow: 0 20px 50px rgba(2,6,23,0.12);
-            overflow: hidden;
-        }
-
-        .chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.25rem;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: #e2e8f0;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 8px 20px rgba(2,6,23,0.25);
-        }
-
-        .chat-header-info { display: flex; align-items: center; gap: 0.75rem; }
-
-        .chat-header-photo {
-            width: 42px; height: 42px; border-radius: 9999px; object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.35);
-            box-shadow: 0 6px 14px rgba(15,23,42,0.35);
-        }
-
-        .chat-header h2 { color: #ffffff !important; }
-        #partner-info { color: #cbd5e1 !important; }
-
-        .btn-primary, .btn-secondary, .btn-send {
-            border-radius: 12px;
-            font-weight: 700;
-            transition: transform .15s ease, box-shadow .15s ease, background .3s ease;
-        }
-        .btn-primary { background: linear-gradient(135deg, #22d3ee, #0284c7); color: white; border: 0; padding: .7rem 1rem; box-shadow: 0 10px 24px rgba(2,132,199,0.35); }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 16px 36px rgba(2,132,199,0.45); }
-        .btn-secondary { background: #e2e8f0; color: #0f172a; border: 0; padding: .7rem 1rem; }
-        .btn-send { background: linear-gradient(135deg, #10b981, #059669); color: white; border: 0; padding: .7rem 1rem; }
-        .btn-send:hover { transform: translateY(-1px); box-shadow: 0 16px 36px rgba(5,150,105,0.35); }
-        .btn-decline { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 0; padding: .7rem 1rem; box-shadow: 0 10px 24px rgba(239,68,68,0.35); border-radius: 12px; font-weight: 700; transition: transform .15s ease, box-shadow .15s ease, background .3s ease; cursor: pointer; }
-        .btn-decline:hover { transform: translateY(-1px); box-shadow: 0 16px 36px rgba(239,68,68,0.45); }
-
-        .chat-messages {
-            height: min(60vh, 640px);
-            overflow: auto;
-            padding: 1rem;
-            background:
-                radial-gradient(600px 300px at 100% 0%, #22d3ee11, transparent 60%),
-                radial-gradient(600px 300px at 0% 50%, #a78bfa11, transparent 60%),
-                linear-gradient(180deg, rgba(255,255,255,0.65), rgba(248,250,252,0.75));
-        }
-
-        /* Custom scrollbar */
-        .chat-messages::-webkit-scrollbar { width: 10px; }
-        .chat-messages::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.35); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
-
-        .message { display: flex; margin: .5rem 0; }
-        .message.own { justify-content: flex-end; }
-        .message.other { justify-content: flex-start; }
-
-        .message-bubble {
-            max-width: 72%;
-            padding: .65rem .8rem .5rem .8rem;
-            border-radius: 16px;
-            position: relative;
-            line-height: 1.4;
-            box-shadow: 0 10px 24px rgba(15,23,42,0.12);
-        }
-        .message.own .message-bubble {
-            background: linear-gradient(135deg, #38bdf8, #3b82f6);
-            color: white;
-            border-bottom-right-radius: 6px;
-        }
-        .message.other .message-bubble {
-            background: rgba(255,255,255,0.9);
-            border: 1px solid rgba(148,163,184,0.25);
-            color: #0f172a;
-            border-bottom-left-radius: 6px;
-            backdrop-filter: blur(8px);
-        }
-
-        .message-time {
-            font-size: .72rem;
-            opacity: .85;
-            margin-top: .25rem;
-            text-align: right;
-            color: rgba(226,232,240,0.9);
-        }
-        .message.other .message-time { color: #64748b; }
-
-        .chat-input-area {
-            display: flex; gap: .6rem; align-items: center;
-            padding: .75rem; border-top: 1px solid rgba(148,163,184,0.25);
-            background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
-            backdrop-filter: blur(10px);
-        }
-        .chat-input {
-            flex: 1; padding: .85rem 1rem; border-radius: 14px; border: 2px solid rgba(148,163,184,0.35);
-            background: rgba(255,255,255,0.85); outline: none; transition: border-color .2s, box-shadow .2s;
-        }
-        .chat-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56,189,248,0.15); }
-
-        /* Modal */
-        .modal-overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(2,6,23,0.6); backdrop-filter: blur(6px); }
-        .modal { width: min(680px, 92vw); background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.75)); border: 1px solid rgba(148,163,184,0.25); border-radius: 16px; box-shadow: 0 30px 70px rgba(2,6,23,0.35); overflow: hidden; }
-        .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: linear-gradient(135deg, #0ea5e9, #6366f1); color: white; }
-        .modal-body { padding: 1rem 1.25rem 1.25rem; }
-        .safety-alert { background: #f1f5f9; border: 1px dashed #94a3b8; border-radius: 12px; padding: .75rem 1rem; color: #0f172a; }
-        .form-group label { display: block; font-weight: 600; color: #0f172a; margin-bottom: .35rem; }
-        .form-group input, .form-group textarea { width: 100%; border: 2px solid #e2e8f0; border-radius: 12px; padding: .7rem .9rem; background: white; outline: none; }
-        .form-group input:focus, .form-group textarea:focus { border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56,189,248,0.15); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .form-actions { display: flex; gap: .5rem; justify-content: flex-end; margin-top: .75rem; }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .chat-messages { height: 56vh; }
-            .message-bubble { max-width: 84%; }
-            .form-row { grid-template-columns: 1fr; }
-        }
-    </style>
+    <title>Chat - Find Roommate | RoastMyDorm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="find-roommate-chat.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav style="background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1rem 0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem; display: flex; justify-content: space-between; align-items: center;">
-            <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: #111827;">
-                <div style="width: 32px; height: 32px; background: #2563eb; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">R</div>
-                <span style="font-size: 1.25rem; font-weight: bold;">RoastMyDorm</span>
-            </a>
-            <a href="find-roommate-matches.html" style="padding: 0.5rem 1rem; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 0.375rem; text-decoration: none; color: #374151; font-weight: 600;">← Back to Matches</a>
-        </div>
-    </nav>
+    <!-- Particles Background -->
+    <div class="particles" id="particles"></div>
 
-    <div style="max-width: 1000px; margin: 2rem auto; padding: 0 1rem;">
-        <!-- Chat Header -->
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="chat-header-info">
-                    <a href="find-roommate-matches.html" style="text-decoration: none; color: #374151; margin-right: 1rem;">←</a>
-                    <img id="partner-photo" src="" alt="Profile" class="chat-header-photo" style="display: none;">
-                    <div>
-                        <h2 id="partner-name" style="font-size: 1.25rem; font-weight: 600; color: #111827; margin: 0;"></h2>
-                        <p id="partner-info" style="font-size: 0.875rem; color: #6b7280; margin: 0;"></p>
+    <!-- Mobile Header (visible only on mobile when in chat view) -->
+    <header class="mobile-chat-header" id="mobileChatHeader">
+        <button class="back-btn" id="backToList">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="mobile-user-info">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="User" class="mobile-avatar">
+            <div class="mobile-user-details">
+                <span class="mobile-user-name">Adam</span>
+                <span class="mobile-user-status online">Online</span>
+            </div>
+        </div>
+        <div class="mobile-actions">
+            <button class="icon-btn"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+    </header>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+        <!-- Left Sidebar - Conversation List -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-section">
+                    <a href="find-roommate.html" class="logo">
+                        <span class="logo-icon">🏠</span>
+                        <span class="logo-text">RoastMyDorm</span>
+                    </a>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search conversations..." id="searchConversations">
+                </div>
+            </div>
+
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversation 1 - Active -->
+                <div class="conversation-item active" data-id="1" data-name="Adam" data-status="online" data-img="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face">
+                    <div class="conversation-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="Adam">
+                        <span class="online-indicator"></span>
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Adam</span>
+                            <span class="conversation-time">2 min</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="preview-text">That sounds great! I'm also looking for...</span>
+                        </div>
                     </div>
                 </div>
-                <button onclick="openScheduleModal()" class="btn-primary">📅 Schedule Meet</button>
+
+                <!-- Conversation 2 -->
+                <div class="conversation-item" data-id="2" data-name="Leila" data-status="online" data-img="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face">
+                    <div class="conversation-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=50&h=50&fit=crop&crop=face" alt="Leila">
+                        <span class="online-indicator"></span>
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Leila</span>
+                            <span class="conversation-time">15 min</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="preview-text">Yes! The apartment near Hassan II...</span>
+                            <span class="unread-badge">2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation 3 -->
+                <div class="conversation-item" data-id="3" data-name="Youssef" data-status="offline" data-lastseen="2h ago" data-img="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face">
+                    <div class="conversation-avatar">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=50&h=50&fit=crop&crop=face" alt="Youssef">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Youssef</span>
+                            <span class="conversation-time">2h</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="preview-text">I'll check the place tomorrow</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation 4 -->
+                <div class="conversation-item" data-id="4" data-name="Sara" data-status="online" data-img="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face">
+                    <div class="conversation-avatar">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" alt="Sara">
+                        <span class="online-indicator"></span>
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Sara</span>
+                            <span class="conversation-time">1d</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="preview-text">Perfect, let me know when you're free</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation 5 -->
+                <div class="conversation-item" data-id="5" data-name="Karim" data-status="offline" data-lastseen="3h ago" data-img="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face">
+                    <div class="conversation-avatar">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" alt="Karim">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Karim</span>
+                            <span class="conversation-time">2d</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="preview-text">The budget works for me 👍</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversation 6 -->
+                <div class="conversation-item" data-id="6" data-name="Fatima" data-status="offline" data-lastseen="1d ago" data-img="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face">
+                    <div class="conversation-avatar">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="Fatima">
+                    </div>
+                    <div class="conversation-info">
+                        <div class="conversation-header">
+                            <span class="conversation-name">Fatima</span>
+                            <span class="conversation-time">3d</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="preview-text">Thanks for reaching out!</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Messages -->
-            <div class="chat-messages" id="messages-container">
-                <div class="empty-state" style="display: none;" id="no-messages">
-                    <p style="color: #6b7280; margin: 2rem 0;">No messages yet. Start the conversation!</p>
+            <!-- Back to Browse -->
+            <div class="sidebar-footer">
+                <a href="find-roommate-matches.html" class="back-to-browse">
+                    <i class="fas fa-users"></i>
+                    <span>Browse Roommates</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Right Panel - Chat Window -->
+        <main class="chat-panel" id="chatPanel">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-user-info">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="Adam" class="chat-avatar" id="chatAvatar">
+                    <div class="chat-user-details">
+                        <h2 class="chat-user-name" id="chatUserName">Adam <span id="verifiedBadge" style="display:none;" title="Verified" class="verified-badge"><i class="fas fa-shield-alt" style="color:#2ecc71;"></i> Verified</span></h2>
+                        <span class="chat-user-status online" id="chatUserStatus">
+                            <span class="status-dot"></span>
+                            Online
+                        </span>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn btn-blue btn-sm" id="viewProfileBtn">
+                        <i class="fas fa-user"></i>
+                        <span>View Profile</span>
+                    </button>
+                    <button class="icon-btn" id="reportBtn" title="Report">
+                        <i class="fas fa-flag"></i>
+                    </button>
+                    <button class="icon-btn" id="blockBtn" title="Block User">
+                        <i class="fas fa-ban"></i>
+                    </button>
+                    <button class="icon-btn" id="moreOptionsBtn" title="More options">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Input Area -->
-            <div class="chat-input-area">
-                <input type="text" id="message-input" class="chat-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()" class="btn-send">Send</button>
+            <!-- Engagement Tip -->
+            <div class="engagement-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span>Students who reply quickly are <strong>3x more likely</strong> to match.</span>
             </div>
 
-            <!-- Confirm/Decline Match Buttons -->
-            <div style="padding: 1rem; border-top: 1px solid rgba(148,163,184,0.25); background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.6)); backdrop-filter: blur(10px);">
-                <div id="match-buttons" style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="confirmMatch()" id="confirm-btn" class="btn-primary">✅ Confirm Roommate Match</button>
-                    <button onclick="declineMatch()" id="decline-btn" class="btn-decline">❌ Decline Roommate Match</button>
+            <!-- Chat Messages Area -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Date Separator -->
+                <div class="date-separator">
+                    <span>Yesterday</span>
                 </div>
-                <div id="confirmed-message" style="display: none; padding: 0.75rem; background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; border-radius: 0.75rem; text-align: center; font-weight: 600; box-shadow: 0 4px 12px rgba(5,95,70,0.15);">
-                    ✅ Roommate Match Confirmed
+
+                <!-- Received Message -->
+                <div class="message received">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Adam" class="message-avatar">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hey! I saw your profile and I think we'd be great roommates. I'm also studying at Mohammed V University.</p>
+                        </div>
+                        <span class="message-time">4:32 PM</span>
+                    </div>
                 </div>
-                <div id="declined-message" style="display: none; padding: 0.75rem; background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; border-radius: 0.75rem; text-align: center; font-weight: 600; box-shadow: 0 4px 12px rgba(153,27,27,0.15);">
-                    ❌ Roommate Match Declined
+
+                <!-- Sent Message -->
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hi Adam! Nice to meet you. Yes, I noticed we have similar schedules. What area are you looking at?</p>
+                        </div>
+                        <div class="message-meta">
+                            <span class="message-time">4:45 PM</span>
+                            <span class="message-status seen">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Received Message -->
+                <div class="message received">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Adam" class="message-avatar">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>I'm looking around Agdal or Hassan. My budget is around 2000-2500 MAD per month. What about you?</p>
+                        </div>
+                        <span class="message-time">5:02 PM</span>
+                    </div>
+                </div>
+
+                <!-- Date Separator -->
+                <div class="date-separator">
+                    <span>Today</span>
+                </div>
+
+                <!-- Sent Message -->
+                <div class="message sent">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>That's perfect! I was thinking the same areas. I found a few places on RoastMyDorm that look promising.</p>
+                        </div>
+                        <div class="message-meta">
+                            <span class="message-time">10:15 AM</span>
+                            <span class="message-status seen">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Received Message -->
+                <div class="message received">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Adam" class="message-avatar">
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>That sounds great! I'm also looking for a place that's quiet during weekdays since I have early classes. Are you more of a morning person or night owl? 😄</p>
+                        </div>
+                        <span class="message-time">10:23 AM</span>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator (hidden by default) -->
+                <div class="message received typing-indicator" id="typingIndicator" style="display: none;">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face" alt="Adam" class="message-avatar">
+                    <div class="message-content">
+                        <div class="message-bubble typing">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions -->
+            <div class="quick-suggestions" id="quickSuggestions">
+                <button class="suggestion-chip" data-text="When are you planning to move in?">
+                    <i class="fas fa-calendar-alt"></i> When are you planning to move in?
+                </button>
+                <button class="suggestion-chip" data-text="What's your budget range?">
+                    <i class="fas fa-wallet"></i> What's your budget range?
+                </button>
+                <button class="suggestion-chip" data-text="Are you more quiet or social?">
+                    <i class="fas fa-comments"></i> Are you more quiet or social?
+                </button>
+            </div>
+
+            <!-- Safety Banner -->
+            <div class="safety-banner" id="safetyBanner" style="display:none;">
+                <i class="fas fa-shield-alt"></i>
+                <span id="safetyBannerText">Always meet in a safe public place and avoid sending deposits outside official agreements.</span>
+            </div>
+
+            <!-- Message Input Area -->
+            <div class="message-input-area">
+                <button class="icon-btn attachment-btn" id="attachmentBtn" title="Add attachment">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Type your message..." 
+                        rows="1"
+                        maxlength="2000"
+                    ></textarea>
+                </div>
+                <button class="send-btn" id="sendBtn" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Empty State (when no conversation selected) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-content">
+                <div class="empty-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Select a conversation</h3>
+                <p>Choose a match from the list to start chatting</p>
+                <a href="find-roommate-matches.html" class="btn btn-primary">
+                    <i class="fas fa-users"></i> Browse Roommates
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Schedule Meeting Modal -->
-    <div id="schedule-modal" class="modal-overlay" style="display: none;">
+    <!-- Report Modal -->
+    <div class="modal-overlay" id="reportModal">
         <div class="modal">
             <div class="modal-header">
-                <h2 style="margin: 0;">Schedule a Meeting</h2>
-                <button onclick="closeScheduleModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+                <h3><i class="fas fa-flag"></i> Report User</h3>
+                <button class="close-modal" id="closeReportModal">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-body">
-                <div class="safety-alert">
-                    <h4>⚠️ Safety Reminder:</h4>
-                    <ul>
-                        <li>Always meet in a public place for the first time</li>
-                        <li>Tell a friend or family member about your meeting</li>
-                        <li>Trust your instincts and prioritize your safety</li>
-                        <li>Don't share personal financial information</li>
-                    </ul>
+                <p>Why are you reporting this user?</p>
+                <div class="report-options">
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="spam">
+                        <span>Spam or fake profile</span>
+                    </label>
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="harassment">
+                        <span>Harassment or inappropriate behavior</span>
+                    </label>
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="scam">
+                        <span>Scam or suspicious activity</span>
+                    </label>
+                    <label class="report-option">
+                        <input type="radio" name="reportReason" value="other">
+                        <span>Other</span>
+                    </label>
                 </div>
-                <form id="meeting-form" onsubmit="submitMeeting(event)">
-                    <div class="form-group">
-                        <label>Meeting Type</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <label style="padding: 1rem; border: 2px solid #d1d5db; border-radius: 0.5rem; cursor: pointer; text-align: center;">
-                                <input type="radio" name="meetingType" value="video" checked style="margin-right: 0.5rem;">
-                                📹 In-App Video Call
-                            </label>
-                            <label style="padding: 1rem; border: 2px solid #d1d5db; border-radius: 0.5rem; cursor: pointer; text-align: center;">
-                                <input type="radio" name="meetingType" value="external" style="margin-right: 0.5rem;">
-                                🔗 External Link
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group" id="external-link-group" style="display: none;">
-                        <label>Meeting Link (Zoom, Google Meet, etc.)</label>
-                        <input type="url" id="meeting-link" placeholder="https://...">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" id="meeting-date" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Time</label>
-                            <input type="time" id="meeting-time" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Additional Notes (Optional)</label>
-                        <textarea id="meeting-notes" rows="3"></textarea>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" onclick="closeScheduleModal()" class="btn-secondary">Cancel</button>
-                        <button type="submit" class="btn-primary">Schedule Meeting</button>
-                    </div>
-                </form>
+                <textarea placeholder="Additional details (optional)" class="report-details" id="reportDetails"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelReport">Cancel</button>
+                <button class="btn btn-primary" id="submitReport">Submit Report</button>
             </div>
         </div>
     </div>
 
-    <script src="js/roommate-data.js"></script>
-    <script src="js/roommate-chat.js"></script>
+    <script src="find-roommate-chat.js"></script>
 </body>
 </html>
 
