@@ -374,16 +374,15 @@ function setupReportModal() {
     messageInput.value = '';
     messageInput.style.height = 'auto';
     sendBtn.disabled = true;
-    
     // Scroll to bottom
     scrollToBottom();
-    
+
     // Update conversation preview
     updateConversationPreview(currentConversationId, text);
-    
+
     // Simulate response
     simulateResponse();
-}
+    // End of send message function
 
 function updateConversationPreview(id, text) {
     const item = document.querySelector('.conversation-item[data-id="' + id + '"]');

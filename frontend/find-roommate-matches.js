@@ -156,7 +156,9 @@ window.onload = function() {
                 window.location.href = ROUTES.createProfile;
             } else if (route === 'browse') {
                 window.location.href = ROUTES.browseRoommates;
-            // Removed demo profile creation to only show real profiles from backend.
+            }
+        }
+        // Removed demo profile creation to only show real profiles from backend.
         var buttonId = button.id;
         if (buttonId) {
             console.log('Button ID clicked:', buttonId);
@@ -176,7 +178,7 @@ window.onload = function() {
                 hidePremiumPopup();
             }
         }
-    });
+    }); // End of event delegation handler
     
     // ==================== MOBILE NAV ====================
     var navToggle = document.getElementById('navToggle');
