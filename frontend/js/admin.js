@@ -14,7 +14,7 @@
 
 const API_BASE_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:5000/api' 
-  : '/api';
+  : 'https://roastmydorm.com/api';
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
