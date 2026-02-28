@@ -12,9 +12,9 @@
 // Configuration
 // ============================================
 
-const API_BASE_URL = window.location.hostname === 'localhost' 
-  ? 'http://localhost:5000/api' 
-  : 'https://roastmydorm.com/api';
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:5000/api'
+  : 'https://roastmydorm-backend-zy4p.vercel.app/api';
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 

@@ -94,9 +94,9 @@ app.use('/api/auth/register', authLimiter);
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://localhost:3000',
-  'http://localhost:3000',
-  'http://localhost:5173', // Vite default
+  process.env.CLIENT_URL || 'http://roastmydorm.com',
+  'http://roastmydorm.com',
+  'http://roastmydorm.com', // Vite default
   'http://localhost:63519', // npx serve
   // Add production domains here
 ];
@@ -147,7 +147,7 @@ const connectDB = async () => {
     let mongoUri = process.env.MONGODB_URI;
     
     // If no valid MongoDB URI, use in-memory server for development
-    if (!mongoUri || mongoUri.includes('localhost') || mongoUri.includes('cluster0.mongodb.net')) {
+    if (!mongoUri || mongoUri.includes('localhost') || mongoUri.includes('127.0.0.1')) {
       try {
         const { getMemoryDbUri, seedAdminUser } = require('./utils/devDb');
         mongoUri = await getMemoryDbUri();
