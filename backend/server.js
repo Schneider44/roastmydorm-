@@ -9,8 +9,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
-require('dotenv').config();
 
+require('dotenv').config();
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
-      connectSrc: ["'self'", process.env.CLIENT_URL || 'http://localhost:3000']
+      connectSrc: ["'self'", process.env.CLIENT_URL || 'https://www.roastmydorm.com']
     }
   },
   crossOriginEmbedderPolicy: false,
@@ -61,18 +61,15 @@ app.use(compression({
 
 // Rate limiting - General
 const generalLimiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // 15 minutes
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again later.'
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => {
-    // Skip rate limiting for health checks
-    return req.path === '/api/health';
-  }
+  skip: (req) => req.path === '/api/health'
 });
 
 // Stricter rate limiting for auth endpoints
@@ -92,25 +89,26 @@ app.use('/api/', generalLimiter);
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
-// CORS configuration
+// CORS configuration (cleaned up + includes https + common local ports)
 const allowedOrigins = [
-  process.env.CLIENT_URL || 'http://roastmydorm.com',
-  'http://roastmydorm.com',
-  'http://roastmydorm.com', // Vite default
-  'http://localhost:63519', // npx serve
-  // Add production domains here
-];
+  process.env.CLIENT_URL,
+  'https://wwww.roastmydorm.com',
+  'http://wwww.roastmydorm.com',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:63519',
+].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+      return callback(null, true);
     }
+
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -123,7 +121,7 @@ app.use(cors({
 // ============================================
 
 // Body parsing with size limits
-app.use(express.json({ 
+app.use(express.json({
   limit: '10mb',
   verify: (req, res, buf) => {
     req.rawBody = buf;
@@ -139,31 +137,52 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // ============================================
-// DATABASE CONNECTION
+// DATABASE CONNECTION (patched for Vercel)
 // ============================================
+
+// Cache the connection across invocations (important for serverless)
+let cachedConn = null;
 
 const connectDB = async () => {
   try {
+    // If already connected, reuse it
+    if (cachedConn && mongoose.connection.readyState === 1) {
+      return cachedConn;
+    }
+
     let mongoUri = process.env.MONGODB_URI;
-    
-    // If no valid MongoDB URI, use in-memory server for development
-    if (!mongoUri || mongoUri.includes('localhost') || mongoUri.includes('127.0.0.1')) {
+
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI is missing. Set it in .env locally and in Vercel Environment Variables.');
+    }
+
+    // On production/serverless, never try local/in-memory DB fallback
+    const isLocal =
+      mongoUri.includes('localhost') ||
+      mongoUri.includes('127.0.0.1');
+
+    if (process.env.NODE_ENV === 'production' && isLocal) {
+      throw new Error('Production MONGODB_URI cannot be localhost/127.0.0.1. Use MongoDB Atlas URI.');
+    }
+
+    // Keep your in-memory DB only for local dev
+    if (isLocal && process.env.NODE_ENV !== 'production') {
       try {
         const { getMemoryDbUri, seedAdminUser } = require('./utils/devDb');
         mongoUri = await getMemoryDbUri();
         process.env.MONGODB_URI = mongoUri;
-        
+
         await mongoose.connect(mongoUri, {
           maxPoolSize: 10,
           serverSelectionTimeoutMS: 5000,
           socketTimeoutMS: 45000,
         });
-        
+
         console.log('✅ In-memory MongoDB connected successfully');
-        
+
         // Seed admin user for development
         await seedAdminUser(mongoose);
-        
+
       } catch (memError) {
         console.error('❌ In-memory DB setup failed:', memError.message);
         throw new Error('No valid MongoDB connection available');
@@ -174,29 +193,44 @@ const connectDB = async () => {
         serverSelectionTimeoutMS: 5000,
         socketTimeoutMS: 45000,
       });
-      
+
       console.log('✅ MongoDB connected successfully');
     }
-    
-    // Handle connection events
-    mongoose.connection.on('error', (err) => {
-      console.error('❌ MongoDB connection error:', err);
-    });
-    
-    mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️ MongoDB disconnected');
-    });
-    
+
+    // Cache the connection
+    cachedConn = mongoose.connection;
+
+    // Handle connection events (register once)
+    if (!mongoose.connection.__hasListeners) {
+      mongoose.connection.__hasListeners = true;
+
+      mongoose.connection.on('error', (err) => {
+        console.error('❌ MongoDB connection error:', err);
+      });
+
+      mongoose.connection.on('disconnected', () => {
+        console.warn('⚠️ MongoDB disconnected');
+        cachedConn = null;
+      });
+    }
+
+    return cachedConn;
+
   } catch (err) {
     console.error('❌ MongoDB connection error:', err);
-    // Don't exit in development to allow for hot reloading
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1);
-    }
+
+    // ✅ IMPORTANT for Vercel/serverless: do NOT kill the process
+    // Let the request fail with 500 and keep logs.
+    throw err;
   }
 };
 
-connectDB();
+// Connect once when the function/container initializes.
+// If it fails, it will throw; your routes should handle DB-dependent operations accordingly.
+connectDB().catch(() => {
+  // swallow here to avoid crashing immediately on cold start;
+  // DB-dependent endpoints will still error and logs will show why.
+});
 
 // ============================================
 // ROUTES
@@ -224,7 +258,7 @@ app.get('/sitemap.xml', (req, res) => {
 });
 app.get('/robots.txt', (req, res) => {
   const seoUtils = require('./utils/seo');
-  const baseUrl = process.env.BASE_URL || 'https://www.roastmydorm.com';
+  const baseUrl = process.env.BASE_URL || 'https://wwww.roastmydorm.com';
   res.set('Content-Type', 'text/plain');
   res.send(seoUtils.generateRobotsTxt(baseUrl));
 });
@@ -239,7 +273,7 @@ app.get('/api/health', (req, res) => {
     memoryUsage: process.memoryUsage(),
     database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   };
-  
+
   try {
     res.json(healthcheck);
   } catch (error) {
@@ -255,7 +289,7 @@ app.get('/api/health', (req, res) => {
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/build')));
-  
+
   app.get('*', (req, res, next) => {
     // Skip API routes
     if (req.path.startsWith('/api')) {
@@ -271,15 +305,14 @@ if (process.env.NODE_ENV === 'production') {
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     success: false,
-    message: 'Route not found' 
+    message: 'Route not found'
   });
 });
 
 // Global error handler
 app.use((err, req, res, next) => {
-  // Log error internally
   console.error('Error:', {
     message: err.message,
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
@@ -288,16 +321,14 @@ app.use((err, req, res, next) => {
     timestamp: new Date().toISOString()
   });
 
-  // Don't leak error details in production
   const statusCode = err.statusCode || 500;
   const response = {
     success: false,
-    message: process.env.NODE_ENV === 'production' 
-      ? 'An unexpected error occurred' 
+    message: process.env.NODE_ENV === 'production'
+      ? 'An unexpected error occurred'
       : err.message
   };
 
-  // Include stack trace only in development
   if (process.env.NODE_ENV === 'development') {
     response.stack = err.stack;
   }
@@ -311,7 +342,7 @@ app.use((err, req, res, next) => {
 
 const gracefulShutdown = async (signal) => {
   console.log(`\n${signal} received. Starting graceful shutdown...`);
-  
+
   try {
     await mongoose.connection.close();
     console.log('✅ MongoDB connection closed');
@@ -325,22 +356,24 @@ const gracefulShutdown = async (signal) => {
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
-// Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-// Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
   process.exit(1);
 });
 
 // ============================================
-// START SERVER
+// EXPORT APP (for Vercel) / LISTEN (for local)
 // ============================================
 
-
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;
-
