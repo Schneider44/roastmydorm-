@@ -92,8 +92,8 @@ app.use('/api/auth/register', authLimiter);
 // CORS configuration (cleaned up + includes https + common local ports)
 const allowedOrigins = [
   process.env.CLIENT_URL,
-  'https://wwww.roastmydorm.com',
-  'http://wwww.roastmydorm.com',
+  'https://www.roastmydorm.com',
+  'http://www.roastmydorm.com',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:63519',
@@ -366,14 +366,7 @@ process.on('uncaughtException', (error) => {
 });
 
 // ============================================
-// EXPORT APP (for Vercel) / LISTEN (for local)
+// EXPORT APP (for Vercel)
 // ============================================
-
-if (require.main === module) {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
-  });
-}
 
 module.exports = app;
