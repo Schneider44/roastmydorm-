@@ -143,6 +143,19 @@ if (process.env.NODE_ENV === 'production') {
 // Cache the connection across invocations (important for serverless)
 let cachedConn = null;
 
+// Register mongoose error listeners immediately (before any connect attempt)
+// so that auth failures never become unhandled 'error' events that crash the process
+if (!mongoose.connection.__hasListeners) {
+  mongoose.connection.__hasListeners = true;
+  mongoose.connection.on('error', (err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+  });
+  mongoose.connection.on('disconnected', () => {
+    console.warn('⚠️ MongoDB disconnected');
+    cachedConn = null;
+  });
+}
+
 const connectDB = async () => {
   try {
     // If already connected, reuse it
@@ -197,30 +210,11 @@ const connectDB = async () => {
       console.log('✅ MongoDB connected successfully');
     }
 
-    // Cache the connection
     cachedConn = mongoose.connection;
-
-    // Handle connection events (register once)
-    if (!mongoose.connection.__hasListeners) {
-      mongoose.connection.__hasListeners = true;
-
-      mongoose.connection.on('error', (err) => {
-        console.error('❌ MongoDB connection error:', err);
-      });
-
-      mongoose.connection.on('disconnected', () => {
-        console.warn('⚠️ MongoDB disconnected');
-        cachedConn = null;
-      });
-    }
-
     return cachedConn;
 
   } catch (err) {
-    console.error('❌ MongoDB connection error:', err);
-
-    // ✅ IMPORTANT for Vercel/serverless: do NOT kill the process
-    // Let the request fail with 500 and keep logs.
+    console.error('❌ MongoDB connection error:', err.message);
     throw err;
   }
 };
@@ -362,7 +356,7 @@ process.on('unhandledRejection', (reason, promise) => {
 
 process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
-  process.exit(1);
+  // Do NOT call process.exit(1) in serverless — it kills the entire function container
 });
 
 // ============================================
