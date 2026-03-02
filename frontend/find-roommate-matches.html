@@ -189,261 +189,33 @@
                     <!-- ==================== ROOMMATE CARDS ==================== -->
                     <div class="roommates-grid" id="roommatesGrid">
 
-                        <!-- Card 1 - Adam (AI Top Pick + Scarcity) -->
-                        <div class="roommate-card ai-pick" data-id="1">
-                            <div class="card-badges">
-                                <span class="badge badge-ai"><i class="fas fa-brain"></i> AI Top Pick</span>
-                                <span class="badge badge-scarcity"><i class="fas fa-fire"></i> High Demand</span>
-                            </div>
-                            <div class="card-image">
-                                <div class="avatar-placeholder">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="match-badge high">92% MATCH</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-name-row">
-                                    <h3>Adam</h3>
-                                    <span class="online-indicator"><i class="fas fa-circle"></i> Online</span>
-                                </div>
-                                <div class="card-info">
-                                    <p><i class="fas fa-map-marker-alt"></i> Casablanca</p>
-                                    <p><i class="fas fa-university"></i> Hassan II University</p>
-                                    <p><i class="fas fa-wallet"></i> 2000 MAD</p>
-                                </div>
-
-                                <!-- Urgency Timer -->
-                                <div class="urgency-timer">
-                                    <i class="fas fa-clock"></i>
-                                    <span>Available in <strong class="countdown" data-days="5">5 days</strong></span>
-                                </div>
-
-                                <div class="card-tags">
-                                    <span class="tag"><i class="fas fa-moon"></i> Night Owl</span>
-                                    <span class="tag"><i class="fas fa-broom"></i> Clean</span>
-                                </div>
-
-                                <!-- AI Compatibility Breakdown -->
-                                <div class="compatibility-breakdown">
-                                    <div class="breakdown-header" onclick="toggleBreakdown(this)">
-                                        <span><i class="fas fa-chart-pie"></i> Why 92% Match?</span>
-                                        <i class="fas fa-chevron-down"></i>
-                                    </div>
-                                    <div class="breakdown-content">
-                                        <div class="breakdown-item">
-                                            <span>Budget Match</span>
-                                            <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
-                                            <span class="percent">100%</span>
-                                        </div>
-                                        <div class="breakdown-item">
-                                            <span>Lifestyle Match</span>
-                                            <div class="mini-bar"><div class="mini-fill" style="width:90%"></div></div>
-                                            <span class="percent">90%</span>
-                                        </div>
-                                        <div class="breakdown-item">
-                                            <span>University Match</span>
-                                            <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
-                                            <span class="percent">100%</span>
-                                        </div>
-                                        <div class="breakdown-item">
-                                            <span>Move-in Match</span>
-                                            <div class="mini-bar"><div class="mini-fill" style="width:80%"></div></div>
-                                            <span class="percent">80%</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Scarcity Social Proof -->
-                                <div class="scarcity-proof">
-                                    <i class="fas fa-eye"></i> <span>3 people viewed today</span>
-                                </div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn btn-blue btn-sm" data-action="view" data-id="1" onclick="goToChat(1)">View Profile</button>
-                                <button class="btn btn-primary btn-sm btn-glow" data-action="message" data-id="1" onclick="goToChat(1)">
-                                    <i class="fas fa-paper-plane"></i> Message Now
-                                </button>
-                            </div>
-                            <div class="social-validation">
-                                <i class="fas fa-bolt"></i> Students who message within 24h are <strong>3x more likely</strong> to match
-                            </div>
+                        <!-- Loading state -->
+                        <div id="loadingState" style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#6b7280;">
+                            <i class="fas fa-spinner fa-spin" style="font-size:2rem;margin-bottom:16px;display:block;"></i>
+                            <p>Loading roommates...</p>
                         </div>
 
-                        <!-- Card 2 - Leila (Premium + Moving Soon) -->
-                        <div class="roommate-card" data-id="2">
-                            <div class="card-badges">
-                                <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
-                                <span class="badge badge-urgent"><i class="fas fa-bolt"></i> Moving This Week</span>
-                            </div>
-                            <div class="card-image">
-                                <div class="avatar-placeholder female">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="match-badge high">89% MATCH</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-name-row">
-                                    <h3>Leila</h3>
-                                    <span class="premium-badge"><i class="fas fa-gem"></i></span>
-                                </div>
-                                <div class="card-info">
-                                    <p><i class="fas fa-map-marker-alt"></i> Rabat</p>
-                                    <p><i class="fas fa-university"></i> Mohammed V University</p>
-                                    <p><i class="fas fa-wallet"></i> 2500 MAD</p>
-                                </div>
-                                <div class="urgency-timer urgent">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <span>Moving in <strong class="countdown" data-days="3">3 days</strong></span>
-                                </div>
-                                <div class="card-tags">
-                                    <span class="tag"><i class="fas fa-sun"></i> Early Bird</span>
-                                    <span class="tag"><i class="fas fa-book"></i> Studious</span>
-                                </div>
-                                <div class="scarcity-proof">
-                                    <i class="fas fa-fire-alt"></i> <span>Only 1 room left</span>
-                                </div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn btn-blue btn-sm" data-action="view" data-id="2" onclick="goToChat(2)">View Profile</button>
-                                <button class="btn btn-primary btn-sm btn-glow" data-action="message" data-id="2" onclick="goToChat(2)">
-                                    <i class="fas fa-paper-plane"></i> Message Now
-                                </button>
-                            </div>
-                            <div class="social-validation">
-                                <i class="fas fa-bolt"></i> Students who message within 24h are <strong>3x more likely</strong> to match
-                            </div>
+                        <!-- Not logged in state (hidden by default) -->
+                        <div id="notLoggedInState" style="display:none;grid-column:1/-1;text-align:center;padding:60px 20px;">
+                            <i class="fas fa-lock" style="font-size:3rem;color:#3b82f6;margin-bottom:16px;display:block;"></i>
+                            <h3 style="margin-bottom:8px;color:#1f2937;">Sign in to see real roommates</h3>
+                            <p style="color:#6b7280;margin-bottom:24px;">Create a free account to browse and connect with real students looking for roommates.</p>
+                            <a href="index.html" class="btn btn-primary">Sign In / Create Account</a>
                         </div>
 
-                        <!-- Card 3 - Hamza -->
-                        <div class="roommate-card" data-id="3">
-                            <div class="card-badges">
-                                <span class="badge badge-new"><i class="fas fa-sparkles"></i> New Profile</span>
-                            </div>
-                            <div class="card-image">
-                                <div class="avatar-placeholder">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="match-badge medium">78% MATCH</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-name-row">
-                                    <h3>Hamza</h3>
-                                </div>
-                                <div class="card-info">
-                                    <p><i class="fas fa-map-marker-alt"></i> Marrakech</p>
-                                    <p><i class="fas fa-university"></i> Cadi Ayyad University</p>
-                                    <p><i class="fas fa-wallet"></i> 1800 MAD</p>
-                                </div>
-                                <div class="card-tags">
-                                    <span class="tag"><i class="fas fa-users"></i> Social</span>
-                                    <span class="tag"><i class="fas fa-gamepad"></i> Gamer</span>
-                                </div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn btn-blue btn-sm" data-action="view" data-id="3" onclick="goToChat(3)">View Profile</button>
-                                <button class="btn btn-primary btn-sm" data-action="message" data-id="3" onclick="goToChat(3)">
-                                    <i class="fas fa-paper-plane"></i> Message Now
-                                </button>
-                            </div>
+                        <!-- No profile state (hidden by default) -->
+                        <div id="noProfileState" style="display:none;grid-column:1/-1;text-align:center;padding:60px 20px;">
+                            <i class="fas fa-user-plus" style="font-size:3rem;color:#3b82f6;margin-bottom:16px;display:block;"></i>
+                            <h3 style="margin-bottom:8px;color:#1f2937;">Create your roommate profile first</h3>
+                            <p style="color:#6b7280;margin-bottom:24px;">Fill in your preferences so we can find your best matches.</p>
+                            <a href="find-roommate-profile.html" class="btn btn-primary">Create Profile</a>
                         </div>
 
-                        <!-- Card 4 - LOCKED/BLURRED (Premium Upsell) -->
-                        <div class="roommate-card locked" data-id="4">
-                            <div class="locked-overlay">
-                                <div class="locked-content">
-                                    <i class="fas fa-lock"></i>
-                                    <h4>Premium Match</h4>
-                                    <p>94% compatibility with your profile</p>
-                                    <button class="btn btn-gold" id="unlockPremiumMatch">
-                                        <i class="fas fa-crown"></i> Unlock Now
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="card-badges">
-                                <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium Only</span>
-                            </div>
-                            <div class="card-image blurred">
-                                <div class="avatar-placeholder female">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="match-badge high">94% MATCH</span>
-                            </div>
-                            <div class="card-body blurred">
-                                <h3>???</h3>
-                                <div class="card-info">
-                                    <p><i class="fas fa-map-marker-alt"></i> Tangier</p>
-                                    <p><i class="fas fa-university"></i> EMSI</p>
-                                    <p><i class="fas fa-wallet"></i> 2200 MAD</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 5 - Sara -->
-                        <div class="roommate-card" data-id="5">
-                            <div class="card-badges">
-                                <span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>
-                            </div>
-                            <div class="card-image">
-                                <div class="avatar-placeholder female">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="match-badge high">90% MATCH</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-name-row">
-                                    <h3>Sara</h3>
-                                    <span class="verified-badge"><i class="fas fa-badge-check"></i></span>
-                                </div>
-                                <div class="card-info">
-                                    <p><i class="fas fa-map-marker-alt"></i> Rabat</p>
-                                    <p><i class="fas fa-university"></i> UIR</p>
-                                    <p><i class="fas fa-wallet"></i> 3000 MAD</p>
-                                </div>
-                                <div class="card-tags">
-                                    <span class="tag"><i class="fas fa-dumbbell"></i> Fitness</span>
-                                    <span class="tag"><i class="fas fa-leaf"></i> Vegan</span>
-                                </div>
-                                <div class="scarcity-proof">
-                                    <i class="fas fa-eye"></i> <span>5 people viewed today</span>
-                                </div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn btn-blue btn-sm" data-action="view" data-id="5" onclick="goToChat(5)">View Profile</button>
-                                <button class="btn btn-primary btn-sm btn-glow" data-action="message" data-id="5" onclick="goToChat(5)">
-                                    <i class="fas fa-paper-plane"></i> Message Now
-                                </button>
-                            </div>
-                            <div class="social-validation">
-                                <i class="fas fa-bolt"></i> Students who message within 24h are <strong>3x more likely</strong> to match
-                            </div>
-                        </div>
-
-                        <!-- Card 6 - Youssef -->
-                        <div class="roommate-card" data-id="6">
-                            <div class="card-image">
-                                <div class="avatar-placeholder">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <span class="match-badge medium">75% MATCH</span>
-                            </div>
-                            <div class="card-body">
-                                <h3>Youssef</h3>
-                                <div class="card-info">
-                                    <p><i class="fas fa-map-marker-alt"></i> Casablanca</p>
-                                    <p><i class="fas fa-university"></i> UM6P</p>
-                                    <p><i class="fas fa-wallet"></i> 3500 MAD</p>
-                                </div>
-                                <div class="card-tags">
-                                    <span class="tag"><i class="fas fa-code"></i> Tech</span>
-                                    <span class="tag"><i class="fas fa-coffee"></i> Coffee Lover</span>
-                                </div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="btn btn-blue btn-sm" data-action="view" data-id="6" onclick="goToChat(6)">View Profile</button>
-                                <button class="btn btn-primary btn-sm" data-action="message" data-id="6" onclick="goToChat(6)">
-                                    <i class="fas fa-paper-plane"></i> Message Now
-                                </button>
-                            </div>
+                        <!-- Empty state (hidden by default) -->
+                        <div id="emptyState" style="display:none;grid-column:1/-1;text-align:center;padding:60px 20px;">
+                            <i class="fas fa-users" style="font-size:3rem;color:#d1d5db;margin-bottom:16px;display:block;"></i>
+                            <h3 style="margin-bottom:8px;color:#1f2937;">No roommates yet</h3>
+                            <p style="color:#6b7280;">Be the first! Share the platform with your classmates.</p>
                         </div>
 
                     </div>

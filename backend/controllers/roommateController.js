@@ -1,409 +1,215 @@
-// Roommate Controller - Mock Implementation
-// Replace these functions with real database operations
-
-// Mock database storage (replace with MongoDB, Firebase, Prisma, etc.)
-let mockProfiles = [];
-let mockMessages = [];
-let mockMatches = [];
-let mockMeetings = [];
-let currentUserId = null;
-
-// Initialize with dummy data
-const initializeDummyData = () => {
-  if (mockProfiles.length > 0) return;
-  
-  mockProfiles = [
-    {
-      id: '1',
-      userId: 'user1',
-      name: 'Amina Benali',
-      age: 21,
-      university: 'Université Mohammed V',
-      location: 'Rabat',
-      cleanlinessLevel: 4,
-      sleepSchedule: 'Early Bird (10 PM - 6 AM)',
-      studyHabits: 'Quiet study preferred',
-      socialLevel: 'Moderate',
-      personality: 'Introvert',
-      interests: ['Reading', 'Yoga', 'Photography'],
-      smokingPreference: 'No smoking',
-      petsTolerance: 'Love pets',
-      budgetMin: 2000,
-      budgetMax: 3000,
-      bio: 'Looking for a clean and quiet roommate who values personal space.',
-      profilePhoto: 'https://i.pravatar.cc/150?img=1',
-      isConfirmed: false,
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: '2',
-      userId: 'user2',
-      name: 'Youssef Alaoui',
-      age: 22,
-      university: 'Université Hassan II',
-      location: 'Casablanca',
-      cleanlinessLevel: 5,
-      sleepSchedule: 'Night Owl (1 AM - 9 AM)',
-      studyHabits: 'Study with music',
-      socialLevel: 'Very Social',
-      personality: 'Extrovert',
-      interests: ['Gaming', 'Music', 'Sports'],
-      smokingPreference: 'Occasionally',
-      petsTolerance: 'Neutral',
-      budgetMin: 2500,
-      budgetMax: 4000,
-      bio: 'Easy-going and social person. Looking for someone fun!',
-      profilePhoto: 'https://i.pravatar.cc/150?img=2',
-      isConfirmed: false,
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: '3',
-      userId: 'user3',
-      name: 'Fatima Zohra',
-      age: 20,
-      university: 'Université Cadi Ayyad',
-      location: 'Marrakech',
-      cleanlinessLevel: 5,
-      sleepSchedule: 'Regular (11 PM - 7 AM)',
-      studyHabits: 'Study groups',
-      socialLevel: 'Social',
-      personality: 'Ambivert',
-      interests: ['Cooking', 'Art', 'Travel'],
-      smokingPreference: 'No smoking',
-      petsTolerance: 'Love pets',
-      budgetMin: 1800,
-      budgetMax: 2800,
-      bio: 'Love cooking and trying new recipes.',
-      profilePhoto: 'https://i.pravatar.cc/150?img=3',
-      isConfirmed: false,
-      createdAt: new Date().toISOString()
-    }
-  ];
-};
-
-initializeDummyData();
+const RoommateProfile = require('../models/RoommateProfile');
+const RoommateMessage = require('../models/RoommateMessage');
+const RoommateMatch = require('../models/RoommateMatch');
+const { calculateMatchScore, sortByMatchScore } = require('../utils/matchScore');
 
 const RoommateController = {
-  // Create or update profile
+
+  // POST /api/roommate/profiles — create or update my profile
   createProfile: async (req, res) => {
     try {
-      const profileData = req.body;
-      
-      // In real app: validate with schema, save to DB
-      const profile = {
-        id: profileData.id || `profile_${Date.now()}`,
-        userId: profileData.userId || `user_${Date.now()}`,
-        ...profileData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        isConfirmed: false
-      };
-      
-      const existingIndex = mockProfiles.findIndex(p => p.userId === profile.userId);
-      if (existingIndex >= 0) {
-        mockProfiles[existingIndex] = { ...mockProfiles[existingIndex], ...profile, updatedAt: new Date().toISOString() };
-        res.json(mockProfiles[existingIndex]);
-      } else {
-        mockProfiles.push(profile);
-        res.json(profile);
+      const userId = req.user._id;
+      const data = { ...req.body, userId, updatedAt: new Date() };
+
+      let profile = await RoommateProfile.findOne({ userId });
+      if (profile) {
+        Object.assign(profile, data);
+        await profile.save();
+        return res.json({ success: true, data: profile });
       }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+
+      profile = await RoommateProfile.create(data);
+      res.status(201).json({ success: true, data: profile });
+    } catch (err) {
+      res.status(400).json({ success: false, message: err.message });
     }
   },
 
-  // Get current user's profile
+  // GET /api/roommate/profiles/me
   getMyProfile: async (req, res) => {
     try {
-      // In real app: get userId from auth token
-      const userId = req.query.userId || currentUserId || 'user1';
-      const profile = mockProfiles.find(p => p.userId === userId);
-      
-      if (!profile) {
-        return res.status(404).json({ error: 'Profile not found' });
-      }
-      
-      res.json(profile);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const profile = await RoommateProfile.findOne({ userId: req.user._id });
+      if (!profile) return res.status(404).json({ success: false, message: 'Profile not found' });
+      res.json({ success: true, data: profile });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Update profile
+  // PUT /api/roommate/profiles/me
   updateProfile: async (req, res) => {
     try {
-      const userId = req.query.userId || currentUserId || 'user1';
-      const updates = req.body;
-      
-      const index = mockProfiles.findIndex(p => p.userId === userId);
-      if (index === -1) {
-        return res.status(404).json({ error: 'Profile not found' });
-      }
-      
-      mockProfiles[index] = {
-        ...mockProfiles[index],
-        ...updates,
-        updatedAt: new Date().toISOString()
-      };
-      
-      res.json(mockProfiles[index]);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const profile = await RoommateProfile.findOneAndUpdate(
+        { userId: req.user._id },
+        { ...req.body, updatedAt: new Date() },
+        { new: true, runValidators: true }
+      );
+      if (!profile) return res.status(404).json({ success: false, message: 'Profile not found' });
+      res.json({ success: true, data: profile });
+    } catch (err) {
+      res.status(400).json({ success: false, message: err.message });
     }
   },
 
-  // Get all profiles (excluding current user and confirmed ones)
+  // GET /api/roommate/profiles — all profiles except mine and confirmed matches
   getAllProfiles: async (req, res) => {
     try {
-      const userId = req.query.userId || currentUserId || 'user1';
-      const currentProfile = mockProfiles.find(p => p.userId === userId);
-      
-      if (!currentProfile) {
-        return res.json([]);
-      }
-      
-      // Get confirmed user IDs
-      const confirmedIds = mockMatches
-        .filter(m => (m.user1Id === userId || m.user2Id === userId) && m.status === 'confirmed')
-        .map(m => m.user1Id === userId ? m.user2Id : m.user1Id);
-      
-      const availableProfiles = mockProfiles.filter(
-        p => p.userId !== userId && !p.isConfirmed && !confirmedIds.includes(p.userId)
+      const userId = req.user._id;
+
+      const confirmed = await RoommateMatch.find({
+        $or: [{ user1Id: userId }, { user2Id: userId }],
+        status: 'confirmed'
+      });
+      const confirmedIds = confirmed.map(m =>
+        m.user1Id.toString() === userId.toString() ? m.user2Id : m.user1Id
       );
-      
-      res.json(availableProfiles);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+
+      const profiles = await RoommateProfile.find({
+        userId: { $ne: userId, $nin: confirmedIds },
+        isActive: true
+      }).lean();
+
+      res.json({ success: true, data: profiles });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Get profile by ID
+  // GET /api/roommate/profiles/:id
   getProfileById: async (req, res) => {
     try {
-      const { id } = req.params;
-      const profile = mockProfiles.find(p => p.id === id || p.userId === id);
-      
-      if (!profile) {
-        return res.status(404).json({ error: 'Profile not found' });
-      }
-      
-      res.json(profile);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      let profile = await RoommateProfile.findById(req.params.id).catch(() => null);
+      if (!profile) profile = await RoommateProfile.findOne({ userId: req.params.id });
+      if (!profile) return res.status(404).json({ success: false, message: 'Profile not found' });
+      res.json({ success: true, data: profile });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Get matches with compatibility scores (requires matching algorithm)
+  // GET /api/roommate/matches — profiles sorted by compatibility score
   getMatches: async (req, res) => {
     try {
-      const userId = req.query.userId || currentUserId || 'user1';
-      const currentProfile = mockProfiles.find(p => p.userId === userId);
-      
-      if (!currentProfile) {
-        return res.json([]);
-      }
-      
-      // Import matching algorithm
-      const { calculateMatchScore, sortByMatchScore } = require('../utils/matchScore');
-      
-      // Get available profiles
-      const allProfiles = await RoommateController.getAllProfiles(req, res);
-      const availableProfiles = JSON.parse(JSON.stringify(allProfiles));
-      
-      // Calculate scores and sort
-      const matches = sortByMatchScore(currentProfile, availableProfiles);
-      
-      res.json(matches);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const userId = req.user._id;
+      const myProfile = await RoommateProfile.findOne({ userId }).lean();
+      if (!myProfile) return res.json({ success: true, data: [] });
+
+      const confirmed = await RoommateMatch.find({
+        $or: [{ user1Id: userId }, { user2Id: userId }],
+        status: 'confirmed'
+      });
+      const confirmedIds = confirmed.map(m =>
+        m.user1Id.toString() === userId.toString() ? m.user2Id : m.user1Id
+      );
+
+      const others = await RoommateProfile.find({
+        userId: { $ne: userId, $nin: confirmedIds },
+        isActive: true
+      }).lean();
+
+      const sorted = sortByMatchScore(myProfile, others);
+      res.json({ success: true, data: sorted });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Get compatibility score between two profiles
+  // GET /api/roommate/matches/compatibility/:id
   getCompatibilityScore: async (req, res) => {
     try {
-      const { id } = req.params;
-      const userId = req.query.userId || currentUserId || 'user1';
-      
-      const currentProfile = mockProfiles.find(p => p.userId === userId);
-      const otherProfile = mockProfiles.find(p => p.id === id || p.userId === id);
-      
-      if (!currentProfile || !otherProfile) {
-        return res.status(404).json({ error: 'Profile not found' });
-      }
-      
-      const { calculateMatchScore } = require('../utils/matchScore');
-      const score = calculateMatchScore(currentProfile, otherProfile);
-      
-      res.json(score);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const myProfile = await RoommateProfile.findOne({ userId: req.user._id }).lean();
+      let other = await RoommateProfile.findById(req.params.id).lean().catch(() => null);
+      if (!other) other = await RoommateProfile.findOne({ userId: req.params.id }).lean();
+      if (!myProfile || !other) return res.status(404).json({ success: false, message: 'Profile not found' });
+      const score = calculateMatchScore(myProfile, other);
+      res.json({ success: true, data: score });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Send message
+  // POST /api/roommate/messages
   sendMessage: async (req, res) => {
     try {
-      const { senderId, receiverId, text } = req.body;
-      
-      const message = {
-        id: `msg_${Date.now()}`,
-        senderId,
+      const { receiverId, text } = req.body;
+      const msg = await RoommateMessage.create({
+        senderId: req.user._id,
         receiverId,
-        text,
-        read: false,
-        createdAt: new Date().toISOString()
-      };
-      
-      mockMessages.push(message);
-      
-      // In real app: emit WebSocket event for real-time
-      // io.to(receiverId).emit('newMessage', message);
-      
-      res.json(message);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+        text
+      });
+      res.status(201).json({ success: true, data: msg });
+    } catch (err) {
+      res.status(400).json({ success: false, message: err.message });
     }
   },
 
-  // Get messages between two users
+  // GET /api/roommate/messages/:partnerId
   getMessages: async (req, res) => {
     try {
+      const userId = req.user._id;
       const { partnerId } = req.params;
-      const userId = req.query.userId || currentUserId || 'user1';
-      
-      const messages = mockMessages.filter(
-        m => (m.senderId === userId && m.receiverId === partnerId) ||
-             (m.senderId === partnerId && m.receiverId === userId)
-      ).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      
-      res.json(messages);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const messages = await RoommateMessage.find({
+        $or: [
+          { senderId: userId, receiverId: partnerId },
+          { senderId: partnerId, receiverId: userId }
+        ]
+      }).sort({ createdAt: 1 });
+      res.json({ success: true, data: messages });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Mark message as read
+  // PUT /api/roommate/messages/:id/read
   markMessageRead: async (req, res) => {
     try {
-      const { id } = req.params;
-      const message = mockMessages.find(m => m.id === id);
-      
-      if (message) {
-        message.read = true;
-        res.json(message);
-      } else {
-        res.status(404).json({ error: 'Message not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const msg = await RoommateMessage.findByIdAndUpdate(
+        req.params.id, { read: true }, { new: true }
+      );
+      if (!msg) return res.status(404).json({ success: false, message: 'Message not found' });
+      res.json({ success: true, data: msg });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Confirm match
+  // POST /api/roommate/matches/confirm
   confirmMatch: async (req, res) => {
     try {
-      const { user1Id, user2Id, confirmedBy } = req.body;
-      
-      const match = {
-        id: `match_${Date.now()}`,
-        user1Id,
-        user2Id,
-        confirmedBy,
-        status: 'confirmed',
-        confirmedAt: new Date().toISOString()
-      };
-      
-      mockMatches.push(match);
-      
-      // Update profiles
-      const profile1 = mockProfiles.find(p => p.userId === user1Id);
-      const profile2 = mockProfiles.find(p => p.userId === user2Id);
-      
-      if (profile1) profile1.isConfirmed = true;
-      if (profile2) profile2.isConfirmed = true;
-      
-      res.json(match);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const user1Id = req.user._id;
+      const { user2Id } = req.body;
+      const match = await RoommateMatch.findOneAndUpdate(
+        { $or: [{ user1Id, user2Id }, { user1Id: user2Id, user2Id: user1Id }] },
+        { user1Id, user2Id, confirmedBy: user1Id, status: 'confirmed', confirmedAt: new Date() },
+        { upsert: true, new: true }
+      );
+      res.json({ success: true, data: match });
+    } catch (err) {
+      res.status(400).json({ success: false, message: err.message });
     }
   },
 
-  // Get confirmed matches
+  // GET /api/roommate/matches/confirmed
   getConfirmedMatches: async (req, res) => {
     try {
-      const userId = req.query.userId || currentUserId || 'user1';
-      
-      const matches = mockMatches.filter(
-        m => (m.user1Id === userId || m.user2Id === userId) && m.status === 'confirmed'
-      );
-      
-      res.json(matches);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      const userId = req.user._id;
+      const matches = await RoommateMatch.find({
+        $or: [{ user1Id: userId }, { user2Id: userId }],
+        status: 'confirmed'
+      });
+      res.json({ success: true, data: matches });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
     }
   },
 
-  // Schedule meeting
   scheduleMeeting: async (req, res) => {
-    try {
-      const meetingData = req.body;
-      
-      const meeting = {
-        id: `meeting_${Date.now()}`,
-        ...meetingData,
-        status: 'scheduled',
-        createdAt: new Date().toISOString()
-      };
-      
-      mockMeetings.push(meeting);
-      res.json(meeting);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+    res.json({ success: true, data: { ...req.body, scheduledBy: req.user._id, createdAt: new Date() } });
   },
 
-  // Get my meetings
   getMyMeetings: async (req, res) => {
-    try {
-      const userId = req.query.userId || currentUserId || 'user1';
-      
-      const meetings = mockMeetings.filter(
-        m => m.scheduledBy === userId || m.matchId.includes(userId)
-      );
-      
-      res.json(meetings);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+    res.json({ success: true, data: [] });
   }
 };
 
 module.exports = RoommateController;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

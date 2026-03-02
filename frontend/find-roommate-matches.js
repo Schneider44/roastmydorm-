@@ -20,38 +20,123 @@ function goToChat(id) {
 }
 
 
-// Fetch and render real roommate profiles
+// ── API base URL (works for local and production) ──
+const ROOMMATE_API = ['localhost', '127.0.0.1', ''].includes(window.location.hostname)
+    ? 'http://localhost:5000/api'
+    : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+// ── Load real profiles on page load ──
 window.addEventListener('DOMContentLoaded', async function() {
-    const jwt = localStorage.getItem('jwt');
-    if (!jwt) return;
-    const res = await fetch('/api/roommate', { headers: { Authorization: 'Bearer ' + jwt } });
-    const data = await res.json();
-    if (data.success && Array.isArray(data.profiles)) {
-        renderProfiles(data.profiles);
+    const token = localStorage.getItem('rmd_token');
+    const grid = document.getElementById('roommatesGrid');
+    const loadingState = document.getElementById('loadingState');
+    const notLoggedIn = document.getElementById('notLoggedInState');
+    const noProfile = document.getElementById('noProfileState');
+    const emptyState = document.getElementById('emptyState');
+
+    function hideAll() {
+        [loadingState, notLoggedIn, noProfile, emptyState].forEach(el => { if (el) el.style.display = 'none'; });
+    }
+
+    if (!token) {
+        hideAll();
+        if (notLoggedIn) notLoggedIn.style.display = 'block';
+        return;
+    }
+
+    try {
+        // First check if user has a roommate profile
+        const profileRes = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
+            headers: { Authorization: 'Bearer ' + token }
+        });
+
+        if (profileRes.status === 404) {
+            hideAll();
+            if (noProfile) noProfile.style.display = 'block';
+            return;
+        }
+
+        // Then get all profiles sorted by match score
+        const res = await fetch(`${ROOMMATE_API}/roommate/profiles`, {
+            headers: { Authorization: 'Bearer ' + token }
+        });
+        const data = await res.json();
+
+        hideAll();
+
+        if (!data.success || !Array.isArray(data.data) || data.data.length === 0) {
+            if (emptyState) emptyState.style.display = 'block';
+            return;
+        }
+
+        renderProfiles(data.data);
+    } catch (err) {
+        hideAll();
+        if (grid) grid.insertAdjacentHTML('beforeend',
+            '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#ef4444;">Could not connect to server. Please try again.</div>'
+        );
     }
 });
 
+function matchBadgeClass(score) {
+    if (score >= 80) return 'high';
+    if (score >= 60) return 'medium';
+    return 'low';
+}
+
 function renderProfiles(profiles) {
-    const container = document.getElementById('matchesContainer') || document.querySelector('.matches-list') || document.querySelector('.main-content');
-    if (!container) return;
-    container.innerHTML = '';
+    const grid = document.getElementById('roommatesGrid');
+    if (!grid) return;
+
+    // Remove loading/state placeholders, keep only dynamic cards
+    grid.querySelectorAll('[id$="State"]').forEach(el => el.remove());
+
     profiles.forEach(profile => {
+        const id = profile._id || profile.userId;
+        const score = profile.matchScore || null;
+        const scoreHtml = score !== null
+            ? `<span class="match-badge ${matchBadgeClass(score)}">${score}% MATCH</span>`
+            : '';
+        const verifiedHtml = profile.isVerified
+            ? `<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`
+            : '';
+        const interestTags = (profile.interests || []).slice(0, 2)
+            .map(i => `<span class="tag">${i}</span>`).join('');
+
         const card = document.createElement('div');
         card.className = 'roommate-card';
+        card.dataset.id = id;
         card.innerHTML = `
-            <div class="avatar-section">
-                <img src="${profile.avatarUrl || 'default-avatar.png'}" class="profile-avatar" alt="${profile.name || 'User'}">
-                ${profile.isVerified ? '<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>' : ''}
+            <div class="card-badges">${verifiedHtml}</div>
+            <div class="card-image">
+                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}">
+                    ${profile.avatarUrl
+                        ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+                        : `<i class="fas fa-user"></i>`}
+                </div>
+                ${scoreHtml}
             </div>
-            <div class="profile-info">
-                <h3>${profile.name || 'User'}</h3>
-                <p>${profile.university || ''}</p>
-                <p>${profile.location || ''}</p>
-                <button class="btn btn-blue btn-sm" onclick="goToChat('${profile.userId}')">Message</button>
-                <button class="btn btn-secondary btn-sm" onclick="openReportModal('${profile.userId}')">Report</button>
+            <div class="card-body">
+                <div class="card-name-row">
+                    <h3>${profile.name || 'Student'}</h3>
+                    ${profile.age ? `<span style="font-size:0.85rem;color:#6b7280;">${profile.age} yrs</span>` : ''}
+                </div>
+                <div class="card-info">
+                    <p><i class="fas fa-map-marker-alt"></i> ${profile.location || '—'}</p>
+                    <p><i class="fas fa-university"></i> ${profile.university || '—'}</p>
+                    <p><i class="fas fa-wallet"></i> ${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</p>
+                </div>
+                ${interestTags ? `<div class="card-tags">${interestTags}</div>` : ''}
+                ${profile.bio ? `<p style="font-size:0.82rem;color:#6b7280;margin-top:8px;line-height:1.4;">${profile.bio.slice(0,80)}${profile.bio.length > 80 ? '…' : ''}</p>` : ''}
+            </div>
+            <div class="card-actions">
+                <button class="btn btn-blue btn-sm" onclick="goToChat('${id}')">View Profile</button>
+                <button class="btn btn-primary btn-sm btn-glow" onclick="goToChat('${id}')">
+                    <i class="fas fa-paper-plane"></i> Message
+                </button>
             </div>
         `;
-        container.appendChild(card);
+        grid.appendChild(card);
     });
 }
 
