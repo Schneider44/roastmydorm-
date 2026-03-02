@@ -809,6 +809,153 @@
                 padding: 24px 20px;
             }
         }
+
+        /* ── Real Auth Form ── */
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 14px;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .auth-tab.active {
+            color: #3b82f6;
+            border-bottom: 3px solid #3b82f6;
+            margin-bottom: -2px;
+        }
+        .auth-body {
+            padding: 24px 32px 32px;
+        }
+        .auth-form-group {
+            margin-bottom: 16px;
+        }
+        .auth-form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+        .auth-btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .auth-btn-primary:hover { background: #2563eb; }
+        .auth-btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+        .auth-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .auth-link a {
+            color: #3b82f6;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .auth-link a:hover { text-decoration: underline; }
+        .auth-message {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .auth-message.error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            display: block;
+        }
+        .auth-message.success {
+            background: #d1fae5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+            display: block;
+        }
+        .code-sent-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+            color: #1e40af;
+        }
+        .resend-link {
+            background: none;
+            border: none;
+            color: #3b82f6;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0;
+            margin-top: 4px;
+        }
+        .resend-link:hover { text-decoration: underline; }
+        /* User nav state */
+        .user-nav {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-nav.visible { display: flex; }
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .logout-btn {
+            background: none;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 0.875rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { background: #f3f4f6; color: #374151; }
+        @media (max-width: 768px) {
+            .auth-body { padding: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -827,7 +974,11 @@
                     <i class="fas fa-question-circle"></i>
                     How It Works
                 </a>
-                <button class="nav-btn" onclick="showSignInModal()">Sign In</button>
+                <button class="nav-btn" id="signInNavBtn" onclick="showSignInModal()">Sign In</button>
+                <div class="user-nav" id="userNav">
+                    <span class="user-name" id="userNavName"></span>
+                    <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                </div>
             </div>
             <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
                 <span></span>
@@ -1040,124 +1191,70 @@
     <div id="signInModal" class="signin-modal">
         <div class="signin-content">
             <div class="signin-header">
-                <h2>Sign In to RoastMyDorm</h2>
-                <p>Choose your verification method to start rating and renting</p>
+                <h2>Welcome to RoastMyDorm</h2>
+                <p>Sign in or create a free account</p>
                 <button class="close-modal" onclick="closeSignInModal()">&times;</button>
             </div>
-            
-            <div class="signin-options">
-                <!-- Gmail Sign In Option -->
-                <div class="signin-option gmail-option" id="gmailOption">
-                    <div class="option-icon">
-                        <i class="fab fa-google"></i>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="auth-tab" id="registerTab" onclick="switchAuthTab('register')">Create Account</button>
+            </div>
+
+            <div class="auth-body">
+                <!-- Error / Success message -->
+                <div class="auth-message" id="authMessage"></div>
+
+                <!-- LOGIN FORM -->
+                <div id="loginForm">
+                    <div class="auth-form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" class="auth-input" id="loginEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter') loginUser()">
                     </div>
-                    <h3>Sign in with Gmail</h3>
-                    <p>We'll send a verification link to your email</p>
-                    
-                    <!-- Email Input Form (Initially Hidden) -->
-                    <div class="email-form" id="gmailEmailForm" style="display: none;">
-                        <div class="form-group">
-                            <input type="email" id="gmailEmailInput" placeholder="Enter your Gmail address" required>
-                            <button class="send-verification-btn" onclick="sendVerificationEmail()">
-                                <i class="fas fa-paper-plane"></i>
-                                Send Verification
-                            </button>
-                        </div>
+                    <div class="auth-form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" class="auth-input" id="loginPassword" placeholder="Your password" onkeydown="if(event.key==='Enter') loginUser()">
                     </div>
-                    
-                    <!-- Verification Status -->
-                    <div class="verification-status" id="verificationStatus" style="display: none;">
-                        <div class="status-message">
-                            <i class="fas fa-envelope"></i>
-                            <span>Verification email sent! Check your inbox.</span>
-                        </div>
-                        <div class="verification-actions">
-                            <button class="resend-btn" onclick="resendVerification()">
-                                <i class="fas fa-redo"></i>
-                                Resend Email
-                            </button>
-                            <button class="demo-btn" onclick="demoEmailVerification()">
-                                <i class="fas fa-check"></i>
-                                Demo: Verify Email
-                            </button>
-                        </div>
+                    <button class="auth-btn-primary" id="loginBtn" onclick="loginUser()">Sign In</button>
+                    <p class="auth-link">Don't have an account? <a onclick="switchAuthTab('register')">Create one free</a></p>
+                </div>
+
+                <!-- REGISTER — Step 1: Enter email -->
+                <div id="registerStep1" style="display:none;">
+                    <div class="auth-form-group">
+                        <label for="registerEmail">Email Address</label>
+                        <input type="email" class="auth-input" id="registerEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter') sendVerificationCode()">
                     </div>
-                    
-                    <!-- Initial Button -->
-                    <button class="signin-btn gmail-btn" id="gmailSignIn" onclick="showGmailForm()">
-                        <i class="fab fa-google"></i>
-                        Continue with Gmail
+                    <button class="auth-btn-primary" id="sendCodeBtn" onclick="sendVerificationCode()">
+                        <i class="fas fa-paper-plane"></i> Send Verification Code
                     </button>
+                    <p class="auth-link">Already have an account? <a onclick="switchAuthTab('login')">Sign in</a></p>
                 </div>
-                
-                <!-- Student ID Scan Option -->
-                <div class="signin-option id-option">
-                    <div class="option-icon">
-                        <i class="fas fa-id-card"></i>
+
+                <!-- REGISTER — Step 2: Enter code + details -->
+                <div id="registerStep2" style="display:none;">
+                    <div class="code-sent-info">
+                        <i class="fas fa-envelope"></i>
+                        Code sent to <strong id="codeSentEmail"></strong><br>
+                        <button class="resend-link" onclick="resendVerificationCode()">Didn't get it? Resend</button>
                     </div>
-                    <h3>Verify with Student ID</h3>
-                    <p>Scan your student ID for instant verification</p>
-                    <button class="signin-btn id-btn" id="idScanBtn" onclick="signInWithIDScan()">
-                        <i class="fas fa-camera"></i>
-                        Scan Student ID
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Gmail Email Input Step -->
-            <div class="verification-step" id="gmailEmailInput" style="display: none;">
-                <div class="verification-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <h3>Enter Your Gmail Address</h3>
-                <p>We'll send a verification link to your Gmail account</p>
-                <div class="email-input-container">
-                    <input type="email" id="gmailEmail" placeholder="Enter your Gmail address" required>
-                    <button class="btn-primary" id="sendVerificationEmail">Send Verification Email</button>
-                </div>
-            </div>
-            
-            <!-- Gmail Verification Step -->
-            <div class="verification-step" id="gmailVerification" style="display: none;">
-                <div class="verification-icon">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <h3>Check Your Email</h3>
-                <p>We've sent a verification link to <strong id="userEmail"></strong>. Please check your inbox and click the link to verify your account.</p>
-                <div class="verification-actions">
-                    <button class="btn-secondary" id="resendEmail">Resend Email</button>
-                    <button class="btn-primary" id="checkVerification">I've Verified</button>
-                </div>
-            </div>
-            
-            <!-- ID Scan Step -->
-            <div class="verification-step" id="idScanStep" style="display: none;">
-                <div class="scan-area">
-                    <div class="scan-box" id="scanBox">
-                        <i class="fas fa-camera"></i>
-                        <p>Position your student ID within the frame</p>
-                        <input type="file" id="idFileInput" accept="image/*" capture="environment" style="display: none;">
+                    <div class="auth-form-group">
+                        <label for="verifyCode">Verification Code (6 digits)</label>
+                        <input type="text" class="auth-input" id="verifyCode" placeholder="123456" maxlength="6"
+                               style="letter-spacing:6px;font-size:1.3rem;text-align:center;"
+                               onkeydown="if(event.key==='Enter') verifyAndRegister()">
                     </div>
-                    <div class="scan-preview" id="scanPreview" style="display: none;">
-                        <img id="previewImage" alt="Student ID Preview">
-                        <div class="scan-actions">
-                            <button class="btn-secondary" id="retakePhoto">Retake</button>
-                            <button class="btn-primary" id="verifyId">Verify ID</button>
-                        </div>
+                    <div class="auth-form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" class="auth-input" id="registerName" placeholder="Your full name">
                     </div>
-                </div>
-            </div>
-            
-            <!-- Verification Success -->
-            <div class="verification-success" id="verificationSuccess" style="display: none;">
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h3>Verification Successful!</h3>
-                <p>Welcome to RoastMyDorm! You can now rate dorms, write reviews, and rent student housing.</p>
-                <div class="success-actions">
-                    <button class="btn-primary" id="startRating">Start Rating Dorms</button>
-                    <button class="btn-secondary" id="browseHousing">Browse Housing</button>
+                    <div class="auth-form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" class="auth-input" id="registerPassword" placeholder="At least 8 characters" onkeydown="if(event.key==='Enter') verifyAndRegister()">
+                    </div>
+                    <button class="auth-btn-primary" id="verifyBtn" onclick="verifyAndRegister()">Create Account</button>
+                    <p class="auth-link"><a onclick="backToRegisterStep1()">← Use a different email</a></p>
                 </div>
             </div>
         </div>
@@ -2470,17 +2567,45 @@
             }, 10);
         }
 
-        // Sign In Modal Functions
+        // ── API Base URL ──
+        const AUTH_API = ['localhost', '127.0.0.1', ''].includes(window.location.hostname)
+            ? 'http://localhost:5000/api'
+            : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+        // ── Auth state helpers ──
+        function getStoredUser() {
+            try { return JSON.parse(localStorage.getItem('rmd_user')); } catch { return null; }
+        }
+
+        function updateNavAuthState() {
+            const user = getStoredUser();
+            const signInBtn = document.getElementById('signInNavBtn');
+            const userNav = document.getElementById('userNav');
+            const userNavName = document.getElementById('userNavName');
+            if (user && localStorage.getItem('rmd_token')) {
+                if (signInBtn) signInBtn.style.display = 'none';
+                if (userNav) userNav.classList.add('visible');
+                if (userNavName) userNavName.textContent = 'Hi, ' + (user.name || user.email.split('@')[0]);
+            } else {
+                if (signInBtn) signInBtn.style.display = '';
+                if (userNav) userNav.classList.remove('visible');
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('rmd_token');
+            localStorage.removeItem('rmd_refresh');
+            localStorage.removeItem('rmd_user');
+            updateNavAuthState();
+        }
+
+        // ── Modal open / close ──
         function showSignInModal() {
             const modal = document.getElementById('signInModal');
             if (modal) {
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
-                
-                // Add animation
-                setTimeout(() => {
-                    modal.classList.add('show');
-                }, 10);
+                setTimeout(() => modal.classList.add('show'), 10);
             }
         }
 
@@ -2492,152 +2617,141 @@
                     modal.style.display = 'none';
                     document.body.style.overflow = 'auto';
                 }, 300);
+                clearAuthMessage();
             }
         }
 
-        // Gmail Sign In Flow
-        let currentEmail = '';
-        let verificationSent = false;
-        let verificationTimer = null;
-
-        function showGmailForm() {
-            const emailForm = document.getElementById('gmailEmailForm');
-            const signInBtn = document.getElementById('gmailSignIn');
-            
-            signInBtn.style.display = 'none';
-            emailForm.style.display = 'block';
-            
-            // Focus on email input
-            setTimeout(() => {
-                document.getElementById('gmailEmailInput').focus();
-            }, 100);
+        // ── Tab switching ──
+        function switchAuthTab(tab) {
+            clearAuthMessage();
+            document.getElementById('loginTab').classList.toggle('active', tab === 'login');
+            document.getElementById('registerTab').classList.toggle('active', tab === 'register');
+            document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('registerStep1').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('registerStep2').style.display = 'none';
         }
 
-        function sendVerificationEmail() {
-            const emailInput = document.getElementById('gmailEmailInput');
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                alert('Please enter your Gmail address');
-                return;
-            }
-            
-            if (!isValidGmail(email)) {
-                alert('Please enter a valid Gmail address');
-                return;
-            }
-            
-            currentEmail = email;
-            
-            // Hide email form and show verification status
-            document.getElementById('gmailEmailForm').style.display = 'none';
-            document.getElementById('verificationStatus').style.display = 'block';
-            
-            // Simulate sending verification email
-            setTimeout(() => {
-                showVerificationSent();
-                startVerificationTimer();
-            }, 1000);
+        // ── Message helpers ──
+        function showAuthMessage(msg, type) {
+            const el = document.getElementById('authMessage');
+            el.textContent = msg;
+            el.className = 'auth-message ' + type;
+        }
+        function clearAuthMessage() {
+            const el = document.getElementById('authMessage');
+            if (el) { el.className = 'auth-message'; el.textContent = ''; }
         }
 
-        function isValidGmail(email) {
-            const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-            return gmailRegex.test(email);
-        }
-
-        function showVerificationSent() {
-            const statusMessage = document.querySelector('.status-message span');
-            const statusIcon = document.querySelector('.status-message i');
-            
-            statusMessage.textContent = `Verification email sent to ${currentEmail}! Check your inbox.`;
-            statusIcon.className = 'fas fa-envelope';
-            
-            verificationSent = true;
-        }
-
-        function startVerificationTimer() {
-            let timeLeft = 300; // 5 minutes
-            
-            verificationTimer = setInterval(() => {
-                timeLeft--;
-        
-                if (timeLeft <= 0) {
-                    clearInterval(verificationTimer);
-                    showVerificationReminder();
+        // ── LOGIN ──
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            if (!email || !password) { showAuthMessage('Please enter your email and password.', 'error'); return; }
+            btn.disabled = true; btn.textContent = 'Signing in…'; clearAuthMessage();
+            try {
+                const res = await fetch(`${AUTH_API}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('rmd_token', data.data.accessToken);
+                    localStorage.setItem('rmd_refresh', data.data.refreshToken);
+                    localStorage.setItem('rmd_user', JSON.stringify(data.data.user));
+                    updateNavAuthState();
+                    closeSignInModal();
+                } else {
+                    showAuthMessage(data.message || 'Invalid email or password.', 'error');
                 }
-            }, 1000);
+            } catch { showAuthMessage('Cannot connect to server. Please try again.', 'error'); }
+            finally { btn.disabled = false; btn.textContent = 'Sign In'; }
         }
 
-        function showVerificationReminder() {
-            const statusMessage = document.querySelector('.status-message span');
-            const statusIcon = document.querySelector('.status-message i');
-            
-            statusMessage.textContent = 'Verification expired. Please check your email and click the verification link.';
-            statusIcon.className = 'fas fa-exclamation-triangle';
-            
-            // Change status to pending/warning style
-            const statusDiv = document.querySelector('.status-message');
-            statusDiv.className = 'status-message verification-pending';
+        // ── REGISTER — step 1: send code ──
+        let authPendingEmail = '';
+        async function sendVerificationCode() {
+            const email = document.getElementById('registerEmail').value.trim();
+            const btn = document.getElementById('sendCodeBtn');
+            if (!email || !email.includes('@')) { showAuthMessage('Please enter a valid email address.', 'error'); return; }
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…'; clearAuthMessage();
+            try {
+                const res = await fetch(`${AUTH_API}/auth/send-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    authPendingEmail = email;
+                    document.getElementById('codeSentEmail').textContent = email;
+                    document.getElementById('registerStep1').style.display = 'none';
+                    document.getElementById('registerStep2').style.display = 'block';
+                    clearAuthMessage();
+                    setTimeout(() => document.getElementById('verifyCode').focus(), 100);
+                } else {
+                    showAuthMessage(data.message || 'Failed to send code. Please try again.', 'error');
+                }
+            } catch { showAuthMessage('Cannot connect to server. Please try again.', 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Verification Code'; }
         }
 
-        function resendVerification() {
-            const statusMessage = document.querySelector('.status-message span');
-            const statusIcon = document.querySelector('.status-message i');
-            
-            // Reset status
-            statusMessage.textContent = `Resending verification email to ${currentEmail}...`;
-            statusIcon.className = 'fas fa-paper-plane';
-            
-            // Clear previous timer
-            if (verificationTimer) {
-                clearInterval(verificationTimer);
-            }
-            
-            // Simulate resending
-            setTimeout(() => {
-                showVerificationSent();
-                startVerificationTimer();
-            }, 1500);
+        // ── REGISTER — step 2: verify code ──
+        async function verifyAndRegister() {
+            const code = document.getElementById('verifyCode').value.trim();
+            const name = document.getElementById('registerName').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const btn = document.getElementById('verifyBtn');
+            if (!code || code.length !== 6) { showAuthMessage('Enter the 6-digit code from your email.', 'error'); return; }
+            if (!name || name.length < 2) { showAuthMessage('Please enter your full name.', 'error'); return; }
+            if (!password || password.length < 8) { showAuthMessage('Password must be at least 8 characters.', 'error'); return; }
+            btn.disabled = true; btn.textContent = 'Creating account…'; clearAuthMessage();
+            try {
+                const res = await fetch(`${AUTH_API}/auth/verify-code`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: authPendingEmail, code, name, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('rmd_token', data.data.accessToken);
+                    localStorage.setItem('rmd_refresh', data.data.refreshToken);
+                    localStorage.setItem('rmd_user', JSON.stringify(data.data.user));
+                    updateNavAuthState();
+                    closeSignInModal();
+                } else {
+                    showAuthMessage(data.message || 'Invalid or expired code. Please try again.', 'error');
+                }
+            } catch { showAuthMessage('Cannot connect to server. Please try again.', 'error'); }
+            finally { btn.disabled = false; btn.textContent = 'Create Account'; }
         }
 
-        function simulateEmailVerification() {
-            // This function would be called when user clicks verification link in email
-            const statusMessage = document.querySelector('.status-message span');
-            const statusIcon = document.querySelector('.status-message i');
-            
-            statusMessage.textContent = `Email verified successfully! Welcome to RoastMyDorm, ${currentEmail}`;
-            statusIcon.className = 'fas fa-check-circle';
-            
-            // Change status to success style
-            const statusDiv = document.querySelector('.status-message');
-            statusDiv.className = 'status-message verification-success';
-            
-            // Clear timer
-            if (verificationTimer) {
-                clearInterval(verificationTimer);
-            }
-            
-            // Close modal after success
-            setTimeout(() => {
-                closeSignInModal();
-                alert(`Welcome to RoastMyDorm! You are now signed in as ${currentEmail}`);
-            }, 2000);
+        // ── Resend code ──
+        async function resendVerificationCode() {
+            clearAuthMessage();
+            try {
+                const res = await fetch(`${AUTH_API}/auth/resend-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: authPendingEmail })
+                });
+                const data = await res.json();
+                showAuthMessage(
+                    data.success ? 'New code sent! Check your inbox.' : (data.message || 'Failed to resend.'),
+                    data.success ? 'success' : 'error'
+                );
+            } catch { showAuthMessage('Cannot connect to server.', 'error'); }
         }
 
-        // Simulate verification for demo (you can call this manually for testing)
-        function demoEmailVerification() {
-            if (verificationSent) {
-                simulateEmailVerification();
-            }
+        function backToRegisterStep1() {
+            document.getElementById('registerStep2').style.display = 'none';
+            document.getElementById('registerStep1').style.display = 'block';
+            clearAuthMessage();
         }
 
-        // ID Scan Sign In
-        function signInWithIDScan() {
-            // You can integrate with camera/ID scanning here
-            alert('ID scanning would open here. This would typically open camera for ID scanning.');
-            // For now, just close the modal
-            closeSignInModal();
-        }
+        // Init nav state on page load
+        updateNavAuthState();
 
         // Mobile Menu Toggle
         function toggleMobileMenu() {
