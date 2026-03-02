@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import Navbar from './components/Navbar'
 import ChatSupport from './pages/ChatSupport'
 import DormListing from './pages/DormListing'
@@ -27,6 +28,8 @@ function App() {
         {/* Redirect old pages to React versions */}
         <Route path="/" element={<div>Loading...</div>} />
       </Routes>
+      
+      <SpeedInsights />
     </div>
   )
 }
