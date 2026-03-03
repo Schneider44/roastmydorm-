@@ -140,6 +140,9 @@ if (process.env.NODE_ENV === 'production') {
 // DATABASE CONNECTION (patched for Vercel)
 // ============================================
 
+// Fail immediately if DB not connected instead of buffering for 10s (Vercel timeout is 10s)
+mongoose.set('bufferCommands', false);
+
 // Cache the connection across invocations (important for serverless)
 let cachedConn = null;
 
