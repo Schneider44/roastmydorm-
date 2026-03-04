@@ -93,7 +93,8 @@ router.post('/login', authValidation.login, asyncHandler(async (req, res) => {
         id: user._id,
         name: `${user.firstName} ${user.lastName}`.trim(),
         email: user.email,
-        role: user.userType,
+        role: user.role,
+        userType: user.userType,
         verified: user.isVerified
       },
       accessToken,
