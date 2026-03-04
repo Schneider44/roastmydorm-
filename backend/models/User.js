@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: function() {
-      return !this.googleId; // Password required only if not using Google OAuth
+      return !this.googleId && this.isVerified; // Password required only after verification
     },
     minlength: 6
   },

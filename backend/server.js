@@ -230,6 +230,21 @@ connectDB().catch(() => {
 });
 
 // ============================================
+// DB CONNECTION MIDDLEWARE
+// ============================================
+
+// Ensure DB is connected before any API route (handles cold starts with bufferCommands=false)
+app.use('/api', async (req, res, next) => {
+  if (req.path === '/health') return next(); // skip for health check
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(503).json({ success: false, message: 'Database unavailable. Please try again in a moment.' });
+  }
+});
+
+// ============================================
 // ROUTES
 // ============================================
 
@@ -261,14 +276,19 @@ app.get('/robots.txt', (req, res) => {
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  let dbError = null;
+  if (mongoose.connection.readyState !== 1) {
+    try { await connectDB(); } catch (e) { dbError = e.message; }
+  }
   const healthcheck = {
     status: 'OK',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     uptime: process.uptime(),
     memoryUsage: process.memoryUsage(),
-    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    dbError: dbError || undefined
   };
 
   try {
