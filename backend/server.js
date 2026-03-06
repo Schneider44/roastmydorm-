@@ -162,7 +162,17 @@ if (!mongoose.connection.__hasListeners) {
 const connectDB = async () => {
   try {
     // If already connected, reuse it
-    if (cachedConn && mongoose.connection.readyState === 1) {
+    if (mongoose.connection.readyState === 1) {
+      return mongoose.connection;
+    }
+
+    // If currently connecting, wait for it instead of calling connect() again
+    if (mongoose.connection.readyState === 2) {
+      await new Promise((resolve, reject) => {
+        mongoose.connection.once('connected', resolve);
+        mongoose.connection.once('error', reject);
+      });
+      cachedConn = mongoose.connection;
       return cachedConn;
     }
 

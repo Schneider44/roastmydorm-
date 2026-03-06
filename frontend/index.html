@@ -996,7 +996,7 @@
                     Find , Rate & Rent  <span class="highlight">Your student Home</span> in Morocco
                     <div class="hero-search">
                         <i class="fas fa-search"></i>
-                        <input id="schoolSearchInput" type="text" placeholder="Search universities and schools">
+                        <input id="schoolSearchInput" type="text" placeholder="Search universities and schools" autocomplete="off">
                         <button id="searchUniversitiesBtn" class="search-btn" onclick="toggleUniversitySearch()">
                             <i class="fas fa-graduation-cap"></i> Search Universities
                         </button>
@@ -2222,6 +2222,9 @@
             const dropdown = document.getElementById('schoolSearchDropdown');
             
             if (!input || !dropdown) return;
+
+            // Clear any browser-autofilled value
+            input.value = '';
 
             // Flatten all universities and schools into one array
             const allInstitutions = [];
