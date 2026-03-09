@@ -46,7 +46,7 @@ const authValidation = {
       .trim()
       .notEmpty().withMessage('Email is required')
       .isEmail().withMessage('Please provide a valid email')
-      .normalizeEmail()
+      .toLowerCase()
       .isLength({ max: 255 }).withMessage('Email too long'),
     body('password')
       .notEmpty().withMessage('Password is required')
@@ -66,7 +66,7 @@ const authValidation = {
       .trim()
       .notEmpty().withMessage('Email is required')
       .isEmail().withMessage('Please provide a valid email')
-      .normalizeEmail(),
+      .toLowerCase(),
     body('password')
       .notEmpty().withMessage('Password is required'),
     handleValidationErrors

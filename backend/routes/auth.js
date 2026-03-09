@@ -77,10 +77,11 @@ router.post('/login', authValidation.login, asyncHandler(async (req, res) => {
     throw errors.unauthorized('Invalid credentials');
   }
 
-  // Update last login
-  user.lastLogin = new Date();
-  user.loginCount = (user.loginCount || 0) + 1;
-  await user.save();
+  // Update last login (use updateOne to avoid triggering pre-save hooks)
+  await User.updateOne(
+    { _id: user._id },
+    { $set: { lastLogin: new Date() }, $inc: { loginCount: 1 } }
+  );
 
   // Generate tokens
   const accessToken = generateAccessToken(user._id);
