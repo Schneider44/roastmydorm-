@@ -4969,22 +4969,25 @@ body {
 /* Mobile Chat Modal */
 @media (max-width: 768px) {
     .chat-modal {
-        padding: 12px;
-        align-items: center;
+        padding: 0;
+        align-items: flex-end;
         justify-content: center;
     }
 
     .chat-window-modal {
-        width: calc(100vw - 24px);
-        height: calc(100vh - 24px);
+        width: 100%;
         max-width: none;
-        max-height: 90vh;
-        border-radius: 12px;
+        height: 85dvh;
+        height: 85vh; /* fallback for older browsers */
+        height: 85dvh;
+        max-height: none;
+        border-radius: 16px 16px 0 0;
+        margin: 0;
     }
 
     .chat-window-modal .chat-header {
         padding: 16px;
-        border-radius: 12px 12px 0 0;
+        border-radius: 16px 16px 0 0;
     }
 
     .chat-window-modal .chat-messages {
@@ -4992,8 +4995,8 @@ body {
     }
 
     .chat-window-modal .chat-input-container {
-        padding: 12px 15px;
-        border-radius: 0 0 12px 12px;
+        padding: 12px 15px 20px;
+        border-radius: 0;
     }
 
     .chat-window-modal .chat-input {
@@ -5003,19 +5006,14 @@ body {
 }
 
 @media (max-width: 360px) {
-    .chat-modal {
-        padding: 8px;
-    }
-
     .chat-window-modal {
-        width: calc(100vw - 16px);
-        height: calc(100vh - 16px);
-        max-height: 95vh;
+        height: 90dvh;
+        height: 90vh;
+        height: 90dvh;
     }
 
     .chat-window-modal .chat-header {
-        padding: 12px;
-        font-size: 0.9rem;
+        padding: 12px 16px;
     }
 
     .chat-window-modal .chat-header-info h3 {
