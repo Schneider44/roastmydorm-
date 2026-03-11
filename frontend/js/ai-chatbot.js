@@ -511,12 +511,15 @@ class RoastMyDormChatbot {
             /* Responsive */
             @media (max-width: 480px) {
                 .rmd-chat-window {
-                    width: calc(100vw - 40px);
-                    height: calc(100vh - 120px);
-                    bottom: 75px;
-                    right: 0;
+                    position: fixed;
+                    bottom: 0;
                     left: 0;
-                    margin: 0 auto;
+                    right: 0;
+                    width: 100%;
+                    height: 85dvh;
+                    height: 85vh;
+                    height: 85dvh;
+                    max-height: none;
                     border-radius: 16px 16px 0 0;
                 }
             }
