@@ -509,18 +509,16 @@ class RoastMyDormChatbot {
             }
 
             /* Responsive */
-            @media (max-width: 480px) {
+            @media (max-width: 768px) {
                 .rmd-chat-window {
-                    position: fixed;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    width: 100%;
-                    height: 85dvh;
-                    height: 85vh;
-                    height: 85dvh;
-                    max-height: none;
-                    border-radius: 16px 16px 0 0;
+                    position: fixed !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    width: 100% !important;
+                    height: 85dvh !important;
+                    max-height: none !important;
+                    border-radius: 16px 16px 0 0 !important;
                 }
             }
         `;
