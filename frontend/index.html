@@ -997,7 +997,7 @@
                 </h1>
                 <div class="hero-search">
                     <i class="fas fa-search"></i>
-                    <input id="schoolSearchInput" type="text" placeholder="Search universities and schools" autocomplete="off">
+                    <input id="schoolSearchInput" type="text" placeholder="Search universities and schools" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
                     <button id="searchUniversitiesBtn" class="search-btn" onclick="toggleUniversitySearch()">
                         <i class="fas fa-graduation-cap"></i> Search Universities
                     </button>
@@ -2223,8 +2223,9 @@
             
             if (!input || !dropdown) return;
 
-            // Clear any browser-autofilled value
+            // Clear any browser-autofilled value (Chrome autofill fires async, use timeout)
             input.value = '';
+            setTimeout(() => { input.value = ''; }, 200);
 
             // Flatten all universities and schools into one array
             const allInstitutions = [];
