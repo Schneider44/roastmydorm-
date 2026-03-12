@@ -274,8 +274,8 @@ app.use('/api/verification', require('./routes/verification'));
 // Property Submission Routes (landlords)
 app.use('/api/property-requests', require('./routes/propertyRequests'));
 
-// Admin Dashboard Routes
-app.use('/api/admin', require('./routes/admin'));
+// Admin Dashboard Routes (full suite: dorms, users, reviews, analytics, etc.)
+app.use('/api/admin', require('./routes/admin/index'));
 
 // SEO Routes - Serve at root level for search engines
 app.get('/sitemap.xml', (req, res) => {
