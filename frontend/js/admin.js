@@ -205,7 +205,10 @@ function showAdminApp() {
   
   // Load dashboard data
   loadDashboard();
-  
+
+  // Load property request badge
+  setTimeout(fetchPrBadge, 500);
+
   // Setup auto-refresh
   setInterval(refreshCurrentPage, REFRESH_INTERVAL);
 }
@@ -320,6 +323,7 @@ function navigateToPage(page) {
     roommates: 'Roommate Profiles',
     analytics: 'Analytics',
     reports: 'Reports & Moderation',
+    'property-requests': 'Property Requests',
     settings: 'Settings'
   };
   document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
@@ -353,6 +357,9 @@ function loadPageData(page) {
       break;
     case 'reports':
       loadReports();
+      break;
+    case 'property-requests':
+      loadPropertyRequests();
       break;
     case 'settings':
       loadSettings();
@@ -1952,3 +1959,175 @@ window.resolveReport = resolveReport;
 window.dismissReport = dismissReport;
 window.confirmAction = confirmAction;
 window.updateSelectedUsers = updateSelectedUsers;
+
+// ============================================
+// Property Requests
+// ============================================
+
+const prState = { status: 'pending', page: 1, total: 0, limit: 10 };
+let prPendingDecision = null; // { id, action }
+
+async function loadPropertyRequests() {
+  const listEl = document.getElementById('pr-list');
+  const paginationEl = document.getElementById('pr-pagination');
+  listEl.innerHTML = '<div class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>';
+
+  try {
+    const params = new URLSearchParams({ status: prState.status, page: prState.page, limit: prState.limit });
+    const data = await apiRequest(`/property-requests?${params}`);
+
+    prState.total = data.total || 0;
+    renderPropertyRequests(data.data || []);
+
+    // Update badge count with pending total
+    if (prState.status === 'pending') {
+      const badge = document.getElementById('property-requests-badge');
+      badge.textContent = prState.total;
+      badge.style.display = prState.total > 0 ? '' : 'none';
+    }
+
+    // Pagination
+    const totalPages = Math.ceil(prState.total / prState.limit);
+    document.getElementById('pr-page-info').textContent = `Page ${prState.page} of ${totalPages || 1}`;
+    document.getElementById('pr-prev').disabled = prState.page <= 1;
+    document.getElementById('pr-next').disabled = prState.page >= totalPages;
+    paginationEl.style.display = prState.total > prState.limit ? 'flex' : 'none';
+  } catch (err) {
+    listEl.innerHTML = '<div class="loading-placeholder">Failed to load property requests</div>';
+    showToast('Failed to load property requests', 'error');
+  }
+}
+
+function renderPropertyRequests(submissions) {
+  const listEl = document.getElementById('pr-list');
+  if (!submissions.length) {
+    listEl.innerHTML = `<div class="loading-placeholder">No ${prState.status} submissions</div>`;
+    return;
+  }
+
+  listEl.innerHTML = submissions.map(s => {
+    const date = new Date(s.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+    const statusColor = { pending: '#f59e0b', approved: '#10b981', rejected: '#ef4444' }[s.status] || '#6b7280';
+    const amenities = (s.amenities || []).slice(0, 4).join(', ') || '—';
+    return `
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <h3 style="margin:0;font-size:1rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}</h3>
+            <span style="background:${statusColor}20;color:${statusColor};padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap">${s.status.toUpperCase()}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px 20px;font-size:.8rem;color:#6b7280;margin-bottom:10px">
+            <span><strong>Landlord:</strong> ${s.landlordName}</span>
+            <span><strong>Email:</strong> ${s.landlordEmail}</span>
+            ${s.landlordPhone ? `<span><strong>Phone:</strong> ${s.landlordPhone}</span>` : ''}
+            <span><strong>Type:</strong> ${s.landlordType || 'individual'}</span>
+            <span><strong>Property:</strong> ${s.propertyType}</span>
+            <span><strong>City:</strong> ${s.city}${s.neighborhood ? ', ' + s.neighborhood : ''}</span>
+            <span><strong>Price:</strong> ${s.price} MAD/mo</span>
+            <span><strong>Furnished:</strong> ${s.furnished ? 'Yes' : 'No'}</span>
+            <span><strong>Submitted:</strong> ${date}</span>
+          </div>
+          <p style="margin:0 0 8px;font-size:.85rem;color:#374151;line-height:1.5">${s.description}</p>
+          ${amenities !== '—' ? `<p style="margin:0;font-size:.8rem;color:#6b7280"><strong>Amenities:</strong> ${amenities}</p>` : ''}
+          ${s.adminNote ? `<p style="margin:8px 0 0;font-size:.8rem;background:#f3f4f6;padding:8px 12px;border-radius:6px"><strong>Admin note:</strong> ${s.adminNote}</p>` : ''}
+        </div>
+        ${s.status === 'pending' ? `
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button onclick="openPrModal('${s._id}','approve')"
+            style="padding:8px 16px;background:#10b981;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
+            ✓ Approve
+          </button>
+          <button onclick="openPrModal('${s._id}','reject')"
+            style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
+            ✗ Reject
+          </button>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterPropRequests(status) {
+  prState.status = status;
+  prState.page = 1;
+  ['pending','approved','rejected','all'].forEach(s => {
+    document.getElementById(`pr-filter-${s}`)?.classList.toggle('active', s === status);
+  });
+  loadPropertyRequests();
+}
+
+function changePrPage(dir) {
+  prState.page += dir;
+  loadPropertyRequests();
+}
+
+function openPrModal(id, action) {
+  prPendingDecision = { id, action };
+  const modal = document.getElementById('pr-modal');
+  const title = document.getElementById('pr-modal-title');
+  const desc = document.getElementById('pr-modal-desc');
+  const confirmBtn = document.getElementById('pr-modal-confirm');
+  document.getElementById('pr-modal-note').value = '';
+
+  if (action === 'approve') {
+    title.textContent = 'Approve Submission';
+    desc.textContent = 'The landlord will receive an email confirming approval.';
+    confirmBtn.style.background = '#10b981';
+    confirmBtn.textContent = 'Approve';
+  } else {
+    title.textContent = 'Reject Submission';
+    desc.textContent = 'The landlord will receive an email with your reason.';
+    confirmBtn.style.background = '#ef4444';
+    confirmBtn.textContent = 'Reject';
+  }
+
+  modal.style.display = 'flex';
+  confirmBtn.onclick = confirmPrDecision;
+}
+
+function closePrModal() {
+  document.getElementById('pr-modal').style.display = 'none';
+  prPendingDecision = null;
+}
+
+async function confirmPrDecision() {
+  if (!prPendingDecision) return;
+  const { id, action } = prPendingDecision;
+  const note = document.getElementById('pr-modal-note').value.trim();
+  const btn = document.getElementById('pr-modal-confirm');
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  try {
+    await apiRequest(`/property-requests/${id}`, 'PATCH', {
+      status: action === 'approve' ? 'approved' : 'rejected',
+      adminNote: note
+    });
+    showToast(`Submission ${action === 'approve' ? 'approved' : 'rejected'} successfully`, 'success');
+    closePrModal();
+    loadPropertyRequests();
+  } catch (err) {
+    showToast('Failed to update submission', 'error');
+    btn.disabled = false;
+    btn.textContent = action === 'approve' ? 'Approve' : 'Reject';
+  }
+}
+
+// Also load pending badge on dashboard load
+const _origLoadDashboard = typeof loadDashboard === 'function' ? loadDashboard : null;
+
+async function fetchPrBadge() {
+  try {
+    const data = await apiRequest('/property-requests/stats');
+    const pending = data.data?.pending || 0;
+    const badge = document.getElementById('property-requests-badge');
+    if (badge) { badge.textContent = pending; badge.style.display = pending > 0 ? '' : 'none'; }
+  } catch (_) {}
+}
+
+// Expose globals
+window.filterPropRequests = filterPropRequests;
+window.changePrPage = changePrPage;
+window.openPrModal = openPrModal;
+window.closePrModal = closePrModal;
