@@ -12,9 +12,23 @@
 // Configuration
 // ============================================
 
-const API_BASE_URL = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+const hostname = window.location.hostname;
+const API_BASE_URL = ['localhost', '127.0.0.1'].includes(hostname)
   ? 'http://localhost:5000/api'
   : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+// Warn if opened as a local file (file:// protocol — CORS will block API calls)
+if (hostname === '') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('login-overlay');
+    if (overlay) {
+      const warning = document.createElement('div');
+      warning.style.cssText = 'background:#ff4444;color:#fff;padding:12px 20px;text-align:center;font-size:14px;font-weight:500;';
+      warning.innerHTML = '⚠️ Open this page via <a href="https://www.roastmydorm.com/admin-dashboard.html" style="color:#fff;font-weight:700;">www.roastmydorm.com/admin-dashboard.html</a> — file:// protocol blocks API connections.';
+      document.body.prepend(warning);
+    }
+  });
+}
 
 const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
