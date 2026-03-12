@@ -1,28 +1,12 @@
 {
   "version": 2,
   "installCommand": "npm install --os=linux --cpu=x64 sharp && npm install",
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "routes/**",
-          "controllers/**",
-          "models/**",
-          "middleware/**",
-          "utils/**",
-          "socket/**",
-          "scripts/**",
-          "seed/**"
-        ]
-      }
+  "functions": {
+    "server.js": {
+      "includeFiles": "routes/**,controllers/**,models/**,middleware/**,utils/**,socket/**,scripts/**,seed/**"
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/server.js" }
   ]
 }

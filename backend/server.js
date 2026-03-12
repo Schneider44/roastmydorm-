@@ -271,6 +271,9 @@ app.use('/api/badges', require('./routes/badges'));
 app.use('/api/seo', require('./routes/seo'));
 app.use('/api/verification', require('./routes/verification'));
 
+// Property Submission Routes (landlords)
+app.use('/api/property-requests', require('./routes/propertyRequests'));
+
 // Admin Dashboard Routes
 app.use('/api/admin', require('./routes/admin'));
 

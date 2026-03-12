@@ -3,49 +3,358 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="find-roommate.css">
+  <title>Admin Dashboard — RoastMyDorm</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    .report-card { border: 1px solid #eee; border-radius: 6px; padding: 1em; margin-bottom: 1em; }
-    .status-open { color: #e67e22; }
-    .status-reviewing { color: #2980b9; }
-    .status-resolved { color: #27ae60; }
-    .btn { padding: 0.4em 1em; border-radius: 4px; border: none; background: #3498db; color: #fff; cursor: pointer; margin-right: 0.5em; }
-    .btn[disabled] { background: #aaa; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; min-height: 100vh; }
+
+    .topbar { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; padding: 0 28px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+    .topbar-logo { font-size: 1.3rem; font-weight: 800; }
+    .topbar-logo span { color: #fbbf24; }
+    .topbar-actions { display: flex; align-items: center; gap: 14px; }
+    .topbar-user { font-size: 0.85rem; color: rgba(255,255,255,0.8); display: flex; align-items: center; gap: 8px; }
+    .btn-logout { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+    .layout { display: flex; min-height: calc(100vh - 64px); }
+    .sidebar { width: 220px; background: #fff; border-right: 1px solid #e2e8f0; padding: 20px 0; flex-shrink: 0; }
+    .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: #64748b; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar-item:hover { background: #f8fafc; color: #1e293b; }
+    .sidebar-item.active { background: #eff6ff; color: #2563eb; border-left-color: #2563eb; font-weight: 700; }
+    .sidebar-badge { margin-left: auto; background: #dc2626; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 50px; min-width: 20px; text-align: center; }
+
+    .main { flex: 1; padding: 28px; overflow-x: hidden; }
+    .section-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .section-header h1 { font-size: 1.4rem; font-weight: 800; color: #0f172a; }
+    .section-header p { font-size: 0.87rem; color: #64748b; margin-top: 3px; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 18px 20px; border: 1px solid #e2e8f0; text-align: center; }
+    .stat-card .stat-num { font-size: 2rem; font-weight: 800; color: #1e3a8a; }
+    .stat-card .stat-lbl { font-size: 0.8rem; color: #64748b; margin-top: 4px; }
+
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn { padding: 7px 16px; border-radius: 8px; border: 1.5px solid #e2e8f0; background: #fff; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #64748b; }
+    .filter-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .filter-btn:hover:not(.active) { border-color: #93c5fd; color: #1e3a8a; }
+
+    .submission-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 16px; overflow: hidden; transition: box-shadow 0.25s; }
+    .submission-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 18px 20px 14px; gap: 12px; flex-wrap: wrap; }
+    .card-title { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .card-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.82rem; color: #64748b; }
+    .card-meta span { display: flex; align-items: center; gap: 5px; }
+    .badge-status { padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+    .badge-pending  { background: #fef3c7; color: #92400e; }
+    .badge-approved { background: #dcfce7; color: #14532d; }
+    .badge-rejected { background: #fee2e2; color: #7f1d1d; }
+
+    .card-body { padding: 0 20px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .info-group label { display: block; font-size: 0.75rem; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .info-group p { font-size: 0.88rem; color: #1e293b; line-height: 1.5; }
+    .info-group.full { grid-column: 1 / -1; }
+    .price-big { font-size: 1.2rem; font-weight: 800; color: #1e3a8a; }
+
+    .card-footer { border-top: 1px solid #f1f5f9; padding: 14px 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .btn-approve { background: #16a34a; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-size: 0.84rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .btn-approve:hover { background: #15803d; }
+    .btn-reject { background: #fff; color: #dc2626; border: 1.5px solid #dc2626; padding: 7px 18px; border-radius: 8px; font-size: 0.84rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .btn-reject:hover { background: #dc2626; color: #fff; }
+    .btn-contact-landlord { background: #eff6ff; color: #2563eb; border: none; padding: 8px 14px; border-radius: 8px; font-size: 0.84rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s; text-decoration: none; }
+    .btn-contact-landlord:hover { background: #dbeafe; }
+
+    .report-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; padding: 18px 20px; margin-bottom: 14px; }
+    .status-open { color: #d97706; } .status-reviewing { color: #2563eb; } .status-resolved { color: #16a34a; }
+    .btn { padding: 7px 14px; border-radius: 7px; border: none; background: #2563eb; color: #fff; cursor: pointer; margin-right: 6px; font-size: 0.83rem; font-weight: 600; }
+    .btn:hover { background: #1d4ed8; }
+
+    .empty-state { text-align: center; padding: 64px 20px; color: #94a3b8; }
+    .empty-state i { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+    .loading-spinner { text-align: center; padding: 40px; color: #94a3b8; font-size: 0.9rem; }
+
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: #fff; border-radius: 16px; padding: 28px; width: 90%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; color: #0f172a; }
+    .modal textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; font-family: inherit; min-height: 100px; resize: vertical; margin-bottom: 16px; }
+    .modal textarea:focus { outline: none; border-color: #2563eb; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .btn-cancel { background: #f1f5f9; color: #64748b; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-confirm-approve { background: #16a34a; color: #fff; border: none; padding: 9px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .btn-confirm-reject  { background: #dc2626; color: #fff; border: none; padding: 9px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .card-body { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <h2>Admin Reports Dashboard</h2>
-  <div id="reports"></div>
-  <script>
-    const jwt = localStorage.getItem('jwt');
-    async function loadReports() {
-      const res = await fetch('/api/admin/reports', { headers: { Authorization: 'Bearer ' + jwt } });
-      const data = await res.json();
-      if (!data.success) return document.getElementById('reports').textContent = 'Failed to load reports.';
-      document.getElementById('reports').innerHTML = data.reports.map(r => `
-        <div class="report-card">
-          <b>Status:</b> <span class="status-${r.status}">${r.status}</span><br>
-          <b>Type:</b> ${r.targetType}<br>
-          <b>Reason:</b> ${r.reason}<br>
-          <b>Details:</b> ${r.description || ''}<br>
-          <b>Reporter:</b> ${r.reporter}<br>
-          <b>Created:</b> ${new Date(r.createdAt).toLocaleString()}<br>
-          <button class="btn" onclick="updateStatus('${r._id}','reviewing')">Mark Reviewing</button>
-          <button class="btn" onclick="updateStatus('${r._id}','resolved')">Resolve</button>
+
+  <div class="topbar">
+    <div class="topbar-logo">Roast<span>My</span>Dorm <span style="font-size:0.75rem;font-weight:500;opacity:0.7;margin-left:6px;">Admin</span></div>
+    <div class="topbar-actions">
+      <div class="topbar-user"><i class="fas fa-user-shield"></i> <span id="adminName">Admin</span></div>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-item active" onclick="showTab('properties')" id="tab-properties">
+        <i class="fas fa-home"></i> Property Requests
+        <span class="sidebar-badge" id="pendingBadge" style="display:none;"></span>
+      </div>
+      <div class="sidebar-item" onclick="showTab('reports')" id="tab-reports">
+        <i class="fas fa-flag"></i> Reports
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <!-- ── Property Submissions ── -->
+      <div id="section-properties">
+        <div class="section-header">
+          <div>
+            <h1><i class="fas fa-home" style="color:#2563eb;margin-right:8px;"></i>Property Submissions</h1>
+            <p>Landlords publish here → you approve or reject → listing goes live for students</p>
+          </div>
         </div>
-      `).join('');
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" id="statPending">—</div><div class="stat-lbl">Awaiting Review</div></div>
+          <div class="stat-card"><div class="stat-num" id="statApproved">—</div><div class="stat-lbl">Approved & Live</div></div>
+          <div class="stat-card"><div class="stat-num" id="statRejected">—</div><div class="stat-lbl">Rejected</div></div>
+        </div>
+
+        <div class="filter-bar">
+          <button class="filter-btn active" onclick="filterSubmissions('pending',this)"><i class="fas fa-clock"></i> Pending</button>
+          <button class="filter-btn" onclick="filterSubmissions('approved',this)"><i class="fas fa-check"></i> Approved</button>
+          <button class="filter-btn" onclick="filterSubmissions('rejected',this)"><i class="fas fa-times"></i> Rejected</button>
+          <button class="filter-btn" onclick="filterSubmissions('all',this)">All</button>
+        </div>
+
+        <div id="submissionsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+      </div>
+
+      <!-- ── Reports ── -->
+      <div id="section-reports" style="display:none;">
+        <div class="section-header">
+          <div>
+            <h1><i class="fas fa-flag" style="color:#dc2626;margin-right:8px;"></i>Reports</h1>
+            <p>User-submitted reports requiring review</p>
+          </div>
+        </div>
+        <div id="reportsList"><div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading…</div></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Decision Modal -->
+  <div class="modal-overlay" id="decisionModal">
+    <div class="modal">
+      <h3 id="modalTitle">Confirm decision</h3>
+      <textarea id="modalNote" placeholder="Write a note for the landlord…"></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button id="modalConfirmBtn" onclick="confirmDecision()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = ['localhost','127.0.0.1',''].includes(location.hostname)
+      ? 'http://localhost:5000/api'
+      : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+    const jwt = localStorage.getItem('rmd_token');
+    if (!jwt) { location.href = 'index.html'; }
+
+    let currentFilter = 'pending';
+    let pendingAction = null;
+
+    function showTab(tab) {
+      ['properties','reports'].forEach(t => {
+        document.getElementById('section-' + t).style.display = t === tab ? '' : 'none';
+        document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+      });
+      if (tab === 'reports') loadReports();
     }
-    async function updateStatus(id, status) {
-      const note = prompt('Admin note (optional):');
-      await fetch('/api/admin/reports/' + id, {
+
+    // ── Stats ──
+    async function loadStats() {
+      try {
+        const res  = await fetch(`${API}/property-requests/stats`, { headers: authH() });
+        const data = await res.json();
+        if (!data.success) return;
+        document.getElementById('statPending').textContent  = data.data.pending;
+        document.getElementById('statApproved').textContent = data.data.approved;
+        document.getElementById('statRejected').textContent = data.data.rejected;
+        const badge = document.getElementById('pendingBadge');
+        badge.textContent   = data.data.pending;
+        badge.style.display = data.data.pending > 0 ? '' : 'none';
+      } catch(e) {}
+    }
+
+    // ── Submissions list ──
+    async function loadSubmissions(status) {
+      currentFilter = status;
+      const list = document.getElementById('submissionsList');
+      list.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading…</div>';
+      try {
+        const res  = await fetch(`${API}/property-requests?status=${status}`, { headers: authH() });
+        const data = await res.json();
+        if (!data.success) {
+          list.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>${data.message||'Failed to load.'}</p></div>`;
+          return;
+        }
+        if (!data.data.length) {
+          list.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>No ${status==='all'?'':status+' '}submissions yet.</p></div>`;
+          return;
+        }
+        list.innerHTML = data.data.map(renderCard).join('');
+      } catch(e) {
+        list.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><p>Network error. Check your connection.</p></div>';
+      }
+    }
+
+    function filterSubmissions(status, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadSubmissions(status);
+    }
+
+    function renderCard(s) {
+      const cityMap = { casablanca:'Casablanca', rabat:'Rabat', marrakech:'Marrakech', other:'Other' };
+      const typeMap  = { studio:'Studio', apartment:'Apartment', house:'House', room:'Room for Rent', colocation:'Colocation' };
+      const date     = new Date(s.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+      const revDate  = s.reviewedAt ? new Date(s.reviewedAt).toLocaleDateString('en-GB') : '';
+
+      const actionBtns = s.status === 'pending'
+        ? `<button class="btn-approve" onclick="openModal('${s._id}','approved')"><i class="fas fa-check"></i> Approve</button>
+           <button class="btn-reject"  onclick="openModal('${s._id}','rejected')"><i class="fas fa-times"></i> Reject</button>`
+        : `<span style="font-size:0.82rem;color:#94a3b8;"><i class="fas fa-calendar-check"></i> Reviewed ${revDate}</span>`;
+
+      const waBtn = s.landlordPhone
+        ? `<a class="btn-contact-landlord" href="https://wa.me/${s.landlordPhone.replace(/\D/g,'')}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>`
+        : '';
+
+      return `
+        <div class="submission-card" id="card-${s._id}">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${esc(s.title)}</div>
+              <div class="card-meta">
+                <span><i class="fas fa-calendar-alt"></i>${date}</span>
+                <span><i class="fas fa-city"></i>${cityMap[s.city]||s.city}${s.neighborhood?', '+esc(s.neighborhood):''}</span>
+                <span><i class="fas fa-tag"></i>${typeMap[s.propertyType]||s.propertyType}</span>
+              </div>
+            </div>
+            <span class="badge-status badge-${s.status}">${s.status.charAt(0).toUpperCase()+s.status.slice(1)}</span>
+          </div>
+
+          <div class="card-body">
+            <div class="info-group"><label>Landlord</label><p>${esc(s.landlordName)} · <em>${s.landlordType}</em></p></div>
+            <div class="info-group"><label>Monthly Rent</label><p class="price-big">${s.price.toLocaleString()} MAD</p></div>
+            <div class="info-group"><label>Email</label><p><a href="mailto:${s.landlordEmail}" style="color:#2563eb;">${s.landlordEmail}</a></p></div>
+            <div class="info-group"><label>Phone</label><p>${s.landlordPhone?`<a href="tel:${s.landlordPhone}" style="color:#2563eb;">${s.landlordPhone}</a>`:'—'}</p></div>
+            <div class="info-group full"><label>Description</label><p>${esc(s.description)}</p></div>
+            ${s.adminNote?`<div class="info-group full"><label>Admin Note</label><p style="font-style:italic;color:#64748b;">"${esc(s.adminNote)}"</p></div>`:''}
+          </div>
+
+          <div class="card-footer">
+            <a class="btn-contact-landlord" href="mailto:${s.landlordEmail}?subject=Your property submission on RoastMyDorm">
+              <i class="fas fa-envelope"></i> Email
+            </a>
+            ${waBtn}
+            <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">${actionBtns}</div>
+          </div>
+        </div>`;
+    }
+
+    // ── Modal ──
+    function openModal(id, status) {
+      pendingAction = { id, status };
+      document.getElementById('modalTitle').textContent     = status==='approved' ? '✅ Approve this property?' : '❌ Reject this property?';
+      document.getElementById('modalNote').placeholder      = status==='approved' ? 'Optional note for the landlord (e.g. next steps)…' : 'Tell the landlord why it was rejected…';
+      const btn = document.getElementById('modalConfirmBtn');
+      btn.className   = status==='approved' ? 'btn-confirm-approve' : 'btn-confirm-reject';
+      btn.textContent = status==='approved' ? 'Yes, Approve' : 'Yes, Reject';
+      document.getElementById('modalNote').value = '';
+      document.getElementById('decisionModal').classList.add('show');
+      setTimeout(() => document.getElementById('modalNote').focus(), 50);
+    }
+
+    function closeModal() {
+      document.getElementById('decisionModal').classList.remove('show');
+      pendingAction = null;
+    }
+
+    async function confirmDecision() {
+      if (!pendingAction) return;
+      const { id, status } = pendingAction;
+      const note = document.getElementById('modalNote').value.trim();
+      const btn  = document.getElementById('modalConfirmBtn');
+      btn.disabled = true; btn.textContent = 'Processing…';
+      try {
+        const res  = await fetch(`${API}/property-requests/${id}`, {
+          method: 'PATCH',
+          headers: { ...authH(), 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status, adminNote: note })
+        });
+        const data = await res.json();
+        if (data.success) { closeModal(); loadSubmissions(currentFilter); loadStats(); }
+        else alert(data.message || 'Action failed.');
+      } catch(e) { alert('Network error. Please try again.'); }
+      finally { btn.disabled = false; }
+    }
+
+    document.getElementById('decisionModal').addEventListener('click', e => {
+      if (e.target.id === 'decisionModal') closeModal();
+    });
+
+    // ── Reports ──
+    async function loadReports() {
+      const list = document.getElementById('reportsList');
+      list.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading…</div>';
+      try {
+        const res  = await fetch(`${API}/admin/reports`, { headers: authH() });
+        const data = await res.json();
+        if (!data.success) { list.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load.</p></div>'; return; }
+        if (!data.reports.length) { list.innerHTML = '<div class="empty-state"><i class="fas fa-thumbs-up"></i><p>No open reports. All clear!</p></div>'; return; }
+        list.innerHTML = data.reports.map(r => `
+          <div class="report-card">
+            <b>Status:</b> <span class="status-${r.status}">${r.status}</span> &nbsp;
+            <b>Type:</b> ${r.targetType} &nbsp; <b>Reason:</b> ${r.reason}<br>
+            <b>Details:</b> ${r.description||'—'}<br>
+            <b>Created:</b> ${new Date(r.createdAt).toLocaleString()}
+            <div style="margin-top:10px;">
+              <button class="btn" onclick="updateReport('${r._id}','reviewing')">Mark Reviewing</button>
+              <button class="btn" style="background:#16a34a;" onclick="updateReport('${r._id}','resolved')">Resolve</button>
+            </div>
+          </div>`).join('');
+      } catch(e) { list.innerHTML = '<div class="empty-state"><i class="fas fa-wifi"></i><p>Network error.</p></div>'; }
+    }
+
+    async function updateReport(id, status) {
+      const note = prompt('Admin note (optional):') || '';
+      await fetch(`${API}/admin/reports/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + jwt },
+        headers: { ...authH(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ status, adminNote: note })
       });
       loadReports();
     }
-    loadReports();
+
+    // ── Helpers ──
+    function authH() { return { Authorization: 'Bearer ' + jwt }; }
+    function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function logout() { localStorage.removeItem('rmd_token'); localStorage.removeItem('rmd_user'); location.href = 'index.html'; }
+
+    // ── Init ──
+    const u = JSON.parse(localStorage.getItem('rmd_user') || '{}');
+    if (u.name) document.getElementById('adminName').textContent = u.name;
+    loadStats();
+    loadSubmissions('pending');
   </script>
 </body>
 </html>

@@ -1277,9 +1277,12 @@
 
                 <!-- Right: Form -->
                 <div class="contact-form-card fade-up" id="contact-form">
-                    <h3><i class="fas fa-paper-plane" style="color:#2563eb;margin-right:8px;"></i>Send Us a Message</h3>
+                    <h3><i class="fas fa-home" style="color:#2563eb;margin-right:8px;"></i>Publish Your Property</h3>
+                    <p style="font-size:0.85rem;color:#6b7280;margin-bottom:20px;">Fill in the details below. Our team will review and publish your listing within 24 hours.</p>
 
                     <div id="formBody">
+                        <!-- Landlord info -->
+                        <p style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Your Information</p>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fname">First Name *</label>
@@ -1290,47 +1293,82 @@
                                 <input type="text" id="lname" placeholder="El Mansouri">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="cemail">Email Address *</label>
-                            <input type="email" id="cemail" placeholder="you@example.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cphone">WhatsApp / Phone</label>
-                            <input type="tel" id="cphone" placeholder="+212 6 00 00 00 00">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cemail">Email Address *</label>
+                                <input type="email" id="cemail" placeholder="you@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cphone">WhatsApp / Phone</label>
+                                <input type="tel" id="cphone" placeholder="+212 6 00 00 00 00">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="ctype">I am a…</label>
                             <select id="ctype">
-                                <option value="">Select…</option>
                                 <option value="individual">Individual landlord</option>
                                 <option value="agency">Real estate agency</option>
                                 <option value="developer">Property developer</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
+
+                        <!-- Property info -->
+                        <p style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;">Property Details</p>
                         <div class="form-group">
-                            <label for="ccity">City *</label>
-                            <select id="ccity" required>
-                                <option value="">Select your city…</option>
-                                <option value="casablanca">Casablanca</option>
-                                <option value="rabat">Rabat</option>
-                                <option value="marrakech">Marrakech</option>
-                                <option value="other">Other city</option>
-                            </select>
+                            <label for="ptitle">Property Title *</label>
+                            <input type="text" id="ptitle" placeholder="e.g. Bright Studio near Université Hassan II" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ptype">Property Type *</label>
+                                <select id="ptype" required>
+                                    <option value="">Select type…</option>
+                                    <option value="studio">Studio</option>
+                                    <option value="apartment">Apartment</option>
+                                    <option value="house">House</option>
+                                    <option value="room">Room for Rent</option>
+                                    <option value="colocation">Colocation</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pprice">Monthly Rent (MAD) *</label>
+                                <input type="number" id="pprice" placeholder="e.g. 2500" min="0" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pcity">City *</label>
+                                <select id="pcity" required>
+                                    <option value="">Select city…</option>
+                                    <option value="casablanca">Casablanca</option>
+                                    <option value="rabat">Rabat</option>
+                                    <option value="marrakech">Marrakech</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pneighborhood">Neighborhood</label>
+                                <input type="text" id="pneighborhood" placeholder="e.g. Agdal, Maarif…">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="cmsg">Message *</label>
-                            <textarea id="cmsg" placeholder="Tell us about your property or ask your question…" required></textarea>
+                            <label for="pdesc">Description *</label>
+                            <textarea id="pdesc" placeholder="Describe the property: size, condition, proximity to university, transport links, included utilities…" required></textarea>
                         </div>
-                        <button class="btn-submit" id="submitBtn" onclick="submitContactForm()">
-                            <i class="fas fa-paper-plane"></i> Send Message
+
+                        <button class="btn-submit" id="submitBtn" onclick="submitPropertyForm()">
+                            <i class="fas fa-paper-plane"></i> Submit for Review
                         </button>
+                        <p style="font-size:0.78rem;color:#9ca3af;text-align:center;margin-top:10px;">
+                            <i class="fas fa-shield-alt"></i> Your listing will go live after our team approves it (usually within 24h).
+                        </p>
                     </div>
 
                     <div class="form-success" id="formSuccess">
                         <i class="fas fa-check-circle"></i>
-                        <h4>Message Sent!</h4>
-                        <p>Thanks for reaching out. Our team will get back to you within 2–4 hours.</p>
+                        <h4>Property Submitted!</h4>
+                        <p>We received your listing and will review it within 24 hours. You'll get an email once it's approved and live for students to see.</p>
                     </div>
                 </div>
             </div>
@@ -1400,22 +1438,35 @@
 
         document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-        // ── Contact Form ──
-        function submitContactForm() {
-            const fname = document.getElementById('fname').value.trim();
-            const cemail = document.getElementById('cemail').value.trim();
-            const ccity = document.getElementById('ccity').value;
-            const cmsg = document.getElementById('cmsg').value.trim();
+        // ── API URL ──
+        const API_URL = ['localhost','127.0.0.1',''].includes(location.hostname)
+            ? 'http://localhost:5000/api'
+            : 'https://roastmydorm-backend-zy4p.vercel.app/api';
 
-            if (!fname || !cemail || !ccity || !cmsg) {
-                const missing = [];
-                if (!fname) missing.push('First Name');
-                if (!cemail) missing.push('Email');
-                if (!ccity) missing.push('City');
-                if (!cmsg) missing.push('Message');
-                alert('Please fill in: ' + missing.join(', '));
-                return;
-            }
+        // ── Property Submission Form ──
+        async function submitPropertyForm() {
+            const fname        = document.getElementById('fname').value.trim();
+            const lname        = document.getElementById('lname').value.trim();
+            const cemail       = document.getElementById('cemail').value.trim();
+            const cphone       = document.getElementById('cphone').value.trim();
+            const ctype        = document.getElementById('ctype').value;
+            const ptitle       = document.getElementById('ptitle').value.trim();
+            const ptype        = document.getElementById('ptype').value;
+            const pprice       = document.getElementById('pprice').value;
+            const pcity        = document.getElementById('pcity').value;
+            const pneighborhood= document.getElementById('pneighborhood').value.trim();
+            const pdesc        = document.getElementById('pdesc').value.trim();
+
+            // Validate required fields
+            const missing = [];
+            if (!fname)   missing.push('First Name');
+            if (!cemail)  missing.push('Email');
+            if (!ptitle)  missing.push('Property Title');
+            if (!ptype)   missing.push('Property Type');
+            if (!pprice)  missing.push('Monthly Rent');
+            if (!pcity)   missing.push('City');
+            if (!pdesc)   missing.push('Description');
+            if (missing.length) { alert('Please fill in: ' + missing.join(', ')); return; }
 
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cemail)) {
                 alert('Please enter a valid email address.');
@@ -1424,21 +1475,40 @@
 
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting…';
 
-            // Simulate API call (replace with real endpoint when ready)
-            setTimeout(() => {
-                document.getElementById('formBody').style.display = 'none';
-                document.getElementById('formSuccess').style.display = 'block';
-            }, 1200);
+            try {
+                const res = await fetch(`${API_URL}/property-requests`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        landlordName:  `${fname} ${lname}`.trim(),
+                        landlordEmail: cemail,
+                        landlordPhone: cphone,
+                        landlordType:  ctype || 'individual',
+                        title:         ptitle,
+                        propertyType:  ptype,
+                        price:         Number(pprice),
+                        city:          pcity,
+                        neighborhood:  pneighborhood,
+                        description:   pdesc
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('formBody').style.display = 'none';
+                    document.getElementById('formSuccess').style.display = 'block';
+                } else {
+                    alert(data.message || 'Submission failed. Please try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit for Review';
+                }
+            } catch(e) {
+                alert('Cannot connect to the server. Please check your internet connection and try again.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit for Review';
+            }
         }
-
-        // ── Allow Enter key on form ──
-        document.querySelectorAll('#formBody input, #formBody select').forEach(el => {
-            el.addEventListener('keydown', e => {
-                if (e.key === 'Enter') submitContactForm();
-            });
-        });
     </script>
 
 </body>
