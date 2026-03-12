@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   firstName: String,
   lastName: String,
-  userType: { type: String, enum: ['student', 'landlord', 'admin'], default: 'student' },
+  userType: { type: String, default: 'admin' },
+  role: { type: String, default: 'user' },
   isVerified: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
   isSuperAdmin: { type: Boolean, default: false },
@@ -65,6 +66,7 @@ async function seedAdmin() {
           $set: {
             password: hashedPassword,
             userType: 'admin',
+            role: 'admin',
             isSuperAdmin: true,
             isVerified: true,
             isActive: true,
@@ -83,6 +85,7 @@ async function seedAdmin() {
         firstName: ADMIN_FIRST_NAME,
         lastName: ADMIN_LAST_NAME,
         userType: 'admin',
+        role: 'admin',
         isSuperAdmin: true,
         isVerified: true,
         isActive: true
