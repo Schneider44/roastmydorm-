@@ -1009,7 +1009,7 @@
                 <div class="hero-buttons">
                     <button class="btn-primary">For Students</button>
                     <button class="btn-primary">Start Rating</button>
-                    <button class="btn-secondary">Browse Housing</button>
+                    <a href="for-landlords.html" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">🏠 For Landlords</a>
                     <a href="find-roommate-profile.html" class="btn-primary" style="text-decoration: none; display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;">👥 Find Your Roommate</a>
                 </div>
                 <div class="hero-stats">
@@ -1210,11 +1210,11 @@
                 <div id="loginForm">
                     <div class="auth-form-group">
                         <label for="loginEmail">Email Address</label>
-                        <input type="email" class="auth-input" id="loginEmail" placeholder="you@example.com" onkeydown="if(event.key==='Enter') loginUser()">
+                        <input type="email" class="auth-input" id="loginEmail" name="email" autocomplete="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter') loginUser()">
                     </div>
                     <div class="auth-form-group">
                         <label for="loginPassword">Password</label>
-                        <input type="password" class="auth-input" id="loginPassword" placeholder="Your password" onkeydown="if(event.key==='Enter') loginUser()">
+                        <input type="password" class="auth-input" id="loginPassword" name="password" autocomplete="current-password" placeholder="Your password" onkeydown="if(event.key==='Enter') loginUser()">
                     </div>
                     <button class="auth-btn-primary" id="loginBtn" onclick="loginUser()">Sign In</button>
                     <p class="auth-link">Don't have an account? <a onclick="switchAuthTab('register')">Create one free</a></p>

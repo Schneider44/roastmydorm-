@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Your Property - RoastMyDorm | Reach Thousands of Students in Morocco</title>
+    <meta name="description" content="Publish your property on RoastMyDorm and connect with thousands of students searching for housing in Casablanca, Rabat, and Marrakech. Free listing, fast tenant matching.">
+    <meta name="keywords" content="publish property Morocco, landlord listing, student housing Morocco, post property Casablanca, post property Rabat, post property Marrakech">
+    <link rel="canonical" href="https://www.roastmydorm.com/for-landlords.html">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Base ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #1f2937;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* ── HERO ── */
+        .hero-landlord {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #0ea5e9 100%);
+            padding: 120px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-landlord::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-landlord .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-landlord h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-landlord h1 span {
+            color: #fbbf24;
+        }
+
+        .hero-landlord p.subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: rgba(255,255,255,0.88);
+            max-width: 600px;
+            margin: 0 auto 36px;
+            line-height: 1.65;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            background: #fbbf24;
+            color: #1e3a8a;
+            border: none;
+            padding: 15px 32px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(251,191,36,0.4);
+        }
+
+        .btn-hero-primary:hover {
+            background: #f59e0b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(251,191,36,0.5);
+        }
+
+        .btn-hero-secondary {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.45);
+            padding: 13px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-hero-secondary:hover {
+            background: rgba(255,255,255,0.22);
+            border-color: rgba(255,255,255,0.7);
+            transform: translateY(-2px);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 56px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .num {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fbbf24;
+            line-height: 1;
+        }
+
+        .hero-stat .lbl {
+            display: block;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.75);
+            margin-top: 4px;
+        }
+
+        /* ── SECTION HEADER ── */
+        .section-header {
+            text-align: center;
+            margin-bottom: 52px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 5px 14px;
+            border-radius: 50px;
+            margin-bottom: 12px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .section-header p {
+            font-size: 1.05rem;
+            color: #6b7280;
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.65;
+        }
+
+        /* ── WHY SECTION ── */
+        .why-section {
+            padding: 88px 20px;
+            background: #f8fafc;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .benefit-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            border: 1px solid #f1f5f9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .benefit-card:hover::after { transform: scaleX(1); }
+
+        .benefit-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #2563eb;
+            margin-bottom: 18px;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .benefit-card p {
+            font-size: 0.93rem;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* ── HOW IT WORKS ── */
+        .how-section {
+            padding: 88px 20px;
+            background: #fff;
+        }
+
+        .steps-wrapper {
+            display: flex;
+            gap: 0;
+            align-items: stretch;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .steps-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 44px;
+            left: calc(16.66% + 22px);
+            right: calc(16.66% + 22px);
+            height: 3px;
+            background: linear-gradient(90deg, #2563eb, #0ea5e9);
+            z-index: 0;
+        }
+
+        .step-item {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-num {
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 0 auto 24px;
+            box-shadow: 0 8px 24px rgba(37,99,235,0.35);
+            transition: transform 0.3s ease;
+            border: 4px solid #fff;
+        }
+
+        .step-item:hover .step-num {
+            transform: scale(1.08);
+        }
+
+        .step-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .step-item p {
+            font-size: 0.92rem;
+            color: #6b7280;
+            line-height: 1.65;
+        }
+
+        /* ── PROPERTY TYPES ── */
+        .types-section {
+            padding: 88px 20px;
+            background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+        }
+
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 20px;
+        }
+
+        .type-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 20px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .type-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 8px 28px rgba(37,99,235,0.12);
+            transform: translateY(-4px);
+        }
+
+        .type-card:hover .type-icon { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; }
+
+        .type-icon {
+            width: 64px;
+            height: 64px;
+            background: #eff6ff;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #2563eb;
+            margin: 0 auto 14px;
+            transition: all 0.3s ease;
+        }
+
+        .type-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* ── PRICING ── */
+        .pricing-section {
+            padding: 88px 20px;
+            background: #fff;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            border-radius: 20px;
+            padding: 40px 32px;
+            border: 2px solid #e5e7eb;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border-color: #2563eb;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            box-shadow: 0 12px 40px rgba(37,99,235,0.15);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -13px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #2563eb, #0ea5e9);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 18px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        .pricing-card .price-tag {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1;
+        }
+
+        .pricing-card .price-tag span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .pricing-card .price-desc {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+            color: #374151;
+        }
+
+        .pricing-features li i {
+            color: #22c55e;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .pricing-features li.muted { color: #9ca3af; }
+        .pricing-features li.muted i { color: #d1d5db; }
+
+        .btn-pricing {
+            display: block;
+            width: 100%;
+            margin-top: 28px;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: none;
+        }
+
+        .btn-pricing.outline {
+            background: transparent;
+            border: 2px solid #2563eb;
+            color: #2563eb;
+        }
+
+        .btn-pricing.outline:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-pricing.solid {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+        }
+
+        .btn-pricing.solid:hover {
+            box-shadow: 0 8px 24px rgba(37,99,235,0.45);
+            transform: translateY(-1px);
+        }
+
+        /* ── TRUST ── */
+        .trust-section {
+            padding: 88px 20px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+        }
+
+        .trust-section .section-tag {
+            background: rgba(255,255,255,0.12);
+            color: #93c5fd;
+        }
+
+        .trust-section .section-header h2 {
+            color: #fff;
+        }
+
+        .trust-section .section-header p {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .trust-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 28px 24px;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .trust-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-4px);
+        }
+
+        .trust-card .trust-icon {
+            font-size: 1.8rem;
+            color: #60a5fa;
+            margin-bottom: 14px;
+        }
+
+        .trust-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .trust-card p {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.6;
+        }
+
+        /* ── BIG CTA ── */
+        .cta-landlord {
+            padding: 96px 20px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-landlord::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e3a8a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .cta-landlord h2 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800;
+            color: #1e3a8a;
+            margin-bottom: 16px;
+        }
+
+        .cta-landlord p {
+            font-size: 1.05rem;
+            color: #1e40af;
+            max-width: 520px;
+            margin: 0 auto 36px;
+            line-height: 1.65;
+        }
+
+        .cta-btns-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-cta-dark {
+            background: #1e3a8a;
+            color: #fff;
+            padding: 15px 36px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(30,58,138,0.3);
+        }
+
+        .btn-cta-dark:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(30,58,138,0.4);
+        }
+
+        .btn-cta-outline {
+            background: transparent;
+            color: #1e3a8a;
+            padding: 13px 34px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 2px solid #1e3a8a;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-cta-outline:hover {
+            background: #1e3a8a;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .cta-trust-row {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .cta-trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .cta-trust-item i {
+            font-size: 1rem;
+            color: #1e3a8a;
+        }
+
+        /* ── CONTACT ── */
+        .contact-section {
+            padding: 88px 20px;
+            background: #f8fafc;
+        }
+
+        .contact-inner {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 52px;
+            align-items: start;
+        }
+
+        .contact-info h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+
+        .contact-info p {
+            font-size: 0.95rem;
+            color: #6b7280;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .contact-channels {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-channel {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .contact-channel:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.1);
+            transform: translateX(4px);
+        }
+
+        .channel-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .channel-icon.email-icon { background: #eff6ff; color: #2563eb; }
+        .channel-icon.wa-icon { background: #f0fdf4; color: #16a34a; }
+
+        .channel-details strong {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .channel-details span {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        /* Contact Form */
+        .contact-form-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            border: 1px solid #e5e7eb;
+        }
+
+        .contact-form-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 9px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            color: #111827;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fafafa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            background: #fff;
+        }
+
+        .form-group textarea { resize: vertical; min-height: 110px; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #fff;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 8px 24px rgba(37,99,235,0.45);
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .form-success i {
+            font-size: 3rem;
+            color: #22c55e;
+            margin-bottom: 12px;
+        }
+
+        .form-success h4 { font-size: 1.1rem; font-weight: 700; color: #111827; margin-bottom: 6px; }
+        .form-success p { font-size: 0.9rem; color: #6b7280; }
+
+        /* ── FOOTER ── */
+        .footer-landlord {
+            background: #0f172a;
+            color: rgba(255,255,255,0.7);
+            padding: 48px 20px 28px;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 28px;
+            padding-bottom: 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: #fff; }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .steps-wrapper::before { display: none; }
+            .steps-wrapper { flex-direction: column; gap: 32px; }
+            .step-item { flex: none; width: 100%; max-width: 380px; margin: 0 auto; }
+
+            .contact-inner {
+                grid-template-columns: 1fr;
+                gap: 36px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-landlord { padding: 100px 16px 64px; }
+            .hero-stats { gap: 28px; }
+
+            .benefit-card, .trust-card { padding: 24px 20px; }
+            .contact-form-card { padding: 28px 20px; }
+            .form-row { grid-template-columns: 1fr; }
+
+            .why-section,
+            .how-section,
+            .types-section,
+            .pricing-section,
+            .trust-section,
+            .cta-landlord,
+            .contact-section { padding: 64px 16px; }
+        }
+
+        /* ── Scroll animation ── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-social">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="nav-logo">
+                <a href="index.html" style="text-decoration:none;color:inherit;">
+                    <span>RoastMyDorm</span>
+                </a>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="for-students.html" class="nav-link">
+                    <i class="fas fa-graduation-cap"></i> For Students
+                </a>
+                <a href="#contact" class="nav-link">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </a>
+                <a href="#post" class="nav-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#2563eb;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;">
+                    <i class="fas fa-plus"></i> Post Property
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <section class="hero-landlord" id="post">
+        <div class="container" style="position:relative;z-index:1;">
+            <div class="badge">
+                <i class="fas fa-building"></i> For Landlords & Real Estate Agencies
+            </div>
+            <h1>
+                Publish Your Property and Reach<br>
+                <span>Thousands of Students</span>
+            </h1>
+            <p class="subtitle">
+                Connect directly with motivated students searching for housing near their universities in Casablanca, Rabat, and Marrakech. No commission. Free listing.
+            </p>
+            <div class="hero-btns">
+                <a href="#contact" class="btn-hero-primary">
+                    <i class="fas fa-home"></i> Post a Property — It's Free
+                </a>
+                <a href="#contact-form" class="btn-hero-secondary">
+                    <i class="fas fa-envelope"></i> Contact Us
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="num">2,000+</span>
+                    <span class="lbl">Monthly Student Visitors</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="num">3</span>
+                    <span class="lbl">Major Cities Covered</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="num">70+</span>
+                    <span class="lbl">Active Listings</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="num">0 MAD</span>
+                    <span class="lbl">Cost to List</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ WHY POST ═══════════════════ -->
+    <section class="why-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="section-tag">Why RoastMyDorm</span>
+                <h2>Everything You Need to<br>Find the Right Tenant</h2>
+                <p>We built a platform specifically for the Moroccan student housing market — so your listings reach the exact audience you want.</p>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card fade-up">
+                    <div class="benefit-icon"><i class="fas fa-users"></i></div>
+                    <h3>Targeted Student Audience</h3>
+                    <p>Your listing is shown exclusively to students actively searching for housing near their universities — zero wasted impressions.</p>
+                </div>
+                <div class="benefit-card fade-up">
+                    <div class="benefit-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Fast Tenant Matching</h3>
+                    <p>Receive direct messages from interested students within hours of posting. No middlemen, no delays.</p>
+                </div>
+                <div class="benefit-card fade-up">
+                    <div class="benefit-icon"><i class="fas fa-comment-dots"></i></div>
+                    <h3>Secure Messaging System</h3>
+                    <p>Communicate with potential tenants safely through our built-in messaging — your personal phone stays private until you choose to share it.</p>
+                </div>
+                <div class="benefit-card fade-up">
+                    <div class="benefit-icon"><i class="fas fa-user-check"></i></div>
+                    <h3>Verified Student Profiles</h3>
+                    <p>Students on our platform are verified — you know you're dealing with genuine prospects, not bots or time-wasters.</p>
+                </div>
+                <div class="benefit-card fade-up">
+                    <div class="benefit-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>3 Major Cities</h3>
+                    <p>List in Casablanca, Rabat, or Marrakech — Morocco's top cities for student enrollment and housing demand.</p>
+                </div>
+                <div class="benefit-card fade-up">
+                    <div class="benefit-icon"><i class="fas fa-star"></i></div>
+                    <h3>Build Your Reputation</h3>
+                    <p>Earn positive reviews from tenants to boost your visibility and stand out from other landlords in your city.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+    <section class="how-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="section-tag">Simple Process</span>
+                <h2>Ready in 3 Simple Steps</h2>
+                <p>Getting your property in front of thousands of students takes less than 10 minutes.</p>
+            </div>
+            <div class="steps-wrapper">
+                <div class="step-item fade-up">
+                    <div class="step-num">1</div>
+                    <h3>Create Your Account</h3>
+                    <p>Sign up for free as a landlord or agency. Your profile is your credibility — students trust verified landlords more.</p>
+                </div>
+                <div class="step-item fade-up">
+                    <div class="step-num">2</div>
+                    <h3>Add Property Details & Photos</h3>
+                    <p>Fill in your listing: price, location, amenities, and upload photos. Listings with great photos get 3× more inquiries.</p>
+                </div>
+                <div class="step-item fade-up">
+                    <div class="step-num">3</div>
+                    <h3>Receive Student Messages</h3>
+                    <p>Go live instantly and start receiving messages from interested students. Review profiles and choose the best fit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ PROPERTY TYPES ═══════════════════ -->
+    <section class="types-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="section-tag">Property Types</span>
+                <h2>We Support All Housing Formats</h2>
+                <p>Whether you rent a single room or manage an entire residence, RoastMyDorm has you covered.</p>
+            </div>
+            <div class="types-grid">
+                <div class="type-card fade-up">
+                    <div class="type-icon"><i class="fas fa-door-open"></i></div>
+                    <h3>Studio</h3>
+                </div>
+                <div class="type-card fade-up">
+                    <div class="type-icon"><i class="fas fa-building"></i></div>
+                    <h3>Apartment</h3>
+                </div>
+                <div class="type-card fade-up">
+                    <div class="type-icon"><i class="fas fa-home"></i></div>
+                    <h3>House</h3>
+                </div>
+                <div class="type-card fade-up">
+                    <div class="type-icon"><i class="fas fa-bed"></i></div>
+                    <h3>Room for Rent</h3>
+                </div>
+                <div class="type-card fade-up">
+                    <div class="type-icon"><i class="fas fa-users"></i></div>
+                    <h3>Colocation</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ PRICING ═══════════════════ -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="section-tag">Transparent Pricing</span>
+                <h2>Start for Free — Always</h2>
+                <p>Listing your property costs nothing. Upgrade only if you want extra visibility.</p>
+            </div>
+            <div class="pricing-grid">
+
+                <!-- Free -->
+                <div class="pricing-card fade-up">
+                    <h3>Free Listing</h3>
+                    <div class="price-tag">0 MAD <span>/ listing</span></div>
+                    <p class="price-desc">Everything you need to get started.</p>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check-circle"></i> Unlimited listing duration</li>
+                        <li><i class="fas fa-check-circle"></i> Up to 10 photos</li>
+                        <li><i class="fas fa-check-circle"></i> Student messaging</li>
+                        <li><i class="fas fa-check-circle"></i> Visible in city searches</li>
+                        <li><i class="fas fa-check-circle"></i> Landlord profile page</li>
+                        <li class="muted"><i class="fas fa-times-circle"></i> Boost listing</li>
+                        <li class="muted"><i class="fas fa-times-circle"></i> Featured placement</li>
+                        <li class="muted"><i class="fas fa-times-circle"></i> Verified badge</li>
+                    </ul>
+                    <a href="#contact" class="btn-pricing outline">Post for Free</a>
+                </div>
+
+                <!-- Premium -->
+                <div class="pricing-card featured fade-up">
+                    <div class="pricing-badge">Most Popular — Coming Soon</div>
+                    <h3>Premium Listing</h3>
+                    <div class="price-tag">Contact Us <span>/ listing</span></div>
+                    <p class="price-desc">Maximise your visibility and close faster.</p>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check-circle"></i> Everything in Free</li>
+                        <li><i class="fas fa-check-circle"></i> Boost listing — appear first</li>
+                        <li><i class="fas fa-check-circle"></i> Featured badge on card</li>
+                        <li><i class="fas fa-check-circle"></i> Verified Landlord badge</li>
+                        <li><i class="fas fa-check-circle"></i> Priority in search results</li>
+                        <li><i class="fas fa-check-circle"></i> Analytics dashboard</li>
+                        <li><i class="fas fa-check-circle"></i> Up to 25 photos</li>
+                        <li><i class="fas fa-check-circle"></i> Dedicated support</li>
+                    </ul>
+                    <a href="#contact-form" class="btn-pricing solid">Get Early Access</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ TRUST & SAFETY ═══════════════════ -->
+    <section class="trust-section">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="section-tag">Trust & Safety</span>
+                <h2>A Platform You Can Rely On</h2>
+                <p>We take quality seriously — so you only deal with serious, verified students.</p>
+            </div>
+            <div class="trust-grid">
+                <div class="trust-card fade-up">
+                    <div class="trust-icon"><i class="fas fa-user-shield"></i></div>
+                    <h4>Verified Student IDs</h4>
+                    <p>Every student is verified with their university email before they can contact landlords. No anonymous inquiries.</p>
+                </div>
+                <div class="trust-card fade-up">
+                    <div class="trust-icon"><i class="fas fa-lock"></i></div>
+                    <h4>Safe Communication</h4>
+                    <p>All messages happen through our secure platform. Your personal contact details are never exposed unless you choose to share them.</p>
+                </div>
+                <div class="trust-card fade-up">
+                    <div class="trust-icon"><i class="fas fa-flag"></i></div>
+                    <h4>Fraud Reporting</h4>
+                    <p>Our moderation team reviews every report within 24 hours. Fake profiles and spam are removed immediately.</p>
+                </div>
+                <div class="trust-card fade-up">
+                    <div class="trust-icon"><i class="fas fa-handshake"></i></div>
+                    <h4>Serious Tenants Only</h4>
+                    <p>Students who contact you have already read your listing and are genuinely interested — so your time is never wasted.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ BIG CTA ═══════════════════ -->
+    <section class="cta-landlord">
+        <div class="container" style="position:relative;z-index:1;">
+            <h2>Your Next Tenant Is<br>Looking Right Now</h2>
+            <p>Join hundreds of landlords who have already found reliable student tenants through RoastMyDorm — at zero cost.</p>
+            <div class="cta-btns-row">
+                <a href="#contact-form" class="btn-cta-dark">
+                    <i class="fas fa-plus-circle"></i> Create Free Listing
+                </a>
+                <a href="#contact" class="btn-cta-outline">
+                    <i class="fas fa-headset"></i> Talk to Support
+                </a>
+            </div>
+            <div class="cta-trust-row">
+                <div class="cta-trust-item"><i class="fas fa-check-circle"></i> 100% Free to List</div>
+                <div class="cta-trust-item"><i class="fas fa-bolt"></i> Go Live in Minutes</div>
+                <div class="cta-trust-item"><i class="fas fa-user-check"></i> Verified Students Only</div>
+                <div class="cta-trust-item"><i class="fas fa-ban"></i> No Hidden Fees</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ CONTACT ═══════════════════ -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="section-header fade-up">
+                <span class="section-tag">Get In Touch</span>
+                <h2>We're Here to Help You List</h2>
+                <p>Have questions or need help posting your property? Reach us directly — we respond fast.</p>
+            </div>
+            <div class="contact-inner">
+                <!-- Left: Info + channels -->
+                <div class="contact-info fade-up">
+                    <h3>Talk to Our Team</h3>
+                    <p>Whether you're an individual landlord with one property or an agency managing dozens of listings — we're ready to help you get started and answer every question.</p>
+
+                    <div class="contact-channels">
+                        <a href="mailto:support@roastmydorm.com" class="contact-channel">
+                            <div class="channel-icon email-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="channel-details">
+                                <strong>Email Support</strong>
+                                <span>support@roastmydorm.com</span>
+                            </div>
+                            <i class="fas fa-chevron-right" style="margin-left:auto;color:#d1d5db;"></i>
+                        </a>
+
+                        <a href="https://wa.me/212600000000?text=Hello%2C%20I%20want%20to%20list%20my%20property%20on%20RoastMyDorm" target="_blank" rel="noopener" class="contact-channel">
+                            <div class="channel-icon wa-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="channel-details">
+                                <strong>WhatsApp</strong>
+                                <span>+212 6 00 00 00 00 — Quick replies</span>
+                            </div>
+                            <i class="fas fa-chevron-right" style="margin-left:auto;color:#d1d5db;"></i>
+                        </a>
+                    </div>
+
+                    <div style="margin-top:28px;background:#fff;border-radius:14px;padding:20px 22px;border:1px solid #e5e7eb;">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                            <div style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></div>
+                            <span style="font-size:0.88rem;font-weight:600;color:#374151;">Response Time</span>
+                        </div>
+                        <p style="font-size:0.88rem;color:#6b7280;line-height:1.6;">We typically reply within <strong style="color:#111827;">2–4 hours</strong> on weekdays. For WhatsApp, expect a response within <strong style="color:#111827;">1 hour</strong> during business hours.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Form -->
+                <div class="contact-form-card fade-up" id="contact-form">
+                    <h3><i class="fas fa-paper-plane" style="color:#2563eb;margin-right:8px;"></i>Send Us a Message</h3>
+
+                    <div id="formBody">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fname">First Name *</label>
+                                <input type="text" id="fname" placeholder="Youssef" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lname">Last Name</label>
+                                <input type="text" id="lname" placeholder="El Mansouri">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cemail">Email Address *</label>
+                            <input type="email" id="cemail" placeholder="you@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cphone">WhatsApp / Phone</label>
+                            <input type="tel" id="cphone" placeholder="+212 6 00 00 00 00">
+                        </div>
+                        <div class="form-group">
+                            <label for="ctype">I am a…</label>
+                            <select id="ctype">
+                                <option value="">Select…</option>
+                                <option value="individual">Individual landlord</option>
+                                <option value="agency">Real estate agency</option>
+                                <option value="developer">Property developer</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ccity">City *</label>
+                            <select id="ccity" required>
+                                <option value="">Select your city…</option>
+                                <option value="casablanca">Casablanca</option>
+                                <option value="rabat">Rabat</option>
+                                <option value="marrakech">Marrakech</option>
+                                <option value="other">Other city</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cmsg">Message *</label>
+                            <textarea id="cmsg" placeholder="Tell us about your property or ask your question…" required></textarea>
+                        </div>
+                        <button class="btn-submit" id="submitBtn" onclick="submitContactForm()">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </div>
+
+                    <div class="form-success" id="formSuccess">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Message Sent!</h4>
+                        <p>Thanks for reaching out. Our team will get back to you within 2–4 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════ FOOTER ═══════════════════ -->
+    <footer class="footer-landlord">
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-logo">RoastMyDorm</div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="for-students.html">For Students</a>
+                    <a href="how-it-works.html">How It Works</a>
+                    <a href="casablanca-dorms.html">Casablanca</a>
+                    <a href="rabat-dorms.html">Rabat</a>
+                    <a href="marrakech-dorms.html">Marrakech</a>
+                    <a href="mailto:support@roastmydorm.com">Support</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 RoastMyDorm. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ── Mobile menu ──
+        function toggleMobileMenu() {
+            const menu = document.getElementById('navMenu');
+            const hb = document.getElementById('hamburger');
+            const isOpen = menu.classList.toggle('mobile-open');
+            hb.classList.toggle('active', isOpen);
+            if (isOpen) {
+                menu.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:#fff;padding:16px 20px;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:999;border-top:1px solid #e5e7eb;';
+            } else {
+                menu.style.cssText = '';
+            }
+        }
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#navMenu a').forEach(a => {
+            a.addEventListener('click', () => {
+                const menu = document.getElementById('navMenu');
+                menu.style.cssText = '';
+                menu.classList.remove('mobile-open');
+                document.getElementById('hamburger').classList.remove('active');
+            });
+        });
+
+        // ── Scroll-triggered fade-in ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, idx) => {
+                if (entry.isIntersecting) {
+                    // Stagger siblings slightly
+                    const siblings = entry.target.parentElement.querySelectorAll('.fade-up');
+                    let delay = 0;
+                    siblings.forEach((el, i) => {
+                        if (el === entry.target) delay = i * 80;
+                    });
+                    setTimeout(() => entry.target.classList.add('visible'), delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // ── Contact Form ──
+        function submitContactForm() {
+            const fname = document.getElementById('fname').value.trim();
+            const cemail = document.getElementById('cemail').value.trim();
+            const ccity = document.getElementById('ccity').value;
+            const cmsg = document.getElementById('cmsg').value.trim();
+
+            if (!fname || !cemail || !ccity || !cmsg) {
+                const missing = [];
+                if (!fname) missing.push('First Name');
+                if (!cemail) missing.push('Email');
+                if (!ccity) missing.push('City');
+                if (!cmsg) missing.push('Message');
+                alert('Please fill in: ' + missing.join(', '));
+                return;
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cemail)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+
+            // Simulate API call (replace with real endpoint when ready)
+            setTimeout(() => {
+                document.getElementById('formBody').style.display = 'none';
+                document.getElementById('formSuccess').style.display = 'block';
+            }, 1200);
+        }
+
+        // ── Allow Enter key on form ──
+        document.querySelectorAll('#formBody input, #formBody select').forEach(el => {
+            el.addEventListener('keydown', e => {
+                if (e.key === 'Enter') submitContactForm();
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -351,9 +351,9 @@ app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const response = {
     success: false,
-    message: process.env.NODE_ENV === 'production'
-      ? 'An unexpected error occurred'
-      : err.message
+    message: (err.isOperational || process.env.NODE_ENV !== 'production')
+      ? err.message
+      : 'An unexpected error occurred'
   };
 
   if (process.env.NODE_ENV === 'development') {
