@@ -135,48 +135,107 @@ if (budgetSlider && sliderValue) {
 }
 
 // ============================================
+// API BASE URL
+// ============================================
+const ROOMMATE_API = ['localhost', '127.0.0.1', ''].includes(window.location.hostname)
+    ? 'http://localhost:5000/api'
+    : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+// ============================================
 // FORM SUBMISSION
 // ============================================
 if (profileForm) {
-    profileForm.addEventListener('submit', function(e) {
+    profileForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        // Collect form data
-        const formData = new FormData(this);
-        const profileData = {};
-        
-        formData.forEach((value, key) => {
-            profileData[key] = value;
-        });
 
-        // Get contact preference (outside main form)
-        const contactPref = document.querySelector('input[name="contactPreference"]:checked');
-        if (contactPref) {
-            profileData.contactPreference = contactPref.value;
-        }
-
-        // Validate required fields
-        const requiredFields = ['fullName', 'city', 'university', 'minBudget', 'moveInDate'];
-        const missingFields = requiredFields.filter(field => !profileData[field]);
-
-        if (missingFields.length > 0) {
-            showNotification('Please fill in all required fields: ' + missingFields.join(', '), 'error');
+        const token = localStorage.getItem('rmd_token');
+        if (!token) {
+            showNotification('Please sign in to create a roommate profile.', 'error');
             return;
         }
 
-        // Log data (in production, this would be an API call)
-        console.log('Profile Data:', profileData);
+        // Collect form data
+        const formData = new FormData(this);
+        const profileData = {};
+        formData.forEach((value, key) => { profileData[key] = value; });
 
-        // Show success notification
-        showNotification('Profile created successfully! Redirecting to matches...', 'success');
+        // Get contact preference (outside main form)
+        const contactPref = document.querySelector('input[name="contactPreference"]:checked');
+        if (contactPref) profileData.contactPreference = contactPref.value;
 
-        // Store in localStorage for demo purposes
+        // Validate required fields
+        const requiredFields = ['fullName', 'city', 'university', 'minBudget'];
+        const missingFields = requiredFields.filter(field => !profileData[field]);
+        if (missingFields.length > 0) {
+            showNotification('Please fill in all required fields.', 'error');
+            return;
+        }
+
+        // Map form fields to API fields
+        const sleepMap = {
+            'early': 'Early Bird (10 PM - 6 AM)',
+            'night': 'Night Owl (1 AM - 9 AM)'
+        };
+        const cleanMap = { 'very-clean': 5, 'balanced': 3 };
+        const guestsMap = { 'rarely': 'Quiet', 'sometimes': 'Moderate', 'often': 'Social' };
+        const smokerMap = { 'non-smoker': 'No smoking', 'smoker': 'Regularly' };
+
+        const apiPayload = {
+            name: profileData.fullName,
+            age: parseInt(profileData.age) || 20,
+            university: profileData.university,
+            location: profileData.city,
+            budgetMin: parseInt(profileData.minBudget) || 1000,
+            budgetMax: parseInt(profileData.maxBudget) || parseInt(profileData.minBudget) || 5000,
+            sleepSchedule: sleepMap[profileData.sleepSchedule] || 'Flexible',
+            cleanlinessLevel: cleanMap[profileData.cleanliness] || 3,
+            smokingPreference: smokerMap[profileData.smoker] || 'No smoking',
+            socialLevel: guestsMap[profileData.guests] || 'Moderate',
+            studyHabits: 'Mixed (quiet & groups)',
+            personality: 'Ambivert',
+            petsTolerance: 'Neutral',
+            bio: profileData.bio || ''
+        };
+
+        // Store in localStorage
         localStorage.setItem('roommateProfile', JSON.stringify(profileData));
 
-        // Redirect to matches page after delay
-        setTimeout(() => {
-            window.location.href = ROUTES.browseRoommates;
-        }, 2000);
+        const submitBtn = document.querySelector('button[type="submit"]');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
+
+        try {
+            // Check if profile already exists → update, else create
+            const checkRes = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
+                headers: { Authorization: 'Bearer ' + token }
+            });
+
+            let res;
+            if (checkRes.status === 404) {
+                res = await fetch(`${ROOMMATE_API}/roommate/profiles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                    body: JSON.stringify(apiPayload)
+                });
+            } else {
+                res = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                    body: JSON.stringify(apiPayload)
+                });
+            }
+
+            const result = await res.json();
+            if (result.success) {
+                showNotification('Profile saved! Redirecting to matches...', 'success');
+                setTimeout(() => { window.location.href = ROUTES.browseRoommates; }, 2000);
+            } else {
+                showNotification(result.message || 'Failed to save profile. Please try again.', 'error');
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Create My Profile'; }
+            }
+        } catch (err) {
+            showNotification('Could not connect to server. Please try again.', 'error');
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Create My Profile'; }
+        }
     });
 }
 
