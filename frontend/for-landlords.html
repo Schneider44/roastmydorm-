@@ -997,15 +997,12 @@
                 </a>
             </div>
             <div class="nav-menu" id="navMenu">
-                <a href="for-students.html" class="nav-link">
-                    <i class="fas fa-graduation-cap"></i> For Students
-                </a>
                 <a href="#contact" class="nav-link">
                     <i class="fas fa-envelope"></i> Contact Us
                 </a>
-                <a href="#post" class="nav-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#2563eb;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;">
+                <button onclick="handlePostPropertyClick()" class="nav-btn" style="display:inline-flex;align-items:center;gap:6px;background:#2563eb;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;font-size:1rem;">
                     <i class="fas fa-plus"></i> Post Property
-                </a>
+                </button>
             </div>
             <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
                 <span></span><span></span><span></span>
@@ -1507,7 +1504,47 @@
         </div>
     </footer>
 
+    <!-- Auth Gate Modal -->
+    <div id="authGateModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;padding:20px">
+        <div style="background:#fff;border-radius:16px;padding:36px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)">
+            <div style="width:60px;height:60px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px">
+                <i class="fas fa-home" style="font-size:1.5rem;color:#2563eb"></i>
+            </div>
+            <h3 style="margin:0 0 8px;font-size:1.25rem;font-weight:700;color:#1e293b">Sign in to Post a Property</h3>
+            <p style="margin:0 0 24px;color:#6b7280;font-size:.9rem;line-height:1.5">You need an account to submit your listing. It only takes 30 seconds to get started.</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+                <a href="index.html#signin" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#2563eb;color:#fff;padding:13px;border-radius:10px;font-weight:700;text-decoration:none;font-size:.95rem">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
+                <a href="index.html#register" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#f8fafc;color:#1e293b;border:1.5px solid #e2e8f0;padding:13px;border-radius:10px;font-weight:600;text-decoration:none;font-size:.95rem">
+                    <i class="fas fa-user-plus"></i> Create a Free Account
+                </a>
+            </div>
+            <button onclick="closeAuthModal()" style="margin-top:16px;background:none;border:none;color:#94a3b8;font-size:.85rem;cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
     <script>
+        // ── Auth gate for Post Property ──
+        function handlePostPropertyClick() {
+            const token = localStorage.getItem('authToken') || localStorage.getItem('accessToken') || localStorage.getItem('rmd_token');
+            if (token) {
+                // Already signed in — scroll to the form
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                // Show auth modal
+                const modal = document.getElementById('authGateModal');
+                modal.style.display = 'flex';
+            }
+        }
+        function closeAuthModal() {
+            document.getElementById('authGateModal').style.display = 'none';
+        }
+        // Close modal when clicking backdrop
+        document.getElementById('authGateModal').addEventListener('click', function(e) {
+            if (e.target === this) closeAuthModal();
+        });
+
         // ── Mobile menu ──
         function toggleMobileMenu() {
             const menu = document.getElementById('navMenu');
