@@ -998,8 +998,11 @@
                     Find , Rate & Rent  <span class="highlight">Your student Home</span> in Morocco
                 </h1>
                 <div class="hero-search">
+                    <!-- Honeypot: absorbs Chrome credential autofill so it doesn't hit the search box -->
+                    <input type="text" name="username" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;overflow:hidden;" tabindex="-1" aria-hidden="true" autocomplete="username">
+                    <input type="password" name="password" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;overflow:hidden;" tabindex="-1" aria-hidden="true" autocomplete="current-password">
                     <i class="fas fa-search"></i>
-                    <input id="schoolSearchInput" type="search" placeholder="Search universities and schools" autocomplete="off" spellcheck="false">
+                    <input id="schoolSearchInput" type="search" placeholder="Search universities and schools" autocomplete="off" spellcheck="false" name="school-search">
                     <button id="searchUniversitiesBtn" class="search-btn" onclick="toggleUniversitySearch()">
                         <i class="fas fa-graduation-cap"></i> Search Universities
                     </button>
