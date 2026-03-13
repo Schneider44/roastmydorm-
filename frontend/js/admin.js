@@ -2006,44 +2006,68 @@ function renderPropertyRequests(submissions) {
     return;
   }
 
+  const amenityLabels = { wifi:'Wi-Fi', gym:'Fitness Center', laundry:'In-unit Laundry', security:'24/7 Security', ac:'Air Conditioning', parking:'Parking', tv:'Smart TV', kitchen:'Equipped Kitchen', supermarket:'Supermarket', tram:'Tram Station' };
+
   listEl.innerHTML = submissions.map(s => {
     const date = new Date(s.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
     const statusColor = { pending: '#f59e0b', approved: '#10b981', rejected: '#ef4444' }[s.status] || '#6b7280';
-    const amenities = (s.amenities || []).slice(0, 4).join(', ') || '—';
+    const amenityTags = (s.amenities || []).map(a => `<span style="background:#eff6ff;color:#2563eb;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:500">${amenityLabels[a] || a}</span>`).join('');
+    const images = s.images || [];
+    const bedroomLabel = s.bedrooms === 0 ? 'Studio' : `${s.bedrooms} Bed${s.bedrooms > 1 ? 's' : ''}`;
+    const moveIn = s.availableFrom ? new Date(s.availableFrom).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+
     return `
-    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-            <h3 style="margin:0;font-size:1rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.title}</h3>
-            <span style="background:${statusColor}20;color:${statusColor};padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap">${s.status.toUpperCase()}</span>
+    <div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden">
+      ${images.length ? `
+      <div style="display:flex;gap:4px;padding:12px 12px 0;overflow-x:auto">
+        ${images.slice(0,6).map((img,i) => `<img src="${img}" alt="Photo ${i+1}" style="height:110px;min-width:150px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'">`).join('')}
+      </div>` : ''}
+      <div style="padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+              <h3 style="margin:0;font-size:1rem;font-weight:600">${s.title}</h3>
+              <span style="background:${statusColor}20;color:${statusColor};padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:600;white-space:nowrap">${s.status.toUpperCase()}</span>
+            </div>
+
+            <!-- Key Specs row -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+              <span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>🛏</strong> ${bedroomLabel}</span>
+              <span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>🚿</strong> ${s.bathrooms || 1} Bath</span>
+              ${s.squareFootage ? `<span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>📐</strong> ${s.squareFootage} m²</span>` : ''}
+              <span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>💰</strong> ${s.price.toLocaleString()} MAD/mo</span>
+              <span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>🏠</strong> ${s.furnished ? 'Furnished' : 'Unfurnished'}</span>
+              ${s.leaseDuration ? `<span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>📋</strong> ${s.leaseDuration}</span>` : ''}
+              ${s.availableFrom ? `<span style="display:flex;align-items:center;gap:5px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:4px 10px;font-size:.8rem"><strong>📅</strong> From ${moveIn}</span>` : ''}
+            </div>
+
+            <!-- Contact info -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px 20px;font-size:.8rem;color:#6b7280;margin-bottom:10px">
+              <span><strong>Landlord:</strong> ${s.landlordName}</span>
+              <span><strong>Email:</strong> ${s.landlordEmail}</span>
+              ${s.landlordPhone ? `<span><strong>Phone:</strong> ${s.landlordPhone}</span>` : ''}
+              <span><strong>Type:</strong> ${s.landlordType || 'individual'}</span>
+              <span><strong>City:</strong> ${s.city}${s.neighborhood ? ', ' + s.neighborhood : ''}</span>
+              <span><strong>Submitted:</strong> ${date}</span>
+            </div>
+
+            <p style="margin:0 0 10px;font-size:.85rem;color:#374151;line-height:1.5">${s.description}</p>
+
+            ${amenityTags ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">${amenityTags}</div>` : ''}
+            ${s.adminNote ? `<p style="margin:10px 0 0;font-size:.8rem;background:#f3f4f6;padding:8px 12px;border-radius:6px"><strong>Admin note:</strong> ${s.adminNote}</p>` : ''}
           </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px 20px;font-size:.8rem;color:#6b7280;margin-bottom:10px">
-            <span><strong>Landlord:</strong> ${s.landlordName}</span>
-            <span><strong>Email:</strong> ${s.landlordEmail}</span>
-            ${s.landlordPhone ? `<span><strong>Phone:</strong> ${s.landlordPhone}</span>` : ''}
-            <span><strong>Type:</strong> ${s.landlordType || 'individual'}</span>
-            <span><strong>Property:</strong> ${s.propertyType}</span>
-            <span><strong>City:</strong> ${s.city}${s.neighborhood ? ', ' + s.neighborhood : ''}</span>
-            <span><strong>Price:</strong> ${s.price} MAD/mo</span>
-            <span><strong>Furnished:</strong> ${s.furnished ? 'Yes' : 'No'}</span>
-            <span><strong>Submitted:</strong> ${date}</span>
-          </div>
-          <p style="margin:0 0 8px;font-size:.85rem;color:#374151;line-height:1.5">${s.description}</p>
-          ${amenities !== '—' ? `<p style="margin:0;font-size:.8rem;color:#6b7280"><strong>Amenities:</strong> ${amenities}</p>` : ''}
-          ${s.adminNote ? `<p style="margin:8px 0 0;font-size:.8rem;background:#f3f4f6;padding:8px 12px;border-radius:6px"><strong>Admin note:</strong> ${s.adminNote}</p>` : ''}
+          ${s.status === 'pending' ? `
+          <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+            <button onclick="openPrModal('${s._id}','approve')"
+              style="padding:8px 16px;background:#10b981;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
+              ✓ Approve
+            </button>
+            <button onclick="openPrModal('${s._id}','reject')"
+              style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
+              ✗ Reject
+            </button>
+          </div>` : ''}
         </div>
-        ${s.status === 'pending' ? `
-        <div style="display:flex;gap:8px;flex-shrink:0">
-          <button onclick="openPrModal('${s._id}','approve')"
-            style="padding:8px 16px;background:#10b981;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
-            ✓ Approve
-          </button>
-          <button onclick="openPrModal('${s._id}','reject')"
-            style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
-            ✗ Reject
-          </button>
-        </div>` : ''}
       </div>
     </div>`;
   }).join('');

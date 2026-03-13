@@ -814,6 +814,43 @@
 
         .form-group textarea { resize: vertical; min-height: 110px; }
 
+        .amenity-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .85rem;
+            font-weight: 500;
+            color: #374151;
+            transition: border-color .15s, background .15s;
+            user-select: none;
+        }
+        .amenity-check:hover { border-color: #2563eb; background: #eff6ff; }
+        .amenity-check input { accent-color: #2563eb; cursor: pointer; }
+        .amenity-check i { color: #2563eb; width: 16px; text-align: center; }
+        .photo-thumb {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-thumb button {
+            position: absolute;
+            top: 4px; right: 4px;
+            background: rgba(0,0,0,.55);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px; height: 22px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
         .btn-submit {
             width: 100%;
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
@@ -1357,6 +1394,80 @@
                             <textarea id="pdesc" placeholder="Describe the property: size, condition, proximity to university, transport links, included utilities…" required></textarea>
                         </div>
 
+                        <!-- Key Specifications -->
+                        <p style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;">Key Specifications</p>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pbedrooms">Bedrooms</label>
+                                <select id="pbedrooms">
+                                    <option value="0">Studio / Open plan</option>
+                                    <option value="1">1 Bedroom</option>
+                                    <option value="2">2 Bedrooms</option>
+                                    <option value="3">3 Bedrooms</option>
+                                    <option value="4">4+ Bedrooms</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pbathrooms">Bathrooms</label>
+                                <select id="pbathrooms">
+                                    <option value="1">1 Bathroom</option>
+                                    <option value="2">2 Bathrooms</option>
+                                    <option value="3">3+ Bathrooms</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="psqm">Area (m²)</label>
+                                <input type="number" id="psqm" placeholder="e.g. 45" min="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="please">Lease Duration</label>
+                                <select id="please">
+                                    <option value="monthly">Month-to-month</option>
+                                    <option value="3months">3 months</option>
+                                    <option value="6months">6 months</option>
+                                    <option value="12months">12 months (1 year)</option>
+                                    <option value="negotiable">Negotiable</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pmovein">Available From</label>
+                                <input type="date" id="pmovein">
+                            </div>
+                            <div class="form-group" style="display:flex;align-items:center;gap:12px;padding-top:28px">
+                                <input type="checkbox" id="pfurnished" style="width:18px;height:18px;cursor:pointer;accent-color:#2563eb">
+                                <label for="pfurnished" style="margin:0;cursor:pointer;font-weight:500">Fully Furnished</label>
+                            </div>
+                        </div>
+
+                        <!-- Amenities -->
+                        <p style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;">Amenities</p>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px" id="amenitiesGrid">
+                            <label class="amenity-check"><input type="checkbox" value="wifi"> <i class="fas fa-wifi"></i> High-Speed Wi-Fi</label>
+                            <label class="amenity-check"><input type="checkbox" value="gym"> <i class="fas fa-dumbbell"></i> Fitness Center Access</label>
+                            <label class="amenity-check"><input type="checkbox" value="laundry"> <i class="fas fa-soap"></i> In-unit Laundry</label>
+                            <label class="amenity-check"><input type="checkbox" value="security"> <i class="fas fa-shield-alt"></i> 24/7 Security</label>
+                            <label class="amenity-check"><input type="checkbox" value="ac"> <i class="fas fa-snowflake"></i> Air Conditioning</label>
+                            <label class="amenity-check"><input type="checkbox" value="parking"> <i class="fas fa-parking"></i> Parking Available</label>
+                            <label class="amenity-check"><input type="checkbox" value="tv"> <i class="fas fa-tv"></i> Smart TV Included</label>
+                            <label class="amenity-check"><input type="checkbox" value="kitchen"> <i class="fas fa-utensils"></i> Fully Equipped Kitchen</label>
+                            <label class="amenity-check"><input type="checkbox" value="supermarket"> <i class="fas fa-shopping-cart"></i> Supermarket Nearby</label>
+                            <label class="amenity-check"><input type="checkbox" value="tram"> <i class="fas fa-train"></i> Tram Station Nearby</label>
+                        </div>
+
+                        <!-- Property Photos -->
+                        <p style="font-size:0.78rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;">Property Photos</p>
+                        <div id="photoUploadArea" style="border:2px dashed #e2e8f0;border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:8px" onclick="document.getElementById('photoInput').click()" ondragover="event.preventDefault();this.style.borderColor='#2563eb'" ondragleave="this.style.borderColor='#e2e8f0'" ondrop="handlePhotoDrop(event)">
+                            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:#94a3b8;display:block;margin-bottom:8px"></i>
+                            <p style="color:#6b7280;font-size:.875rem;margin:0">Click or drag & drop photos here</p>
+                            <p style="color:#94a3b8;font-size:.75rem;margin:4px 0 0">Up to 10 images · JPG, PNG, WebP · Max 5MB each</p>
+                        </div>
+                        <input type="file" id="photoInput" multiple accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
+                        <div id="photoPreview" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;margin-top:8px"></div>
+
                         <button class="btn-submit" id="submitBtn" onclick="submitPropertyForm()">
                             <i class="fas fa-paper-plane"></i> Submit for Review
                         </button>
@@ -1443,6 +1554,43 @@
             ? 'http://localhost:5000/api'
             : 'https://roastmydorm-backend-zy4p.vercel.app/api';
 
+        // ── Photo handling ──
+        let selectedPhotos = []; // array of { file, dataUrl }
+
+        function handlePhotoSelect(e) {
+            addPhotos(Array.from(e.target.files));
+            e.target.value = '';
+        }
+        function handlePhotoDrop(e) {
+            e.preventDefault();
+            document.getElementById('photoUploadArea').style.borderColor = '#e2e8f0';
+            addPhotos(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+        }
+        function addPhotos(files) {
+            const remaining = 10 - selectedPhotos.length;
+            files.slice(0, remaining).forEach(file => {
+                if (file.size > 5 * 1024 * 1024) { alert(`${file.name} exceeds 5MB`); return; }
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    selectedPhotos.push({ file, dataUrl: ev.target.result });
+                    renderPhotoPreviews();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        function removePhoto(idx) {
+            selectedPhotos.splice(idx, 1);
+            renderPhotoPreviews();
+        }
+        function renderPhotoPreviews() {
+            const el = document.getElementById('photoPreview');
+            el.innerHTML = selectedPhotos.map((p, i) => `
+                <div class="photo-thumb">
+                    <img src="${p.dataUrl}" alt="Photo ${i+1}">
+                    <button onclick="removePhoto(${i})" title="Remove">✕</button>
+                </div>`).join('');
+        }
+
         // ── Property Submission Form ──
         async function submitPropertyForm() {
             const fname        = document.getElementById('fname').value.trim();
@@ -1456,6 +1604,14 @@
             const pcity        = document.getElementById('pcity').value;
             const pneighborhood= document.getElementById('pneighborhood').value.trim();
             const pdesc        = document.getElementById('pdesc').value.trim();
+            const pbedrooms    = Number(document.getElementById('pbedrooms').value);
+            const pbathrooms   = Number(document.getElementById('pbathrooms').value);
+            const psqm         = document.getElementById('psqm').value;
+            const please       = document.getElementById('please').value;
+            const pmovein      = document.getElementById('pmovein').value;
+            const pfurnished   = document.getElementById('pfurnished').checked;
+            const amenities    = Array.from(document.querySelectorAll('#amenitiesGrid input:checked')).map(cb => cb.value);
+            const images       = selectedPhotos.map(p => p.dataUrl);
 
             // Validate required fields
             const missing = [];
@@ -1482,16 +1638,24 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        landlordName:  `${fname} ${lname}`.trim(),
-                        landlordEmail: cemail,
-                        landlordPhone: cphone,
-                        landlordType:  ctype || 'individual',
-                        title:         ptitle,
-                        propertyType:  ptype,
-                        price:         Number(pprice),
-                        city:          pcity,
-                        neighborhood:  pneighborhood,
-                        description:   pdesc
+                        landlordName:   `${fname} ${lname}`.trim(),
+                        landlordEmail:  cemail,
+                        landlordPhone:  cphone,
+                        landlordType:   ctype || 'individual',
+                        title:          ptitle,
+                        propertyType:   ptype,
+                        price:          Number(pprice),
+                        city:           pcity,
+                        neighborhood:   pneighborhood,
+                        description:    pdesc,
+                        bedrooms:       pbedrooms,
+                        bathrooms:      pbathrooms,
+                        squareFootage:  psqm ? Number(psqm) : undefined,
+                        leaseDuration:  please,
+                        availableFrom:  pmovein || undefined,
+                        furnished:      pfurnished,
+                        amenities,
+                        images
                     })
                 });
                 const data = await res.json();

@@ -15,9 +15,14 @@ const propertyRequestSchema = new mongoose.Schema({
   address:      { type: String, trim: true },
   price:        { type: Number, required: true, min: 0 },
   description:  { type: String, required: true, trim: true },
+  bedrooms:     { type: Number, default: 0 },
+  bathrooms:    { type: Number, default: 1 },
+  squareFootage:{ type: Number },
+  leaseDuration:{ type: String, trim: true },
   amenities:    [{ type: String, trim: true }],
   furnished:    { type: Boolean, default: false },
   availableFrom:{ type: Date },
+  images:       [{ type: String }],
 
   // ── Admin Review ──
   status:    { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },

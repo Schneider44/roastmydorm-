@@ -14,7 +14,8 @@ router.post('/', asyncHandler(async (req, res) => {
   const {
     landlordName, landlordEmail, landlordPhone, landlordType,
     title, propertyType, city, neighborhood, address,
-    price, description, amenities, furnished, availableFrom
+    price, description, amenities, furnished, availableFrom,
+    bedrooms, bathrooms, squareFootage, leaseDuration, images
   } = req.body;
 
   // Basic validation
@@ -30,9 +31,14 @@ router.post('/', asyncHandler(async (req, res) => {
     landlordName, landlordEmail, landlordPhone, landlordType,
     title, propertyType, city, neighborhood, address,
     price: Number(price), description,
+    bedrooms: bedrooms !== undefined ? Number(bedrooms) : 0,
+    bathrooms: bathrooms !== undefined ? Number(bathrooms) : 1,
+    squareFootage: squareFootage ? Number(squareFootage) : undefined,
+    leaseDuration: leaseDuration || undefined,
     amenities: Array.isArray(amenities) ? amenities : [],
     furnished: Boolean(furnished),
-    availableFrom: availableFrom ? new Date(availableFrom) : undefined
+    availableFrom: availableFrom ? new Date(availableFrom) : undefined,
+    images: Array.isArray(images) ? images.slice(0, 10) : []
   });
 
   // Notify admin (non-blocking — don't fail the request if email fails)
