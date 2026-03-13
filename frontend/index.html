@@ -108,6 +108,8 @@
             border: 1px solid #e5e7eb;
             border-radius: 8px;
         }
+        #schoolSearchInput::-webkit-search-cancel-button,
+        #schoolSearchInput::-webkit-search-decoration { display: none; }
 
         .search-btn {
             width: 100%;
@@ -997,7 +999,7 @@
                 </h1>
                 <div class="hero-search">
                     <i class="fas fa-search"></i>
-                    <input id="schoolSearchInput" type="text" placeholder="Search universities and schools" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')">
+                    <input id="schoolSearchInput" type="search" placeholder="Search universities and schools" autocomplete="off" spellcheck="false">
                     <button id="searchUniversitiesBtn" class="search-btn" onclick="toggleUniversitySearch()">
                         <i class="fas fa-graduation-cap"></i> Search Universities
                     </button>
