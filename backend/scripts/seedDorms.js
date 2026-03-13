@@ -918,5 +918,10 @@ async function seedDorms() {
   }
 }
 
+// Export for use by other modules
+module.exports = { dormsData, generateSlug };
+
 // Run if called directly
-seedDorms();
+if (require.main === module) {
+  seedDorms();
+}
