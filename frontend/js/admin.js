@@ -1959,6 +1959,7 @@ window.resolveReport = resolveReport;
 window.dismissReport = dismissReport;
 window.confirmAction = confirmAction;
 window.updateSelectedUsers = updateSelectedUsers;
+window.navigateTo = navigateToPage;
 
 // ============================================
 // Property Requests
