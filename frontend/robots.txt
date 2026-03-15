@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.roastmydorm.com/sitemap.xml
+
+# Disallow admin and private pages
+Disallow: /admin-dashboard.html
+Disallow: /settings.html
+Disallow: /find-roommate-chat.html
+Disallow: /find-roommate-matches.html
+Disallow: /review-form.html
