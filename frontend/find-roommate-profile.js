@@ -142,13 +142,47 @@ const ROOMMATE_API = ['localhost', '127.0.0.1', ''].includes(window.location.hos
     : 'https://roastmydorm-backend-zy4p.vercel.app/api';
 
 // ============================================
+// TOKEN REFRESH HELPERS
+// ============================================
+async function refreshRmdToken() {
+    const refreshToken = localStorage.getItem('rmd_refresh');
+    if (!refreshToken) return null;
+    try {
+        const res = await fetch(`${ROOMMATE_API}/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken })
+        });
+        const data = await res.json();
+        if (res.ok && data.success && data.data.accessToken) {
+            localStorage.setItem('rmd_token', data.data.accessToken);
+            if (data.data.refreshToken) localStorage.setItem('rmd_refresh', data.data.refreshToken);
+            return data.data.accessToken;
+        }
+        return null;
+    } catch {
+        return null;
+    }
+}
+
+// Decode JWT expiry without a library and refresh if within 60s of expiry
+async function ensureFreshToken(token) {
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expiresIn = payload.exp * 1000 - Date.now();
+        if (expiresIn < 60000) return await refreshRmdToken();
+    } catch { /* ignore decode errors */ }
+    return token;
+}
+
+// ============================================
 // FORM SUBMISSION
 // ============================================
 if (profileForm) {
     profileForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        const token = localStorage.getItem('rmd_token');
+        let token = localStorage.getItem('rmd_token');
         if (!token) {
             showNotification('Please sign in to create a roommate profile.', 'error');
             return;
@@ -204,13 +238,33 @@ if (profileForm) {
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
 
         try {
+            // Refresh token if expired before making calls
+            token = await ensureFreshToken(token);
+            if (!token) {
+                showNotification('Your session has expired. Please sign in again.', 'error');
+                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Create My Profile'; }
+                return;
+            }
+
             // Check if profile already exists → update, else create
             const checkRes = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
                 headers: { Authorization: 'Bearer ' + token }
             });
 
+            // If token expired mid-session, refresh and retry once
+            if (checkRes.status === 401) {
+                token = await refreshRmdToken();
+                if (!token) {
+                    showNotification('Your session has expired. Please sign in again.', 'error');
+                    setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Create My Profile'; }
+                    return;
+                }
+            }
+
             let res;
-            if (checkRes.status === 404) {
+            if (checkRes.status === 404 || checkRes.status === 401) {
                 res = await fetch(`${ROOMMATE_API}/roommate/profiles`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
