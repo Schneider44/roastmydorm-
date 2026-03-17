@@ -25,9 +25,29 @@ const ROOMMATE_API = ['localhost', '127.0.0.1', ''].includes(window.location.hos
     ? 'http://localhost:5000/api'
     : 'https://roastmydorm-backend-zy4p.vercel.app/api';
 
+// ── Token refresh helper ──
+async function refreshRmdToken() {
+    const refreshToken = localStorage.getItem('rmd_refresh');
+    if (!refreshToken) return null;
+    try {
+        const res = await fetch(`${ROOMMATE_API}/auth/refresh`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken })
+        });
+        const data = await res.json();
+        if (res.ok && data.success && data.data.accessToken) {
+            localStorage.setItem('rmd_token', data.data.accessToken);
+            if (data.data.refreshToken) localStorage.setItem('rmd_refresh', data.data.refreshToken);
+            return data.data.accessToken;
+        }
+        return null;
+    } catch { return null; }
+}
+
 // ── Load real profiles on page load ──
 window.addEventListener('DOMContentLoaded', async function() {
-    const token = localStorage.getItem('rmd_token');
+    let token = localStorage.getItem('rmd_token');
     const grid = document.getElementById('roommatesGrid');
     const loadingState = document.getElementById('loadingState');
     const notLoggedIn = document.getElementById('notLoggedInState');
@@ -45,10 +65,23 @@ window.addEventListener('DOMContentLoaded', async function() {
     }
 
     try {
-        // First check if user has a roommate profile
-        const profileRes = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
+        // Check current user's own profile
+        let profileRes = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
             headers: { Authorization: 'Bearer ' + token }
         });
+
+        // Silently refresh token if expired
+        if (profileRes.status === 401) {
+            token = await refreshRmdToken();
+            if (!token) {
+                hideAll();
+                if (notLoggedIn) notLoggedIn.style.display = 'block';
+                return;
+            }
+            profileRes = await fetch(`${ROOMMATE_API}/roommate/profiles/me`, {
+                headers: { Authorization: 'Bearer ' + token }
+            });
+        }
 
         if (profileRes.status === 404) {
             hideAll();
@@ -56,7 +89,10 @@ window.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        // Then get all profiles sorted by match score
+        const myProfileData = await profileRes.json();
+        const myProfile = myProfileData.success ? myProfileData.data : null;
+
+        // Get all other profiles
         const res = await fetch(`${ROOMMATE_API}/roommate/profiles`, {
             headers: { Authorization: 'Bearer ' + token }
         });
@@ -64,12 +100,15 @@ window.addEventListener('DOMContentLoaded', async function() {
 
         hideAll();
 
-        if (!data.success || !Array.isArray(data.data) || data.data.length === 0) {
+        const others = (data.success && Array.isArray(data.data)) ? data.data : [];
+
+        // Render own profile card first, then others
+        if (myProfile) renderMyProfile(myProfile);
+        if (others.length > 0) renderProfiles(others);
+        if (!myProfile && others.length === 0) {
             if (emptyState) emptyState.style.display = 'block';
-            return;
         }
 
-        renderProfiles(data.data);
     } catch (err) {
         hideAll();
         if (grid) grid.insertAdjacentHTML('beforeend',
@@ -77,6 +116,46 @@ window.addEventListener('DOMContentLoaded', async function() {
         );
     }
 });
+
+function renderMyProfile(profile) {
+    const grid = document.getElementById('roommatesGrid');
+    if (!grid) return;
+
+    const interestTags = (profile.interests || []).slice(0, 2)
+        .map(i => `<span class="tag">${i}</span>`).join('');
+
+    const card = document.createElement('div');
+    card.className = 'roommate-card';
+    card.style.cssText = 'border: 2px solid #10b981; position: relative;';
+    card.innerHTML = `
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:0.72rem;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap;letter-spacing:0.5px;">YOUR PROFILE</div>
+        <div class="card-badges"><span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span></div>
+        <div class="card-image">
+            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}">
+                ${profile.avatarUrl
+                    ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+                    : `<i class="fas fa-user"></i>`}
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-name-row">
+                <h3>${profile.name || 'You'}</h3>
+                ${profile.age ? `<span style="font-size:0.85rem;color:#6b7280;">${profile.age} yrs</span>` : ''}
+            </div>
+            <div class="card-info">
+                <p><i class="fas fa-map-marker-alt"></i> ${profile.location || '—'}</p>
+                <p><i class="fas fa-university"></i> ${profile.university || '—'}</p>
+                <p><i class="fas fa-wallet"></i> ${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</p>
+            </div>
+            ${interestTags ? `<div class="card-tags">${interestTags}</div>` : ''}
+            ${profile.bio ? `<p style="font-size:0.82rem;color:#6b7280;margin-top:8px;line-height:1.4;">${profile.bio.slice(0,80)}${profile.bio.length > 80 ? '…' : ''}</p>` : ''}
+        </div>
+        <div class="card-actions">
+            <a href="find-roommate-profile.html" class="btn btn-blue btn-sm">Edit Profile</a>
+        </div>
+    `;
+    grid.insertBefore(card, grid.firstChild);
+}
 
 function matchBadgeClass(score) {
     if (score >= 80) return 'high';
