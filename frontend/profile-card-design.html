@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile Card — UI Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F0F4FF;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px 80px;
+    }
+
+    /* ─── Page header ─── */
+    .page-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6366f1;
+      margin-bottom: 10px;
+    }
+    .page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .page-sub {
+      font-size: 0.92rem;
+      color: #6B7280;
+      margin-bottom: 56px;
+      text-align: center;
+    }
+
+    /* ─── Stage ─── */
+    .stage {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 64px;
+      flex-wrap: wrap;
+    }
+
+    /* ─── Column labels ─── */
+    .col-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .col-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 30px;
+      padding: 5px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #374151;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .col-tag .dot {
+      width: 7px; height: 7px;
+      background: #4F46E5;
+      border-radius: 50%;
+    }
+    .col-tag.mobile-tag .dot { background: #10b981; }
+
+    /* ─── THE CARD ─── */
+    .profile-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 1px rgba(17,24,39,0.05),
+        0 4px 6px -1px rgba(17,24,39,0.06),
+        0 20px 40px -8px rgba(17,24,39,0.14),
+        0 40px 80px -20px rgba(79,70,229,0.08);
+      overflow: hidden;
+      position: relative;
+      width: 320px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .profile-card:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 0 0 1px rgba(17,24,39,0.06),
+        0 8px 12px -2px rgba(17,24,39,0.08),
+        0 28px 56px -8px rgba(17,24,39,0.18),
+        0 48px 96px -24px rgba(79,70,229,0.12);
+    }
+
+    /* Mobile card */
+    .profile-card.mobile {
+      width: 300px;
+    }
+
+    /* ─── Cover Banner ─── */
+    .card-cover {
+      height: 80px;
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 60%, #a855f7 100%);
+      position: relative;
+    }
+    .card-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='28' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+      opacity: 0.5;
+    }
+
+    /* 3-dot menu */
+    .card-menu-btn {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.2s;
+    }
+    .card-menu-btn:hover { background: rgba(255,255,255,0.3); }
+    .card-menu-btn i { color: rgba(255,255,255,0.9); font-size: 0.7rem; }
+
+    /* ─── Avatar ─── */
+    .card-avatar-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: -36px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 2;
+    }
+    .card-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 16px rgba(79,70,229,0.25), 0 2px 6px rgba(0,0,0,0.1);
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    /* Online dot */
+    .online-dot {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      width: 13px;
+      height: 13px;
+      background: #10b981;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      z-index: 3;
+    }
+
+    /* ─── Card Body ─── */
+    .card-body {
+      padding: 0 22px 22px;
+      text-align: center;
+    }
+
+    /* Identity */
+    .card-name {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 3px;
+      letter-spacing: -0.3px;
+    }
+    .card-role {
+      font-size: 0.78rem;
+      color: #6B7280;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    /* Info rows */
+    .card-info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+    .info-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-size: 0.77rem;
+      color: #374151;
+      font-weight: 500;
+    }
+    .info-row .info-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: #EEF2FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .info-row .info-icon i {
+      font-size: 0.58rem;
+      color: #4F46E5;
+    }
+
+    /* Divider */
+    .card-divider {
+      height: 1px;
+      background: #F3F4F6;
+      margin: 16px -22px;
+    }
+
+    /* Stats row */
+    .card-stats {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 16px;
+    }
+    .stat-block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 10px 8px;
+      border-radius: 10px;
+      background: #F9FAFB;
+      transition: background 0.2s;
+    }
+    .stat-block:first-child { margin-right: 8px; }
+    .stat-block:hover { background: #EEF2FF; }
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.5px;
+    }
+    .stat-label {
+      font-size: 0.64rem;
+      font-weight: 600;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Skills chips */
+    .card-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .skill-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 11px;
+      background: #EEF2FF;
+      color: #4338CA;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 1px solid rgba(79,70,229,0.15);
+      transition: background 0.2s, transform 0.15s;
+      cursor: default;
+    }
+    .skill-chip:hover {
+      background: #E0E7FF;
+      transform: translateY(-1px);
+    }
+    .skill-chip i {
+      font-size: 0.55rem;
+      color: #6366f1;
+    }
+
+    /* Action buttons */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-card {
+      flex: 1;
+      padding: 10px 10px;
+      border-radius: 11px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary-card {
+      background: #4F46E5;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+    }
+    .btn-primary-card:hover {
+      background: #4338CA;
+      box-shadow: 0 6px 20px rgba(79,70,229,0.45);
+      transform: translateY(-1px);
+    }
+    .btn-secondary-card {
+      background: #F9FAFB;
+      color: #374151;
+      border: 1px solid #E5E7EB;
+    }
+    .btn-secondary-card:hover {
+      background: #F3F4F6;
+      border-color: #D1D5DB;
+      transform: translateY(-1px);
+    }
+
+    /* ─── MOBILE card tweaks ─── */
+    .profile-card.mobile .card-cover {
+      height: 72px;
+    }
+    .profile-card.mobile .card-avatar {
+      width: 64px;
+      height: 64px;
+      font-size: 1.3rem;
+    }
+    .profile-card.mobile .card-avatar-wrap {
+      margin-top: -32px;
+    }
+    .profile-card.mobile .card-body {
+      padding: 0 18px 18px;
+    }
+    .profile-card.mobile .card-name {
+      font-size: 1rem;
+    }
+    .profile-card.mobile .card-actions {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .profile-card.mobile .btn-card {
+      padding: 11px 10px;
+      font-size: 0.82rem;
+    }
+
+    /* ─── Presentation frame ─── */
+    .card-frame {
+      position: relative;
+      padding: 40px;
+      background: #F8FAFC;
+      border-radius: 24px;
+      border: 1px solid #E5E7EB;
+    }
+    .card-frame.mobile-frame {
+      background: #f0fdf4;
+      border-color: #d1fae5;
+    }
+
+    /* Phone mockup wrapper for mobile */
+    .phone-shell {
+      position: relative;
+      background: #1a1a2e;
+      border-radius: 36px;
+      padding: 14px 10px 18px;
+      box-shadow:
+        0 0 0 1px #2d2d44,
+        0 24px 48px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      width: 320px;
+    }
+    .phone-notch {
+      width: 90px;
+      height: 9px;
+      background: #0d0d1a;
+      border-radius: 10px;
+      margin: 0 auto 12px;
+      position: relative;
+    }
+    .phone-notch::before {
+      content: '';
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #1e2d4a;
+    }
+    .phone-inner {
+      background: #F0F4FF;
+      border-radius: 26px;
+      padding: 18px 10px;
+      overflow: hidden;
+    }
+    .phone-status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 8px;
+      margin-bottom: 14px;
+    }
+    .phone-time {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #374151;
+    }
+    .phone-icons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .phone-icons i {
+      font-size: 0.58rem;
+      color: #374151;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 99px; }
+  </style>
+</head>
+<body>
+
+  <!-- Page header -->
+  <p class="page-label">UI Component Design</p>
+  <h1 class="page-title">Student Profile Card</h1>
+  <p class="page-sub">Desktop & Mobile — Dribbble-quality SaaS/EdTech UI</p>
+
+  <div class="stage">
+
+    <!-- ─── DESKTOP ─── -->
+    <div class="col-wrap">
+      <div class="col-tag">
+        <span class="dot"></span>
+        Desktop — 320px card
+      </div>
+
+      <div class="card-frame">
+        <div class="profile-card" id="desktopCard">
+
+          <!-- Cover -->
+          <div class="card-cover">
+            <div class="card-menu-btn" title="More options">
+              <i class="fas fa-ellipsis-h"></i>
+            </div>
+          </div>
+
+          <!-- Avatar -->
+          <div class="card-avatar-wrap">
+            <div class="card-avatar">
+              RS
+              <span class="online-dot"></span>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body">
+
+            <!-- Identity -->
+            <div class="card-name">Reda Schneider</div>
+            <div class="card-role">Computer Science Student</div>
+
+            <!-- Info -->
+            <div class="card-info-list">
+              <div class="info-row">
+                <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
+                <span>University of Mohammed V</span>
+              </div>
+              <div class="info-row">
+                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <span>Marrakech, Morocco</span>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="card-divider"></div>
+
+            <!-- Stats -->
+            <div class="card-stats">
+              <div class="stat-block">
+                <span class="stat-value">3.8</span>
+                <span class="stat-label">GPA</span>
+              </div>
+              <div class="stat-block">
+                <span class="stat-value">3rd</span>
+                <span class="stat-label">Year</span>
+              </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="card-skills">
+              <span class="skill-chip"><i class="fas fa-palette"></i>UI Design</span>
+              <span class="skill-chip"><i class="fab fa-react"></i>React</span>
+              <span class="skill-chip"><i class="fab fa-figma"></i>Figma</span>
+              <span class="skill-chip"><i class="fas fa-code"></i>TypeScript</span>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-actions">
+              <button class="btn-card btn-secondary-card">
+                <i class="fas fa-paper-plane"></i>
+                Message
+              </button>
+              <button class="btn-card btn-primary-card">
+                <i class="fas fa-user"></i>
+                View Profile
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── MOBILE ─── -->
+    <div class="col-wrap">
+      <div class="col-tag mobile-tag">
+        <span class="dot"></span>
+        Mobile — in-app card
+      </div>
+
+      <div class="card-frame mobile-frame">
+        <div class="phone-shell">
+
+          <!-- Phone notch -->
+          <div class="phone-notch"></div>
+
+          <div class="phone-inner">
+
+            <!-- Status bar -->
+            <div class="phone-status-bar">
+              <span class="phone-time">9:41</span>
+              <div class="phone-icons">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-three-quarters"></i>
+              </div>
+            </div>
+
+            <!-- Mobile card -->
+            <div class="profile-card mobile">
+
+              <!-- Cover -->
+              <div class="card-cover">
+                <div class="card-menu-btn" title="More options">
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+              </div>
+
+              <!-- Avatar -->
+              <div class="card-avatar-wrap">
+                <div class="card-avatar">
+                  RS
+                  <span class="online-dot"></span>
+                </div>
+              </div>
+
+              <!-- Body -->
+              <div class="card-body">
+
+                <!-- Identity -->
+                <div class="card-name">Reda Schneider</div>
+                <div class="card-role">Computer Science Student</div>
+
+                <!-- Info -->
+                <div class="card-info-list">
+                  <div class="info-row">
+                    <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <span>Mohammed V University</span>
+                  </div>
+                  <div class="info-row">
+                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <span>Marrakech, Morocco</span>
+                  </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="card-divider"></div>
+
+                <!-- Stats -->
+                <div class="card-stats">
+                  <div class="stat-block">
+                    <span class="stat-value">3.8</span>
+                    <span class="stat-label">GPA</span>
+                  </div>
+                  <div class="stat-block">
+                    <span class="stat-value">3rd</span>
+                    <span class="stat-label">Year</span>
+                  </div>
+                </div>
+
+                <!-- Skills -->
+                <div class="card-skills">
+                  <span class="skill-chip"><i class="fas fa-palette"></i>UI Design</span>
+                  <span class="skill-chip"><i class="fab fa-react"></i>React</span>
+                  <span class="skill-chip"><i class="fab fa-figma"></i>Figma</span>
+                  <span class="skill-chip"><i class="fas fa-code"></i>TypeScript</span>
+                </div>
+
+                <!-- Actions — stacked on mobile -->
+                <div class="card-actions">
+                  <button class="btn-card btn-primary-card">
+                    <i class="fas fa-user"></i>
+                    View Profile
+                  </button>
+                  <button class="btn-card btn-secondary-card">
+                    <i class="fas fa-paper-plane"></i>
+                    Message
+                  </button>
+                </div>
+
+              </div>
+            </div>
+            <!-- /mobile card -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── Spec row ─── -->
+  <div style="margin-top:60px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:700px;">
+    <span style="background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:6px 16px;font-size:0.72rem;font-weight:600;color:#374151;box-shadow:0 1px 4px rgba(0,0,0,0.05);">Primary: #4F46E5</span>
+    <span style="background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:6px 16px;font-size:0.72rem;font-weight:600;color:#374151;box-shadow:0 1px 4px rgba(0,0,0,0.05);">Font: Inter</span>
+    <span style="background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:6px 16px;font-size:0.72rem;font-weight:600;color:#374151;box-shadow:0 1px 4px rgba(0,0,0,0.05);">Radius: 20px</span>
+    <span style="background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:6px 16px;font-size:0.72rem;font-weight:600;color:#374151;box-shadow:0 1px 4px rgba(0,0,0,0.05);">Background: #F8FAFC</span>
+    <span style="background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:6px 16px;font-size:0.72rem;font-weight:600;color:#374151;box-shadow:0 1px 4px rgba(0,0,0,0.05);">Secondary text: #6B7280</span>
+    <span style="background:#fff;border:1px solid #e5e7eb;border-radius:30px;padding:6px 16px;font-size:0.72rem;font-weight:600;color:#374151;box-shadow:0 1px 4px rgba(0,0,0,0.05);">Online: #10b981</span>
+  </div>
+
+</body>
+</html>

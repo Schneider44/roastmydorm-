@@ -666,57 +666,96 @@ body {
 /* ============================================
    ROOMMATE CARD
    ============================================ */
+/* ════════════════════════════════════
+   PROFILE CARD — Clean White Design
+   ════════════════════════════════════ */
 .roommate-card {
-    background: linear-gradient(160deg, rgba(22, 32, 58, 0.98) 0%, rgba(12, 18, 38, 0.98) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: #ffffff;
+    border: 1px solid rgba(17, 24, 39, 0.06);
     border-radius: 20px;
     overflow: hidden;
     position: relative;
-    transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    box-shadow:
+        0 0 0 1px rgba(17, 24, 39, 0.04),
+        0 4px 6px -1px rgba(17, 24, 39, 0.06),
+        0 16px 32px -8px rgba(17, 24, 39, 0.1),
+        0 32px 64px -16px rgba(79, 70, 229, 0.06);
 }
 
 .roommate-card:hover {
-    transform: translateY(-7px) scale(1.01);
-    border-color: rgba(99, 102, 241, 0.35);
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(99, 102, 241, 0.15);
+    transform: translateY(-6px);
+    box-shadow:
+        0 0 0 1px rgba(17, 24, 39, 0.06),
+        0 8px 12px -2px rgba(17, 24, 39, 0.08),
+        0 24px 48px -8px rgba(17, 24, 39, 0.14),
+        0 48px 96px -24px rgba(79, 70, 229, 0.1);
 }
 
 .roommate-card.ai-pick {
-    border-color: rgba(102, 126, 234, 0.4);
-    box-shadow: 0 0 30px rgba(102, 126, 234, 0.2);
-}
-
-.roommate-card.ai-pick:hover {
-    box-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+    border-color: rgba(79, 70, 229, 0.2);
+    box-shadow:
+        0 0 0 1px rgba(79, 70, 229, 0.12),
+        0 16px 40px -8px rgba(79, 70, 229, 0.15);
 }
 
 /* ── Card Cover Banner ── */
 .card-cover {
-    height: 88px;
+    height: 84px;
     position: relative;
     flex-shrink: 0;
+}
+
+/* subtle dot-pattern overlay on cover */
+.card-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+    pointer-events: none;
 }
 
 /* ── Avatar wrap overlaps cover ── */
 .card-avatar-wrap {
     display: flex;
     justify-content: center;
-    margin-top: -44px;
-    margin-bottom: 6px;
+    margin-top: -36px;
+    margin-bottom: 10px;
     position: relative;
     z-index: 2;
 }
+
+/* ── 3-dot menu on cover ── */
+.card-menu-btn {
+    position: absolute;
+    top: 11px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.2s;
+}
+.card-menu-btn:hover { background: rgba(255, 255, 255, 0.35); }
+.card-menu-btn i { color: rgba(255, 255, 255, 0.9); font-size: 0.65rem; }
 
 /* ── Floating badges on top-right of cover ── */
 .card-badges-float {
     position: absolute;
     top: 10px;
-    right: 12px;
+    left: 12px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 5px;
     z-index: 3;
 }
@@ -829,7 +868,7 @@ body {
     border: 1px solid rgba(39, 174, 96, 0.4);
 }
 
-/* Card Image (legacy, keep for backward compat) */
+/* Card Image (legacy) */
 .card-image {
     padding: 0 16px;
     position: relative;
@@ -839,59 +878,73 @@ body {
 
 /* Avatar */
 .avatar-placeholder {
-    width: 88px;
-    height: 88px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.9rem;
-    font-weight: 700;
-    color: white;
-    border: 3px solid rgba(12, 18, 38, 1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25), 0 2px 6px rgba(0, 0, 0, 0.08);
     text-transform: uppercase;
     letter-spacing: -1px;
     overflow: hidden;
     flex-shrink: 0;
+    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
 }
 
 .avatar-placeholder.female {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
 }
 
-/* Match badge (inside card-badges-float) */
+/* Online status dot */
+.online-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #10b981;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+/* Match badge */
 .match-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     padding: 4px 10px;
     border-radius: 20px;
-    font-size: 0.68rem;
+    font-size: 0.67rem;
     font-weight: 700;
-    letter-spacing: 0.4px;
-    backdrop-filter: blur(6px);
+    letter-spacing: 0.3px;
 }
 
 .match-badge.high {
-    background: rgba(16, 185, 129, 0.25);
-    color: #34d399;
-    border: 1px solid rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .match-badge.medium {
-    background: rgba(245, 158, 11, 0.2);
-    color: #fbbf24;
-    border: 1px solid rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .match-badge.low {
-    background: rgba(100, 116, 139, 0.2);
-    color: var(--text-muted);
-    border: 1px solid rgba(100, 116, 139, 0.3);
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+    border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 /* Card Body */
 .card-body {
-    padding: 0 18px 16px;
+    padding: 0 20px 20px;
     text-align: center;
     flex: 1;
     display: flex;
@@ -903,43 +956,123 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .card-body h3 {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: var(--text-white);
+    color: #111827;
     line-height: 1.2;
+    letter-spacing: -0.3px;
+}
+
+/* Role subtitle */
+.card-role {
+    font-size: 0.75rem;
+    color: #6B7280;
+    font-weight: 500;
+    margin-bottom: 14px;
 }
 
 .age-chip {
-    background: rgba(255,255,255,0.08);
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 2px 8px;
+    background: #F3F4F6;
+    color: #6B7280;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 9px;
     border-radius: 30px;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid #E5E7EB;
     white-space: nowrap;
 }
 
-/* Location pill */
+/* Info rows with icon boxes */
+.card-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 14px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+.info-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: #EEF2FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.info-icon i {
+    font-size: 0.55rem;
+    color: #4F46E5;
+}
+
+/* Stat blocks */
+.card-stats {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.stat-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 9px 8px;
+    border-radius: 10px;
+    background: #F9FAFB;
+    border: 1px solid #F3F4F6;
+    transition: background 0.2s;
+}
+
+.stat-block:hover { background: #EEF2FF; border-color: #E0E7FF; }
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.5px;
+}
+
+.stat-label {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Location pill (legacy, kept for old cards) */
 .location-pill {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.78rem;
-    color: var(--text-muted);
+    font-size: 0.76rem;
+    color: #6B7280;
     margin-bottom: 12px;
 }
 
 .location-pill i {
-    color: #6366f1;
-    font-size: 0.72rem;
+    color: #4F46E5;
+    font-size: 0.68rem;
 }
 
-/* Meta info row */
+/* Meta info row (legacy) */
 .card-meta-row {
     display: flex;
     justify-content: center;
@@ -952,18 +1085,19 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
     border-radius: 30px;
     padding: 4px 10px;
-    font-size: 0.72rem;
-    color: var(--text-muted);
+    font-size: 0.7rem;
+    color: #374151;
     white-space: nowrap;
+    font-weight: 500;
 }
 
 .meta-pill i {
-    font-size: 0.65rem;
-    color: #6366f1;
+    font-size: 0.6rem;
+    color: #4F46E5;
 }
 
 .online-indicator {
@@ -1024,31 +1158,38 @@ body {
     animation: urgent-pulse 2s ease-in-out infinite;
 }
 
-/* Card Tags */
+/* Card Tags / Skills chips */
 .card-tags {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .tag {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 4px 10px;
-    background: rgba(99, 102, 241, 0.12);
-    border: 1px solid rgba(99, 102, 241, 0.25);
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: #a5b4fc;
+    padding: 5px 11px;
+    background: #EEF2FF;
+    border: 1px solid rgba(79, 70, 229, 0.15);
+    border-radius: 30px;
+    font-size: 0.69rem;
+    font-weight: 600;
+    color: #4338CA;
+    transition: background 0.2s, transform 0.15s;
+    cursor: default;
+}
+
+.tag:hover {
+    background: #E0E7FF;
+    transform: translateY(-1px);
 }
 
 .tag i {
-    font-size: 0.6rem;
-    color: #818cf8;
+    font-size: 0.55rem;
+    color: #6366f1;
 }
 
 /* Compatibility Breakdown */
@@ -1143,9 +1284,9 @@ body {
 
 /* Card Bio snippet */
 .card-bio {
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    line-height: 1.45;
+    font-size: 0.76rem;
+    color: #6B7280;
+    line-height: 1.5;
     margin-bottom: 14px;
     flex: 1;
 }
@@ -1153,48 +1294,73 @@ body {
 /* Divider before actions */
 .card-divider {
     height: 1px;
-    background: rgba(255,255,255,0.06);
-    margin: 0 -18px 14px;
+    background: #F3F4F6;
+    margin: 0 -20px 16px;
 }
 
 /* Card Actions */
 .card-actions {
     display: flex;
     gap: 8px;
-    padding: 0 18px 18px;
+    padding: 0 20px 20px;
 }
 
 .card-actions .btn {
     flex: 1;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    padding: 9px 10px;
+    border-radius: 11px;
+    font-size: 0.78rem;
+    padding: 10px 10px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    border: none;
 }
 
+/* Ghost / secondary button */
 .card-actions .btn-outline-ghost {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: var(--text-light);
-    transition: background 0.2s, border-color 0.2s;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    color: #374151;
 }
 
 .card-actions .btn-outline-ghost:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.22);
+    background: #F3F4F6;
+    border-color: #D1D5DB;
+    transform: translateY(-1px);
 }
 
+/* Primary indigo message button */
 .card-actions .btn-msg {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-    border: none;
+    background: #4F46E5;
     color: #fff;
-    box-shadow: 0 4px 14px rgba(99,102,241,0.35);
-    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
 }
 
 .card-actions .btn-msg:hover {
-    opacity: 0.88;
+    background: #4338CA;
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
     transform: translateY(-1px);
+}
+
+/* Badge styles updated for white cards */
+.badge-verified {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    backdrop-filter: blur(4px);
+    background-clip: padding-box;
 }
 
 /* Social Validation */

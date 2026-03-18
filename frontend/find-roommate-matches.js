@@ -146,23 +146,27 @@ function renderMyProfile(profile) {
     if (!grid) return;
 
     const initials = getInitials(profile.name);
-    const interestTags = (profile.interests || []).slice(0, 3)
+    const cover = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    const interestTags = (profile.interests || []).slice(0, 4)
         .map(i => `<span class="tag">${i}</span>`).join('');
-    const bioSnippet = profile.bio ? profile.bio.slice(0, 90) + (profile.bio.length > 90 ? '…' : '') : '';
-    const cover = cardCoverGradient(profile.name, true);
+    const bioSnippet = profile.bio ? profile.bio.slice(0, 88) + (profile.bio.length > 88 ? '…' : '') : '';
 
     const card = document.createElement('div');
     card.className = 'roommate-card';
-    card.style.cssText = 'border: 2px solid rgba(16,185,129,0.5); position: relative;';
+    card.style.cssText = 'border: 2px solid rgba(16,185,129,0.3); box-shadow: 0 0 0 2px rgba(16,185,129,0.08), 0 16px 40px -8px rgba(16,185,129,0.12);';
     card.innerHTML = `
         <div class="card-cover" style="background:${cover};">
-            <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:0.65rem;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap;letter-spacing:0.6px;box-shadow:0 2px 8px rgba(16,185,129,0.4);">YOUR PROFILE</div>
+            <div class="card-menu-btn"><i class="fas fa-ellipsis-h"></i></div>
+            <div class="card-badges-float">
+                <span style="background:rgba(255,255,255,0.22);backdrop-filter:blur(6px);color:#fff;font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);letter-spacing:0.5px;">YOUR PROFILE</span>
+            </div>
         </div>
         <div class="card-avatar-wrap">
-            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${cover};">
+            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${cover};position:relative;">
                 ${profile.avatarUrl
                     ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
                     : initials}
+                <span class="online-dot"></span>
             </div>
         </div>
         <div class="card-body">
@@ -170,17 +174,22 @@ function renderMyProfile(profile) {
                 <h3>${profile.name || 'You'}</h3>
                 ${profile.age ? `<span class="age-chip">${profile.age} yrs</span>` : ''}
             </div>
-            ${profile.location ? `<div class="location-pill"><i class="fas fa-map-marker-alt"></i>${profile.location}</div>` : ''}
-            <div class="card-meta-row">
-                ${profile.university ? `<span class="meta-pill"><i class="fas fa-graduation-cap"></i>${profile.university}</span>` : ''}
-                ${(profile.budgetMin || profile.budgetMax) ? `<span class="meta-pill"><i class="fas fa-wallet"></i>${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</span>` : ''}
+            <div class="card-role">${profile.university ? 'Student' : 'RoastMyDorm Member'}</div>
+            <div class="card-info-list">
+                ${profile.university ? `<div class="info-row"><div class="info-icon"><i class="fas fa-graduation-cap"></i></div><span>${profile.university}</span></div>` : ''}
+                ${profile.location ? `<div class="info-row"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><span>${profile.location}</span></div>` : ''}
             </div>
+            ${(profile.budgetMin || profile.budgetMax || profile.sleepSchedule) ? `
+            <div class="card-stats">
+                ${(profile.budgetMin || profile.budgetMax) ? `<div class="stat-block"><span class="stat-value">${profile.budgetMax || profile.budgetMin}</span><span class="stat-label">MAD/mo</span></div>` : ''}
+                ${profile.cleanlinessLevel ? `<div class="stat-block"><span class="stat-value">${profile.cleanlinessLevel}/5</span><span class="stat-label">Clean</span></div>` : ''}
+            </div>` : ''}
             ${interestTags ? `<div class="card-tags">${interestTags}</div>` : ''}
             ${bioSnippet ? `<p class="card-bio">${bioSnippet}</p>` : ''}
         </div>
         <div class="card-divider"></div>
         <div class="card-actions">
-            <a href="find-roommate-profile.html" class="btn btn-outline-ghost"><i class="fas fa-pen"></i> Edit</a>
+            <a href="find-roommate-profile.html" class="btn btn-outline-ghost"><i class="fas fa-pen"></i> Edit Profile</a>
         </div>
     `;
     grid.insertBefore(card, grid.firstChild);
@@ -205,27 +214,28 @@ function renderProfiles(profiles) {
         const cover = cardCoverGradient(String(id));
 
         const scoreHtml = score !== null
-            ? `<span class="match-badge ${matchBadgeClass(score)}">${score}% match</span>`
+            ? `<span class="match-badge ${matchBadgeClass(score)}"><i class="fas fa-bolt" style="font-size:0.55rem;"></i>${score}% match</span>`
             : '';
         const verifiedHtml = profile.isVerified
-            ? `<span class="badge badge-verified" style="backdrop-filter:blur(6px);"><i class="fas fa-check-circle"></i> Verified</span>`
+            ? `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`
             : '';
-        const interestTags = (profile.interests || []).slice(0, 3)
+        const interestTags = (profile.interests || []).slice(0, 4)
             .map(i => `<span class="tag">${i}</span>`).join('');
-        const bioSnippet = profile.bio ? profile.bio.slice(0, 90) + (profile.bio.length > 90 ? '…' : '') : '';
+        const bioSnippet = profile.bio ? profile.bio.slice(0, 88) + (profile.bio.length > 88 ? '…' : '') : '';
 
         const card = document.createElement('div');
         card.className = 'roommate-card';
         card.dataset.id = id;
         card.innerHTML = `
             <div class="card-cover" style="background:${cover};">
+                <div class="card-menu-btn"><i class="fas fa-ellipsis-h"></i></div>
                 <div class="card-badges-float">
                     ${verifiedHtml}
                     ${scoreHtml}
                 </div>
             </div>
             <div class="card-avatar-wrap">
-                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${cover};">
+                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${cover};position:relative;">
                     ${profile.avatarUrl
                         ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
                         : initials}
@@ -236,11 +246,16 @@ function renderProfiles(profiles) {
                     <h3>${profile.name || 'Student'}</h3>
                     ${profile.age ? `<span class="age-chip">${profile.age} yrs</span>` : ''}
                 </div>
-                ${profile.location ? `<div class="location-pill"><i class="fas fa-map-marker-alt"></i>${profile.location}</div>` : ''}
-                <div class="card-meta-row">
-                    ${profile.university ? `<span class="meta-pill"><i class="fas fa-graduation-cap"></i>${profile.university}</span>` : ''}
-                    ${(profile.budgetMin || profile.budgetMax) ? `<span class="meta-pill"><i class="fas fa-wallet"></i>${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</span>` : ''}
+                <div class="card-role">${profile.university ? 'Student' : 'Looking for a roommate'}</div>
+                <div class="card-info-list">
+                    ${profile.university ? `<div class="info-row"><div class="info-icon"><i class="fas fa-graduation-cap"></i></div><span>${profile.university}</span></div>` : ''}
+                    ${profile.location ? `<div class="info-row"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><span>${profile.location}</span></div>` : ''}
                 </div>
+                ${(profile.budgetMin || profile.budgetMax || profile.cleanlinessLevel) ? `
+                <div class="card-stats">
+                    ${(profile.budgetMin || profile.budgetMax) ? `<div class="stat-block"><span class="stat-value">${profile.budgetMax || profile.budgetMin}</span><span class="stat-label">MAD/mo</span></div>` : ''}
+                    ${profile.cleanlinessLevel ? `<div class="stat-block"><span class="stat-value">${profile.cleanlinessLevel}/5</span><span class="stat-label">Clean</span></div>` : ''}
+                </div>` : ''}
                 ${interestTags ? `<div class="card-tags">${interestTags}</div>` : ''}
                 ${bioSnippet ? `<p class="card-bio">${bioSnippet}</p>` : ''}
             </div>
