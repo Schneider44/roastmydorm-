@@ -665,492 +665,219 @@ body {
 }
 
 /* ============================================
-   ROOMMATE CARD
+   ROOMMATE CARD — Dark Glassmorphism Design
    ============================================ */
-/* ════════════════════════════════════
-   PROFILE CARD — Clean White Design
-   ════════════════════════════════════ */
+/* ── Card base ── */
 .roommate-card {
-    background: #ffffff;
-    border: 1px solid rgba(17, 24, 39, 0.06);
-    border-radius: 20px;
+    background: #111827;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
     overflow: hidden;
     position: relative;
     transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    box-shadow:
-        0 0 0 1px rgba(17, 24, 39, 0.04),
-        0 4px 6px -1px rgba(17, 24, 39, 0.06),
-        0 16px 32px -8px rgba(17, 24, 39, 0.1),
-        0 32px 64px -16px rgba(79, 70, 229, 0.06);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 
 .roommate-card:hover {
-    transform: translateY(-6px);
-    box-shadow:
-        0 0 0 1px rgba(17, 24, 39, 0.06),
-        0 8px 12px -2px rgba(17, 24, 39, 0.08),
-        0 24px 48px -8px rgba(17, 24, 39, 0.14),
-        0 48px 96px -24px rgba(79, 70, 229, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,200,100,0.15);
 }
 
-.roommate-card.ai-pick {
-    border-color: rgba(79, 70, 229, 0.2);
-    box-shadow:
-        0 0 0 1px rgba(79, 70, 229, 0.12),
-        0 16px 40px -8px rgba(79, 70, 229, 0.15);
-}
-
-/* ── Card cover hidden (new layout has no cover) ── */
-.card-cover { display: none; }
-
-/* ── Card Header: horizontal avatar + identity + 3-dot ── */
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 14px 0;
+/* ── Green glow cover ── */
+.card-cover {
+    display: block !important;
+    height: 80px;
     position: relative;
-}
-
-/* ── Avatar wrap in header (no negative margin) ── */
-.card-avatar-wrap {
     flex-shrink: 0;
-    position: relative;
-    margin-top: 0;
-    margin-bottom: 0;
+    background: linear-gradient(180deg, #0a2e1a 0%, #0d1f14 100%);
+    overflow: hidden;
 }
 
-/* ── Identity next to avatar ── */
+.card-cover::before {
+    content: '';
+    position: absolute;
+    top: -30px; left: 50%;
+    transform: translateX(-50%);
+    width: 180px; height: 120px;
+    background: radial-gradient(ellipse, rgba(0,200,80,0.55) 0%, rgba(0,150,60,0.15) 55%, transparent 75%);
+    pointer-events: none;
+}
+
+/* ── 3-dot menu on cover ── */
+.card-menu-btn {
+    position: absolute;
+    top: 10px; right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    transition: background 0.2s;
+    z-index: 3;
+}
+.card-menu-btn:hover { background: rgba(255,255,255,0.1); }
+.card-menu-btn i { color: rgba(255,255,255,0.7); font-size: 0.72rem; letter-spacing: 1px; }
+
+/* ── Avatar centered, overlapping cover ── */
+.card-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -38px;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* ── Avatar circle ── */
+.avatar-placeholder {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; font-weight: 800;
+    color: #fff;
+    border: 3px solid #1f2937;
+    box-shadow:
+        0 0 0 3px rgba(0,200,80,0.35),
+        0 0 18px rgba(0,200,80,0.25),
+        0 4px 16px rgba(0,0,0,0.5);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #1e3a2f, #2d5a3d);
+}
+
+.avatar-placeholder.female {
+    background: linear-gradient(135deg, #3a1e2f, #5a2d4a);
+}
+
+/* Verified checkmark on avatar */
+.verified-badge-avatar {
+    position: absolute;
+    bottom: 3px; right: 3px;
+    width: 20px; height: 20px;
+    background: #00c864;
+    border: 2px solid #111827;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+    pointer-events: none;
+}
+.verified-badge-avatar i { font-size: 0.5rem; color: #fff; }
+
+/* Legacy online dot */
+.online-dot { display: none; }
+
+/* ── Name + status row (centered) ── */
 .card-identity {
-    flex: 1;
-    min-width: 0;
-    text-align: left;
+    text-align: center;
+    padding: 10px 16px 0;
 }
 
 .card-identity h3 {
     font-size: 1rem;
     font-weight: 700;
-    color: #111827;
-    letter-spacing: -0.3px;
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.card-identity .card-role {
-    font-size: 0.74rem;
-    color: #6B7280;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-/* ── 3-dot menu (top-right of card) ── */
-.card-menu-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: transparent;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-    flex-shrink: 0;
-}
-.card-menu-btn:hover { background: #F3F4F6; }
-.card-menu-btn i { color: #9CA3AF; font-size: 0.75rem; }
-
-/* ── Badges float (below header, left-aligned) ── */
-.card-badges-float {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    padding: 8px 14px 0;
-    align-items: center;
-}
-
-/* Locked Card */
-.roommate-card.locked {
-    pointer-events: none;
-}
-
-.roommate-card.locked .locked-overlay {
-    pointer-events: all;
-}
-
-.locked-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(10, 15, 28, 0.9);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-}
-
-.locked-content {
-    text-align: center;
-    padding: 30px;
-}
-
-.locked-content i {
-    font-size: 3rem;
-    color: var(--gold);
-    margin-bottom: 16px;
-}
-
-.locked-content h4 {
-    color: var(--text-white);
-    margin-bottom: 8px;
-}
-
-.locked-content p {
-    color: var(--text-muted);
-    margin-bottom: 20px;
-}
-
-.blurred {
-    filter: blur(8px);
-}
-
-/* Card Badges (legacy, keep for other uses) */
-.card-badges {
-    display: flex;
-    gap: 8px;
-    padding: 12px 16px;
-    flex-wrap: wrap;
-}
-
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.badge-ai {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
-    color: #a78bfa;
-    border: 1px solid rgba(167, 139, 250, 0.4);
-}
-
-.badge-scarcity {
-    background: rgba(231, 76, 60, 0.2);
-    color: #E74C3C;
-    border: 1px solid rgba(231, 76, 60, 0.4);
-}
-
-.badge-premium {
-    background: var(--gradient-gold);
-    color: #1A1A2E;
-}
-
-.badge-urgent {
-    background: rgba(243, 156, 18, 0.2);
-    color: var(--warning);
-    border: 1px solid rgba(243, 156, 18, 0.4);
-    animation: urgent-pulse 2s ease-in-out infinite;
-}
-
-@keyframes urgent-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-.badge-new {
-    background: rgba(52, 152, 219, 0.2);
-    color: var(--info);
-    border: 1px solid rgba(52, 152, 219, 0.4);
-}
-
-.badge-verified {
-    background: rgba(39, 174, 96, 0.2);
-    color: var(--success);
-    border: 1px solid rgba(39, 174, 96, 0.4);
-}
-
-/* Card Image (legacy) */
-.card-image {
-    padding: 0 16px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-}
-
-/* Avatar */
-.avatar-placeholder {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    font-weight: 800;
     color: #ffffff;
-    border: 3px solid #ffffff;
-    box-shadow: 0 2px 10px rgba(79, 70, 229, 0.2), 0 1px 4px rgba(0, 0, 0, 0.08);
-    text-transform: uppercase;
-    letter-spacing: -1px;
-    overflow: hidden;
-    flex-shrink: 0;
-    background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+    letter-spacing: -0.2px;
+    margin-bottom: 4px;
 }
 
-.avatar-placeholder.female {
-    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-}
-
-/* Online status dot */
-.online-dot {
-    position: absolute;
-    bottom: 1px;
-    right: 1px;
-    width: 12px;
-    height: 12px;
-    background: #10b981;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-/* Match badge */
-.match-badge {
-    display: inline-flex;
+.card-status-row {
+    display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.67rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: #9CA3AF;
+    font-weight: 500;
 }
 
-.match-badge.high {
-    background: rgba(16, 185, 129, 0.12);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.25);
+.status-green-dot {
+    width: 7px; height: 7px;
+    background: #00c864;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 5px rgba(0,200,100,0.6);
 }
 
-.match-badge.medium {
-    background: rgba(245, 158, 11, 0.12);
-    color: #d97706;
-    border: 1px solid rgba(245, 158, 11, 0.25);
+/* ── Card header (legacy horizontal — hidden, we use vertical now) ── */
+.card-header { display: none; }
+.card-badges-float { display: none; }
+
+/* ── Divider ── */
+.card-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+    margin: 12px 16px;
 }
 
-.match-badge.low {
-    background: rgba(107, 114, 128, 0.1);
-    color: #6b7280;
-    border: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-/* Card Body */
+/* ── Card body ── */
 .card-body {
-    padding: 10px 14px 14px;
-    text-align: left;
+    padding: 0 16px 4px;
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 0;
 }
 
-/* legacy — hidden, replaced by .card-header */
-.card-name-row { display: none; }
-.card-body h3 { display: none; }
-
-/* Role subtitle (inside .card-identity, not .card-body) */
-.card-role {
-    font-size: 0.74rem;
-    color: #6B7280;
-    font-weight: 500;
-    margin-bottom: 0;
-}
-
-.age-chip {
-    background: #F3F4F6;
-    color: #6B7280;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 30px;
-    border: 1px solid #E5E7EB;
-    white-space: nowrap;
-}
-
-/* Info rows with small icon box */
+/* Info rows */
 .card-info-list {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-bottom: 0;
+    gap: 8px;
 }
 
 .info-row {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 0.71rem;
-    color: #374151;
+    gap: 8px;
+    font-size: 0.74rem;
+    color: #D1D5DB;
     font-weight: 500;
 }
 
-.info-icon {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    background: #EEF2FF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.info-row i {
+    font-size: 0.7rem;
+    color: #6366f1;
+    width: 14px;
+    text-align: center;
     flex-shrink: 0;
 }
 
-.info-icon i {
-    font-size: 0.48rem;
-    color: #4F46E5;
-}
-
-/* ── Inline stats row ── */
-.card-stats-inline {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    flex-wrap: wrap;
-}
-
-.stat-inline-text {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #111827;
-}
-
-.stat-inline-badge {
+/* Role pill (dark chip) */
+.role-pill {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    background: #DCFCE7;
-    color: #16A34A;
-    border: 1px solid #BBF7D0;
+    gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px;
-    padding: 2px 8px;
-    font-size: 0.62rem;
-    font-weight: 700;
-}
-
-/* Interests / skills section */
-.card-interests-label {
-    font-size: 0.67rem;
-    font-weight: 700;
-    color: #374151;
-    margin-bottom: 5px;
-}
-
-/* Legacy pills — hidden */
-.card-meta-row,
-.location-pill { display: none; }
-
-/* Legacy stat blocks — hidden */
-.card-stats { display: none; }
-.stat-block, .stat-value, .stat-label { display: none; }
-
-.meta-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #F9FAFB;
-    border: 1px solid #E5E7EB;
-    border-radius: 30px;
-    padding: 4px 10px;
-    font-size: 0.7rem;
-    color: #374151;
-    white-space: nowrap;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    color: #D1D5DB;
     font-weight: 500;
 }
+.role-pill i { font-size: 0.62rem; color: #818CF8; }
 
-.meta-pill i {
-    font-size: 0.6rem;
-    color: #4F46E5;
+/* Bio text */
+.card-bio {
+    font-size: 0.73rem;
+    color: #9CA3AF;
+    line-height: 1.45;
+    text-align: center;
+    flex: 1;
+    margin: 0;
 }
 
-.online-indicator {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.75rem;
-    color: var(--success);
-}
-
-.online-indicator i {
-    font-size: 0.5rem;
-    animation: blink 1.5s ease-in-out infinite;
-}
-
-.premium-badge, .verified-badge {
-    color: var(--gold);
-    font-size: 1rem;
-}
-
-.card-info {
-    margin-bottom: 12px;
-    display: none; /* replaced by .card-meta-row */
-}
-
-.card-info p {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-}
-
-.card-info p i {
-    width: 16px;
-    color: var(--primary-red);
-}
-
-/* Urgency Timer */
-.urgency-timer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(243, 156, 18, 0.1);
-    border: 1px solid rgba(243, 156, 18, 0.3);
-    border-radius: var(--radius-sm);
-    font-size: 0.8rem;
-    color: var(--warning);
-    margin-bottom: 12px;
-}
-
-.urgency-timer.urgent {
-    background: rgba(231, 76, 60, 0.1);
-    border-color: rgba(231, 76, 60, 0.3);
-    color: var(--urgent);
-    animation: urgent-pulse 2s ease-in-out infinite;
-}
-
-/* Card Tags / Skills chips */
+/* Tags */
 .card-tags {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 5px;
-    margin-bottom: 0;
 }
 
 .tag {
@@ -1158,193 +885,125 @@ body {
     align-items: center;
     gap: 3px;
     padding: 3px 9px;
-    background: #EEF2FF;
-    border: 1px solid rgba(79, 70, 229, 0.15);
-    border-radius: 30px;
-    font-size: 0.65rem;
+    background: rgba(99,102,241,0.15);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 20px;
+    font-size: 0.63rem;
     font-weight: 600;
-    color: #4338CA;
-    transition: background 0.15s;
+    color: #a5b4fc;
     cursor: default;
 }
+.tag i { font-size: 0.5rem; color: #818cf8; }
 
-.tag:hover { background: #E0E7FF; }
+/* Match badge */
+.match-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px; border-radius: 20px;
+    font-size: 0.63rem; font-weight: 700;
+}
+.match-badge.high { background: rgba(0,200,80,0.15); color: #34d399; border: 1px solid rgba(0,200,80,0.25); }
+.match-badge.medium { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+.match-badge.low { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.2); }
 
-.tag i {
-    font-size: 0.5rem;
-    color: #6366f1;
+/* Verified badge (text version) */
+.badge-verified {
+    background: rgba(0,200,80,0.12);
+    color: #34d399;
+    border: 1px solid rgba(0,200,80,0.22);
+    font-size: 0.62rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px;
+    display: inline-flex; align-items: center; gap: 4px;
 }
 
-/* Compatibility Breakdown */
-.compatibility-breakdown {
-    background: var(--bg-glass);
-    border: var(--border-glass);
-    border-radius: var(--radius-sm);
-    margin-bottom: 12px;
-    overflow: hidden;
-}
+/* Legacy hidden */
+.card-name-row, .card-identity .card-role,
+.card-meta-row, .location-pill,
+.card-stats, .stat-block, .card-stats-inline,
+.info-icon, .card-interests-label,
+.card-header, .card-badges-float,
+.card-info, .urgency-timer, .scarcity-proof,
+.online-indicator, .premium-badge { display: none !important; }
 
-.breakdown-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    color: var(--text-light);
-    transition: var(--transition-fast);
-}
-
-.breakdown-header:hover {
-    background: var(--bg-glass-hover);
-}
-
-.breakdown-header i:last-child {
-    transition: transform 0.3s ease;
-}
-
-.breakdown-header.active i:last-child {
-    transform: rotate(180deg);
-}
-
-.breakdown-content {
-    display: none;
-    padding: 12px;
-    border-top: var(--border-glass);
-}
-
-.breakdown-content.show {
-    display: block;
-}
-
-.breakdown-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-    font-size: 0.75rem;
-}
-
-.breakdown-item span:first-child {
-    width: 100px;
-    color: var(--text-muted);
-}
-
-.mini-bar {
-    flex: 1;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.mini-fill {
-    height: 100%;
-    background: var(--success);
-    border-radius: 3px;
-}
-
-.breakdown-item .percent {
-    width: 40px;
-    text-align: right;
-    color: var(--success);
-    font-weight: 600;
-}
-
-/* Scarcity Proof */
-.scarcity-proof {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-}
-
-.scarcity-proof i {
-    color: var(--warning);
-}
-
-/* Card Bio snippet */
-.card-bio {
-    font-size: 0.76rem;
-    color: #6B7280;
-    line-height: 1.5;
-    margin-bottom: 14px;
-    flex: 1;
-}
-
-/* Divider before actions */
-.card-divider {
-    height: 1px;
-    background: #F3F4F6;
-    margin: 0 -20px 16px;
-}
-
-/* Card Actions */
+/* ── Action button ── */
 .card-actions {
+    padding: 12px 16px 16px;
     display: flex;
-    gap: 7px;
-    padding: 0 14px 14px;
+    gap: 8px;
 }
 
 .card-actions .btn {
     flex: 1;
-    border-radius: 9px;
-    font-size: 0.72rem;
-    padding: 8px 8px;
+    border-radius: 10px;
+    font-size: 0.74rem;
+    padding: 9px 10px;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
     border: none;
 }
 
-/* Ghost / secondary button */
-.card-actions .btn-outline-ghost {
-    background: #F9FAFB;
-    border: 1px solid #E5E7EB;
-    color: #374151;
-}
-
-.card-actions .btn-outline-ghost:hover {
-    background: #F3F4F6;
-    border-color: #D1D5DB;
-    transform: translateY(-1px);
-}
-
-/* Primary indigo message button */
+/* Full-width green button */
 .card-actions .btn-msg {
-    background: #4F46E5;
+    background: linear-gradient(135deg, #00a854, #00c864);
     color: #fff;
-    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    box-shadow: 0 4px 16px rgba(0,200,100,0.3);
 }
-
 .card-actions .btn-msg:hover {
-    background: #4338CA;
-    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+    filter: brightness(1.1);
+    box-shadow: 0 6px 22px rgba(0,200,100,0.45);
     transform: translateY(-1px);
 }
 
-/* Badge styles updated for white cards */
-.badge-verified {
-    background: rgba(16, 185, 129, 0.1);
-    color: #059669;
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    backdrop-filter: blur(4px);
-    background-clip: padding-box;
+/* Secondary ghost button */
+.card-actions .btn-outline-ghost {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #D1D5DB;
 }
+.card-actions .btn-outline-ghost:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-1px);
+}
+
+/* Locked Card */
+.roommate-card.locked { pointer-events: none; }
+.roommate-card.locked .locked-overlay { pointer-events: all; }
+.locked-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,15,28,0.9);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+}
+.locked-content { text-align: center; padding: 30px; }
+.locked-content i { font-size: 3rem; color: var(--gold); margin-bottom: 16px; }
+.locked-content h4 { color: #fff; margin-bottom: 8px; }
+.locked-content p { color: #94A3B8; margin-bottom: 20px; }
+.blurred { filter: blur(8px); }
+
+/* Legacy badge styles */
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+.badge-ai { background: rgba(102,126,234,0.2); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); }
+.badge-urgent { background: rgba(243,156,18,0.2); color: var(--warning); border: 1px solid rgba(243,156,18,0.4); }
+.badge-new { background: rgba(52,152,219,0.2); color: var(--info); border: 1px solid rgba(52,152,219,0.4); }
+@keyframes urgent-pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
+
+/* Compatibility breakdown (kept for sidebar) */
+.compatibility-breakdown { background: var(--bg-glass); border: var(--border-glass); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; }
+.breakdown-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; cursor: pointer; font-size: 0.8rem; color: var(--text-light); }
+.breakdown-header:hover { background: var(--bg-glass-hover); }
+.breakdown-header.active i:last-child { transform: rotate(180deg); }
+.breakdown-content { display: none; padding: 12px; border-top: var(--border-glass); }
+.breakdown-content.show { display: block; }
+.breakdown-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.75rem; }
+.breakdown-item span:first-child { width: 100px; color: var(--text-muted); }
+.mini-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.mini-fill { height: 100%; background: var(--success); border-radius: 3px; }
+.breakdown-item .percent { width: 40px; text-align: right; color: var(--success); font-weight: 600; }
+.scarcity-proof { display: none; }
 
 /* Social Validation */
 .social-validation {

@@ -143,91 +143,66 @@ function getInitials(name) {
 
 function buildCardHtml({ profile, id, isOwn, score }) {
     const initials = getInitials(profile.name);
-    const avatarGrad = isOwn
-        ? 'linear-gradient(135deg,#10b981,#059669)'
-        : cardCoverGradient(String(id));
 
     const avatarHtml = profile.avatarUrl
         ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
         : initials;
 
-    const verifiedBadge = profile.isVerified
-        ? `<span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`
-        : '';
+    const ageText = profile.age ? `${profile.age} yrs` : '';
+    const statusRow = `
+        <div class="card-status-row">
+            <span class="status-green-dot"></span>
+            Active${ageText ? ' · ' + ageText : ''}
+            ${isOwn ? '&nbsp;<span style="background:rgba(0,200,80,0.15);color:#34d399;font-size:0.6rem;font-weight:700;padding:1px 7px;border-radius:20px;border:1px solid rgba(0,200,80,0.25);">YOU</span>' : ''}
+            ${!isOwn && score !== null ? `<span class="match-badge ${matchBadgeClass(score)}" style="margin-left:4px;">${score}%</span>` : ''}
+        </div>`;
 
-    const ownBadge = isOwn
-        ? `<span style="background:#DCFCE7;color:#16a34a;border:1px solid #BBF7D0;font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.4px;">YOUR PROFILE</span>`
-        : '';
+    const locationRow = profile.location
+        ? `<div class="info-row"><i class="fas fa-map-marker-alt"></i> ${profile.location}</div>` : '';
 
-    const scoreBadge = !isOwn && score !== null
-        ? `<span class="match-badge ${matchBadgeClass(score)}"><i class="fas fa-bolt" style="font-size:0.5rem;"></i> ${score}% match</span>`
-        : '';
+    const rolePill = `<div class="info-row"><span class="role-pill"><i class="fas fa-graduation-cap"></i> ${profile.university || 'Student'}</span></div>`;
 
-    const hasBadges = verifiedBadge || ownBadge || scoreBadge;
-
-    // Inline stats row: "Budget: X MAD · Active · Clean: Y/5"
-    const budgetText = (profile.budgetMin || profile.budgetMax)
-        ? `<span class="stat-inline-text">Budget: ${profile.budgetMax || profile.budgetMin} MAD</span>` : '';
-    const cleanText = profile.cleanlinessLevel
-        ? `<span class="stat-inline-text">Clean: ${profile.cleanlinessLevel}/5</span>` : '';
-    const activeBadge = `<span class="stat-inline-badge"><i class="fas fa-circle" style="font-size:0.4rem;"></i> Active</span>`;
-    const hasStats = budgetText || cleanText;
-
-    // Interest tags (max 4)
-    const interestTags = (profile.interests || []).slice(0, 4)
-        .map(i => `<span class="tag">${i}</span>`).join('');
-
-    const bioSnippet = profile.bio ? profile.bio.slice(0, 88) + (profile.bio.length > 88 ? '…' : '') : '';
+    const bioSnippet = profile.bio ? profile.bio.slice(0, 72) + (profile.bio.length > 72 ? '…' : '') : '';
 
     const actionsHtml = isOwn
-        ? `<a href="find-roommate-profile.html" class="btn btn-msg" style="text-decoration:none;"><i class="fas fa-pen"></i> Edit Profile</a>`
-        : `<button class="btn btn-msg" onclick="goToChat('${id}')"><i class="fas fa-paper-plane"></i> Message</button>
-           <button class="btn btn-outline-ghost" onclick="goToChat('${id}')"><i class="fas fa-user"></i> Profile</button>`;
+        ? `<a href="find-roommate-profile.html" class="btn btn-msg" style="text-decoration:none;flex:1;"><i class="fas fa-pen"></i> Edit Profile</a>`
+        : `<button class="btn btn-msg" style="flex:1;" onclick="goToChat('${id}')"><i class="fas fa-eye"></i> View Profile</button>`;
 
     return `
-        <!-- Header: avatar + identity + menu -->
-        <div class="card-header">
-            <div class="card-avatar-wrap">
-                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${avatarGrad};position:relative;">
-                    ${avatarHtml}
-                    <span class="online-dot"></span>
-                </div>
-            </div>
-            <div class="card-identity">
-                <h3>${profile.name || (isOwn ? 'You' : 'Student')}</h3>
-                <div class="card-role">${profile.university ? 'Student' : 'Looking for a roommate'}</div>
-            </div>
+        <!-- Green glow cover -->
+        <div class="card-cover">
             <button class="card-menu-btn"><i class="fas fa-ellipsis-h"></i></button>
         </div>
 
-        ${hasBadges ? `<div class="card-badges-float">${ownBadge}${verifiedBadge}${scoreBadge}</div>` : ''}
-
-        <div class="card-divider" style="margin:10px 14px 0;"></div>
-
-        <!-- Info section -->
-        <div class="card-body">
-            <div class="card-info-list">
-                ${profile.university ? `<div class="info-row"><div class="info-icon"><i class="fas fa-graduation-cap"></i></div><span>${profile.university}</span></div>` : ''}
-                ${profile.location ? `<div class="info-row"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><span>${profile.location}</span></div>` : ''}
+        <!-- Centered avatar overlapping cover -->
+        <div class="card-avatar-wrap">
+            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="position:relative;">
+                ${avatarHtml}
+                <span class="verified-badge-avatar"><i class="fas fa-check"></i></span>
             </div>
-
-            ${hasStats ? `
-            <div class="card-divider" style="margin:8px -14px;"></div>
-            <div class="card-stats-inline">
-                ${budgetText}
-                ${activeBadge}
-                ${cleanText}
-            </div>` : ''}
-
-            ${interestTags ? `
-            <div class="card-divider" style="margin:8px -14px;"></div>
-            <p class="card-interests-label">Interests:</p>
-            <div class="card-tags">${interestTags}</div>` : ''}
-
-            ${bioSnippet ? `<p class="card-bio" style="margin-top:6px;">${bioSnippet}</p>` : ''}
         </div>
 
-        <div class="card-divider" style="margin:0 14px;"></div>
+        <!-- Name + status -->
+        <div class="card-identity">
+            <h3>${profile.name || (isOwn ? 'You' : 'Student')}</h3>
+            ${statusRow}
+        </div>
+
+        <!-- Divider -->
+        <div class="card-divider"></div>
+
+        <!-- Info rows -->
+        <div class="card-body">
+            <div class="card-info-list">
+                ${locationRow}
+                ${rolePill}
+            </div>
+
+            ${bioSnippet ? `<div class="card-divider" style="margin:10px 0;"></div>
+            <p class="card-bio">${bioSnippet}</p>` : ''}
+        </div>
+
+        <!-- Action button -->
         <div class="card-actions">${actionsHtml}</div>
     `;
 }
