@@ -202,7 +202,7 @@ function buildCardHtml({ profile, id, isOwn, score }) {
 
         ${hasBadges ? `<div class="card-badges-float">${ownBadge}${verifiedBadge}${scoreBadge}</div>` : ''}
 
-        <div class="card-divider" style="margin:12px 20px 0;"></div>
+        <div class="card-divider" style="margin:10px 14px 0;"></div>
 
         <!-- Info section -->
         <div class="card-body">
@@ -212,7 +212,7 @@ function buildCardHtml({ profile, id, isOwn, score }) {
             </div>
 
             ${hasStats ? `
-            <div class="card-divider" style="margin:12px -20px;"></div>
+            <div class="card-divider" style="margin:8px -14px;"></div>
             <div class="card-stats-inline">
                 ${budgetText}
                 ${activeBadge}
@@ -220,14 +220,14 @@ function buildCardHtml({ profile, id, isOwn, score }) {
             </div>` : ''}
 
             ${interestTags ? `
-            <div class="card-divider" style="margin:12px -20px;"></div>
+            <div class="card-divider" style="margin:8px -14px;"></div>
             <p class="card-interests-label">Interests:</p>
-            <div class="card-tags" style="text-align:left;justify-content:flex-start;">${interestTags}</div>` : ''}
+            <div class="card-tags">${interestTags}</div>` : ''}
 
-            ${bioSnippet ? `<p class="card-bio" style="margin-top:8px;">${bioSnippet}</p>` : ''}
+            ${bioSnippet ? `<p class="card-bio" style="margin-top:6px;">${bioSnippet}</p>` : ''}
         </div>
 
-        <div class="card-divider" style="margin:0 20px;"></div>
+        <div class="card-divider" style="margin:0 14px;"></div>
         <div class="card-actions">${actionsHtml}</div>
     `;
 }
