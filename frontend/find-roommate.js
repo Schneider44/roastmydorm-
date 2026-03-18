@@ -67,10 +67,17 @@ document.querySelectorAll('[data-route]').forEach(element => {
         const routeKey = element.getAttribute('data-route');
         
         switch (routeKey) {
-            case 'create':
-                navigateToRoute('createProfile');
+            case 'create': {
+                // If user already has a profile, send them straight to browse
+                const hasProfile = localStorage.getItem('roommateProfile') && localStorage.getItem('rmd_token');
+                if (hasProfile) {
+                    navigateToRoute('browseRoommates');
+                } else {
+                    navigateToRoute('createProfile');
+                }
                 break;
-            case 'browse':
+            }
+            case 'browse': {
                 // Check if profile exists before allowing browse
                 const savedProfile = localStorage.getItem('roommateProfile');
                 if (!savedProfile) {
@@ -80,6 +87,7 @@ document.querySelectorAll('[data-route]').forEach(element => {
                     navigateToRoute('browseRoommates');
                 }
                 break;
+            }
             case 'chat':
                 navigateToRoute('chat');
                 break;
