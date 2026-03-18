@@ -117,41 +117,70 @@ window.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
+// Generate a gradient for a card cover based on a seed string
+function cardCoverGradient(seed, isOwn) {
+    if (isOwn) return 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    const palettes = [
+        'linear-gradient(135deg,#667eea,#764ba2)',
+        'linear-gradient(135deg,#f093fb,#f5576c)',
+        'linear-gradient(135deg,#4facfe,#00f2fe)',
+        'linear-gradient(135deg,#43e97b,#38f9d7)',
+        'linear-gradient(135deg,#fa709a,#fee140)',
+        'linear-gradient(135deg,#a18cd1,#fbc2eb)',
+        'linear-gradient(135deg,#fccb90,#d57eeb)',
+        'linear-gradient(135deg,#a1c4fd,#c2e9fb)',
+    ];
+    let h = 0;
+    for (let i = 0; i < (seed || '').length; i++) h = (h * 31 + seed.charCodeAt(i)) & 0xff;
+    return palettes[h % palettes.length];
+}
+
+// Get initials from a name
+function getInitials(name) {
+    if (!name) return '?';
+    return name.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+}
+
 function renderMyProfile(profile) {
     const grid = document.getElementById('roommatesGrid');
     if (!grid) return;
 
-    const interestTags = (profile.interests || []).slice(0, 2)
+    const initials = getInitials(profile.name);
+    const interestTags = (profile.interests || []).slice(0, 3)
         .map(i => `<span class="tag">${i}</span>`).join('');
+    const bioSnippet = profile.bio ? profile.bio.slice(0, 90) + (profile.bio.length > 90 ? '…' : '') : '';
+    const cover = cardCoverGradient(profile.name, true);
 
     const card = document.createElement('div');
     card.className = 'roommate-card';
-    card.style.cssText = 'border: 2px solid #10b981; position: relative;';
+    card.style.cssText = 'border: 2px solid rgba(16,185,129,0.5); position: relative;';
     card.innerHTML = `
-        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:0.72rem;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap;letter-spacing:0.5px;">YOUR PROFILE</div>
-        <div class="card-badges"><span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span></div>
-        <div class="card-image">
-            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}">
+        <div class="card-cover" style="background:${cover};">
+            <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:0.65rem;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap;letter-spacing:0.6px;box-shadow:0 2px 8px rgba(16,185,129,0.4);">YOUR PROFILE</div>
+        </div>
+        <div class="card-avatar-wrap">
+            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${cover};">
                 ${profile.avatarUrl
                     ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-                    : `<i class="fas fa-user"></i>`}
+                    : initials}
             </div>
         </div>
         <div class="card-body">
             <div class="card-name-row">
                 <h3>${profile.name || 'You'}</h3>
-                ${profile.age ? `<span style="font-size:0.85rem;color:#6b7280;">${profile.age} yrs</span>` : ''}
+                ${profile.age ? `<span class="age-chip">${profile.age} yrs</span>` : ''}
             </div>
-            <div class="card-info">
-                <p><i class="fas fa-map-marker-alt"></i> ${profile.location || '—'}</p>
-                <p><i class="fas fa-university"></i> ${profile.university || '—'}</p>
-                <p><i class="fas fa-wallet"></i> ${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</p>
+            ${profile.location ? `<div class="location-pill"><i class="fas fa-map-marker-alt"></i>${profile.location}</div>` : ''}
+            <div class="card-meta-row">
+                ${profile.university ? `<span class="meta-pill"><i class="fas fa-graduation-cap"></i>${profile.university}</span>` : ''}
+                ${(profile.budgetMin || profile.budgetMax) ? `<span class="meta-pill"><i class="fas fa-wallet"></i>${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</span>` : ''}
             </div>
             ${interestTags ? `<div class="card-tags">${interestTags}</div>` : ''}
-            ${profile.bio ? `<p style="font-size:0.82rem;color:#6b7280;margin-top:8px;line-height:1.4;">${profile.bio.slice(0,80)}${profile.bio.length > 80 ? '…' : ''}</p>` : ''}
+            ${bioSnippet ? `<p class="card-bio">${bioSnippet}</p>` : ''}
         </div>
+        <div class="card-divider"></div>
         <div class="card-actions">
-            <a href="find-roommate-profile.html" class="btn btn-blue btn-sm">Edit Profile</a>
+            <a href="find-roommate-profile.html" class="btn btn-outline-ghost"><i class="fas fa-pen"></i> Edit</a>
         </div>
     `;
     grid.insertBefore(card, grid.firstChild);
@@ -167,52 +196,58 @@ function renderProfiles(profiles) {
     const grid = document.getElementById('roommatesGrid');
     if (!grid) return;
 
-    // Remove loading/state placeholders, keep only dynamic cards
     grid.querySelectorAll('[id$="State"]').forEach(el => el.remove());
 
     profiles.forEach(profile => {
         const id = profile._id || profile.userId;
         const score = profile.matchScore || null;
+        const initials = getInitials(profile.name);
+        const cover = cardCoverGradient(String(id));
+
         const scoreHtml = score !== null
-            ? `<span class="match-badge ${matchBadgeClass(score)}">${score}% MATCH</span>`
+            ? `<span class="match-badge ${matchBadgeClass(score)}">${score}% match</span>`
             : '';
         const verifiedHtml = profile.isVerified
-            ? `<span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>`
+            ? `<span class="badge badge-verified" style="backdrop-filter:blur(6px);"><i class="fas fa-check-circle"></i> Verified</span>`
             : '';
-        const interestTags = (profile.interests || []).slice(0, 2)
+        const interestTags = (profile.interests || []).slice(0, 3)
             .map(i => `<span class="tag">${i}</span>`).join('');
+        const bioSnippet = profile.bio ? profile.bio.slice(0, 90) + (profile.bio.length > 90 ? '…' : '') : '';
 
         const card = document.createElement('div');
         card.className = 'roommate-card';
         card.dataset.id = id;
         card.innerHTML = `
-            <div class="card-badges">${verifiedHtml}</div>
-            <div class="card-image">
-                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}">
+            <div class="card-cover" style="background:${cover};">
+                <div class="card-badges-float">
+                    ${verifiedHtml}
+                    ${scoreHtml}
+                </div>
+            </div>
+            <div class="card-avatar-wrap">
+                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="background:${cover};">
                     ${profile.avatarUrl
                         ? `<img src="${profile.avatarUrl}" alt="${profile.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-                        : `<i class="fas fa-user"></i>`}
+                        : initials}
                 </div>
-                ${scoreHtml}
             </div>
             <div class="card-body">
                 <div class="card-name-row">
                     <h3>${profile.name || 'Student'}</h3>
-                    ${profile.age ? `<span style="font-size:0.85rem;color:#6b7280;">${profile.age} yrs</span>` : ''}
+                    ${profile.age ? `<span class="age-chip">${profile.age} yrs</span>` : ''}
                 </div>
-                <div class="card-info">
-                    <p><i class="fas fa-map-marker-alt"></i> ${profile.location || '—'}</p>
-                    <p><i class="fas fa-university"></i> ${profile.university || '—'}</p>
-                    <p><i class="fas fa-wallet"></i> ${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</p>
+                ${profile.location ? `<div class="location-pill"><i class="fas fa-map-marker-alt"></i>${profile.location}</div>` : ''}
+                <div class="card-meta-row">
+                    ${profile.university ? `<span class="meta-pill"><i class="fas fa-graduation-cap"></i>${profile.university}</span>` : ''}
+                    ${(profile.budgetMin || profile.budgetMax) ? `<span class="meta-pill"><i class="fas fa-wallet"></i>${profile.budgetMin || '?'}–${profile.budgetMax || '?'} MAD</span>` : ''}
                 </div>
                 ${interestTags ? `<div class="card-tags">${interestTags}</div>` : ''}
-                ${profile.bio ? `<p style="font-size:0.82rem;color:#6b7280;margin-top:8px;line-height:1.4;">${profile.bio.slice(0,80)}${profile.bio.length > 80 ? '…' : ''}</p>` : ''}
+                ${bioSnippet ? `<p class="card-bio">${bioSnippet}</p>` : ''}
             </div>
+            <div class="card-divider"></div>
             <div class="card-actions">
-                <button class="btn btn-blue btn-sm" onclick="goToChat('${id}')">View Profile</button>
-                <button class="btn btn-primary btn-sm btn-glow" onclick="goToChat('${id}')">
-                    <i class="fas fa-paper-plane"></i> Message
-                </button>
+                <button class="btn btn-outline-ghost" onclick="goToChat('${id}')"><i class="fas fa-user"></i> Profile</button>
+                <button class="btn btn-msg" onclick="goToChat('${id}')"><i class="fas fa-paper-plane"></i> Message</button>
             </div>
         `;
         grid.appendChild(card);

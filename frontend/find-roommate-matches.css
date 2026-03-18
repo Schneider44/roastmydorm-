@@ -667,18 +667,20 @@ body {
    ROOMMATE CARD
    ============================================ */
 .roommate-card {
-    background: var(--bg-card);
-    border: var(--border-glass);
-    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, rgba(22, 32, 58, 0.98) 0%, rgba(12, 18, 38, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 20px;
     overflow: hidden;
     position: relative;
-    transition: var(--transition-normal);
+    transition: transform 0.3s cubic-bezier(.22,.68,0,1.2), box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .roommate-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(229, 57, 53, 0.3);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-7px) scale(1.01);
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(99, 102, 241, 0.15);
 }
 
 .roommate-card.ai-pick {
@@ -688,6 +690,35 @@ body {
 
 .roommate-card.ai-pick:hover {
     box-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+}
+
+/* ── Card Cover Banner ── */
+.card-cover {
+    height: 88px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* ── Avatar wrap overlaps cover ── */
+.card-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: -44px;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ── Floating badges on top-right of cover ── */
+.card-badges-float {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    z-index: 3;
 }
 
 /* Locked Card */
@@ -738,7 +769,7 @@ body {
     filter: blur(8px);
 }
 
-/* Card Badges */
+/* Card Badges (legacy, keep for other uses) */
 .card-badges {
     display: flex;
     gap: 8px;
@@ -798,7 +829,7 @@ body {
     border: 1px solid rgba(39, 174, 96, 0.4);
 }
 
-/* Card Image */
+/* Card Image (legacy, keep for backward compat) */
 .card-image {
     padding: 0 16px;
     position: relative;
@@ -806,59 +837,133 @@ body {
     justify-content: center;
 }
 
+/* Avatar */
 .avatar-placeholder {
-    width: 100px;
-    height: 100px;
+    width: 88px;
+    height: 88px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
+    font-size: 1.9rem;
+    font-weight: 700;
     color: white;
+    border: 3px solid rgba(12, 18, 38, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .avatar-placeholder.female {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
+/* Match badge (inside card-badges-float) */
 .match-badge {
-    position: absolute;
-    top: 10px;
-    right: 16px;
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     font-weight: 700;
+    letter-spacing: 0.4px;
+    backdrop-filter: blur(6px);
 }
 
 .match-badge.high {
-    background: rgba(39, 174, 96, 0.2);
-    color: var(--success);
-    border: 1px solid rgba(39, 174, 96, 0.4);
+    background: rgba(16, 185, 129, 0.25);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 .match-badge.medium {
-    background: rgba(243, 156, 18, 0.2);
-    color: var(--warning);
-    border: 1px solid rgba(243, 156, 18, 0.4);
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.match-badge.low {
+    background: rgba(100, 116, 139, 0.2);
+    color: var(--text-muted);
+    border: 1px solid rgba(100, 116, 139, 0.3);
 }
 
 /* Card Body */
 .card-body {
-    padding: 16px;
+    padding: 0 18px 16px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .card-name-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
 .card-body h3 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    font-weight: 700;
     color: var(--text-white);
+    line-height: 1.2;
+}
+
+.age-chip {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+    white-space: nowrap;
+}
+
+/* Location pill */
+.location-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.location-pill i {
+    color: #6366f1;
+    font-size: 0.72rem;
+}
+
+/* Meta info row */
+.card-meta-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 30px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.meta-pill i {
+    font-size: 0.65rem;
+    color: #6366f1;
 }
 
 .online-indicator {
@@ -881,6 +986,7 @@ body {
 
 .card-info {
     margin-bottom: 12px;
+    display: none; /* replaced by .card-meta-row */
 }
 
 .card-info p {
@@ -922,24 +1028,27 @@ body {
 .card-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    justify-content: center;
+    gap: 6px;
     margin-bottom: 12px;
 }
 
 .tag {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    background: var(--bg-glass);
-    border: var(--border-glass);
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
     border-radius: 20px;
-    font-size: 0.75rem;
-    color: var(--text-light);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #a5b4fc;
 }
 
 .tag i {
-    color: var(--primary-blue-light);
+    font-size: 0.6rem;
+    color: #818cf8;
 }
 
 /* Compatibility Breakdown */
@@ -1032,15 +1141,60 @@ body {
     color: var(--warning);
 }
 
+/* Card Bio snippet */
+.card-bio {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+    margin-bottom: 14px;
+    flex: 1;
+}
+
+/* Divider before actions */
+.card-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 0 -18px 14px;
+}
+
 /* Card Actions */
 .card-actions {
     display: flex;
-    gap: 10px;
-    padding: 0 16px 16px;
+    gap: 8px;
+    padding: 0 18px 18px;
 }
 
 .card-actions .btn {
     flex: 1;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    padding: 9px 10px;
+    font-weight: 600;
+}
+
+.card-actions .btn-outline-ghost {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-light);
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.card-actions .btn-outline-ghost:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.22);
+}
+
+.card-actions .btn-msg {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    transition: opacity 0.2s, transform 0.15s;
+}
+
+.card-actions .btn-msg:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
 }
 
 /* Social Validation */
