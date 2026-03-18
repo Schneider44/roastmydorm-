@@ -54,6 +54,23 @@
                                     <span class="section-icon"><i class="fas fa-user"></i></span>
                                     Basic Information
                                 </h2>
+
+                                <!-- Profile Photo Upload -->
+                                <div class="avatar-upload-wrap">
+                                    <div class="avatar-upload-preview" id="avatarPreview">
+                                        <i class="fas fa-user" id="avatarIcon"></i>
+                                        <img id="avatarImg" src="" alt="Profile photo" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                                    </div>
+                                    <div class="avatar-upload-info">
+                                        <label for="avatarInput" class="avatar-upload-btn">
+                                            <i class="fas fa-camera"></i> Upload Photo
+                                        </label>
+                                        <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+                                        <p class="avatar-hint">JPG, PNG · Max 5MB · Square recommended</p>
+                                        <button type="button" id="removeAvatarBtn" style="display:none;background:none;border:none;color:#ef4444;font-size:0.75rem;cursor:pointer;padding:0;"><i class="fas fa-trash-alt"></i> Remove</button>
+                                    </div>
+                                </div>
+
                                 <div class="form-grid">
                                     <div class="form-group">
                                         <label for="fullName">Full Name <span class="required">*</span></label>

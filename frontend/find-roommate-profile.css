@@ -262,6 +262,72 @@ body {
     box-shadow: var(--shadow-card);
 }
 
+/* ── Avatar Upload ── */
+.avatar-upload-wrap {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 0 24px;
+}
+
+.avatar-upload-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(79, 70, 229, 0.12);
+    border: 2px dashed rgba(99, 102, 241, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.avatar-upload-preview.has-image {
+    border-style: solid;
+    border-color: rgba(99, 102, 241, 0.6);
+}
+
+.avatar-upload-preview i {
+    font-size: 2rem;
+    color: rgba(99, 102, 241, 0.5);
+}
+
+.avatar-upload-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.avatar-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(79, 70, 229, 0.15);
+    color: #818cf8;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    width: fit-content;
+}
+
+.avatar-upload-btn:hover {
+    background: rgba(79, 70, 229, 0.25);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.avatar-hint {
+    font-size: 0.7rem;
+    color: var(--text-muted, #94A3B8);
+    margin: 0;
+}
+
+/* ── Form section ── */
 .form-section-block {
     margin-bottom: 36px;
     padding-bottom: 32px;

@@ -214,6 +214,7 @@ if (profileForm) {
         const guestsMap = { 'rarely': 'Quiet', 'sometimes': 'Moderate', 'often': 'Social' };
         const smokerMap = { 'non-smoker': 'No smoking', 'smoker': 'Regularly' };
 
+        const savedAvatar = localStorage.getItem('rmd_avatar') || '';
         const apiPayload = {
             name: profileData.fullName,
             age: parseInt(profileData.age) || 20,
@@ -228,7 +229,8 @@ if (profileForm) {
             studyHabits: 'Mixed (quiet & groups)',
             personality: 'Ambivert',
             petsTolerance: 'Neutral',
-            bio: profileData.bio || ''
+            bio: profileData.bio || '',
+            ...(savedAvatar ? { avatarUrl: savedAvatar } : {})
         };
 
         // Store in localStorage
@@ -498,6 +500,74 @@ function loadSavedProfile() {
 
 // Load saved profile on page load
 loadSavedProfile();
+
+// ============================================
+// AVATAR / PROFILE PHOTO UPLOAD
+// ============================================
+(function initAvatarUpload() {
+    const input    = document.getElementById('avatarInput');
+    const preview  = document.getElementById('avatarPreview');
+    const img      = document.getElementById('avatarImg');
+    const icon     = document.getElementById('avatarIcon');
+    const removeBtn = document.getElementById('removeAvatarBtn');
+    if (!input || !preview || !img) return;
+
+    // Restore saved avatar
+    const saved = localStorage.getItem('rmd_avatar');
+    if (saved) {
+        img.src = saved;
+        img.style.display = 'block';
+        if (icon) icon.style.display = 'none';
+        preview.classList.add('has-image');
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+    }
+
+    input.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            showNotification('Image must be under 5 MB.', 'error');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            // Resize to 300x300 via canvas to keep payload small
+            const image = new Image();
+            image.onload = function () {
+                const canvas = document.createElement('canvas');
+                const SIZE = 300;
+                canvas.width = SIZE; canvas.height = SIZE;
+                const ctx = canvas.getContext('2d');
+                // Centre-crop
+                const side = Math.min(image.width, image.height);
+                const sx = (image.width - side) / 2;
+                const sy = (image.height - side) / 2;
+                ctx.drawImage(image, sx, sy, side, side, 0, 0, SIZE, SIZE);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+                localStorage.setItem('rmd_avatar', dataUrl);
+                img.src = dataUrl;
+                img.style.display = 'block';
+                if (icon) icon.style.display = 'none';
+                preview.classList.add('has-image');
+                if (removeBtn) removeBtn.style.display = 'inline-block';
+            };
+            image.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    if (removeBtn) {
+        removeBtn.addEventListener('click', function () {
+            localStorage.removeItem('rmd_avatar');
+            img.src = '';
+            img.style.display = 'none';
+            if (icon) icon.style.display = 'block';
+            preview.classList.remove('has-image');
+            removeBtn.style.display = 'none';
+            input.value = '';
+        });
+    }
+}());
 
 // ============================================
 // CONSOLE LOG FOR DEBUGGING

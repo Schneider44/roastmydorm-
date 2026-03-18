@@ -701,63 +701,78 @@ body {
         0 16px 40px -8px rgba(79, 70, 229, 0.15);
 }
 
-/* ── Card Cover Banner ── */
-.card-cover {
-    height: 84px;
-    position: relative;
-    flex-shrink: 0;
-}
+/* ── Card cover hidden (new layout has no cover) ── */
+.card-cover { display: none; }
 
-/* subtle dot-pattern overlay on cover */
-.card-cover::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='18' fill='none' stroke='rgba(255,255,255,0.07)' stroke-width='1'/%3E%3C/svg%3E") repeat;
-    pointer-events: none;
-}
-
-/* ── Avatar wrap overlaps cover ── */
-.card-avatar-wrap {
+/* ── Card Header: horizontal avatar + identity + 3-dot ── */
+.card-header {
     display: flex;
-    justify-content: center;
-    margin-top: -36px;
-    margin-bottom: 10px;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 20px 0;
     position: relative;
-    z-index: 2;
 }
 
-/* ── 3-dot menu on cover ── */
+/* ── Avatar wrap in header (no negative margin) ── */
+.card-avatar-wrap {
+    flex-shrink: 0;
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* ── Identity next to avatar ── */
+.card-identity {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.card-identity h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-identity .card-role {
+    font-size: 0.74rem;
+    color: #6B7280;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* ── 3-dot menu (top-right of card) ── */
 .card-menu-btn {
     position: absolute;
-    top: 11px;
-    right: 12px;
+    top: 16px;
+    right: 16px;
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 3;
     transition: background 0.2s;
+    flex-shrink: 0;
 }
-.card-menu-btn:hover { background: rgba(255, 255, 255, 0.35); }
-.card-menu-btn i { color: rgba(255, 255, 255, 0.9); font-size: 0.65rem; }
+.card-menu-btn:hover { background: #F3F4F6; }
+.card-menu-btn i { color: #9CA3AF; font-size: 0.75rem; }
 
-/* ── Floating badges on top-right of cover ── */
+/* ── Badges float (below header, left-aligned) ── */
 .card-badges-float {
-    position: absolute;
-    top: 10px;
-    left: 12px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    z-index: 3;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 10px 20px 0;
+    align-items: center;
 }
 
 /* Locked Card */
@@ -878,17 +893,17 @@ body {
 
 /* Avatar */
 .avatar-placeholder {
-    width: 72px;
-    height: 72px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 800;
     color: #ffffff;
     border: 3px solid #ffffff;
-    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25), 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(79, 70, 229, 0.2), 0 1px 4px rgba(0, 0, 0, 0.08);
     text-transform: uppercase;
     letter-spacing: -1px;
     overflow: hidden;
@@ -903,13 +918,14 @@ body {
 /* Online status dot */
 .online-dot {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
+    bottom: 1px;
+    right: 1px;
     width: 12px;
     height: 12px;
     background: #10b981;
     border: 2px solid #ffffff;
     border-radius: 50%;
+    pointer-events: none;
 }
 
 /* Match badge */
@@ -944,61 +960,48 @@ body {
 
 /* Card Body */
 .card-body {
-    padding: 0 20px 20px;
-    text-align: center;
+    padding: 14px 20px 20px;
+    text-align: left;
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.card-name-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 3px;
-}
+/* legacy — hidden, replaced by .card-header */
+.card-name-row { display: none; }
+.card-body h3 { display: none; }
 
-.card-body h3 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #111827;
-    line-height: 1.2;
-    letter-spacing: -0.3px;
-}
-
-/* Role subtitle */
+/* Role subtitle (inside .card-identity, not .card-body) */
 .card-role {
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     color: #6B7280;
     font-weight: 500;
-    margin-bottom: 14px;
+    margin-bottom: 0;
 }
 
 .age-chip {
     background: #F3F4F6;
     color: #6B7280;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    padding: 2px 9px;
+    padding: 2px 8px;
     border-radius: 30px;
     border: 1px solid #E5E7EB;
     white-space: nowrap;
 }
 
-/* Info rows with icon boxes */
+/* Info rows with small icon box */
 .card-info-list {
     display: flex;
     flex-direction: column;
-    gap: 7px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 0;
 }
 
 .info-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
+    gap: 9px;
     font-size: 0.76rem;
     color: #374151;
     font-weight: 500;
@@ -1020,66 +1023,48 @@ body {
     color: #4F46E5;
 }
 
-/* Stat blocks */
-.card-stats {
+/* ── Inline stats row (like "GPA: 3.8 · Top Performer · Year: 3rd") ── */
+.card-stats-inline {
     display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.stat-block {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 2px;
-    padding: 9px 8px;
-    border-radius: 10px;
-    background: #F9FAFB;
-    border: 1px solid #F3F4F6;
-    transition: background 0.2s;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.stat-block:hover { background: #EEF2FF; border-color: #E0E7FF; }
-
-.stat-value {
-    font-size: 1rem;
-    font-weight: 800;
+.stat-inline-text {
+    font-size: 0.78rem;
+    font-weight: 700;
     color: #111827;
-    letter-spacing: -0.5px;
 }
 
-.stat-label {
-    font-size: 0.62rem;
-    font-weight: 600;
-    color: #9CA3AF;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Location pill (legacy, kept for old cards) */
-.location-pill {
+.stat-inline-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.76rem;
-    color: #6B7280;
-    margin-bottom: 12px;
+    gap: 4px;
+    background: #DCFCE7;
+    color: #16A34A;
+    border: 1px solid #BBF7D0;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.67rem;
+    font-weight: 700;
 }
 
-.location-pill i {
-    color: #4F46E5;
-    font-size: 0.68rem;
+/* Interests / skills section */
+.card-interests-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 8px;
 }
 
-/* Meta info row (legacy) */
-.card-meta-row {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
+/* Legacy pills — hidden */
+.card-meta-row,
+.location-pill { display: none; }
+
+/* Legacy stat blocks — hidden */
+.card-stats { display: none; }
+.stat-block, .stat-value, .stat-label { display: none; }
 
 .meta-pill {
     display: inline-flex;
