@@ -176,8 +176,10 @@ function buildCardHtml({ profile, id, isOwn, score }) {
 
         <!-- Centered avatar overlapping cover -->
         <div class="card-avatar-wrap">
-            <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}" style="position:relative;">
-                ${avatarHtml}
+            <div class="avatar-ring-wrap">
+                <div class="avatar-placeholder${profile.gender === 'female' ? ' female' : ''}">
+                    ${avatarHtml}
+                </div>
                 <span class="verified-badge-avatar"><i class="fas fa-check"></i></span>
             </div>
         </div>
