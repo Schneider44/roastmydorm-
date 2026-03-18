@@ -143,6 +143,19 @@ const RoommateController = {
     }
   },
 
+  // GET /api/roommate/messages/unread-count
+  getUnreadCount: async (req, res) => {
+    try {
+      const count = await RoommateMessage.countDocuments({
+        receiverId: req.user._id,
+        read: false
+      });
+      res.json({ success: true, data: { count } });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  },
+
   // GET /api/roommate/messages/:partnerId
   getMessages: async (req, res) => {
     try {
@@ -154,6 +167,13 @@ const RoommateController = {
           { senderId: partnerId, receiverId: userId }
         ]
       }).sort({ createdAt: 1 });
+
+      // Mark all received messages as read
+      await RoommateMessage.updateMany(
+        { senderId: partnerId, receiverId: userId, read: false },
+        { read: true }
+      );
+
       res.json({ success: true, data: messages });
     } catch (err) {
       res.status(500).json({ success: false, message: err.message });
@@ -207,7 +227,7 @@ const RoommateController = {
     res.json({ success: true, data: { ...req.body, scheduledBy: req.user._id, createdAt: new Date() } });
   },
 
-  getMyMeetings: async (req, res) => {
+  getMyMeetings: async (_req, res) => {
     res.json({ success: true, data: [] });
   }
 };

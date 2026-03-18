@@ -19,6 +19,7 @@ router.get('/matches/compatibility/:id', auth, RoommateController.getCompatibili
 
 // Message routes
 router.post('/messages', auth, RoommateController.sendMessage);
+router.get('/messages/unread-count', auth, RoommateController.getUnreadCount);
 router.get('/messages/:partnerId', auth, RoommateController.getMessages);
 router.put('/messages/:id/read', auth, RoommateController.markMessageRead);
 

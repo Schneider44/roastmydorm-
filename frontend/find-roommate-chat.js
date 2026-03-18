@@ -28,6 +28,7 @@ const conversationsList = document.getElementById('conversationsList');
 // ── Boot ──
 window.addEventListener('DOMContentLoaded', async function () {
     createParticles();
+    requestNotificationPermission();
 
     if (!token) {
         showError('Please sign in to use the chat.');
@@ -119,15 +120,79 @@ async function loadMessages() {
     lastMessageCount = (data.data || []).length;
 }
 
+// ── Notification helpers ──
+function requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+}
+
+function playNotificationSound() {
+    try {
+        const AudioCtx = window.AudioContext || window['webkitAudioContext'];
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.4);
+    } catch (e) { /* AudioContext not available */ }
+}
+
+let titleBlinker = null;
+function blinkTitle(name) {
+    const original = document.title;
+    let on = true;
+    clearInterval(titleBlinker);
+    titleBlinker = setInterval(function () {
+        document.title = on ? '💬 New message from ' + name : original;
+        on = !on;
+    }, 1000);
+    // Stop blinking when tab is focused
+    window.addEventListener('focus', function stopBlink() {
+        clearInterval(titleBlinker);
+        document.title = original;
+        window.removeEventListener('focus', stopBlink);
+    });
+}
+
+function showIncomingNotification(senderName, text) {
+    playNotificationSound();
+    blinkTitle(senderName);
+
+    if ('Notification' in window && Notification.permission === 'granted' && document.hidden) {
+        const n = new Notification('💬 ' + senderName + ' sent you a message', {
+            body: text.slice(0, 100),
+            icon: '/roastmydorm_logo-removebg-preview.png',
+            tag: 'rmd-chat-incoming'
+        });
+        n.onclick = function () { window.focus(); };
+    }
+}
+
 // ── Poll for new messages ──
 async function pollMessages() {
     if (!partner) return;
     const data = await apiFetch('/roommate/messages/' + partner.userId);
     if (!data || !data.success) return;
     const msgs = data.data || [];
-    if (msgs.length !== lastMessageCount) {
+
+    if (msgs.length > lastMessageCount) {
+        // Check if the newest message is from the partner (not us)
+        const newest = msgs[msgs.length - 1];
+        const isIncoming = newest && String(newest.senderId) !== String(myUserId);
+        if (isIncoming) {
+            showIncomingNotification(partner.name, newest.text);
+        }
         lastMessageCount = msgs.length;
         renderMessages(msgs);
+        // Clear unread badge since user is actively in chat
+        localStorage.setItem('rmd_unread_count', '0');
     }
 }
 
