@@ -12,6 +12,8 @@ router.get('/profiles/me', auth, RoommateController.getMyProfile);
 router.put('/profiles/me', auth, RoommateController.updateProfile);
 router.get('/profiles', auth, RoommateController.getAllProfiles);
 router.get('/profiles/:id', auth, RoommateController.getProfileById);
+router.delete('/profiles/me', auth, RoommateController.deleteMyProfile);
+router.delete('/profiles/:id', auth, RoommateController.deleteProfileById);
 
 // Matching routes
 router.get('/matches', auth, RoommateController.getMatches);

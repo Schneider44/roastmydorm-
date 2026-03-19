@@ -229,6 +229,26 @@ const RoommateController = {
 
   getMyMeetings: async (_req, res) => {
     res.json({ success: true, data: [] });
+  },
+
+  // DELETE /api/roommate/profiles/me — delete own profile
+  deleteMyProfile: async (req, res) => {
+    try {
+      await RoommateProfile.findOneAndDelete({ userId: req.user._id });
+      res.json({ success: true, message: 'Profile deleted' });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  },
+
+  // DELETE /api/roommate/profiles/:id — admin delete any profile
+  deleteProfileById: async (req, res) => {
+    try {
+      await RoommateProfile.findByIdAndDelete(req.params.id);
+      res.json({ success: true, message: 'Profile deleted' });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
   }
 };
 

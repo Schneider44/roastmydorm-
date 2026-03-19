@@ -89,9 +89,6 @@ window.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        const myProfileData = await profileRes.json();
-        const myProfile = myProfileData.success ? myProfileData.data : null;
-
         // Get all other profiles
         const res = await fetch(`${ROOMMATE_API}/roommate/profiles`, {
             headers: { Authorization: 'Bearer ' + token }
@@ -102,10 +99,9 @@ window.addEventListener('DOMContentLoaded', async function() {
 
         const others = (data.success && Array.isArray(data.data)) ? data.data : [];
 
-        // Render own profile card first, then others
-        if (myProfile) renderMyProfile(myProfile);
+        // Render other profiles only (own card excluded from browse)
         if (others.length > 0) renderProfiles(others);
-        if (!myProfile && others.length === 0) {
+        if (others.length === 0) {
             if (emptyState) emptyState.style.display = 'block';
         }
 
@@ -166,7 +162,8 @@ function buildCardHtml({ profile, id, isOwn, score }) {
 
     const actionsHtml = isOwn
         ? `<a href="find-roommate-profile.html" class="btn btn-msg" style="text-decoration:none;flex:1;"><i class="fas fa-pen"></i> Edit Profile</a>`
-        : `<button class="btn btn-msg" style="flex:1;" onclick="goToChat('${id}')"><i class="fas fa-eye"></i> View Profile</button>`;
+        : `<button class="btn btn-msg" style="flex:1;" onclick="goToChat('${id}')"><i class="fas fa-eye"></i> View Profile</button>
+           <button class="btn btn-outline-ghost" style="flex:0 0 auto;padding:9px 12px;" onclick="deleteProfile('${id}', this)" title="Delete profile"><i class="fas fa-trash-alt"></i></button>`;
 
     return `
         <!-- Green glow cover -->
@@ -240,6 +237,23 @@ function renderProfiles(profiles) {
         grid.appendChild(card);
     });
 }
+
+window.deleteProfile = async function(id, btn) {
+    if (!confirm('Delete this profile?')) return;
+    const token = localStorage.getItem('rmd_token');
+    btn.disabled = true;
+    const res = await fetch(`${ROOMMATE_API}/roommate/profiles/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + token }
+    });
+    const data = await res.json();
+    if (data.success) {
+        btn.closest('.roommate-card').remove();
+    } else {
+        alert('Could not delete: ' + data.message);
+        btn.disabled = false;
+    }
+};
 
 window.openReportModal = function(userId) {
     const modal = document.createElement('div');
