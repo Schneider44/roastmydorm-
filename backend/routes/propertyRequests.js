@@ -7,6 +7,22 @@ const { asyncHandler, errors } = require('../utils/helpers');
 const { sendPropertySubmissionAlert, sendPropertyDecisionEmail } = require('../utils/email');
 
 // ─────────────────────────────────────────────
+// PUBLIC — GET /api/property-requests/listings
+// Returns approved listings for a city (for dorm pages)
+// ─────────────────────────────────────────────
+router.get('/listings', asyncHandler(async (req, res) => {
+  const { city } = req.query;
+  const filter = { status: 'approved' };
+  if (city) filter.city = city.toLowerCase();
+
+  const listings = await PropertyRequest.find(filter)
+    .sort({ reviewedAt: -1 })
+    .select('title propertyType city neighborhood address price description amenities furnished availableFrom images landlordName landlordPhone reviewedAt');
+
+  res.json({ success: true, data: listings });
+}));
+
+// ─────────────────────────────────────────────
 // PUBLIC — POST /api/property-requests
 // Landlord submits a property for review
 // ─────────────────────────────────────────────

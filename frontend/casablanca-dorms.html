@@ -679,7 +679,8 @@
              {id:23, title:"Girl Student Room|UIA", location:"Maarif, Casablanca",price:1800,image:"maarif4.png",type:"Roomate",amenities:["Furnished"],rating:4.2,reviews:0,verified:true,available:true,page:"Maarif-roomate.html"},
              {id:24, title:"Premium Boys Students Studio| Faculty of Sciences",location:"Sidi Maarouf, Casablanca",price:3500,image:"maarouf-studio.png",type:"Studio",amenities:["Furnished"],rating:4.0,reviews:0,verified:true,available:true,page:"Sidi maarouf-roomate.html"},
              {id:25, title:"Empty Room for Girls|Hassan II Univ", location:"Belverde,Casablanca",price:1700,image:"belverde-apt4.png",type:"Roomate",amenities:["Furnished"],rating:4.0,reviews:0,verified:true,available:true,page:"Belvedere-Apt.html"},
-             {id:26, title:"The Modern Apartement |Faculty of Sciences", location:"Sidi Maarouf,Casablanca",price:3400,image:"mustkabal.png",type:"Shared",amenities:["Furnished"],rating:4.0,reviews:0,verified:true,available:true,page:"Sidi maarouf-Apt2.html"}
+             {id:26, title:"The Modern Apartement |Faculty of Sciences", location:"Sidi Maarouf,Casablanca",price:3400,image:"mustkabal.png",type:"Shared",amenities:["Furnished"],rating:4.0,reviews:0,verified:true,available:true,page:"Sidi maarouf-Apt2.html"},
+             {id:27, title:"Empty Apartement | UIA", location:"Ouled Saleh road bouskoura,Casablanca",price:3500,image:"bouskoura-apt.png",type:"Apartement",amenities:["Quiet"],rating:4.4,reviews:0,verified:true,available:true,page:"Bouskoura.html"}
        
             ];  
 
@@ -687,12 +688,52 @@
 
         let currentFilter = 'all';
         let savedListings = JSON.parse(localStorage.getItem('savedListings')) || [];
+        let allDorms = [...dorms];
+
+        const API_BASE = ['localhost','127.0.0.1',''].includes(window.location.hostname)
+            ? 'http://localhost:5000/api'
+            : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+        // Convert an approved PropertyRequest into the card format
+        function apiListingToCard(item) {
+            const amenityMap = { wifi: 'wifi', furnished: 'laundry', gym: 'gym', parking: 'gym', quiet: 'laundry' };
+            const amenities = (item.amenities || []).map(a => amenityMap[a.toLowerCase()] || a.toLowerCase()).filter(Boolean);
+            const firstImage = item.images && item.images.length > 0 ? item.images[0] : 'roastmydorm_logo-removebg-preview.png';
+            return {
+                id: 'api_' + item._id,
+                title: item.title,
+                location: `${item.neighborhood ? item.neighborhood + ', ' : ''}${item.city.charAt(0).toUpperCase() + item.city.slice(1)}`,
+                price: item.price,
+                type: item.propertyType,
+                image: firstImage,
+                amenities: amenities.length ? amenities : ['wifi'],
+                rating: 4.0,
+                reviews: 0,
+                verified: true,
+                available: true,
+                page: null,
+                fromApi: true,
+                landlordPhone: item.landlordPhone,
+                description: item.description
+            };
+        }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            renderListings(dorms);
+        document.addEventListener('DOMContentLoaded', async function() {
             setupFilters();
             setupSearch();
+            renderListings(allDorms);
+
+            // Load approved listings from API
+            try {
+                const res = await fetch(`${API_BASE}/property-requests/listings?city=casablanca`);
+                const data = await res.json();
+                if (data.success && data.data.length > 0) {
+                    const apiCards = data.data.map(apiListingToCard);
+                    allDorms = [...dorms, ...apiCards];
+                    renderListings(allDorms);
+                }
+            } catch (e) { /* silently ignore if API unavailable */ }
         });
 
         // Render Listings
@@ -754,9 +795,9 @@
 
         // Filter Listings
         function filterListings() {
-            let filtered = dorms;
+            let filtered = allDorms;
             if (currentFilter !== 'all') {
-                filtered = dorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 2500) || (currentFilter === 'premium' && d.price > 3200));
+                filtered = allDorms.filter(d => d.type === currentFilter || (currentFilter === 'budget' && d.price < 2500) || (currentFilter === 'premium' && d.price > 3200));
             }
             renderListings(filtered);
         }
@@ -765,7 +806,7 @@
         function setupSearch() {
             document.getElementById('searchInput').addEventListener('input', function() {
                 const query = this.value.toLowerCase();
-                const filtered = dorms.filter(d => d.title.toLowerCase().includes(query) || d.location.toLowerCase().includes(query));
+                const filtered = allDorms.filter(d => d.title.toLowerCase().includes(query) || d.location.toLowerCase().includes(query));
                 renderListings(filtered);
             });
         }
@@ -780,26 +821,28 @@
                 savedListings.push(id);
             }
             localStorage.setItem('savedListings', JSON.stringify(savedListings));
-            renderListings(currentFilter === 'all' ? dorms : filterListings());
+            renderListings(currentFilter === 'all' ? allDorms : filterListings());
         }
 
-        // View & Book - Navigate to dorm page
+        // View & Book - Navigate to dorm page or show contact info for API listings
         function openBooking(id) {
-            const dorm = dorms.find(d => d.id === id);
-            if (dorm && dorm.page) {
+            const dorm = allDorms.find(d => d.id === id);
+            if (!dorm) return;
+            if (dorm.fromApi) {
+                const phone = dorm.landlordPhone ? `\nContact: ${dorm.landlordPhone}` : '';
+                alert(`${dorm.title}\n\n${dorm.description || ''}${phone}`);
+            } else if (dorm.page) {
                 window.location.href = dorm.page;
-            } else {
-                alert("Dorm page not found");
             }
         }
 
         // Mobile Navigation
         function showTab(tab) {
             if (tab === 'saved') {
-                const savedDorms = dorms.filter(d => savedListings.includes(d.id));
+                const savedDorms = allDorms.filter(d => savedListings.includes(d.id));
                 renderListings(savedDorms);
             } else if (tab === 'explore') {
-                renderListings(dorms);
+                renderListings(allDorms);
             } else if (tab === 'profile') {
                 alert('Profile Page - Coming Soon');
             }
