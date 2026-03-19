@@ -282,8 +282,7 @@ if (profileForm) {
 
             const result = await res.json();
             if (result.success) {
-                showNotification('Profile saved! Redirecting to matches...', 'success');
-                setTimeout(() => { window.location.href = ROUTES.browseRoommates; }, 2000);
+                window.location.href = ROUTES.browseRoommates;
             } else {
                 showNotification(result.message || 'Failed to save profile. Please try again.', 'error');
                 if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Create My Profile'; }
