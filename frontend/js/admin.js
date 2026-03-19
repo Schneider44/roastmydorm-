@@ -36,6 +36,9 @@ const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 // State Management
 // ============================================
 
+const prState = { status: 'pending', page: 1, total: 0, limit: 10 };
+let prPendingDecision = null;
+
 const state = {
   user: null,
   accessToken: null,
@@ -1965,8 +1968,6 @@ window.navigateTo = navigateToPage;
 // Property Requests
 // ============================================
 
-const prState = { status: 'pending', page: 1, total: 0, limit: 10 };
-let prPendingDecision = null; // { id, action }
 
 async function loadPropertyRequests() {
   const listEl = document.getElementById('pr-list');
