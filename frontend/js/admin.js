@@ -2058,12 +2058,13 @@ function renderPropertyRequests(submissions) {
             ${amenityTags ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">${amenityTags}</div>` : ''}
             ${s.adminNote ? `<p style="margin:10px 0 0;font-size:.8rem;background:#f3f4f6;padding:8px 12px;border-radius:6px"><strong>Admin note:</strong> ${s.adminNote}</p>` : ''}
           </div>
-          ${s.status === 'pending' ? `
+          ${s.status !== 'rejected' ? `
           <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+            ${s.status === 'pending' ? `
             <button onclick="openPrModal('${s._id}','approve')"
               style="padding:8px 16px;background:#10b981;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
               ✓ Approve
-            </button>
+            </button>` : ''}
             <button onclick="openPrModal('${s._id}','reject')"
               style="padding:8px 16px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:.875rem">
               ✗ Reject
