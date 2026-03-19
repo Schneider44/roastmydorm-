@@ -1994,8 +1994,9 @@ async function loadPropertyRequests() {
     document.getElementById('pr-next').disabled = prState.page >= totalPages;
     paginationEl.style.display = prState.total > prState.limit ? 'flex' : 'none';
   } catch (err) {
-    listEl.innerHTML = '<div class="loading-placeholder">Failed to load property requests</div>';
-    showToast('Failed to load property requests', 'error');
+    console.error('Property requests error:', err);
+    listEl.innerHTML = `<div class="loading-placeholder">Failed to load property requests: ${err.message}</div>`;
+    showToast('Failed to load property requests: ' + err.message, 'error');
   }
 }
 
