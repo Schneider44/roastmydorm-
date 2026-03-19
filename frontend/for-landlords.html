@@ -1632,6 +1632,20 @@
 
         document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
+        // Clear individual field error on input
+        document.addEventListener('input', function(e) {
+            if (!e.target.matches('input,select,textarea')) return;
+            e.target.style.borderColor = '';
+            const err = e.target.parentElement.querySelector('.field-err');
+            if (err) err.remove();
+        });
+        document.addEventListener('change', function(e) {
+            if (!e.target.matches('input,select,textarea')) return;
+            e.target.style.borderColor = '';
+            const err = e.target.parentElement.querySelector('.field-err');
+            if (err) err.remove();
+        });
+
         // ── API URL ──
         const API_URL = ['localhost','127.0.0.1'].includes(location.hostname)
             ? 'http://localhost:5000/api'
@@ -1674,8 +1688,29 @@
                 </div>`).join('');
         }
 
+        // ── Field error helpers ──
+        function setFieldError(id, msg) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.style.borderColor = '#ef4444';
+            let err = el.parentElement.querySelector('.field-err');
+            if (!err) {
+                err = document.createElement('span');
+                err.className = 'field-err';
+                err.style.cssText = 'color:#ef4444;font-size:0.78rem;display:block;margin-top:4px;';
+                el.parentElement.appendChild(err);
+            }
+            err.textContent = msg;
+        }
+        function clearFieldErrors() {
+            document.querySelectorAll('.field-err').forEach(e => e.remove());
+            document.querySelectorAll('[style*="border-color: rgb(239"]').forEach(e => e.style.borderColor = '');
+        }
+
         // ── Property Submission Form ──
         async function submitPropertyForm() {
+            clearFieldErrors();
+
             const fname        = document.getElementById('fname').value.trim();
             const lname        = document.getElementById('lname').value.trim();
             const cemail       = document.getElementById('cemail').value.trim();
@@ -1687,8 +1722,8 @@
             const pcity        = document.getElementById('pcity').value;
             const pneighborhood= document.getElementById('pneighborhood').value.trim();
             const pdesc        = document.getElementById('pdesc').value.trim();
-            const pbedrooms    = Number(document.getElementById('pbedrooms').value);
-            const pbathrooms   = Number(document.getElementById('pbathrooms').value);
+            const pbedrooms    = document.getElementById('pbedrooms').value;
+            const pbathrooms   = document.getElementById('pbathrooms').value;
             const psqm         = document.getElementById('psqm').value;
             const please       = document.getElementById('please').value;
             const pmovein      = document.getElementById('pmovein').value;
@@ -1696,19 +1731,69 @@
             const amenities    = Array.from(document.querySelectorAll('#amenitiesGrid input:checked')).map(cb => cb.value);
             const images       = selectedPhotos.map(p => p.dataUrl);
 
-            // Validate required fields
-            const missing = [];
-            if (!fname)   missing.push('First Name');
-            if (!cemail)  missing.push('Email');
-            if (!ptitle)  missing.push('Property Title');
-            if (!ptype)   missing.push('Property Type');
-            if (!pprice)  missing.push('Monthly Rent');
-            if (!pcity)   missing.push('City');
-            if (!pdesc)   missing.push('Description');
-            if (missing.length) { alert('Please fill in: ' + missing.join(', ')); return; }
+            // ── Validate all sections ──
+            let hasErrors = false;
 
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cemail)) {
-                alert('Please enter a valid email address.');
+            // Your Information
+            if (!fname) { setFieldError('fname', 'First name is required'); hasErrors = true; }
+            if (!lname) { setFieldError('lname', 'Last name is required'); hasErrors = true; }
+            if (!cemail) { setFieldError('cemail', 'Email is required'); hasErrors = true; }
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cemail)) { setFieldError('cemail', 'Enter a valid email address'); hasErrors = true; }
+            if (!cphone) { setFieldError('cphone', 'Phone number is required'); hasErrors = true; }
+
+            // Property Details
+            if (!ptitle) { setFieldError('ptitle', 'Property title is required'); hasErrors = true; }
+            if (!ptype)  { setFieldError('ptype', 'Select a property type'); hasErrors = true; }
+            if (!pcity)  { setFieldError('pcity', 'Select a city'); hasErrors = true; }
+            if (!pneighborhood) { setFieldError('pneighborhood', 'Neighborhood is required'); hasErrors = true; }
+            if (!pprice || Number(pprice) <= 0) { setFieldError('pprice', 'Enter a valid monthly rent'); hasErrors = true; }
+
+            // Key Specifications
+            if (!pbedrooms) { setFieldError('pbedrooms', 'Number of bedrooms is required'); hasErrors = true; }
+            if (!pbathrooms) { setFieldError('pbathrooms', 'Number of bathrooms is required'); hasErrors = true; }
+            if (!please) { setFieldError('please', 'Lease duration is required'); hasErrors = true; }
+            if (!pmovein) { setFieldError('pmovein', 'Available from date is required'); hasErrors = true; }
+
+            // Description
+            if (!pdesc || pdesc.length < 30) { setFieldError('pdesc', 'Please write at least 30 characters describing your property'); hasErrors = true; }
+
+            // Amenities
+            if (amenities.length === 0) {
+                const grid = document.getElementById('amenitiesGrid');
+                if (grid) {
+                    let err = grid.parentElement.querySelector('.field-err');
+                    if (!err) {
+                        err = document.createElement('span');
+                        err.className = 'field-err';
+                        err.style.cssText = 'color:#ef4444;font-size:0.78rem;display:block;margin-top:4px;';
+                        grid.parentElement.appendChild(err);
+                    }
+                    err.textContent = 'Select at least one amenity';
+                }
+                hasErrors = true;
+            }
+
+            // Photos
+            if (images.length === 0) {
+                const area = document.getElementById('photoUploadArea');
+                if (area) {
+                    area.style.borderColor = '#ef4444';
+                    let err = area.parentElement.querySelector('.field-err');
+                    if (!err) {
+                        err = document.createElement('span');
+                        err.className = 'field-err';
+                        err.style.cssText = 'color:#ef4444;font-size:0.78rem;display:block;margin-top:6px;';
+                        area.parentElement.appendChild(err);
+                    }
+                    err.textContent = 'Please upload at least one photo of your property';
+                }
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                // Scroll to first error
+                const firstErr = document.querySelector('.field-err');
+                if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
