@@ -759,7 +759,7 @@
                     <div class="card-image-wrapper">
                         <div class="card-image" style="background-image: url('${dorm.image}')"></div>
                         ${dorm.verified ? '<div class="card-badge"><i class="fas fa-check-circle"></i> Verified</div>' : ''}
-                        <button class="card-save" onclick="toggleSave(${dorm.id}, event)">
+                        <button class="card-save" onclick="toggleSave('${dorm.id}', event)">
                             <i class="fas fa-heart" style="color: ${isSaved ? '#e11d48' : 'currentColor'};"></i>
                         </button>
                     </div>
@@ -774,7 +774,7 @@
                             <span>${dorm.rating} (${dorm.reviews})</span>
                         </div>
                         <div class="card-status">${dorm.available ? '✓ Available Now' : '× Sold Out'}</div>
-                        <button class="card-button" onclick="openBooking(${dorm.id})">${dorm.available ? 'View & Book' : 'Join Waitlist'}</button>
+                        <button class="card-button" onclick="openBooking('${dorm.id}')">${dorm.available ? 'View & Book' : 'Join Waitlist'}</button>
                     </div>
                 `;
                 grid.appendChild(card);
