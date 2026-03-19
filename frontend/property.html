@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details - RoastMyDorm</title>
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f9fafb; color: #1f2937; }
+
+        /* Header */
+        .header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 800; text-decoration: none; color: #1f2937; }
+        .logo span { color: #0ea5e9; }
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; color: #6b7280; font-size: 0.9rem; text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .back-btn:hover { color: #1f2937; }
+
+        /* Container */
+        .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; }
+
+        /* Loading / Error */
+        .state-box { text-align: center; padding: 80px 20px; color: #6b7280; }
+        .state-box i { font-size: 2.5rem; margin-bottom: 16px; display: block; }
+        .state-box h2 { font-size: 1.3rem; margin-bottom: 8px; color: #374151; }
+
+        /* Gallery */
+        .gallery { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 280px 180px; gap: 8px; border-radius: 16px; overflow: hidden; margin-bottom: 32px; }
+        .gallery-main { grid-row: 1 / 3; }
+        .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; transition: opacity 0.2s; }
+        .gallery img:hover { opacity: 0.92; }
+        .gallery-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #e0f2fe, #bae6fd); display: flex; align-items: center; justify-content: center; }
+        .gallery-placeholder i { font-size: 3rem; color: #7dd3fc; }
+        .gallery-more { position: relative; cursor: pointer; }
+        .gallery-more::after { content: attr(data-more); position: absolute; inset: 0; background: rgba(0,0,0,0.45); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; font-family: 'Poppins', sans-serif; }
+
+        /* Layout */
+        .layout { display: grid; grid-template-columns: 1fr 340px; gap: 28px; }
+
+        /* Main content */
+        .main-col {}
+        .prop-title { font-family: 'Poppins', sans-serif; font-size: 1.7rem; font-weight: 700; color: #111827; margin-bottom: 8px; }
+        .prop-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; color: #6b7280; font-size: 0.9rem; }
+        .prop-meta span { display: flex; align-items: center; gap: 5px; }
+        .badge-verified { background: #dcfce7; color: #16a34a; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+
+        .section { background: #fff; border-radius: 14px; padding: 24px; margin-bottom: 20px; border: 1px solid #f3f4f6; }
+        .section h3 { font-family: 'Poppins', sans-serif; font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .section h3 i { color: #0ea5e9; font-size: 0.9rem; }
+
+        /* Specs grid */
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .spec-item { background: #f9fafb; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+        .spec-label { font-size: 0.72rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .spec-value { font-size: 0.95rem; font-weight: 600; color: #111827; }
+
+        /* Amenities */
+        .amenities-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+        .amenity-tag { display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; color: #1d4ed8; border-radius: 20px; padding: 5px 12px; font-size: 0.8rem; font-weight: 500; }
+        .amenity-tag i { font-size: 0.7rem; }
+
+        /* Description */
+        .desc-text { color: #4b5563; line-height: 1.75; font-size: 0.95rem; white-space: pre-line; }
+
+        /* Sidebar */
+        .sidebar {}
+        .price-card { background: #fff; border-radius: 14px; padding: 24px; border: 1px solid #f3f4f6; position: sticky; top: 90px; }
+        .price-amount { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; color: #111827; }
+        .price-amount span { font-size: 0.95rem; font-weight: 400; color: #6b7280; }
+        .price-card .divider { height: 1px; background: #f3f4f6; margin: 18px 0; }
+        .contact-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+        .contact-item { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #374151; }
+        .contact-item i { width: 32px; height: 32px; background: #f0f9ff; color: #0ea5e9; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+        .btn-contact { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; font-family: 'Inter', sans-serif; text-decoration: none; }
+        .btn-primary { background: #0ea5e9; color: #fff; margin-bottom: 10px; }
+        .btn-primary:hover { background: #0284c7; }
+        .btn-whatsapp { background: #dcfce7; color: #16a34a; }
+        .btn-whatsapp:hover { background: #bbf7d0; }
+
+        /* Lightbox */
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 999; align-items: center; justify-content: center; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 8px; object-fit: contain; }
+        .lightbox-close { position: absolute; top: 20px; right: 24px; color: #fff; font-size: 1.8rem; cursor: pointer; background: none; border: none; }
+        .lightbox-prev, .lightbox-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 1.4rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+
+        @media (max-width: 768px) {
+            .gallery { grid-template-columns: 1fr; grid-template-rows: 240px 120px 120px; }
+            .gallery-main { grid-row: 1; }
+            .layout { grid-template-columns: 1fr; }
+            .price-card { position: static; }
+            .prop-title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="/" class="logo">Roast<span>My</span>Dorm</a>
+    <a href="javascript:history.back()" class="back-btn"><i class="fas fa-arrow-left"></i> Back to listings</a>
+</header>
+
+<div class="container">
+    <div id="loadingState" class="state-box">
+        <i class="fas fa-spinner fa-spin" style="color:#0ea5e9;"></i>
+        <h2>Loading property…</h2>
+    </div>
+    <div id="errorState" class="state-box" style="display:none;">
+        <i class="fas fa-exclamation-circle" style="color:#ef4444;"></i>
+        <h2>Property not found</h2>
+        <p>This listing may have been removed.</p>
+    </div>
+    <div id="content" style="display:none;">
+        <!-- Gallery -->
+        <div class="gallery" id="gallery"></div>
+
+        <!-- Layout -->
+        <div class="layout">
+            <div class="main-col">
+                <h1 class="prop-title" id="propTitle"></h1>
+                <div class="prop-meta" id="propMeta"></div>
+
+                <!-- Specs -->
+                <div class="section">
+                    <h3><i class="fas fa-list"></i> Key Details</h3>
+                    <div class="specs-grid" id="specsGrid"></div>
+                </div>
+
+                <!-- Amenities -->
+                <div class="section" id="amenitiesSection">
+                    <h3><i class="fas fa-star"></i> Amenities</h3>
+                    <div class="amenities-wrap" id="amenitiesWrap"></div>
+                </div>
+
+                <!-- Description -->
+                <div class="section">
+                    <h3><i class="fas fa-align-left"></i> Description</h3>
+                    <p class="desc-text" id="propDesc"></p>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="price-card">
+                    <div class="price-amount" id="propPrice"></div>
+                    <div class="divider"></div>
+                    <div class="contact-row" id="contactRow"></div>
+                    <a id="btnCall" class="btn-contact btn-primary" href="#"><i class="fas fa-phone"></i> Call Landlord</a>
+                    <a id="btnWhatsapp" class="btn-contact btn-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-times"></i></button>
+    <button class="lightbox-prev" onclick="lightboxNav(-1)"><i class="fas fa-chevron-left"></i></button>
+    <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-next" onclick="lightboxNav(1)"><i class="fas fa-chevron-right"></i></button>
+</div>
+
+<script>
+    const API_BASE = ['localhost','127.0.0.1',''].includes(location.hostname)
+        ? 'http://localhost:5000/api'
+        : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+
+    const amenityIcons = {
+        wifi: 'fa-wifi', furnished: 'fa-couch', gym: 'fa-dumbbell',
+        parking: 'fa-car', laundry: 'fa-water', pool: 'fa-swimming-pool',
+        security: 'fa-shield-alt', elevator: 'fa-elevator', heating: 'fa-fire',
+        ac: 'fa-snowflake', kitchen: 'fa-utensils', garden: 'fa-leaf',
+        balcony: 'fa-door-open', study: 'fa-book', cleaning: 'fa-broom',
+        quiet: 'fa-volume-mute'
+    };
+
+    let lightboxImages = [];
+    let lightboxIndex = 0;
+
+    function openLightbox(idx) {
+        lightboxIndex = idx;
+        document.getElementById('lightboxImg').src = lightboxImages[idx];
+        document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+    function lightboxNav(dir) {
+        lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+        document.getElementById('lightboxImg').src = lightboxImages[lightboxIndex];
+    }
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+
+    function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+    function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' }) : '—'; }
+
+    async function loadProperty() {
+        const id = new URLSearchParams(location.search).get('id');
+        if (!id) { showError(); return; }
+
+        try {
+            const res = await fetch(`${API_BASE}/property-requests/listings/${id}`);
+            const data = await res.json();
+            if (!res.ok || !data.success) { showError(); return; }
+            render(data.data);
+        } catch(e) { showError(); }
+    }
+
+    function showError() {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+    }
+
+    function render(p) {
+        document.title = `${p.title} - RoastMyDorm`;
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+        // Gallery
+        lightboxImages = p.images && p.images.length ? p.images : [];
+        const gallery = document.getElementById('gallery');
+        if (lightboxImages.length === 0) {
+            gallery.innerHTML = `<div class="gallery-main gallery-placeholder"><i class="fas fa-home"></i></div>`;
+        } else {
+            const main = `<div class="gallery-main"><img src="${lightboxImages[0]}" alt="Main" onclick="openLightbox(0)"></div>`;
+            const side = lightboxImages.slice(1, 3).map((img, i) => {
+                const isLast = i === 1 && lightboxImages.length > 3;
+                return isLast
+                    ? `<div class="gallery-more" data-more="+${lightboxImages.length - 3} photos" onclick="openLightbox(${i+1})"><img src="${img}" alt="Photo ${i+2}"></div>`
+                    : `<div><img src="${img}" alt="Photo ${i+2}" onclick="openLightbox(${i+1})"></div>`;
+            }).join('');
+            gallery.innerHTML = main + side;
+        }
+
+        // Title
+        document.getElementById('propTitle').textContent = p.title;
+
+        // Meta
+        const location2 = [p.neighborhood, capitalize(p.city), 'Morocco'].filter(Boolean).join(', ');
+        document.getElementById('propMeta').innerHTML = `
+            <span><i class="fas fa-map-marker-alt"></i> ${location2}</span>
+            <span><i class="fas fa-home"></i> ${capitalize(p.propertyType)}</span>
+            <span class="badge-verified"><i class="fas fa-check-circle"></i> Verified</span>
+        `;
+
+        // Price
+        document.getElementById('propPrice').innerHTML = `${Number(p.price).toLocaleString()} MAD <span>/ month</span>`;
+
+        // Specs
+        const specs = [
+            { label: 'Bedrooms', value: p.bedrooms || '—', icon: 'fa-bed' },
+            { label: 'Bathrooms', value: p.bathrooms || '—', icon: 'fa-bath' },
+            { label: 'Size', value: p.squareFootage ? p.squareFootage + ' m²' : '—', icon: 'fa-vector-square' },
+            { label: 'Furnished', value: p.furnished ? 'Yes' : 'No', icon: 'fa-couch' },
+            { label: 'Lease', value: p.leaseDuration || '—', icon: 'fa-file-contract' },
+            { label: 'Available', value: formatDate(p.availableFrom), icon: 'fa-calendar-alt' },
+        ];
+        document.getElementById('specsGrid').innerHTML = specs.map(s => `
+            <div class="spec-item">
+                <span class="spec-label"><i class="fas ${s.icon}" style="margin-right:4px;color:#0ea5e9;"></i>${s.label}</span>
+                <span class="spec-value">${s.value}</span>
+            </div>`).join('');
+
+        // Amenities
+        if (p.amenities && p.amenities.length) {
+            document.getElementById('amenitiesWrap').innerHTML = p.amenities.map(a => {
+                const icon = amenityIcons[a.toLowerCase()] || 'fa-check';
+                return `<span class="amenity-tag"><i class="fas ${icon}"></i> ${capitalize(a)}</span>`;
+            }).join('');
+        } else {
+            document.getElementById('amenitiesSection').style.display = 'none';
+        }
+
+        // Description
+        document.getElementById('propDesc').textContent = p.description;
+
+        // Contact
+        document.getElementById('contactRow').innerHTML = `
+            <div class="contact-item"><i class="fas fa-user"></i> ${p.landlordName}</div>
+            ${p.landlordPhone ? `<div class="contact-item"><i class="fas fa-phone"></i> ${p.landlordPhone}</div>` : ''}
+        `;
+
+        const phone = (p.landlordPhone || '').replace(/\s/g, '');
+        if (phone) {
+            document.getElementById('btnCall').href = `tel:${phone}`;
+            document.getElementById('btnWhatsapp').href = `https://wa.me/${phone.replace('+','')}?text=Hi, I'm interested in your property: ${encodeURIComponent(p.title)}`;
+        } else {
+            document.getElementById('btnCall').style.display = 'none';
+            document.getElementById('btnWhatsapp').style.display = 'none';
+        }
+    }
+
+    loadProperty();
+</script>
+</body>
+</html>

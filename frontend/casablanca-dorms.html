@@ -701,6 +701,7 @@
             const firstImage = item.images && item.images.length > 0 ? item.images[0] : 'roastmydorm_logo-removebg-preview.png';
             return {
                 id: 'api_' + item._id,
+                apiId: item._id,
                 title: item.title,
                 location: `${item.neighborhood ? item.neighborhood + ', ' : ''}${item.city.charAt(0).toUpperCase() + item.city.slice(1)}`,
                 price: item.price,
@@ -824,13 +825,12 @@
             renderListings(currentFilter === 'all' ? allDorms : filterListings());
         }
 
-        // View & Book - Navigate to dorm page or show contact info for API listings
+        // View & Book - Navigate to dorm page
         function openBooking(id) {
             const dorm = allDorms.find(d => d.id === id);
             if (!dorm) return;
             if (dorm.fromApi) {
-                const phone = dorm.landlordPhone ? `\nContact: ${dorm.landlordPhone}` : '';
-                alert(`${dorm.title}\n\n${dorm.description || ''}${phone}`);
+                window.location.href = `property.html?id=${dorm.apiId}`;
             } else if (dorm.page) {
                 window.location.href = dorm.page;
             }

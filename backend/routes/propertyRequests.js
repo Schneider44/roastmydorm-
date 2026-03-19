@@ -17,9 +17,21 @@ router.get('/listings', asyncHandler(async (req, res) => {
 
   const listings = await PropertyRequest.find(filter)
     .sort({ reviewedAt: -1 })
-    .select('title propertyType city neighborhood address price description amenities furnished availableFrom images landlordName landlordPhone reviewedAt');
+    .select('title propertyType city neighborhood address price description amenities furnished availableFrom images landlordName landlordPhone bedrooms bathrooms squareFootage leaseDuration reviewedAt');
 
   res.json({ success: true, data: listings });
+}));
+
+// ─────────────────────────────────────────────
+// PUBLIC — GET /api/property-requests/listings/:id
+// Returns a single approved listing by ID
+// ─────────────────────────────────────────────
+router.get('/listings/:id', asyncHandler(async (req, res) => {
+  const listing = await PropertyRequest.findOne({ _id: req.params.id, status: 'approved' })
+    .select('title propertyType city neighborhood address price description amenities furnished availableFrom images landlordName landlordPhone bedrooms bathrooms squareFootage leaseDuration reviewedAt');
+
+  if (!listing) throw errors.notFound('Listing');
+  res.json({ success: true, data: listing });
 }));
 
 // ─────────────────────────────────────────────
