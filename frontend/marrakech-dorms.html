@@ -672,6 +672,7 @@
             { id:15, title:"Shared Apt| Dyur marjane", location:"Dyur marjane , marrakech", price:3200, type:"Shared",image:"dyur m9.png", amenities:["Quiet"], rating:4.1,reviews:0, verified:true, available:true, page:"Dyur-Marjane.html"}
         ];
 
+        dorms.sort((a, b) => b.id - a.id);
         let currentFilter = 'all';
         let savedListings = JSON.parse(localStorage.getItem('savedListings')) || [];
 
