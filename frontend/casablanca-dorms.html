@@ -696,7 +696,8 @@
 
         let currentFilter = 'all';
         let savedListings = JSON.parse(localStorage.getItem('savedListings')) || [];
-        let allDorms = [...dorms].sort((a, b) => b.id - a.id);
+        dorms.sort((a, b) => b.id - a.id);
+        let allDorms = [...dorms];
 
         const API_BASE = ['localhost','127.0.0.1',''].includes(window.location.hostname)
             ? 'http://localhost:5000/api'
@@ -739,7 +740,7 @@
                 const data = await res.json();
                 if (data.success && data.data.length > 0) {
                     const apiCards = data.data.map(apiListingToCard);
-                    allDorms = [...dorms, ...apiCards];
+                    allDorms = [...apiCards, ...dorms];
                     renderListings(allDorms);
                 }
             } catch (e) { /* silently ignore if API unavailable */ }
