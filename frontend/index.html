@@ -1043,12 +1043,39 @@
             max-width: 520px;
             margin: 0 auto 3rem;
         }
+        .partners-logos-track {
+            overflow: hidden;
+            margin-bottom: 3.5rem;
+            position: relative;
+        }
+        .partners-logos-track::before,
+        .partners-logos-track::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .partners-logos-track::before {
+            left: 0;
+            background: linear-gradient(to right, #f9fafb, transparent);
+        }
+        .partners-logos-track::after {
+            right: 0;
+            background: linear-gradient(to left, #f9fafb, transparent);
+        }
         .partners-logos {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
             gap: 1rem;
-            margin-bottom: 3.5rem;
+            width: max-content;
+            animation: marquee 28s linear infinite;
+        }
+        .partners-logos:hover { animation-play-state: paused; }
+        @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
         .partner-logo {
             display: flex;
@@ -1059,11 +1086,12 @@
             border: 1px solid #e5e7eb;
             border-radius: 12px;
             padding: 1rem 1.4rem;
-            min-width: 100px;
+            min-width: 110px;
             color: #9ca3af;
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.03em;
+            flex-shrink: 0;
             transition: all 0.25s ease;
             cursor: default;
             box-shadow: 0 1px 3px rgba(0,0,0,0.04);
@@ -1076,7 +1104,6 @@
         .partner-logo:hover {
             border-color: #00a8a8;
             color: #00a8a8;
-            transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,168,168,0.12);
         }
         .partner-logo:hover i { color: #00a8a8; }
@@ -1142,7 +1169,7 @@
         @media (max-width: 768px) {
             .partners-heading { font-size: 1.6rem; }
             .partners-cards { grid-template-columns: 1fr; }
-            .partner-logo { min-width: 80px; padding: 0.75rem 1rem; }
+            .partner-logo { min-width: 90px; padding: 0.75rem 1rem; }
         }
     </style>
 </head>
@@ -1367,17 +1394,30 @@
             <h2 class="partners-heading">We Have The Best Partners</h2>
             <p class="partners-subtext">Working with leading universities, real estate agencies, and student organizations across Morocco.</p>
 
-            <div class="partners-logos">
-                <div class="partner-logo"><i class="fas fa-university"></i><span>UIA Casablanca</span></div>
-                <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>Hassan II Univ</span></div>
-                <div class="partner-logo"><i class="fas fa-building"></i><span>ENCG</span></div>
-                <div class="partner-logo"><i class="fas fa-landmark"></i><span>ENSAM</span></div>
-                <div class="partner-logo"><i class="fas fa-university"></i><span>Mohamed V</span></div>
-                <div class="partner-logo"><i class="fas fa-city"></i><span>ISPITS</span></div>
-                <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>ISCAE</span></div>
-                <div class="partner-logo"><i class="fas fa-building"></i><span>EHTP</span></div>
-                <div class="partner-logo"><i class="fas fa-home"></i><span>Manzil</span></div>
-                <div class="partner-logo"><i class="fas fa-key"></i><span>ImmoMaroc</span></div>
+            <div class="partners-logos-track">
+                <div class="partners-logos">
+                    <div class="partner-logo"><i class="fas fa-university"></i><span>UIA Casablanca</span></div>
+                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>Hassan II Univ</span></div>
+                    <div class="partner-logo"><i class="fas fa-building"></i><span>ENCG</span></div>
+                    <div class="partner-logo"><i class="fas fa-landmark"></i><span>ENSAM</span></div>
+                    <div class="partner-logo"><i class="fas fa-university"></i><span>Mohamed V</span></div>
+                    <div class="partner-logo"><i class="fas fa-city"></i><span>ISPITS</span></div>
+                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>ISCAE</span></div>
+                    <div class="partner-logo"><i class="fas fa-building"></i><span>EHTP</span></div>
+                    <div class="partner-logo"><i class="fas fa-home"></i><span>Manzil</span></div>
+                    <div class="partner-logo"><i class="fas fa-key"></i><span>ImmoMaroc</span></div>
+                    <!-- Duplicate set for seamless loop -->
+                    <div class="partner-logo"><i class="fas fa-university"></i><span>UIA Casablanca</span></div>
+                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>Hassan II Univ</span></div>
+                    <div class="partner-logo"><i class="fas fa-building"></i><span>ENCG</span></div>
+                    <div class="partner-logo"><i class="fas fa-landmark"></i><span>ENSAM</span></div>
+                    <div class="partner-logo"><i class="fas fa-university"></i><span>Mohamed V</span></div>
+                    <div class="partner-logo"><i class="fas fa-city"></i><span>ISPITS</span></div>
+                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>ISCAE</span></div>
+                    <div class="partner-logo"><i class="fas fa-building"></i><span>EHTP</span></div>
+                    <div class="partner-logo"><i class="fas fa-home"></i><span>Manzil</span></div>
+                    <div class="partner-logo"><i class="fas fa-key"></i><span>ImmoMaroc</span></div>
+                </div>
             </div>
 
             <div class="partners-cards">
