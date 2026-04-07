@@ -1013,39 +1013,25 @@
 
         /* Partners Section */
         .partners-section {
-            background: #f9fafb;
-            padding: 80px 0;
+            background: #fff;
+            padding: 60px 0 50px;
+            border-top: 1px solid #f3f4f6;
         }
         .partners-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
-            text-align: center;
-        }
-        .partners-eyebrow {
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #00a8a8;
-            margin-bottom: 0.75rem;
         }
         .partners-heading {
             font-family: 'Poppins', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 1.3rem;
+            font-weight: 700;
             color: #111827;
-            margin-bottom: 0.75rem;
-        }
-        .partners-subtext {
-            font-size: 1rem;
-            color: #6b7280;
-            max-width: 520px;
-            margin: 0 auto 3rem;
+            margin-bottom: 2rem;
         }
         .partners-logos-track {
             overflow: hidden;
-            margin-bottom: 3.5rem;
+            margin-bottom: 2.5rem;
             position: relative;
         }
         .partners-logos-track::before,
@@ -1060,17 +1046,18 @@
         }
         .partners-logos-track::before {
             left: 0;
-            background: linear-gradient(to right, #f9fafb, transparent);
+            background: linear-gradient(to right, #fff, transparent);
         }
         .partners-logos-track::after {
             right: 0;
-            background: linear-gradient(to left, #f9fafb, transparent);
+            background: linear-gradient(to left, #fff, transparent);
         }
         .partners-logos {
             display: flex;
-            gap: 1rem;
+            align-items: center;
+            gap: 3rem;
             width: max-content;
-            animation: marquee 28s linear infinite;
+            animation: marquee 22s linear infinite;
         }
         .partners-logos:hover { animation-play-state: paused; }
         @keyframes marquee {
@@ -1081,30 +1068,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 0.75rem 1.25rem;
-            height: 80px;
-            min-width: 160px;
             flex-shrink: 0;
             transition: all 0.25s ease;
             cursor: default;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         .partner-logo img {
-            max-height: 56px;
-            max-width: 140px;
+            height: 44px;
             width: auto;
+            max-width: 150px;
             object-fit: contain;
             filter: grayscale(100%);
-            opacity: 0.65;
+            opacity: 0.55;
             transition: all 0.25s ease;
-        }
-        .partner-logo:hover {
-            border-color: #00a8a8;
-            box-shadow: 0 8px 20px rgba(0,168,168,0.12);
-            transform: translateY(-2px);
         }
         .partner-logo:hover img {
             filter: grayscale(0%);
@@ -1114,65 +1089,85 @@
         .partners-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
         .partner-card {
-            border-radius: 16px;
-            padding: 2.5rem 2rem;
-            text-align: left;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #cfe8fc;
             display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            align-items: stretch;
+            min-height: 180px;
             transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
         .partner-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .partner-card--blue {
-            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+        .partner-card-text {
+            padding: 2rem 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
         }
-        .partner-card--teal {
-            background: linear-gradient(135deg, #ccfbf1 0%, #f0fdfa 100%);
-        }
-        .partner-card-icon {
-            font-size: 3rem;
-            line-height: 1;
-        }
-        .partner-card-body h3 {
+        .partner-card-text h3 {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: #111827;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
-        .partner-card-body p {
-            font-size: 0.95rem;
-            color: #4b5563;
-            line-height: 1.65;
+        .partner-card-text p {
+            font-size: 0.875rem;
+            color: #374151;
+            line-height: 1.55;
             margin-bottom: 1.25rem;
         }
         .partner-card-btn {
             display: inline-block;
-            background: #111827;
-            color: #fff;
+            background: #fff;
+            color: #111827;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            font-size: 0.9rem;
-            padding: 0.7rem 1.6rem;
-            border-radius: 8px;
+            font-size: 0.82rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
             text-decoration: none;
-            transition: background 0.2s ease, transform 0.2s ease;
+            border: 1px solid #d1d5db;
+            width: fit-content;
+            transition: all 0.2s ease;
         }
         .partner-card-btn:hover {
-            background: #00a8a8;
-            transform: translateY(-1px);
+            background: #111827;
+            color: #fff;
+            border-color: #111827;
+        }
+        .partner-card-image {
+            width: 220px;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .partner-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .partner-card-image.placeholder {
+            background: linear-gradient(135deg, #93c5fd 0%, #bfdbfe 100%);
+            font-size: 4rem;
+            align-items: center;
         }
         @media (max-width: 768px) {
-            .partners-heading { font-size: 1.6rem; }
+            .partners-heading { font-size: 1.1rem; }
             .partners-cards { grid-template-columns: 1fr; }
-            .partner-logo { min-width: 90px; padding: 0.75rem 1rem; }
+            .partner-card-image { width: 130px; }
+            .partner-logo img { height: 34px; }
         }
     </style>
 </head>
@@ -1393,9 +1388,7 @@
     <!-- Partners Section -->
     <section class="partners-section">
         <div class="partners-container">
-            <p class="partners-eyebrow">Trusted Network</p>
             <h2 class="partners-heading">We Have The Best Partners</h2>
-            <p class="partners-subtext">Working with leading universities, real estate agencies, and student organizations across Morocco.</p>
 
             <div class="partners-logos-track">
                 <div class="partners-logos">
@@ -1416,21 +1409,25 @@
             </div>
 
             <div class="partners-cards">
-                <div class="partner-card partner-card--blue">
-                    <div class="partner-card-icon">🤝</div>
-                    <div class="partner-card-body">
-                        <h3>Partner With Us</h3>
-                        <p>At RoastMyDorm, we offer a seamless booking process and robust sales support to help you grow your business and reach thousands of students across Morocco.</p>
+                <div class="partner-card">
+                    <div class="partner-card-text">
+                        <div>
+                            <h3>Partner With Us</h3>
+                            <p>At RoastMyDorm, we offer a seamless booking process and robust sales support to help you reach thousands of students across Morocco.</p>
+                        </div>
                         <a href="for-landlords.html" class="partner-card-btn">Partner With Us</a>
                     </div>
+                    <div class="partner-card-image placeholder">🤝</div>
                 </div>
-                <div class="partner-card partner-card--teal">
-                    <div class="partner-card-icon">🏠</div>
-                    <div class="partner-card-body">
-                        <h3>List With Us</h3>
-                        <p>List your properties efficiently with RoastMyDorm and connect directly with verified students looking for housing near their universities.</p>
+                <div class="partner-card">
+                    <div class="partner-card-text">
+                        <div>
+                            <h3>List With Us</h3>
+                            <p>List your properties efficiently with RoastMyDorm and connect directly with verified students looking for housing.</p>
+                        </div>
                         <a href="for-landlords.html" class="partner-card-btn">List Properties</a>
                     </div>
+                    <div class="partner-card-image placeholder">🏠</div>
                 </div>
             </div>
         </div>
