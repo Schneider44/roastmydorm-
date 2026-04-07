@@ -1079,34 +1079,37 @@
         }
         .partner-logo {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
             background: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 1rem 1.4rem;
-            min-width: 110px;
-            color: #9ca3af;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.03em;
+            border-radius: 16px;
+            padding: 0.75rem 1.25rem;
+            height: 80px;
+            min-width: 160px;
             flex-shrink: 0;
             transition: all 0.25s ease;
             cursor: default;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
-        .partner-logo i {
-            font-size: 1.6rem;
-            color: #d1d5db;
-            transition: color 0.25s ease;
+        .partner-logo img {
+            max-height: 56px;
+            max-width: 140px;
+            width: auto;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.65;
+            transition: all 0.25s ease;
         }
         .partner-logo:hover {
             border-color: #00a8a8;
-            color: #00a8a8;
             box-shadow: 0 8px 20px rgba(0,168,168,0.12);
+            transform: translateY(-2px);
         }
-        .partner-logo:hover i { color: #00a8a8; }
+        .partner-logo:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
 
         .partners-cards {
             display: grid;
@@ -1396,27 +1399,19 @@
 
             <div class="partners-logos-track">
                 <div class="partners-logos">
-                    <div class="partner-logo"><i class="fas fa-university"></i><span>UIA Casablanca</span></div>
-                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>Hassan II Univ</span></div>
-                    <div class="partner-logo"><i class="fas fa-building"></i><span>ENCG</span></div>
-                    <div class="partner-logo"><i class="fas fa-landmark"></i><span>ENSAM</span></div>
-                    <div class="partner-logo"><i class="fas fa-university"></i><span>Mohamed V</span></div>
-                    <div class="partner-logo"><i class="fas fa-city"></i><span>ISPITS</span></div>
-                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>ISCAE</span></div>
-                    <div class="partner-logo"><i class="fas fa-building"></i><span>EHTP</span></div>
-                    <div class="partner-logo"><i class="fas fa-home"></i><span>Manzil</span></div>
-                    <div class="partner-logo"><i class="fas fa-key"></i><span>ImmoMaroc</span></div>
+                    <div class="partner-logo"><img src="Rotaract.png" alt="Rotaract Majorelle"></div>
+                    <div class="partner-logo"><img src="Zynza.png" alt="Zynza Real Estate"></div>
+                    <div class="partner-logo"><img src="Rotaract.png" alt="Rotaract Majorelle"></div>
+                    <div class="partner-logo"><img src="Zynza.png" alt="Zynza Real Estate"></div>
+                    <div class="partner-logo"><img src="Rotaract.png" alt="Rotaract Majorelle"></div>
+                    <div class="partner-logo"><img src="Zynza.png" alt="Zynza Real Estate"></div>
                     <!-- Duplicate set for seamless loop -->
-                    <div class="partner-logo"><i class="fas fa-university"></i><span>UIA Casablanca</span></div>
-                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>Hassan II Univ</span></div>
-                    <div class="partner-logo"><i class="fas fa-building"></i><span>ENCG</span></div>
-                    <div class="partner-logo"><i class="fas fa-landmark"></i><span>ENSAM</span></div>
-                    <div class="partner-logo"><i class="fas fa-university"></i><span>Mohamed V</span></div>
-                    <div class="partner-logo"><i class="fas fa-city"></i><span>ISPITS</span></div>
-                    <div class="partner-logo"><i class="fas fa-graduation-cap"></i><span>ISCAE</span></div>
-                    <div class="partner-logo"><i class="fas fa-building"></i><span>EHTP</span></div>
-                    <div class="partner-logo"><i class="fas fa-home"></i><span>Manzil</span></div>
-                    <div class="partner-logo"><i class="fas fa-key"></i><span>ImmoMaroc</span></div>
+                    <div class="partner-logo"><img src="Rotaract.png" alt="Rotaract Majorelle"></div>
+                    <div class="partner-logo"><img src="Zynza.png" alt="Zynza Real Estate"></div>
+                    <div class="partner-logo"><img src="Rotaract.png" alt="Rotaract Majorelle"></div>
+                    <div class="partner-logo"><img src="Zynza.png" alt="Zynza Real Estate"></div>
+                    <div class="partner-logo"><img src="Rotaract.png" alt="Rotaract Majorelle"></div>
+                    <div class="partner-logo"><img src="Zynza.png" alt="Zynza Real Estate"></div>
                 </div>
             </div>
 
