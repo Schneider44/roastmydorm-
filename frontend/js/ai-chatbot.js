@@ -103,12 +103,20 @@ class RoastMyDormChatbot {
                             <p>Support is typing...</p>
                         </div>
                         <div class="rmd-input-container">
-                            <textarea 
-                                class="rmd-chat-input" 
-                                id="rmdChatInput" 
+                            <textarea
+                                class="rmd-chat-input"
+                                id="rmdChatInput"
                                 placeholder="Type your message..."
                                 rows="1"
                             ></textarea>
+                            <button class="rmd-voice-btn" id="rmdVoiceBtn" title="Voice message">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="2" width="6" height="11" rx="3"></rect>
+                                    <path d="M19 10a7 7 0 01-14 0"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
                             <button class="rmd-send-btn" id="rmdSendBtn" title="Send Message">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -447,6 +455,31 @@ class RoastMyDormChatbot {
             .rmd-chat-input:focus {
                 border-color: ${this.options.primaryColor};
             }
+            .rmd-voice-btn {
+                width: 44px;
+                height: 44px;
+                border: 1.5px solid #e2e8f0;
+                background: #fff;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                flex-shrink: 0;
+            }
+            .rmd-voice-btn:hover { background: #f1f5f9; }
+            .rmd-voice-btn svg { width: 18px; height: 18px; color: #64748b; }
+            .rmd-voice-btn.recording {
+                background: #fee2e2;
+                border-color: #e70909;
+                animation: rmd-pulse 1s infinite;
+            }
+            .rmd-voice-btn.recording svg { color: #e70909; }
+            @keyframes rmd-pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
             .rmd-send-btn {
                 width: 44px;
                 height: 44px;
@@ -534,6 +567,7 @@ class RoastMyDormChatbot {
         const closeBtn = document.getElementById('rmdCloseChat');
         const clearBtn = document.getElementById('rmdClearChat');
         const sendBtn = document.getElementById('rmdSendBtn');
+        const voiceBtn = document.getElementById('rmdVoiceBtn');
         const input = document.getElementById('rmdChatInput');
         const quickActions = document.getElementById('rmdQuickActions');
 
@@ -541,6 +575,7 @@ class RoastMyDormChatbot {
         closeBtn.addEventListener('click', () => this.toggleChat());
         clearBtn.addEventListener('click', () => this.clearChat());
         sendBtn.addEventListener('click', () => this.sendMessage());
+        voiceBtn.addEventListener('click', () => this.toggleVoice());
 
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -557,6 +592,59 @@ class RoastMyDormChatbot {
                 this.handleQuickAction(action);
             }
         });
+    }
+
+    toggleVoice() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert('Voice input is not supported in your browser. Please use Chrome or Edge.');
+            return;
+        }
+
+        const voiceBtn = document.getElementById('rmdVoiceBtn');
+
+        if (this.recognition && this.isRecording) {
+            this.recognition.stop();
+            return;
+        }
+
+        this.recognition = new SpeechRecognition();
+        this.recognition.continuous = false;
+        this.recognition.interimResults = true;
+        this.recognition.lang = 'ar-MA'; // Moroccan Arabic (Darija)
+
+        this.isRecording = true;
+        voiceBtn.classList.add('recording');
+        voiceBtn.title = 'Stop recording';
+
+        const input = document.getElementById('rmdChatInput');
+        const originalPlaceholder = input.placeholder;
+        input.placeholder = '🎙️ Listening...';
+
+        this.recognition.onresult = (e) => {
+            const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+            input.value = transcript;
+            this.autoResizeInput();
+        };
+
+        this.recognition.onend = () => {
+            this.isRecording = false;
+            voiceBtn.classList.remove('recording');
+            voiceBtn.title = 'Voice message';
+            input.placeholder = originalPlaceholder;
+            // Auto-send if something was captured
+            if (input.value.trim()) this.sendMessage();
+        };
+
+        this.recognition.onerror = (e) => {
+            this.isRecording = false;
+            voiceBtn.classList.remove('recording');
+            voiceBtn.title = 'Voice message';
+            input.placeholder = originalPlaceholder;
+            if (e.error !== 'aborted') alert('Microphone error: ' + e.error);
+        };
+
+        this.recognition.start();
     }
 
     // ============================================

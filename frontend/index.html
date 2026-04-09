@@ -1010,6 +1010,237 @@
         @media (max-width: 768px) {
             .auth-body { padding: 20px; }
         }
+
+        /* ── Shared section base ── */
+        .rmd-section {
+            padding: 80px 0;
+            background: #fff;
+        }
+        .rmd-section--alt { background: #f8fafc; }
+        body.dark-mode .rmd-section { background: #111827; }
+        body.dark-mode .rmd-section--alt { background: #0f172a; }
+        .rmd-container {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .rmd-label {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #00a8a8;
+            margin-bottom: 0.6rem;
+        }
+        .rmd-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+        body.dark-mode .rmd-title { color: #f1f5f9; }
+        .rmd-subtitle {
+            font-size: 1rem;
+            color: #64748b;
+            max-width: 560px;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+        body.dark-mode .rmd-subtitle { color: #94a3b8; }
+
+        /* ── Category tabs ── */
+        .rmd-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            justify-content: flex-start;
+        }
+        .rmd-tab {
+            padding: 0.4rem 1.1rem;
+            border-radius: 999px;
+            border: 1.5px solid #e2e8f0;
+            background: transparent;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .rmd-tab.active, .rmd-tab:hover {
+            background: #00a8a8;
+            border-color: #00a8a8;
+            color: #fff;
+        }
+        body.dark-mode .rmd-tab { border-color: #334155; color: #94a3b8; }
+
+        /* ── Partner cards grid ── */
+        /* ── Shared marquee track ── */
+        .marquee-track {
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0;
+        }
+        .marquee-track::before,
+        .marquee-track::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 100px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .marquee-track::before { left: 0; background: linear-gradient(to right, #f8fafc, transparent); }
+        .marquee-track::after  { right: 0; background: linear-gradient(to left,  #f8fafc, transparent); }
+        .rmd-section:not(.rmd-section--alt) .marquee-track::before { background: linear-gradient(to right, #fff, transparent); }
+        .rmd-section:not(.rmd-section--alt) .marquee-track::after  { background: linear-gradient(to left,  #fff, transparent); }
+        body.dark-mode .marquee-track::before { background: linear-gradient(to right, #111827, transparent) !important; }
+        body.dark-mode .marquee-track::after  { background: linear-gradient(to left,  #111827, transparent) !important; }
+
+        .marquee-belt {
+            display: flex;
+            width: max-content;
+            gap: 1.25rem;
+            padding: 0.5rem 0;
+        }
+        .marquee-belt.forward  { animation: slide-left  32s linear infinite; }
+        .marquee-belt.backward { animation: slide-right 32s linear infinite; }
+        .marquee-belt:hover    { animation-play-state: paused; }
+
+        @keyframes slide-left  { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes slide-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+        /* ── Partner card ── */
+        .partner-card {
+            background: #fff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 1.25rem 1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+            text-align: center;
+            text-decoration: none;
+            flex-shrink: 0;
+            width: 170px;
+            position: relative;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+        body.dark-mode .partner-card { background: #1e293b; border-color: #334155; }
+        .partner-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0,168,168,0.15);
+            border-color: #00a8a8;
+        }
+        .partner-card-badge {
+            position: absolute;
+            top: 8px; right: 8px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background: #f0fdfa;
+            color: #00a8a8;
+        }
+        .partner-logo-wrap {
+            width: 60px; height: 60px;
+            border-radius: 12px;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        body.dark-mode .partner-logo-wrap { background: #0f172a; }
+        .partner-logo-wrap img { width: 46px; height: 46px; object-fit: contain; }
+        .partner-logo-wrap .partner-icon { font-size: 1.75rem; }
+        .partner-card-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        body.dark-mode .partner-card-name { color: #f1f5f9; }
+        .partner-card-desc {
+            font-size: 0.72rem;
+            color: #64748b;
+            line-height: 1.4;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.22s ease, max-height 0.22s ease;
+        }
+        body.dark-mode .partner-card-desc { color: #94a3b8; }
+        .partner-card:hover .partner-card-desc { opacity: 1; max-height: 50px; }
+        .partner-card-link {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #00a8a8;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            opacity: 0;
+            transition: opacity 0.22s ease;
+        }
+        .partner-card:hover .partner-card-link { opacity: 1; }
+
+        /* ── Media card ── */
+        .media-card {
+            background: #fff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: center;
+            text-decoration: none;
+            flex-shrink: 0;
+            width: 180px;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+        body.dark-mode .media-card { background: #1e293b; border-color: #334155; }
+        .media-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.09);
+            border-color: #00a8a8;
+        }
+        .media-logo-icon {
+            font-size: 2rem;
+            filter: grayscale(100%) opacity(0.45);
+            transition: filter 0.25s ease;
+        }
+        .media-card:hover .media-logo-icon { filter: grayscale(0%) opacity(1); }
+        .media-card-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            filter: grayscale(100%) opacity(0.6);
+            transition: filter 0.25s ease;
+        }
+        body.dark-mode .media-card-name { color: #f1f5f9; }
+        .media-card:hover .media-card-name { filter: grayscale(0%) opacity(1); }
+        .media-card-quote {
+            font-size: 0.68rem;
+            color: #94a3b8;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        @media (max-width: 640px) {
+            .rmd-section { padding: 52px 0; }
+            .marquee-track::before,
+            .marquee-track::after { width: 40px; }
+        }
     </style>
 </head>
 <body>
@@ -1223,6 +1454,35 @@
                     <span>Flats</span>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ══ Section 1: Our Trusted Partners ══ -->
+    <section class="rmd-section rmd-section--alt" id="trusted-partners">
+        <div class="rmd-container">
+            <span class="rmd-label">Network</span>
+            <h2 class="rmd-title">Our Trusted Partners</h2>
+            <p class="rmd-subtitle">We collaborate with leading organizations to provide the best student housing experience across Morocco.</p>
+            <!-- Category Tabs -->
+            <div class="rmd-tabs" id="partnerTabs">
+                <button class="rmd-tab active" onclick="filterPartners('all', this)">All</button>
+                <button class="rmd-tab" onclick="filterPartners('association', this)">University</button>
+            </div>
+        </div>
+        <div class="rmd-container">
+            <div id="partnersDisplay" style="display:flex;flex-wrap:wrap;justify-content:flex-start;gap:1.25rem;margin-top:0.5rem;"></div>
+        </div>
+    </section>
+
+    <!-- ══ Section 2: Featured In ══ -->
+    <section class="rmd-section" id="featured-in">
+        <div class="rmd-container">
+            <span class="rmd-label">Press</span>
+            <h2 class="rmd-title">Featured In</h2>
+            <p class="rmd-subtitle">Recognized and featured by leading media outlets and communities across Morocco and beyond.</p>
+        </div>
+        <div class="rmd-container">
+            <div id="mediaDisplay" style="display:flex;flex-wrap:wrap;justify-content:flex-start;gap:1.25rem;margin-top:1.5rem;"></div>
         </div>
     </section>
 
@@ -2845,5 +3105,73 @@
     
     <!-- AI Chatbot Widget -->
     <script src="js/ai-chatbot.js"></script>
+
+    <!-- Partners & Featured In data + rendering -->
+    <script>
+    const PARTNERS = [
+        { name: "ISPITS", img: "Ispits logo.png", category: "university", desc: "ISPITS Marrakech", url: "#", badge: "University" },
+    ];
+
+    const MEDIA = [
+        { name: "Aei — ISPITS Student Association", img: "Aei.png", quote: '"Association des Étudiants ISPITS Marrakech"', url: "#" },
+    ];
+
+    let activeCategory = 'all';
+
+    function buildPartnerCard(p) {
+        const logoHtml = p.img
+            ? `<img src="${p.img}" alt="${p.name}" loading="lazy">`
+            : `<span class="partner-icon">${p.icon}</span>`;
+        return `<a class="partner-card" href="${p.url}" target="_blank" rel="noopener"
+            data-category="${p.category}" onclick="trackClick('partner','${p.name}')">
+            <span class="partner-card-badge">${p.badge}</span>
+            <div class="partner-logo-wrap">${logoHtml}</div>
+            <span class="partner-card-name">${p.name}</span>
+            <span class="partner-card-desc">${p.desc}</span>
+            <span class="partner-card-link">Visit <i class="fas fa-arrow-right" style="font-size:0.6rem"></i></span>
+        </a>`;
+    }
+
+    function fillBelt(id, items) {
+        // Duplicate items for seamless loop
+        const html = [...items, ...items].map(buildPartnerCard).join('');
+        document.getElementById(id).innerHTML = html;
+    }
+
+    function renderPartners(category) {
+        const filtered = category === 'all' ? PARTNERS : PARTNERS.filter(p => p.category === category);
+        document.getElementById('partnersDisplay').innerHTML = filtered.map(buildPartnerCard).join('');
+    }
+
+    function filterPartners(cat, btn) {
+        document.querySelectorAll('.rmd-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        renderPartners(cat);
+    }
+
+    function buildMediaCard(m) {
+        const logoHtml = m.img
+            ? `<img src="${m.img}" alt="${m.name}" loading="lazy" style="width:56px;height:56px;object-fit:contain;border-radius:10px;">`
+            : `<span class="media-logo-icon">${m.icon}</span>`;
+        return `<a class="media-card" href="${m.url}" target="_blank" rel="noopener"
+            onclick="trackClick('media','${m.name}')">
+            <div class="media-logo-wrap" style="width:auto;height:auto;">${logoHtml}</div>
+            <span class="media-card-name">${m.name}</span>
+            <span class="media-card-quote">${m.quote}</span>
+        </a>`;
+    }
+
+    function renderMedia() {
+        document.getElementById('mediaDisplay').innerHTML = MEDIA.map(buildMediaCard).join('');
+    }
+
+    function trackClick(type, name) {
+        if (window.gtag) gtag('event', 'click', { event_category: type, event_label: name });
+    }
+
+    // Init
+    renderPartners('all');
+    renderMedia();
+    </script>
 </body>
 </html> 
