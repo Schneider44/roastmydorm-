@@ -228,7 +228,7 @@ body {
 
 /* Hero Section */
 .hero {
-    background: url('gemini\ back.png') center/cover no-repeat;
+    background: url('roast\ back.png') center/cover no-repeat;
     background-size: cover;
     background-position: center;
     color: var(--white);
@@ -236,6 +236,12 @@ body {
     min-height: 100vh;
     display: flex;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        background-image: url('roast\ back.png');
+    }
 }
 
 .hero-container {
@@ -255,6 +261,7 @@ body {
     line-height: 1.3;
     margin-bottom: 20px;
     text-align: center;
+    color: #000;
 }
 
 @media (min-width: 481px) {
