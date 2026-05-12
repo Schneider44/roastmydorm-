@@ -1307,48 +1307,144 @@
             }
         }
 
+        /* Mobile sticky CTA bar */
+        .mobile-cta-bar {
+            display: none;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .main-container {
                 grid-template-columns: 1fr;
             }
-            
             .booking-widget {
                 position: relative;
                 top: 0;
+                max-width: 100% !important;
             }
         }
-        
+
         @media (max-width: 768px) {
+            .main-container {
+                padding: 0.75rem;
+                gap: 1.5rem;
+            }
+            .breadcrumbs-container {
+                padding: 0 0.75rem;
+            }
             .gallery-main {
                 grid-template-columns: 1fr;
-                height: 400px;
+                height: auto;
             }
-            
+            .main-image {
+                height: 260px;
+            }
             .thumbnails {
                 flex-direction: row;
-                height: 100px;
+                height: 80px;
             }
-            
             .title-section h1 {
-                font-size: 2rem;
+                font-size: 1.5rem;
+                line-height: 1.3;
             }
-            
+            .title-section .subtitle {
+                font-size: 0.9rem;
+            }
+            .price-tag .price {
+                font-size: 1.75rem;
+            }
+            .section-title {
+                font-size: 1.2rem;
+            }
             .specs-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
             }
-            
             .amenities-list {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
-            
             .review-summary {
                 flex-direction: column;
                 text-align: center;
             }
-            
             .footer-container {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .main-content {
+                gap: 1.5rem;
+            }
+            .booking-widget {
+                padding: 1.25rem;
+            }
+            /* Hide sidebar widget; sticky bar replaces it */
+            .booking-widget {
+                display: none;
+            }
+            .mobile-cta-bar {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                border-top: 1px solid #e5e7eb;
+                padding: 0.75rem 1rem;
+                gap: 0.75rem;
+                align-items: center;
+                z-index: 200;
+                box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+            }
+            .mobile-cta-price {
+                flex: 1;
+                font-family: 'Poppins', sans-serif;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: #00a8a8;
+            }
+            .mobile-cta-price span {
+                display: block;
+                font-size: 0.7rem;
+                font-weight: 500;
+                color: #6b7280;
+            }
+            .mobile-cta-wa {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: #25D366;
+                color: white;
+                text-decoration: none;
+                padding: 0.7rem 1.25rem;
+                border-radius: 10px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                white-space: nowrap;
+            }
+            body {
+                padding-bottom: 72px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.5rem;
+            }
+            .title-section h1 {
+                font-size: 1.3rem;
+            }
+            .price-tag .price {
+                font-size: 1.5rem;
+            }
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+            .amenities-list {
+                grid-template-columns: 1fr;
+            }
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            .review-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -1601,6 +1697,16 @@ For more information leave a comment, we
                 </form>
             </div>
         </aside>
+    </div>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="mobile-cta-bar">
+        <div class="mobile-cta-price">
+            1,500 MAD<span>/month</span>
+        </div>
+        <a href="https://wa.me/212698087554" class="mobile-cta-wa">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
     </div>
 
     <!-- Sign-In Modal -->
