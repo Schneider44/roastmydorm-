@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>List Your Property - RoastMyDorm | Reach Thousands of Students in Morocco</title>
-    <meta name="description" content="Publish your property on RoastMyDorm and connect with thousands of students searching for housing in Casablanca, Rabat, and Marrakech. Free listing, fast tenant matching.">
+    <meta name="description" content="List your property on RoastMyDorm and reach thousands of students in Casablanca, Rabat & Marrakech. Free listing, fast tenant matching.">
     <meta name="keywords" content="publish property Morocco, landlord listing, student housing Morocco, post property Casablanca, post property Rabat, post property Marrakech">
     <meta name="robots" content="index, follow">
     <meta name="author" content="RoastMyDorm">
@@ -1071,7 +1071,7 @@
             </p>
             <div class="hero-btns">
                 <a href="#contact" class="btn-hero-primary">
-                    <i class="fas fa-home"></i> Post a Property — It's Free
+                    <i class="fas fa-home"></i> Post a Property — Free for 14 Days
                 </a>
                 <a href="#contact-form" class="btn-hero-secondary">
                     <i class="fas fa-envelope"></i> Contact Us
@@ -1214,7 +1214,7 @@
 
                 <!-- Free -->
                 <div class="pricing-card fade-up">
-                    <h3>Free Listing</h3>
+                    <h3>Free trial</h3>
                     <div class="price-tag">0 MAD <span>/ listing</span></div>
                     <p class="price-desc">Everything you need to get started.</p>
                     <ul class="pricing-features">
@@ -1227,14 +1227,14 @@
                         <li class="muted"><i class="fas fa-times-circle"></i> Featured placement</li>
                         <li class="muted"><i class="fas fa-times-circle"></i> Verified badge</li>
                     </ul>
-                    <a href="#contact" class="btn-pricing outline">Post for Free</a>
+                    <a href="#contact" class="btn-pricing outline">Free for 14 Days</a>
                 </div>
 
                 <!-- Premium -->
-                <div class="pricing-card featured fade-up">
-                    <div class="pricing-badge">Most Popular — Coming Soon</div>
+                <div class="pricing-card featured fade-up" id="premium-card">
+                    <div class="pricing-badge">Most Popular</div>
                     <h3>Premium Listing</h3>
-                    <div class="price-tag">100 Mad <span>/ listing</span></div>
+                    <div class="price-tag">$20 <span>/ month</span></div>
                     <p class="price-desc">Maximise your visibility and close faster.</p>
                     <ul class="pricing-features">
                         <li><i class="fas fa-check-circle"></i> Unlimited Listing duration</li>
@@ -1246,8 +1246,59 @@
                         <li><i class="fas fa-check-circle"></i> Up to 25 photos</li>
                         <li><i class="fas fa-check-circle"></i> Dedicated support</li>
                     </ul>
-                    <a href="#contact-form" class="btn-pricing solid">Coming Soon</a>
+                    <button type="button" id="subscribe-premium-btn" class="btn-pricing solid">Subscribe Now</button>
+                    <p id="subscribe-error" style="margin-top:10px;color:#dc2626;font-size:0.85rem;display:none;"></p>
                 </div>
+
+                <script>
+                (function() {
+                    const API_BASE = (['localhost', '127.0.0.1', ''].includes(location.hostname))
+                        ? 'http://localhost:5000'
+                        : 'https://roastmydorm-backend-zy4p.vercel.app';
+
+                    const btn = document.getElementById('subscribe-premium-btn');
+                    const errEl = document.getElementById('subscribe-error');
+
+                    function showError(msg) {
+                        errEl.textContent = msg;
+                        errEl.style.display = 'block';
+                    }
+
+                    btn.addEventListener('click', async () => {
+                        errEl.style.display = 'none';
+                        const token = localStorage.getItem('token');
+                        if (!token) {
+                            // Redirect to login with return path
+                            const returnTo = encodeURIComponent(location.pathname + '#premium-card');
+                            location.href = `/login.html?return=${returnTo}`;
+                            return;
+                        }
+
+                        const original = btn.textContent;
+                        btn.disabled = true;
+                        btn.textContent = 'Redirecting…';
+
+                        try {
+                            const res = await fetch(`${API_BASE}/api/stripe/create-checkout-session`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            });
+                            const data = await res.json();
+                            if (!res.ok || !data.url) {
+                                throw new Error(data.message || 'Could not start checkout.');
+                            }
+                            location.href = data.url;
+                        } catch (err) {
+                            btn.disabled = false;
+                            btn.textContent = original;
+                            showError(err.message || 'Something went wrong. Please try again.');
+                        }
+                    });
+                })();
+                </script>
 
             </div>
         </div>
