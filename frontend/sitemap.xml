@@ -52,9 +52,21 @@
   </url>
   <url>
     <loc>https://www.roastmydorm.com/blog.html</loc>
-    <lastmod>2026-03-13</lastmod>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.roastmydorm.com/guide-logement-rabat.html</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.roastmydorm.com/guide-logement-casablanca.html</loc>
+    <lastmod>2026-05-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- Casablanca Listings -->
