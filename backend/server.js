@@ -88,15 +88,25 @@ const authLimiter = rateLimit({
 app.use('/api/', generalLimiter);
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
+app.use('/api/auth/send-verification', authLimiter);
+app.use('/api/auth/resend-verification', authLimiter);
 
-// CORS configuration (cleaned up + includes https + common local ports)
+// CORS configuration — HTTPS-only in production, localhost allowed in dev
 const allowedOrigins = [
   process.env.CLIENT_URL,
   'https://www.roastmydorm.com',
+  'https://roastmydorm.com',
   'http://www.roastmydorm.com',
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'http://localhost:63519',
+  'http://roastmydorm.com',
+  ...(process.env.NODE_ENV !== 'production' ? [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:63519',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5507',
+    'file://',
+  ] : [])
 ].filter(Boolean);
 
 app.use(cors({
@@ -120,14 +130,22 @@ app.use(cors({
 // BODY PARSING & LOGGING
 // ============================================
 
-// Body parsing with size limits
+// Stripe webhook MUST receive raw body for signature verification — mount BEFORE express.json
+const { webhookHandler: stripeWebhookHandler } = require('./routes/stripe');
+app.post(
+  '/api/stripe/webhook',
+  express.raw({ type: 'application/json', limit: '1mb' }),
+  stripeWebhookHandler
+);
+
+// Body parsing with size limits (100kb for JSON API, 10mb only for file upload routes)
 app.use(express.json({
-  limit: '10mb',
+  limit: '100kb',
   verify: (req, res, buf) => {
     req.rawBody = buf;
   }
 }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // Logging - different format for production
 if (process.env.NODE_ENV === 'production') {
@@ -246,6 +264,12 @@ connectDB().catch(() => {
 // Ensure DB is connected before any API route (handles cold starts with bufferCommands=false)
 app.use('/api', async (req, res, next) => {
   if (req.path === '/health') return next(); // skip for health check
+  
+  // In development mode, allow test login even without DB
+  if (process.env.NODE_ENV !== 'production' && req.path === '/auth/login' && req.method === 'POST') {
+    return next(); // Skip DB check for test login
+  }
+  
   try {
     await connectDB();
     next();
@@ -274,6 +298,9 @@ app.use('/api/verification', require('./routes/verification'));
 // Property Submission Routes (landlords)
 app.use('/api/property-requests', require('./routes/propertyRequests'));
 
+// Stripe subscription routes (checkout, status, cancel, billing portal)
+app.use('/api/stripe', require('./routes/stripe'));
+
 // Admin Dashboard Routes (full suite: dorms, users, reviews, analytics, etc.)
 app.use('/api/admin', require('./routes/admin/index'));
 
@@ -283,34 +310,38 @@ app.get('/sitemap.xml', (req, res) => {
 });
 app.get('/robots.txt', (req, res) => {
   const seoUtils = require('./utils/seo');
-  const baseUrl = process.env.BASE_URL || 'https://wwww.roastmydorm.com';
+  const baseUrl = process.env.BASE_URL || 'https://www.roastmydorm.com';
   res.set('Content-Type', 'text/plain');
   res.send(seoUtils.generateRobotsTxt(baseUrl));
 });
 
-// Health check endpoint
+// Health check endpoint — minimal public info, full info for internal callers only
 app.get('/api/health', async (req, res) => {
-  let dbError = null;
+  const isInternal = req.headers['x-internal-key'] === process.env.HEALTH_SECRET;
+  let dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+
   if (mongoose.connection.readyState !== 1) {
-    try { await connectDB(); } catch (e) { dbError = e.message; }
+    try { await connectDB(); dbStatus = 'connected'; } catch (_) { dbStatus = 'disconnected'; }
   }
-  const healthcheck = {
-    status: 'OK',
-    timestamp: new Date().toISOString(),
+
+  // Public response — no sensitive info
+  const publicResponse = {
+    status: dbStatus === 'connected' ? 'OK' : 'DEGRADED',
+    timestamp: new Date().toISOString()
+  };
+
+  if (!isInternal) {
+    return res.status(dbStatus === 'connected' ? 200 : 503).json(publicResponse);
+  }
+
+  // Internal/admin callers get full diagnostics
+  res.json({
+    ...publicResponse,
     environment: process.env.NODE_ENV || 'development',
     uptime: process.uptime(),
     memoryUsage: process.memoryUsage(),
-    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    dbError: dbError || undefined
-  };
-
-  try {
-    res.json(healthcheck);
-  } catch (error) {
-    healthcheck.status = 'ERROR';
-    healthcheck.message = error.message;
-    res.status(503).json(healthcheck);
-  }
+    database: dbStatus
+  });
 });
 
 // ============================================
@@ -394,6 +425,22 @@ process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
   // Do NOT call process.exit(1) in serverless — it kills the entire function container
 });
+
+// ============================================
+// START LOCAL SERVER (for local development)
+// ============================================
+
+const PORT = process.env.PORT || 5000;
+
+// Only start server if running locally (not in Vercel/serverless)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV}`);
+  }).on('error', (err) => {
+    console.error('Server error:', err.message);
+  });
+}
 
 // ============================================
 // EXPORT APP (for Vercel)
