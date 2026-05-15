@@ -1735,3 +1735,268 @@ body {
         padding: 30px 20px;
     }
 }
+
+/* ============================================
+   MOBILE FIXES — comprehensive overhaul
+   ============================================ */
+
+/* ── Navbar ── */
+@media (max-width: 992px) {
+    .navbar {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Hide text links — hamburger handles them */
+    .nav-links {
+        order: 3;
+        width: 100%;
+    }
+
+    /* Slim down the action buttons */
+    .nav-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+        order: 2;
+    }
+
+    /* Hide Boost on mobile — save space */
+    #boostBtn {
+        display: none;
+    }
+
+    .nav-cta {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+
+    .btn-sm {
+        padding: 8px 12px;
+        font-size: 0.82rem;
+    }
+
+    /* Content clears the taller mobile navbar */
+    .main-content {
+        padding-top: 80px;
+    }
+}
+
+/* ── Global section padding ── */
+@media (max-width: 768px) {
+    .social-proof-section,
+    .ai-banner-section,
+    .commitment-section,
+    .filter-section,
+    .content-section,
+    .pagination-section {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .reciprocity-banner {
+        margin-left: 14px;
+        margin-right: 14px;
+        font-size: 0.85rem;
+        padding: 10px 14px;
+        gap: 8px;
+    }
+
+    /* Social proof */
+    .social-proof-banner {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    /* AI banner */
+    .ai-banner {
+        padding: 20px 16px;
+        gap: 14px;
+    }
+
+    .ai-banner h2 {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    .ai-banner p {
+        font-size: 0.85rem;
+    }
+
+    .ai-banner .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Commitment / progress */
+    .commitment-card {
+        padding: 16px;
+    }
+
+    /* Filter card */
+    .filter-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .filter-header {
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .messages-remaining {
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        gap: 6px;
+    }
+
+    .filter-group label {
+        font-size: 0.82rem;
+    }
+
+    .filter-group select {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+
+    /* Roommate cards */
+    .roommates-grid {
+        gap: 14px;
+    }
+
+    /* Sidebar panels: stack them with smaller padding */
+    .boost-card,
+    .ai-suggestions-card,
+    .premium-card,
+    .top-rated-card {
+        padding: 16px;
+    }
+
+    /* Pagination */
+    .pagination {
+        gap: 6px;
+    }
+
+    .page-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+
+    /* Footer */
+    .footer-col ul li {
+        font-size: 0.875rem;
+    }
+}
+
+/* ── Small phones ── */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px 12px;
+    }
+
+    .nav-logo {
+        font-size: 1.15rem;
+    }
+
+    .nav-logo span {
+        display: inline; /* keep brand name, hide icon text only if needed */
+    }
+
+    .main-content {
+        padding-top: 72px;
+    }
+
+    /* Social proof strip */
+    .social-proof-banner {
+        gap: 12px;
+        padding: 14px 12px;
+    }
+
+    .proof-stat p {
+        font-size: 0.78rem;
+    }
+
+    /* AI banner */
+    .ai-banner {
+        padding: 16px 12px;
+    }
+
+    .ai-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+
+    .ai-banner h2 {
+        font-size: 0.92rem;
+    }
+
+    /* Reciprocity */
+    .reciprocity-banner {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+
+    /* Filter */
+    .filter-card {
+        padding: 14px 12px;
+    }
+
+    /* Cards in grid */
+    .roommate-card {
+        border-radius: 12px;
+    }
+
+    /* Popup */
+    .popup-content {
+        margin: 12px;
+        border-radius: 16px;
+    }
+
+    /* Premium / boost cards */
+    .premium-price .price {
+        font-size: 1.5rem;
+    }
+
+    /* Sticky CTA bar at bottom for mobile */
+    .sticky-mobile-cta {
+        display: flex;
+    }
+}
+
+/* Sticky bottom CTA (mobile only) */
+.sticky-mobile-cta {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    background: rgba(10, 15, 28, 0.97);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 12px 16px;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sticky-mobile-cta .cta-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    flex: 1;
+}
+
+.sticky-mobile-cta .btn {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    font-size: 0.88rem;
+}
+
+/* Push footer up so sticky bar doesn't cover it */
+@media (max-width: 480px) {
+    .footer {
+        padding-bottom: 80px;
+    }
+}
