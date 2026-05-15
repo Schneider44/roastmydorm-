@@ -56,13 +56,7 @@
 
         .card { border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.3s, transform 0.3s; text-decoration: none; color: inherit; }
         .card:hover { box-shadow: 0 8px 32px rgba(0,168,168,0.12); transform: translateY(-4px); }
-        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
-        .card-img.rabat      { background: linear-gradient(135deg, #e0f7f7, #b2ebeb); }
-        .card-img.casa       { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
-        .card-img.colo       { background: linear-gradient(135deg, #f3e8ff, #e9d5ff); }
-        .card-img.marrakech  { background: linear-gradient(135deg, #fdf4ff, #e9d5ff); }
-        .card-img.roommate   { background: linear-gradient(135deg, #ecfdf5, #a7f3d0); }
-        .card-img.landlord   { background: linear-gradient(135deg, #eff6ff, #bfdbfe); }
+        .card-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; background-size: cover; background-position: center; background-repeat: no-repeat; }
         .card-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
         .card-category { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #00a8a8; margin-bottom: 0.6rem; }
         .card-title { font-family: 'Poppins', sans-serif; font-size: 1.15rem; font-weight: 700; color: #111827; margin-bottom: 0.75rem; line-height: 1.35; }
@@ -95,6 +89,7 @@
         <nav class="nav-links">
             <a href="rabat-dorms.html">Rabat</a>
             <a href="casablanca-dorms.html">Casablanca</a>
+            <a href="marrakech-dorms.html">Marrakech</a>
             <a href="for-landlords.html">Propriétaires</a>
             <a href="rabat-dorms.html" class="nav-btn">Voir les logements</a>
         </nav>
@@ -113,7 +108,7 @@
     <div class="blog-grid">
 
         <a href="guide-logement-rabat.html" class="card">
-            <div class="card-img rabat">🏙️</div>
+            <div class="card-img" style="background-image: url('Rabat.png');"></div>
             <div class="card-body">
                 <p class="card-category">Guide ville · Rabat</p>
                 <h3 class="card-title">Guide Logement Étudiant à Rabat 2026</h3>
@@ -126,7 +121,7 @@
         </a>
 
         <a href="guide-logement-casablanca.html" class="card">
-            <div class="card-img casa">🌆</div>
+            <div class="card-img" style="background-image: url('Casablanca\ 🇲🇦.png');"></div>
             <div class="card-body">
                 <p class="card-category">Guide ville · Casablanca</p>
                 <h3 class="card-title">Guide Logement Étudiant à Casablanca 2026</h3>
@@ -139,7 +134,7 @@
         </a>
 
         <a href="guide-logement-marrakech.html" class="card">
-            <div class="card-img marrakech">🌴</div>
+            <div class="card-img" style="background-image: url('marrakeech.png');"></div>
             <div class="card-body">
                 <p class="card-category">Guide ville · Marrakech</p>
                 <h3 class="card-title">Guide Logement Étudiant à Marrakech 2026</h3>
@@ -152,7 +147,7 @@
         </a>
 
         <a href="find-roommate-matches.html" class="card">
-            <div class="card-img roommate">🤝</div>
+            <div class="card-img" style="background-image: url('studying2.png');"></div>
             <div class="card-body">
                 <p class="card-category">Astuce · Colocation</p>
                 <h3 class="card-title">Comment Trouver la Colocation Idéale au Maroc</h3>
@@ -165,7 +160,7 @@
         </a>
 
         <a href="for-landlords.html" class="card">
-            <div class="card-img landlord">🏠</div>
+            <div class="card-img" style="background-image: url('salon app.png');"></div>
             <div class="card-body">
                 <p class="card-category">Guide · Propriétaires</p>
                 <h3 class="card-title">Publier une Annonce Logement Étudiant au Maroc</h3>
