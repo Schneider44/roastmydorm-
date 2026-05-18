@@ -1446,6 +1446,117 @@
         </div>
     </section>
 
+    <!-- Browse by University Section -->
+    <section class="uni-section">
+        <style>
+        .uni-section { padding: 64px 0; background: #f9fafb; }
+        .uni-section .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .uni-label { font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #00a8a8; margin-bottom: 8px; display: block; }
+        .uni-heading { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: #111827; margin-bottom: 10px; }
+        .uni-subheading { font-size: 1rem; color: #6b7280; margin-bottom: 40px; max-width: 560px; }
+        .uni-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .uni-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px 18px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 10px; transition: box-shadow 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+        .uni-card:hover { box-shadow: 0 8px 28px rgba(0,168,168,0.13); transform: translateY(-3px); border-color: #00a8a8; }
+        .uni-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #00a8a8, #007a7a); opacity: 0; transition: opacity 0.25s; }
+        .uni-card:hover::before { opacity: 1; }
+        .uni-badge { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #00a8a8, #007a7a); color: #fff; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 20px; align-self: flex-start; }
+        .uni-name { font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 700; color: #111827; line-height: 1.3; }
+        .uni-city { font-size: 0.8rem; color: #6b7280; display: flex; align-items: center; gap: 4px; }
+        .uni-city i { color: #00a8a8; font-size: 0.7rem; }
+        .uni-listings { font-size: 0.78rem; font-weight: 600; color: #00a8a8; margin-top: auto; }
+        .uni-arrow { font-size: 0.78rem; color: #9ca3af; align-self: flex-end; transition: color 0.2s; }
+        .uni-card:hover .uni-arrow { color: #00a8a8; }
+        .uni-footer { text-align: center; }
+        .uni-browse-all { display: inline-block; color: #00a8a8; font-weight: 600; text-decoration: none; font-size: 0.95rem; border: 2px solid #00a8a8; padding: 10px 28px; border-radius: 10px; transition: background 0.2s, color 0.2s; }
+        .uni-browse-all:hover { background: #00a8a8; color: #fff; }
+        @media (max-width: 640px) { .uni-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .uni-section { padding: 44px 0; } }
+        @media (max-width: 380px) { .uni-grid { grid-template-columns: 1fr; } }
+        </style>
+        <div class="container">
+            <span class="uni-label"><i class="fas fa-graduation-cap"></i> Campus Housing</span>
+            <h2 class="uni-heading">Browse by University</h2>
+            <p class="uni-subheading">Find verified student housing near your campus — dorms, studios & shared apartments across Morocco.</p>
+            <div class="uni-grid">
+
+                <a href="housing-near-mohammed-v-university.html" class="uni-card">
+                    <span class="uni-badge">UM5</span>
+                    <p class="uni-name">Mohammed V University</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Rabat</p>
+                    <p class="uni-listings">12 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-uir.html" class="uni-card">
+                    <span class="uni-badge">UIR</span>
+                    <p class="uni-name">Université Internationale de Rabat</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Salé – Rabat</p>
+                    <p class="uni-listings">8 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-ensias.html" class="uni-card">
+                    <span class="uni-badge">ENSIAS</span>
+                    <p class="uni-name">ENSIAS</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Rabat</p>
+                    <p class="uni-listings">10 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-emsi.html" class="uni-card">
+                    <span class="uni-badge">EMSI</span>
+                    <p class="uni-name">EMSI</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Casablanca · Rabat</p>
+                    <p class="uni-listings">14 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-encg-casablanca.html" class="uni-card">
+                    <span class="uni-badge">ENCG</span>
+                    <p class="uni-name">ENCG Casablanca</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Casablanca</p>
+                    <p class="uni-listings">11 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-ispits.html" class="uni-card">
+                    <span class="uni-badge">ISPITS</span>
+                    <p class="uni-name">ISPITS</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Casablanca · Marrakech</p>
+                    <p class="uni-listings">9 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-cadi-ayyad-university.html" class="uni-card">
+                    <span class="uni-badge">UCA</span>
+                    <p class="uni-name">Cadi Ayyad University</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Marrakech</p>
+                    <p class="uni-listings">14 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-upm.html" class="uni-card">
+                    <span class="uni-badge">UPM</span>
+                    <p class="uni-name">Université Privée de Marrakech</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Marrakech</p>
+                    <p class="uni-listings">10 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+                <a href="housing-near-um6p.html" class="uni-card">
+                    <span class="uni-badge">UM6P</span>
+                    <p class="uni-name">Université Mohammed VI Polytechnique</p>
+                    <p class="uni-city"><i class="fas fa-map-marker-alt"></i> Benguerir</p>
+                    <p class="uni-listings">6 listings nearby</p>
+                    <span class="uni-arrow">→</span>
+                </a>
+
+            </div>
+            <div class="uni-footer">
+                <a href="rabat-dorms.html" class="uni-browse-all">View all listings <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
     <!-- How It Works Section -->
     <section class="how-it-works">
         <div class="container">
