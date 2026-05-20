@@ -358,11 +358,145 @@ const sendPropertyDecisionEmail = async (submission, decision, adminNote) => {
   });
 };
 
+/**
+ * Send enquiry confirmation email to client + notification to landlord
+ */
+const sendEnquiryConfirmation = async ({ clientName, clientEmail, clientPhone, message, preferredContact, listing }) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return { success: false, reason: 'email_not_configured' };
+
+  const transporter = createTransporter();
+  const listingUrl = listing.url || 'https://www.roastmydorm.com';
+
+  const clientHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+    <body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4f4f4;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:20px;">
+        <tr><td align="center">
+          <table width="580" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.1);overflow:hidden;">
+            <!-- Header -->
+            <tr>
+              <td style="background:linear-gradient(135deg,#00a8a8 0%,#007a7a 100%);padding:32px;text-align:center;">
+                <h1 style="color:#fff;margin:0;font-size:22px;font-weight:800;">🏠 RoastMyDorm</h1>
+                <p style="color:rgba(255,255,255,0.85);margin:8px 0 0;font-size:15px;">Your enquiry is confirmed!</p>
+              </td>
+            </tr>
+            <!-- Body -->
+            <tr>
+              <td style="padding:36px 32px;">
+                <h2 style="color:#111827;margin:0 0 6px;font-size:20px;">Hey ${clientName}! 🎉</h2>
+                <p style="color:#6b7280;margin:0 0 24px;font-size:15px;">Great news — your enquiry for the listing below has been received!</p>
+
+                <!-- Listing Card -->
+                <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:28px;">
+                  <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#00a8a8;margin-bottom:6px;">Your Enquiry</div>
+                  <div style="font-size:17px;font-weight:700;color:#111827;margin-bottom:4px;">${listing.name}</div>
+                  <div style="font-size:13px;color:#6b7280;margin-bottom:16px;">${listing.location}</div>
+
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
+                        <span style="color:#6b7280;font-size:13px;">🏠 Listing type</span>
+                        <span style="float:right;color:#111827;font-weight:600;font-size:13px;">${listing.type}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
+                        <span style="color:#6b7280;font-size:13px;">💰 Rent</span>
+                        <span style="float:right;color:#00a8a8;font-weight:700;font-size:14px;">${listing.rent}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
+                        <span style="color:#6b7280;font-size:13px;">📅 Lease Duration</span>
+                        <span style="float:right;color:#111827;font-weight:600;font-size:13px;">${listing.lease}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:7px 0;">
+                        <span style="color:#6b7280;font-size:13px;">🚪 Move-in Date</span>
+                        <span style="float:right;color:#111827;font-weight:600;font-size:13px;">${listing.moveIn}</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+
+                <!-- CTA -->
+                <div style="background:linear-gradient(135deg,#f0fdfd,#e6fafa);border:1px solid #99e6e6;border-radius:12px;padding:20px;margin-bottom:28px;text-align:center;">
+                  <div style="font-size:13px;font-weight:700;color:#065f5f;margin-bottom:6px;">🚀 Next Step: Complete Your Booking</div>
+                  <p style="color:#374151;font-size:13px;margin:0 0 16px;">Finish the booking form to fast-track confirmation and secure your room.</p>
+                  <a href="${listingUrl}" style="display:inline-block;background:#00a8a8;color:#fff;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">👉 View Listing &amp; Book</a>
+                  <p style="color:#6b7280;font-size:11px;margin:12px 0 0;">⏳ Rooms are in high demand — completing now helps avoid availability issues.</p>
+                </div>
+
+                <!-- Help -->
+                <div style="margin-bottom:8px;">
+                  <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:8px;">❓ Need Help Before Booking?</div>
+                  <p style="color:#6b7280;font-size:13px;margin:0 0 8px;">We can assist with:</p>
+                  <ul style="color:#374151;font-size:13px;margin:0;padding-left:20px;line-height:1.9;">
+                    <li>Payment &amp; instalment options</li>
+                    <li>Cancellation &amp; refund policy</li>
+                    <li>Document requirements</li>
+                  </ul>
+                  <p style="color:#6b7280;font-size:13px;margin:12px 0 0;">Just <strong>reply to this email</strong> and our team will assist you 😊</p>
+                </div>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #f3f4f6;text-align:center;">
+                <p style="color:#9ca3af;font-size:11px;margin:0;">© 2026 RoastMyDorm · Find your perfect student housing in Morocco</p>
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  const landlordHtml = `
+    <div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;background:#f8fafc;padding:20px;border-radius:12px;">
+      <h2 style="color:#007a7a;margin-bottom:4px;">📩 New Enquiry Received</h2>
+      <p style="color:#6b7280;margin-top:0;">Someone is interested in: <strong>${listing.name}</strong></p>
+      <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+        <tr><td style="padding:9px 16px;color:#6b7280;width:40%;border-bottom:1px solid #f3f4f6;">Name</td><td style="padding:9px 16px;font-weight:600;color:#111827;border-bottom:1px solid #f3f4f6;">${clientName}</td></tr>
+        <tr><td style="padding:9px 16px;color:#6b7280;border-bottom:1px solid #f3f4f6;">Email</td><td style="padding:9px 16px;color:#111827;border-bottom:1px solid #f3f4f6;">${clientEmail}</td></tr>
+        <tr><td style="padding:9px 16px;color:#6b7280;border-bottom:1px solid #f3f4f6;">Phone</td><td style="padding:9px 16px;color:#111827;border-bottom:1px solid #f3f4f6;">${clientPhone || '—'}</td></tr>
+        <tr><td style="padding:9px 16px;color:#6b7280;border-bottom:1px solid #f3f4f6;">Preferred Contact</td><td style="padding:9px 16px;color:#111827;border-bottom:1px solid #f3f4f6;">${preferredContact || '—'}</td></tr>
+        <tr><td style="padding:9px 16px;color:#6b7280;vertical-align:top;">Message</td><td style="padding:9px 16px;color:#111827;">${message || '—'}</td></tr>
+      </table>
+      <div style="text-align:center;margin-top:20px;">
+        <a href="${listingUrl}" style="background:#00a8a8;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block;">View Listing →</a>
+      </div>
+    </div>
+  `;
+
+  await transporter.sendMail({
+    from: `"RoastMyDorm" <${process.env.EMAIL_USER}>`,
+    to: clientEmail,
+    subject: `🎉 Enquiry confirmed — ${listing.name} | RoastMyDorm`,
+    html: clientHtml
+  });
+
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+  await transporter.sendMail({
+    from: `"RoastMyDorm" <${process.env.EMAIL_USER}>`,
+    to: adminEmail,
+    subject: `📩 New enquiry from ${clientName} — ${listing.name}`,
+    html: landlordHtml
+  });
+
+  return { success: true };
+};
+
 module.exports = {
   generateVerificationToken,
   generateVerificationCode,
   sendVerificationEmail,
   sendPasswordResetEmail,
   sendPropertySubmissionAlert,
-  sendPropertyDecisionEmail
+  sendPropertyDecisionEmail,
+  sendEnquiryConfirmation
 };

@@ -283,6 +283,7 @@ app.use('/api', async (req, res, next) => {
 // ============================================
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/enquiries', require('./routes/enquiries'));
 app.use('/api/dorms', require('./routes/dorms'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/users', require('./routes/users'));
