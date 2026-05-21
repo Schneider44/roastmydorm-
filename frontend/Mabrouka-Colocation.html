@@ -2716,15 +2716,15 @@ NB: for a single girl
             // Build WhatsApp "send to yourself" message
             const fullPhone = (code + phone.replace(/^0/, '')).replace(/\s/g,'');
             const waText = encodeURIComponent(
-                `Hey ${name}! 🎉\n\n` +
-                `Great news, your enquiry for *${LISTING.name}* has been received!\n\n` +
+                `*Hey ${name}! 🎉*\n\n` +
+                `Great news, your *${LISTING.name}* at ${LISTING.location}\n\n` +
                 `🏠 *Tenancy Details*\n` +
-                `*Type:* ${LISTING.type}\n` +
+                `*Type of the listings:* ${LISTING.type}\n` +
                 `*Rent:* ${LISTING.rent}\n` +
                 `*Lease Duration:* ${LISTING.lease}\n` +
                 `*Move-in Date:* ${LISTING.moveIn}\n\n` +
                 `🚀 *Next Step: Complete Your Booking*\n` +
-                `Finish the booking form to fast-track confirmation and secure your room 👇\n` +
+                `Finish the *Booking Form* to fast-track confirmation and secure your room 👇\n` +
                 `👉 ${LISTING.url}\n\n` +
                 `_⏳ Rooms at *Mabrouka* are in high demand — completing now helps avoid availability issues._\n\n` +
                 `❓ *Need Help Before Paying?*\n` +
@@ -2745,18 +2745,18 @@ NB: for a single girl
                     <p style="color:#6b7280;font-size:0.93rem;margin:0 0 6px;">A confirmation has been sent to <strong>${email}</strong>.</p>
                     <p style="color:#6b7280;font-size:0.88rem;margin:0 0 24px;">Our team will contact you via <strong>${reach}</strong> shortly.</p>
 
-                    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:18px 16px;text-align:left;margin-bottom:22px;font-size:0.83rem;color:#374151;line-height:1.8;white-space:pre-line;">Hey ${name}! 🎉
+                    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:18px 16px;text-align:left;margin-bottom:22px;font-size:0.83rem;color:#374151;line-height:1.8;white-space:pre-line;"><strong>Hey ${name}! 🎉</strong>
 
-Great news, your enquiry for <strong>${LISTING.name}</strong> has been received!
+Great news, your <strong>${LISTING.name}</strong> at ${LISTING.location}
 
 🏠 <strong>Tenancy Details</strong>
-<strong>Type:</strong> ${LISTING.type}
+<strong>Type of the listings:</strong> ${LISTING.type}
 <strong>Rent:</strong> ${LISTING.rent}
 <strong>Lease Duration:</strong> ${LISTING.lease}
 <strong>Move-in Date:</strong> ${LISTING.moveIn}
 
 🚀 <strong>Next Step: Complete Your Booking</strong>
-Finish the form to secure your room 👇</div>
+Finish the <strong>Booking Form</strong> to fast-track confirmation and secure your room 👇</div>
 
                     <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
                         <a href="https://wa.me/${fullPhone}?text=${waText}" target="_blank"

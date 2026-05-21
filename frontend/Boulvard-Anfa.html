@@ -2572,15 +2572,15 @@ On WhatsApp
             } catch(e) {}
             const fullPhone = (code + phone.replace(/^0/,'')).replace(/\s/g,'');
             const waText = encodeURIComponent(
-                'Hey ' + name + '! 🎉\n\n' +
-                'Great news, your enquiry for *' + LISTING.name + '* has been received!\n\n' +
+                '*Hey ' + name + '! 🎉*\n\n' +
+                'Great news, your *' + LISTING.name + '* at ' + LISTING.location + '\n\n' +
                 '🏠 *Tenancy Details*\n' +
-                '*Type:* ' + LISTING.type + '\n' +
+                '*Type of the listings:* ' + LISTING.type + '\n' +
                 '*Rent:* ' + LISTING.rent + '\n' +
                 '*Lease Duration:* ' + LISTING.lease + '\n' +
                 '*Move-in Date:* ' + LISTING.moveIn + '\n\n' +
                 '🚀 *Next Step: Complete Your Booking*\n' +
-                'Finish the booking form to secure your room 👇\n' +
+                'Finish the *Booking Form* to fast-track confirmation and secure your room 👇\n' +
                 '👉 ' + LISTING.url + '\n\n' +
                 '_⏳ Rooms at *Boulvard Anfa* are in high demand — completing now helps avoid availability issues._\n\n' +
                 '❓ *Need Help Before Paying?*\n' +
@@ -2597,7 +2597,7 @@ On WhatsApp
                 '<p style="color:#6b7280;font-size:0.93rem;margin:0 0 6px;">A confirmation has been sent to <strong>' + email + '</strong>.</p>' +
                 '<p style="color:#6b7280;font-size:0.88rem;margin:0 0 24px;">Our team will contact you via <strong>' + reach + '</strong> shortly.</p>' +
                 '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">' +
-                '<a href="https://wa.me/' + fullPhone + '?text=' + '" + waText + "' + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.93rem;"><i class=\"fab fa-whatsapp\"></i> Save on WhatsApp</a>' +
+                '<a href="https://wa.me/' + fullPhone + '?text=' + waText + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.93rem;"><i class=\"fab fa-whatsapp\"></i> Save on WhatsApp</a>' +
                 '<button onclick="closeEnquireModal()" style="display:inline-flex;align-items:center;gap:8px;background:#f3f4f6;color:#374151;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:0.93rem;">Close</button>' +
                 '</div>' +
                 '<p style="color:#9ca3af;font-size:0.75rem;margin-top:12px;">Opens a pre-filled message you can save or forward.</p>' +

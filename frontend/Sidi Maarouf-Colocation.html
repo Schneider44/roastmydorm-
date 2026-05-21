@@ -1,6 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.roastmydorm.com/Sidi Maarouf-Colocation.html">
+    <meta property="og:title" content="Student Apartement Sidi Maarouf, Gueliz, Marrakech — 4,000 MAD/mo">
+    <meta property="og:description" content="Furnished student Girl room in Sidi Maarouf,Casablanca. 5-min walk to Ispits and Fst. Available July.">
+    <meta property="og:image" content="https://www.roastmydorm.com/maarouf colo.png">
+    <meta property="og:site_name" content="RoastMyDorm">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Student Apartement Sidi Maarouf, Gueliz, Marrakech — 4,000 MAD/mo">
+    <meta name="twitter:description" content="Furnished student Girl room in Sidi Maarouf,Casablanca. 5-min walk to Ispits and Fst. Available July.">
+    <meta name="twitter:image" content="https://www.roastmydorm.com/maarouf colo.png">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LodgingBusiness",
+      "name": "Student Apartement — Sidi Maarouf, Casablanca",
+      "description": "Furnished student Apartement in Sidi Maarouf, Gueliz, Marrakech. 5-min walk to Ispits and Fst. 4,000 MAD/month.",
+      "url": "https://www.roastmydorm.com/Sidi Maarouf-Colocation.html",
+      "image": "https://www.roastmydorm.com/maarouf colo.png",
+      "priceRange": "4000 MAD/month",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Sidi Maarouf",
+        "addressLocality": "Sidi Maarouf",
+        "addressCountry": "MA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 33.9716,
+        "longitude": -6.8498
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.roastmydorm.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Sidi Maarouf Colocation", "item": "https://www.roastmydorm.com/Sidi Maarouf-Colocation.html" },
+          { "@type": "ListItem", "position": 3, "name": "Sidi Maarouf Apartement", "item": "https://www.roastmydorm.com/Sidi Maarouf-Colocation.html" }
+        ]
+      }
+    }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Modern Studio | Central Campus Living - Sidi Maarouf - Casablanca - RoastMyDorm</title>
@@ -1694,11 +1739,11 @@ Bathroom
                 <form id="enquire-form" onsubmit="submitEnquiry(event)">
                     <div style="margin-bottom:18px; position:relative;">
                         <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Your Full Name *</label>
-                        <input type="text" id="enq-name" placeholder="e.g. Fatima Zahra" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
+                        <input type="text" id="enq-name" placeholder="" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
                     </div>
                     <div style="margin-bottom:18px; position:relative;">
                         <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Your Email Address *</label>
-                        <input type="email" id="enq-email" placeholder="you@example.com" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
+                        <input type="email" id="enq-email" placeholder="" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
                     </div>
                     <div style="display:flex; gap:10px; margin-bottom:18px;">
                         <div style="position:relative; width:110px; flex-shrink:0;">
@@ -2585,15 +2630,15 @@ Bathroom
             } catch(e) {}
             const fullPhone = (code + phone.replace(/^0/,'')).replace(/\s/g,'');
             const waText = encodeURIComponent(
-                'Hey ' + name + '! 🎉\n\n' +
-                'Great news, your enquiry for *' + LISTING.name + '* has been received!\n\n' +
+                '*Hey ' + name + '! 🎉*\n\n' +
+                'Great news, your *' + LISTING.name + '* at ' + LISTING.location + '\n\n' +
                 '🏠 *Tenancy Details*\n' +
-                '*Type:* ' + LISTING.type + '\n' +
+                '*Type of the listings:* ' + LISTING.type + '\n' +
                 '*Rent:* ' + LISTING.rent + '\n' +
                 '*Lease Duration:* ' + LISTING.lease + '\n' +
                 '*Move-in Date:* ' + LISTING.moveIn + '\n\n' +
                 '🚀 *Next Step: Complete Your Booking*\n' +
-                'Finish the booking form to secure your room 👇\n' +
+                'Finish the *Booking Form* to fast-track confirmation and secure your room 👇\n' +
                 '👉 ' + LISTING.url + '\n\n' +
                 '_⏳ Rooms at *Sidi Maarouf* are in high demand — completing now helps avoid availability issues._\n\n' +
                 '❓ *Need Help Before Paying?*\n' +
@@ -2610,7 +2655,7 @@ Bathroom
                 '<p style="color:#6b7280;font-size:0.93rem;margin:0 0 6px;">A confirmation has been sent to <strong>' + email + '</strong>.</p>' +
                 '<p style="color:#6b7280;font-size:0.88rem;margin:0 0 24px;">Our team will contact you via <strong>' + reach + '</strong> shortly.</p>' +
                 '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">' +
-                '<a href="https://wa.me/' + fullPhone + '?text=' + '" + waText + "' + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.93rem;"><i class=\"fab fa-whatsapp\"></i> Save on WhatsApp</a>' +
+                '<a href="https://wa.me/' + fullPhone + '?text=' + waText + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.93rem;"><i class=\"fab fa-whatsapp\"></i> Save on WhatsApp</a>' +
                 '<button onclick="closeEnquireModal()" style="display:inline-flex;align-items:center;gap:8px;background:#f3f4f6;color:#374151;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:0.93rem;">Close</button>' +
                 '</div>' +
                 '<p style="color:#9ca3af;font-size:0.75rem;margin-top:12px;">Opens a pre-filled message you can save or forward.</p>' +
@@ -2647,7 +2692,8 @@ Bathroom
                 });
             }
         });
-    </script>
+    </script>
+
 </body>
 </html>
 

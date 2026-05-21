@@ -386,36 +386,34 @@ const sendEnquiryConfirmation = async ({ clientName, clientEmail, clientPhone, m
             <tr>
               <td style="padding:36px 32px;">
                 <h2 style="color:#111827;margin:0 0 6px;font-size:20px;">Hey ${clientName}! 🎉</h2>
-                <p style="color:#6b7280;margin:0 0 24px;font-size:15px;">Great news — your enquiry for the listing below has been received!</p>
+                <p style="color:#6b7280;margin:0 0 6px;font-size:15px;">Great news, your <strong>${listing.name}</strong> at ${listing.location}</p>
 
                 <!-- Listing Card -->
                 <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:20px;margin-bottom:28px;">
-                  <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#00a8a8;margin-bottom:6px;">Your Enquiry</div>
-                  <div style="font-size:17px;font-weight:700;color:#111827;margin-bottom:4px;">${listing.name}</div>
-                  <div style="font-size:13px;color:#6b7280;margin-bottom:16px;">${listing.location}</div>
+                  <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#00a8a8;margin-bottom:12px;">🏠 Tenancy Details</div>
 
                   <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                       <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
-                        <span style="color:#6b7280;font-size:13px;">🏠 Listing type</span>
+                        <span style="color:#6b7280;font-size:13px;">Type of the listings</span>
                         <span style="float:right;color:#111827;font-weight:600;font-size:13px;">${listing.type}</span>
                       </td>
                     </tr>
                     <tr>
                       <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
-                        <span style="color:#6b7280;font-size:13px;">💰 Rent</span>
+                        <span style="color:#6b7280;font-size:13px;">Rent</span>
                         <span style="float:right;color:#00a8a8;font-weight:700;font-size:14px;">${listing.rent}</span>
                       </td>
                     </tr>
                     <tr>
                       <td style="padding:7px 0;border-bottom:1px solid #f3f4f6;">
-                        <span style="color:#6b7280;font-size:13px;">📅 Lease Duration</span>
+                        <span style="color:#6b7280;font-size:13px;">Lease Duration</span>
                         <span style="float:right;color:#111827;font-weight:600;font-size:13px;">${listing.lease}</span>
                       </td>
                     </tr>
                     <tr>
                       <td style="padding:7px 0;">
-                        <span style="color:#6b7280;font-size:13px;">🚪 Move-in Date</span>
+                        <span style="color:#6b7280;font-size:13px;">Move-in Date</span>
                         <span style="float:right;color:#111827;font-weight:600;font-size:13px;">${listing.moveIn}</span>
                       </td>
                     </tr>
@@ -425,15 +423,15 @@ const sendEnquiryConfirmation = async ({ clientName, clientEmail, clientPhone, m
                 <!-- CTA -->
                 <div style="background:linear-gradient(135deg,#f0fdfd,#e6fafa);border:1px solid #99e6e6;border-radius:12px;padding:20px;margin-bottom:28px;text-align:center;">
                   <div style="font-size:13px;font-weight:700;color:#065f5f;margin-bottom:6px;">🚀 Next Step: Complete Your Booking</div>
-                  <p style="color:#374151;font-size:13px;margin:0 0 16px;">Finish the booking form to fast-track confirmation and secure your room.</p>
+                  <p style="color:#374151;font-size:13px;margin:0 0 16px;">Finish the <strong>Booking Form</strong> to fast-track confirmation and secure your room 👇</p>
                   <a href="${listingUrl}" style="display:inline-block;background:#00a8a8;color:#fff;padding:13px 32px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;">👉 View Listing &amp; Book</a>
                   <p style="color:#6b7280;font-size:11px;margin:12px 0 0;">⏳ Rooms are in high demand — completing now helps avoid availability issues.</p>
                 </div>
 
                 <!-- Help -->
                 <div style="margin-bottom:8px;">
-                  <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:8px;">❓ Need Help Before Booking?</div>
-                  <p style="color:#6b7280;font-size:13px;margin:0 0 8px;">We can assist with:</p>
+                  <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:8px;">❓ Need Help Before Paying?</div>
+                  <p style="color:#6b7280;font-size:13px;margin:0 0 8px;">We can help with:</p>
                   <ul style="color:#374151;font-size:13px;margin:0;padding-left:20px;line-height:1.9;">
                     <li>Payment &amp; instalment options</li>
                     <li>Cancellation &amp; refund policy</li>
