@@ -1580,46 +1580,127 @@ Notifications
             </div>
         </div>
 
-        <!-- Right Column - Contact Landlord Card -->
+        <!-- Right Column - Booking Widget -->
         <aside class="booking-widget" style="max-width: 400px;">
-            <div class="contact-card" style="background: white; padding: 24px; border-radius: 12px;">
-                <h2 style="color: #0056b3; margin-top: 0; display: flex; align-items: center; gap: 10px; font-family: 'Poppins', sans-serif; font-size: 1.25rem;">
-                    <i class="fas fa-phone"></i> Contact the Landlord
-                </h2>
-                <p style="color: #6b7280; margin-bottom: 20px;">Get in touch directly or fill out the form below.</p>
-
-                <div class="direct-contact" style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb;">
-                    <p style="margin: 0 0 12px 0;"><strong>Call:</strong> +212 6 37 95 38 73</p>
-                    <a href="https://wa.me/212637953873" class="btn-whatsapp" style="display: flex; align-items: center; justify-content: center; padding: 12px 20px; border-radius: 8px; background-color: #25D366; color: white; text-decoration: none; font-weight: 600; gap: 8px;">
-                        <i class="fab fa-whatsapp"></i> Message on WhatsApp
-                    </a>
-                    <p style="font-size: 12px; color: #6b7280; font-style: italic; margin-top: 8px;">Available for quick chats and photos.</p>
+            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.07);">
+                <div style="font-size: 2rem; font-weight: 800; color: #00a8a8; font-family: 'Poppins', sans-serif; margin-bottom: 4px;">2,500 MAD / month</div>
+                <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 20px;">per month · utilities included</div>
+                <div style="display: inline-flex; align-items: center; gap: 6px; background: #ecfdf5; color: #065f46; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 20px;">
+                    <i class="fas fa-check-circle" style="color:#10b981;"></i> Verified Listing
                 </div>
-
-                <form id="landlord-contact-form" onsubmit="submitInquiry(event)">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Full Name</label>
-                        <input type="text" placeholder="Your Name" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                <button onclick="openEnquireModal()" style="display: flex; align-items: center; justify-content: center; width: 100%; padding: 14px 20px; border-radius: 10px; background: #00a8a8; color: white; border: none; cursor: pointer; font-size: 1.05rem; font-weight: 700; gap: 8px; font-family: 'Poppins', sans-serif; margin-bottom: 10px; transition: background 0.2s;" onmouseover="this.style.background='#007a7a'" onmouseout="this.style.background='#00a8a8'">
+                    <i class="fas fa-paper-plane"></i> Enquire Now
+                </button>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f3f4f6;">
+                    <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #374151;">
+                        <i class="fas fa-shield-alt" style="color:#00a8a8; width:18px;"></i> Verified property
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Phone Number</label>
-                        <input type="tel" placeholder="Your Phone Number" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                    <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #374151;">
+                        <i class="fas fa-headset" style="color:#00a8a8; width:18px;"></i> Direct landlord contact
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Email Address</label>
-                        <input type="email" placeholder="email@example.com" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit;">
+                    <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #374151;">
+                        <i class="fas fa-star" style="color:#00a8a8; width:18px;"></i> No agency fees
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333;">Message/Notes</label>
-                        <textarea placeholder="Hi! I'm interested in the property..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-family: inherit; height: 80px; resize: vertical;"></textarea>
-                    </div>
-                    <button type="submit" style="display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px 20px; border-radius: 8px; background-color: #0056b3; color: white; border: none; cursor: pointer; font-size: 16px; font-weight: 600; gap: 8px;">
-                        <i class="fas fa-paper-plane"></i> Submit Inquiry
-                    </button>
-                </form>
+                </div>
             </div>
         </aside>
     </div>
+    </div>
+
+    
+    <!-- Mobile Sticky CTA -->
+    <div class="mobile-cta-bar">
+        <div class="mobile-cta-price">
+            2,500 MAD / month<span>/month</span>
+        </div>
+        <button onclick="openEnquireModal()" class="mobile-cta-wa" style="background:#00a8a8; border:none; cursor:pointer; font-family:'Inter',sans-serif;">
+            <i class="fas fa-paper-plane"></i> Enquire Now
+        </button>
+    </div>
+
+    
+    <!-- ===== ENQUIRE NOW MODAL ===== -->
+    <div id="enquireModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:20000; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(4px);" onclick="if(event.target===this) closeEnquireModal()">
+        <div style="background:#fff; border-radius:16px; width:100%; max-width:860px; max-height:92vh; overflow-y:auto; position:relative; box-shadow:0 24px 60px rgba(0,0,0,0.25); display:flex; flex-direction:row; animation:slideUp 0.3s ease;">
+            <!-- Left: Form -->
+            <div style="flex:1; padding:32px 36px; min-width:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                    <h2 style="font-family:'Poppins',sans-serif; font-size:1.5rem; font-weight:700; color:#111827; margin:0;">Enquire Now</h2>
+                    <button onclick="closeEnquireModal()" style="background:none; border:none; font-size:1.4rem; color:#6b7280; cursor:pointer; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='none'">&times;</button>
+                </div>
+                <form id="enquire-form" onsubmit="submitEnquiry(event)">
+                    <div style="margin-bottom:18px; position:relative;">
+                        <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Your Full Name *</label>
+                        <input type="text" id="enq-name" placeholder="e.g. Fatima Zahra" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
+                    </div>
+                    <div style="margin-bottom:18px; position:relative;">
+                        <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Your Email Address *</label>
+                        <input type="email" id="enq-email" placeholder="you@example.com" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
+                    </div>
+                    <div style="display:flex; gap:10px; margin-bottom:18px;">
+                        <div style="position:relative; width:110px; flex-shrink:0;">
+                            <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Code *</label>
+                            <select id="enq-code" style="width:100%; padding:14px 10px; border:1px solid #d1d5db; border-radius:8px; font-size:0.95rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none; background:#fff;" onfocus="this.style.borderColor='#00a8a8'" onblur="this.style.borderColor='#d1d5db'">
+                                <option value="+212">+212 &#127474;&#127462;</option>
+                                <option value="+33">+33 &#127467;&#127479;</option>
+                                <option value="+1">+1 &#127482;&#127480;</option>
+                                <option value="+44">+44 &#127468;&#127463;</option>
+                                <option value="+34">+34 &#127466;&#127480;</option>
+                                <option value="+49">+49 &#127465;&#127466;</option>
+                                <option value="+966">+966 &#127480;&#127462;</option>
+                            </select>
+                        </div>
+                        <div style="flex:1; position:relative;">
+                            <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Your Mobile Number *</label>
+                            <input type="tel" id="enq-phone" placeholder="06 12 34 56 78" required style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none;" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'">
+                        </div>
+                    </div>
+                    <div style="margin-bottom:18px; position:relative;">
+                        <label style="position:absolute; top:-9px; left:12px; background:#fff; padding:0 4px; font-size:0.75rem; font-weight:600; color:#6b7280;">Got Questions?</label>
+                        <textarea id="enq-message" maxlength="150" placeholder="Hi, I'm interested in this room. Is it still available?" style="width:100%; padding:14px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem; font-family:'Inter',sans-serif; box-sizing:border-box; outline:none; resize:none; height:90px;" oninput="document.getElementById('enq-charcount').textContent=this.value.length+'/150 characters'" onfocus="this.style.borderColor='#00a8a8';this.style.boxShadow='0 0 0 3px rgba(0,168,168,0.1)'" onblur="this.style.borderColor='#d1d5db';this.style.boxShadow='none'"></textarea>
+                        <div id="enq-charcount" style="text-align:right; font-size:0.75rem; color:#9ca3af; margin-top:4px;">0/150 characters</div>
+                    </div>
+                    <div style="margin-bottom:22px;">
+                        <div style="font-size:0.85rem; font-weight:600; color:#374151; margin-bottom:10px;">Best Way To Reach You</div>
+                        <div style="display:flex; gap:10px;">
+                            <label style="flex:1; display:flex; align-items:center; gap:8px; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:0.9rem; color:#374151;" onmouseover="this.style.borderColor='#00a8a8'" onmouseout="if(!this.querySelector('input').checked)this.style.borderColor='#d1d5db'">
+                                <input type="checkbox" id="reach-wa" style="accent-color:#00a8a8; width:15px; height:15px;"> WhatsApp
+                            </label>
+                            <label style="flex:1; display:flex; align-items:center; gap:8px; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:0.9rem; color:#374151;" onmouseover="this.style.borderColor='#00a8a8'" onmouseout="if(!this.querySelector('input').checked)this.style.borderColor='#d1d5db'">
+                                <input type="checkbox" id="reach-email" style="accent-color:#00a8a8; width:15px; height:15px;"> Email
+                            </label>
+                            <label style="flex:1; display:flex; align-items:center; gap:8px; border:1px solid #d1d5db; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:0.9rem; color:#374151;" onmouseover="this.style.borderColor='#00a8a8'" onmouseout="if(!this.querySelector('input').checked)this.style.borderColor='#d1d5db'">
+                                <input type="checkbox" id="reach-call" style="accent-color:#00a8a8; width:15px; height:15px;"> Call
+                            </label>
+                        </div>
+                    </div>
+                    <p style="font-size:0.8rem; color:#6b7280; margin-bottom:18px;">I agree with the <a href="#" style="color:#00a8a8; text-decoration:underline;">terms</a> and <a href="#" style="color:#00a8a8; text-decoration:underline;">privacy policy</a> of RoastMyDorm.</p>
+                    <button type="submit" style="width:100%; padding:15px; background:#00a8a8; color:white; border:none; border-radius:10px; font-size:1.05rem; font-weight:700; cursor:pointer; font-family:'Poppins',sans-serif;" onmouseover="this.style.background='#007a7a'" onmouseout="this.style.background='#00a8a8'">Submit</button>
+                </form>
+            </div>
+            <!-- Right: Property Card -->
+            <div style="width:280px; flex-shrink:0; background:#f9fafb; border-left:1px solid #e5e7eb; border-radius:0 16px 16px 0; padding:32px 24px; display:flex; flex-direction:column; gap:20px;">
+                <div style="border-radius:12px; overflow:hidden; border:1px solid #e5e7eb;">
+                    <div style="height:160px; background:linear-gradient(135deg,#00a8a8,#007a7a); display:flex; align-items:center; justify-content:center;">
+                        <i class="fas fa-home" style="font-size:3rem; color:rgba(255,255,255,0.6);"></i>
+                    </div>
+                    <div style="padding:14px 16px; background:#fff;">
+                        <div style="font-weight:700; font-size:0.97rem; color:#111827; margin-bottom:4px;">Girl Roommate Wanted — Laimoun Florida</div>
+                        <div style="font-size:0.82rem; color:#00a8a8; margin-bottom:10px;">Laimoun Florida, Casablanca</div>
+                        <div style="font-size:0.78rem; color:#6b7280; font-weight:500; margin-bottom:2px;">Rent</div>
+                        <div style="font-size:1rem; font-weight:700; color:#111827;">2,500 MAD / month</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:13px;">
+                    <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color:#374151;"><i class="fas fa-tag" style="color:#00a8a8; width:18px;"></i><span style="font-weight:600; color:#00a8a8;">No Agency Fees</span></div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color:#374151;"><i class="fas fa-shield-alt" style="color:#00a8a8; width:18px;"></i><span>Verified Property</span></div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color:#374151;"><i class="fas fa-headset" style="color:#00a8a8; width:18px;"></i><span>Direct Landlord Contact</span></div>
+                    <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color:#374151;"><i class="fas fa-star" style="color:#00a8a8; width:18px;"></i><span>100+ Student Reviews</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ===== END ENQUIRE MODAL ===== -->
 
     <!-- Sign-In Modal -->
     <div id="signInModal" class="signin-modal" onclick="if(event.target.id === 'signInModal') closeSignInModal();">
@@ -2392,13 +2473,88 @@ Notifications
         }
         function submitInquiry(event) {
             event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            
-            // Show success message
-            alert('Thank you for your inquiry! The landlord will contact you shortly.');
-            form.reset();
+            openEnquireModal();
         }
+
+                /* ---- Enquire Now ---- */
+        const LISTING = {
+            name: 'Girl Roommate Wanted — Laimoun Florida',
+            location: 'Laimoun Florida, Casablanca',
+            type: 'Shared Room',
+            rent: '2,500 MAD / month',
+            lease: '6 or 12 months',
+            moveIn: 'Contact landlord',
+            url: 'https://www.roastmydorm.com/Quartier-laimoun.html'
+        };
+        const API_BASE = (function(){
+            const h = window.location.hostname;
+            return (h === 'localhost' || h === '127.0.0.1' || h === '')
+                ? 'http://localhost:5000/api'
+                : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+        })();
+
+        function openEnquireModal() {
+            const m = document.getElementById('enquireModal');
+            m.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeEnquireModal() {
+            document.getElementById('enquireModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        async function submitEnquiry(event) {
+            event.preventDefault();
+            const name  = document.getElementById('enq-name').value.trim();
+            const email = document.getElementById('enq-email').value.trim();
+            const code  = document.getElementById('enq-code').value;
+            const phone = document.getElementById('enq-phone').value.trim();
+            const msg   = document.getElementById('enq-message').value.trim();
+            const reach = ['wa','email','call'].filter(k => document.getElementById('reach-'+k).checked).join(', ') || '—';
+            if (!name || !email || !phone) { alert('Please fill in Name, Email and Phone.'); return; }
+            const btn = event.target.querySelector('button[type="submit"]');
+            btn.textContent = 'Sending…'; btn.disabled = true;
+            try {
+                await fetch(API_BASE + '/enquiries/confirm', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ clientName:name, clientEmail:email, clientPhone:phone, countryCode:code, message:msg, preferredContact:reach, listing:LISTING })
+                });
+            } catch(e) {}
+            const fullPhone = (code + phone.replace(/^0/,'')).replace(/\s/g,'');
+            const waText = encodeURIComponent(
+                'Hey ' + name + '! 🎉\n\n' +
+                'Great news, your enquiry for *' + LISTING.name + '* has been received!\n\n' +
+                '🏠 *Tenancy Details*\n' +
+                '*Type:* ' + LISTING.type + '\n' +
+                '*Rent:* ' + LISTING.rent + '\n' +
+                '*Lease Duration:* ' + LISTING.lease + '\n' +
+                '*Move-in Date:* ' + LISTING.moveIn + '\n\n' +
+                '🚀 *Next Step: Complete Your Booking*\n' +
+                'Finish the booking form to secure your room 👇\n' +
+                '👉 ' + LISTING.url + '\n\n' +
+                '_⏳ Rooms at *Laimoun Florida* are in high demand — completing now helps avoid availability issues._\n\n' +
+                '❓ *Need Help Before Paying?*\n' +
+                'We can help with:\n' +
+                ' - Payment & instalment options\n' +
+                ' - Cancellation & refund policy\n' +
+                ' - Document requirements\n\n' +
+                'Just *reply to this message* and our team will assist you 😊'
+            );
+            document.getElementById('enquire-form').innerHTML =
+                '<div style="text-align:center;padding:32px 12px 24px;">' +
+                '<div style="width:68px;height:68px;background:#ecfdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;"><i class="fas fa-check" style="color:#10b981;font-size:1.7rem;"></i></div>' +
+                '<h3 style="font-family:Poppins,sans-serif;font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 10px;">Enquiry Sent! 🎉</h3>' +
+                '<p style="color:#6b7280;font-size:0.93rem;margin:0 0 6px;">A confirmation has been sent to <strong>' + email + '</strong>.</p>' +
+                '<p style="color:#6b7280;font-size:0.88rem;margin:0 0 24px;">Our team will contact you via <strong>' + reach + '</strong> shortly.</p>' +
+                '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">' +
+                '<a href="https://wa.me/' + fullPhone + '?text=' + '" + waText + "' + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.93rem;"><i class=\"fab fa-whatsapp\"></i> Save on WhatsApp</a>' +
+                '<button onclick="closeEnquireModal()" style="display:inline-flex;align-items:center;gap:8px;background:#f3f4f6;color:#374151;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:0.93rem;">Close</button>' +
+                '</div>' +
+                '<p style="color:#9ca3af;font-size:0.75rem;margin-top:12px;">Opens a pre-filled message you can save or forward.</p>' +
+                '</div>';
+        }
+        document.addEventListener('keydown', function(e){
+            if(e.key==='Escape' && document.getElementById('enquireModal') && document.getElementById('enquireModal').style.display==='flex') closeEnquireModal();
+        });
         
         function openFullMap() {
             const address = encodeURIComponent('Laymouna Florida , Casablanca , Morocco');
@@ -2428,7 +2584,6 @@ Notifications
             }
         });
     </script>
-<script id="wa-msg-script">document.querySelectorAll("a.btn-whatsapp").forEach(function(a){var n=a.href.replace("https://wa.me/","").split("?")[0];a.href="https://wa.me/"+n+"?text="+encodeURIComponent("Hello, I would like to have more information about this property: *"+window.location.href+"*");});</script>
 </body>
 </html>
 

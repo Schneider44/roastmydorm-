@@ -2051,6 +2051,85 @@
                 .bindPopup('Shared Studio - Bourgone')
                 .openPopup();
         });
-    </script>
+                    /* ---- Enquire Now ---- */
+        const LISTING = {
+            name: 'Shared Studio — Bourgone',
+            location: 'Bourgone, Casablanca',
+            type: 'Studio',
+            rent: '2,500 MAD / month',
+            lease: '6 or 12 months',
+            moveIn: 'Contact landlord',
+            url: 'https://www.roastmydorm.com/shared-studio-bourgone.html'
+        };
+        const API_BASE = (function(){
+            const h = window.location.hostname;
+            return (h === 'localhost' || h === '127.0.0.1' || h === '')
+                ? 'http://localhost:5000/api'
+                : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+        })();
+
+        function openEnquireModal() {
+            const m = document.getElementById('enquireModal');
+            m.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeEnquireModal() {
+            document.getElementById('enquireModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+        async function submitEnquiry(event) {
+            event.preventDefault();
+            const name  = document.getElementById('enq-name').value.trim();
+            const email = document.getElementById('enq-email').value.trim();
+            const code  = document.getElementById('enq-code').value;
+            const phone = document.getElementById('enq-phone').value.trim();
+            const msg   = document.getElementById('enq-message').value.trim();
+            const reach = ['wa','email','call'].filter(k => document.getElementById('reach-'+k).checked).join(', ') || '—';
+            if (!name || !email || !phone) { alert('Please fill in Name, Email and Phone.'); return; }
+            const btn = event.target.querySelector('button[type="submit"]');
+            btn.textContent = 'Sending…'; btn.disabled = true;
+            try {
+                await fetch(API_BASE + '/enquiries/confirm', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ clientName:name, clientEmail:email, clientPhone:phone, countryCode:code, message:msg, preferredContact:reach, listing:LISTING })
+                });
+            } catch(e) {}
+            const fullPhone = (code + phone.replace(/^0/,'')).replace(/\s/g,'');
+            const waText = encodeURIComponent(
+                'Hey ' + name + '! 🎉\n\n' +
+                'Great news, your enquiry for *' + LISTING.name + '* has been received!\n\n' +
+                '🏠 *Tenancy Details*\n' +
+                '*Type:* ' + LISTING.type + '\n' +
+                '*Rent:* ' + LISTING.rent + '\n' +
+                '*Lease Duration:* ' + LISTING.lease + '\n' +
+                '*Move-in Date:* ' + LISTING.moveIn + '\n\n' +
+                '🚀 *Next Step: Complete Your Booking*\n' +
+                'Finish the booking form to secure your room 👇\n' +
+                '👉 ' + LISTING.url + '\n\n' +
+                '_⏳ Rooms at *Bourgone* are in high demand — completing now helps avoid availability issues._\n\n' +
+                '❓ *Need Help Before Paying?*\n' +
+                'We can help with:\n' +
+                ' - Payment & instalment options\n' +
+                ' - Cancellation & refund policy\n' +
+                ' - Document requirements\n\n' +
+                'Just *reply to this message* and our team will assist you 😊'
+            );
+            document.getElementById('enquire-form').innerHTML =
+                '<div style="text-align:center;padding:32px 12px 24px;">' +
+                '<div style="width:68px;height:68px;background:#ecfdf5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;"><i class="fas fa-check" style="color:#10b981;font-size:1.7rem;"></i></div>' +
+                '<h3 style="font-family:Poppins,sans-serif;font-size:1.25rem;font-weight:700;color:#111827;margin:0 0 10px;">Enquiry Sent! 🎉</h3>' +
+                '<p style="color:#6b7280;font-size:0.93rem;margin:0 0 6px;">A confirmation has been sent to <strong>' + email + '</strong>.</p>' +
+                '<p style="color:#6b7280;font-size:0.88rem;margin:0 0 24px;">Our team will contact you via <strong>' + reach + '</strong> shortly.</p>' +
+                '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">' +
+                '<a href="https://wa.me/' + fullPhone + '?text=' + '" + waText + "' + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:0.93rem;"><i class=\"fab fa-whatsapp\"></i> Save on WhatsApp</a>' +
+                '<button onclick="closeEnquireModal()" style="display:inline-flex;align-items:center;gap:8px;background:#f3f4f6;color:#374151;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;font-weight:600;font-size:0.93rem;">Close</button>' +
+                '</div>' +
+                '<p style="color:#9ca3af;font-size:0.75rem;margin-top:12px;">Opens a pre-filled message you can save or forward.</p>' +
+                '</div>';
+        }
+        document.addEventListener('keydown', function(e){
+            if(e.key==='Escape' && document.getElementById('enquireModal') && document.getElementById('enquireModal').style.display==='flex') closeEnquireModal();
+        });
+</script>
 </body>
 </html>
