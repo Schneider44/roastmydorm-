@@ -127,6 +127,8 @@ const allowedOrigins = [
   'https://roastmydorm.com',
   'http://www.roastmydorm.com',
   'http://roastmydorm.com',
+  'https://roastmydorm-frontend.vercel.app',
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   ...(process.env.NODE_ENV !== 'production' ? [
     'http://localhost:5173',
     'http://localhost:3000',
