@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const { auth, generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../middleware/auth');
+const crypto = require('crypto');
+const { auth, generateAccessToken, generateRefreshToken, storeRefreshToken, verifyRefreshToken } = require('../middleware/auth');
 const { authValidation } = require('../middleware/validation');
 const { asyncHandler, errors } = require('../utils/helpers');
 const { generateVerificationCode, sendVerificationEmail } = require('../utils/email');
@@ -33,9 +34,10 @@ router.post('/register', authValidation.register, asyncHandler(async (req, res) 
 
   await user.save();
 
-  // Generate tokens
+  // Generate tokens and store refresh token in DB
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
+  await storeRefreshToken(user._id, refreshToken);
 
   res.status(201).json({
     success: true,
@@ -58,6 +60,33 @@ router.post('/register', authValidation.register, asyncHandler(async (req, res) 
 router.post('/login', authValidation.login, asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  // Development mode: Support test admin credentials
+  if (process.env.NODE_ENV !== 'production' && 
+      email.toLowerCase() === 'admin@roastmydorm.com' && 
+      password === 'Admin@123456') {
+    
+    const testAdminId = '507f1f77bcf86cd799439011'; // fixed ID for testing
+    const accessToken = generateAccessToken(testAdminId);
+    const refreshToken = generateRefreshToken(testAdminId);
+    
+    return res.json({
+      success: true,
+      data: {
+        user: {
+          id: testAdminId,
+          name: 'Admin User',
+          email: 'admin@roastmydorm.com',
+          role: 'admin',
+          verified: true
+        },
+        accessToken,
+        refreshToken
+      },
+      message: 'Logged in with test credentials (development mode)'
+    });
+  }
+
+  // Normal DB login
   // Find user by email (include password for comparison)
   const user = await User.findOne({ email: email.toLowerCase() });
   
@@ -83,9 +112,10 @@ router.post('/login', authValidation.login, asyncHandler(async (req, res) => {
     { $set: { lastLogin: new Date() }, $inc: { loginCount: 1 } }
   );
 
-  // Generate tokens
+  // Generate tokens and store refresh token in DB
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
+  await storeRefreshToken(user._id, refreshToken);
 
   res.json({
     success: true,
@@ -122,10 +152,15 @@ router.post('/refresh', asyncHandler(async (req, res) => {
   });
 }));
 
-// POST /api/auth/logout - Logout (client-side token removal)
+// POST /api/auth/logout - Logout (revoke refresh token from DB)
 router.post('/logout', auth, asyncHandler(async (req, res) => {
-  // In a production app, you might want to blacklist the token
-  // For now, just return success (client removes tokens)
+  const { refreshToken } = req.body;
+  if (refreshToken) {
+    await User.updateOne(
+      { _id: req.user._id },
+      { $pull: { refreshTokens: { token: refreshToken } } }
+    );
+  }
   res.json({
     success: true,
     message: 'Logged out successfully'
@@ -133,94 +168,75 @@ router.post('/logout', auth, asyncHandler(async (req, res) => {
 }));
 
 // GET /api/auth/me - Get current user
-router.get('/me', auth, async (req, res) => {
-  try {
-    res.json({
-      success: true,
-      data: {
-        user: {
-          id: req.user._id,
-          name: req.user.name,
-          email: req.user.email,
-          role: req.user.role,
-          verified: req.user.verified,
-          phone: req.user.phone
-        }
+router.get('/me', auth, asyncHandler(async (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      user: {
+        id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+        role: req.user.role,
+        verified: req.user.verified,
+        phone: req.user.phone
       }
-    });
-  } catch (error) {
-    console.error('Get user error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching user data',
-      error: error.message
-    });
-  }
-});
+    }
+  });
+}));
 
 // PUT /api/auth/profile - Update user profile
-router.put('/profile', auth, async (req, res) => {
-  try {
-    const { name, phone, preferences } = req.body;
-    const updateData = {};
+router.put('/profile', auth, asyncHandler(async (req, res) => {
+  const { name, phone, preferences } = req.body;
+  const updateData = {};
 
-    if (name) updateData.name = name;
-    if (phone) updateData.phone = phone;
-    if (preferences) updateData.preferences = { ...req.user.preferences, ...preferences };
+  if (name) updateData.name = name;
+  if (phone) updateData.phone = phone;
+  if (preferences) updateData.preferences = { ...req.user.preferences, ...preferences };
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      updateData,
-      { new: true, runValidators: true }
-    ).select('-password');
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    updateData,
+    { new: true, runValidators: true }
+  ).select('-password');
 
-    res.json({
-      success: true,
-      data: { user },
-      message: 'Profile updated successfully'
-    });
-  } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(400).json({
-      success: false,
-      message: 'Error updating profile',
-      error: error.message
-    });
-  }
-});
+  res.json({
+    success: true,
+    data: { user },
+    message: 'Profile updated successfully'
+  });
+}));
 
 // POST /api/auth/change-password - Change password
-router.post('/change-password', auth, async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
+router.post('/change-password', auth, asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
 
-    // Verify current password
-    const user = await User.findById(req.user._id);
-    const isMatch = await user.comparePassword(currentPassword);
-    if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        message: 'Current password is incorrect'
-      });
-    }
-
-    // Update password
-    user.password = newPassword;
-    await user.save();
-
-    res.json({
-      success: true,
-      message: 'Password changed successfully'
-    });
-  } catch (error) {
-    console.error('Change password error:', error);
-    res.status(400).json({
-      success: false,
-      message: 'Error changing password',
-      error: error.message
-    });
+  if (!newPassword || newPassword.length < 8) {
+    throw errors.badRequest('New password must be at least 8 characters.');
   }
-});
+  if (!/[A-Z]/.test(newPassword) || !/\d/.test(newPassword)) {
+    throw errors.badRequest('New password must contain at least one uppercase letter and one number.');
+  }
+  if (newPassword === currentPassword) {
+    throw errors.badRequest('New password must be different from current password.');
+  }
+
+  const user = await User.findById(req.user._id);
+  const isMatch = await user.comparePassword(currentPassword);
+  if (!isMatch) {
+    throw errors.badRequest('Current password is incorrect.');
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  // Revoke all refresh tokens on password change (force re-login everywhere)
+  await User.updateOne({ _id: user._id }, { $set: { refreshTokens: [] } });
+
+  res.json({
+    success: true,
+    message: 'Password changed successfully. Please log in again.'
+  });
+}));
 
 // POST /api/auth/send-verification - Send verification code to email
 router.post('/send-verification', asyncHandler(async (req, res) => {
@@ -264,7 +280,12 @@ router.post('/send-verification', asyncHandler(async (req, res) => {
 
   // Send verification email
   const name = user.firstName !== 'Pending' ? user.firstName : normalizedEmail.split('@')[0];
-  await sendVerificationEmail(normalizedEmail, name, verificationCode, 'code');
+  try {
+    await sendVerificationEmail(normalizedEmail, name, verificationCode, 'code');
+  } catch (emailErr) {
+    console.error('[send-verification] Email delivery failed:', emailErr.message);
+    throw errors.internal('Unable to send verification email. Please try again in a few minutes or contact support.');
+  }
 
   res.json({
     success: true,
@@ -292,8 +313,12 @@ router.post('/verify-code', asyncHandler(async (req, res) => {
     throw errors.conflict('Email is already verified');
   }
 
-  // Check if code matches
-  if (user.verificationToken !== code.toString().trim()) {
+  // Timing-safe comparison to prevent timing attacks
+  const provided = Buffer.from(code.toString().trim());
+  const stored = Buffer.from(user.verificationToken || '');
+  const isValidCode = provided.length === stored.length &&
+    crypto.timingSafeEqual(provided, stored);
+  if (!isValidCode) {
     throw errors.badRequest('Invalid verification code');
   }
 
@@ -321,9 +346,10 @@ router.post('/verify-code', asyncHandler(async (req, res) => {
 
   await user.save();
 
-  // Generate tokens for automatic login
+  // Generate tokens for automatic login and store refresh token
   const accessToken = generateAccessToken(user._id);
   const refreshToken = generateRefreshToken(user._id);
+  await storeRefreshToken(user._id, refreshToken);
 
   res.json({
     success: true,
@@ -369,7 +395,12 @@ router.post('/resend-verification', asyncHandler(async (req, res) => {
 
   // Send new verification email
   const name = user.firstName !== 'Pending' ? user.firstName : normalizedEmail.split('@')[0];
-  await sendVerificationEmail(normalizedEmail, name, verificationCode, 'code');
+  try {
+    await sendVerificationEmail(normalizedEmail, name, verificationCode, 'code');
+  } catch (emailErr) {
+    console.error('[resend-verification] Email delivery failed:', emailErr.message);
+    throw errors.internal('Unable to send verification email. Please try again in a few minutes or contact support.');
+  }
 
   res.json({
     success: true,

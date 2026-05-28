@@ -1,18 +1,47 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const hpp = require('hpp');
+// ── Diagnostic step-logger (uses only Node.js built-ins, always safe) ──────────
+const fs   = require('fs');
 const path = require('path');
+const _LOG = path.join(__dirname, 'uploads', 'startup-error.txt');
+function _step(msg) {
+  const line = `${new Date().toISOString()} ${msg}\n`;
+  process.stdout.write(line);
+  try { fs.mkdirSync(path.dirname(_LOG), { recursive: true }); fs.appendFileSync(_LOG, line); } catch (_) {}
+}
+_step(`BOOT node=${process.version} pid=${process.pid}`);
 
-require('dotenv').config();
+const express = require('express');        _step('express OK');
+const mongoose = require('mongoose');      _step('mongoose OK');
+const cors = require('cors');              _step('cors OK');
+const helmet = require('helmet');          _step('helmet OK');
+const compression = require('compression'); _step('compression OK');
+const morgan = require('morgan');          _step('morgan OK');
+const rateLimit = require('express-rate-limit'); _step('rate-limit OK');
+const mongoSanitize = require('express-mongo-sanitize'); _step('mongo-sanitize OK');
+const xss = require('xss-clean');          _step('xss-clean OK');
+const hpp = require('hpp');                _step('hpp OK');
+
+require('dotenv').config();               _step('dotenv OK');
 
 const app = express();
+
+// Log startup errors to uploads/startup-error.txt for remote diagnosis via HTTP
+function _logStartupError(label, err) {
+  try {
+    fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
+    fs.appendFileSync(
+      path.join(__dirname, 'uploads', 'startup-error.txt'),
+      `${new Date().toISOString()} [${label}] ${err.message}\n${err.stack || ''}\n---\n`
+    );
+  } catch (_) {}
+}
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  _logStartupError('uncaughtException', error);
+});
+
+// Trust Hostinger's nginx reverse proxy (fixes X-Forwarded-For / rate-limit validation)
+app.set('trust proxy', 1);
 
 // Serve uploads statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -131,12 +160,17 @@ app.use(cors({
 // ============================================
 
 // Stripe webhook MUST receive raw body for signature verification — mount BEFORE express.json
-const { webhookHandler: stripeWebhookHandler } = require('./routes/stripe');
-app.post(
-  '/api/stripe/webhook',
-  express.raw({ type: 'application/json', limit: '1mb' }),
-  stripeWebhookHandler
-);
+try {
+  const { webhookHandler: stripeWebhookHandler } = require('./routes/stripe');
+  app.post(
+    '/api/stripe/webhook',
+    express.raw({ type: 'application/json', limit: '1mb' }),
+    stripeWebhookHandler
+  );
+} catch (e) {
+  console.error('[startup] Failed to load stripe webhook:', e.message);
+  _logStartupError('stripe', e);
+}
 
 // Body parsing with size limits (100kb for JSON API, 10mb only for file upload routes)
 app.use(express.json({
@@ -282,28 +316,51 @@ app.use('/api', async (req, res, next) => {
 // ROUTES
 // ============================================
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/enquiries', require('./routes/enquiries'));
-app.use('/api/dorms', require('./routes/dorms'));
-app.use('/api/reviews', require('./routes/reviews'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/messages', require('./routes/messages'));
-app.use('/api/analytics', require('./routes/analytics'));
-app.use('/api/roommate', require('./routes/roommate'));
-app.use('/api/blog', require('./routes/blog'));
-app.use('/api/questions', require('./routes/questions'));
-app.use('/api/badges', require('./routes/badges'));
-app.use('/api/seo', require('./routes/seo'));
-app.use('/api/verification', require('./routes/verification'));
+function safeRoute(path, modulePath) {
+  try {
+    app.use(path, require(modulePath));
+  } catch (e) {
+    console.error(`[startup] Failed to load route ${modulePath}:`, e.message);
+    _logStartupError(modulePath, e);
+    app.use(path, (req, res) => res.status(503).json({ success: false, message: `Route temporarily unavailable: ${path}` }));
+  }
+}
+
+safeRoute('/api/auth', './routes/auth');
+safeRoute('/api/auth', './routes/googleAuth');
+safeRoute('/api/enquiries', './routes/enquiries');
+safeRoute('/api/inquiries', './routes/inquiries');
+
+// WhatsApp webhook (verify + receive)
+try {
+  const { webhookVerify, webhookReceive } = require('./services/whatsapp');
+  app.get('/api/webhooks/whatsapp',  webhookVerify);
+  app.post('/api/webhooks/whatsapp', express.json(), webhookReceive);
+} catch (e) {
+  console.error('[startup] Failed to load whatsapp service:', e.message);
+  _logStartupError('whatsapp', e);
+}
+
+safeRoute('/api/dorms', './routes/dorms');
+safeRoute('/api/reviews', './routes/reviews');
+safeRoute('/api/users', './routes/users');
+safeRoute('/api/messages', './routes/messages');
+safeRoute('/api/analytics', './routes/analytics');
+safeRoute('/api/roommate', './routes/roommate');
+safeRoute('/api/blog', './routes/blog');
+safeRoute('/api/questions', './routes/questions');
+safeRoute('/api/badges', './routes/badges');
+safeRoute('/api/seo', './routes/seo');
+safeRoute('/api/verification', './routes/verification');
 
 // Property Submission Routes (landlords)
-app.use('/api/property-requests', require('./routes/propertyRequests'));
+safeRoute('/api/property-requests', './routes/propertyRequests');
 
 // Stripe subscription routes (checkout, status, cancel, billing portal)
-app.use('/api/stripe', require('./routes/stripe'));
+safeRoute('/api/stripe', './routes/stripe');
 
 // Admin Dashboard Routes (full suite: dorms, users, reviews, analytics, etc.)
-app.use('/api/admin', require('./routes/admin/index'));
+safeRoute('/api/admin', './routes/admin/index');
 
 // SEO Routes - Serve at root level for search engines
 app.get('/sitemap.xml', (req, res) => {
@@ -349,17 +406,15 @@ app.get('/api/health', async (req, res) => {
 // STATIC FILES (Production)
 // ============================================
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-
-  app.get('*', (req, res, next) => {
-    // Skip API routes
-    if (req.path.startsWith('/api')) {
-      return next();
-    }
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+// Serve frontend static files from Hostinger's public_html (one level up from nodejs/)
+const frontendPath = path.join(__dirname, '..', 'public_html');
+app.use(express.static(frontendPath));
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
+    if (err) next();
   });
-}
+});
 
 // ============================================
 // ERROR HANDLING

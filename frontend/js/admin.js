@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RoastMyDorm Admin Dashboard JavaScript
  * Handles all admin dashboard functionality including:
  * - Authentication & session management
@@ -15,7 +15,7 @@
 const hostname = window.location.hostname;
 const API_BASE_URL = ['localhost', '127.0.0.1'].includes(hostname)
   ? 'http://localhost:5000/api'
-  : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+  : 'https://www.roastmydorm.com/api';
 
 // Warn if opened as a local file (file:// protocol — CORS will block API calls)
 if (hostname === '') {

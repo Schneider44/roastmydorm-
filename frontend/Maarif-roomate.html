@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2548,7 +2548,7 @@
             const h = window.location.hostname;
             return (h === 'localhost' || h === '127.0.0.1' || h === '')
                 ? 'http://localhost:5000/api'
-                : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+                : 'https://www.roastmydorm.com/api';
         })();
 
         function openEnquireModal() {
@@ -2572,9 +2572,20 @@
             const btn = event.target.querySelector('button[type="submit"]');
             btn.textContent = 'Sending…'; btn.disabled = true;
             try {
-                await fetch(API_BASE + '/enquiries/confirm', {
+                await fetch(API_BASE + '/inquiries', {
                     method: 'POST', headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({ clientName:name, clientEmail:email, clientPhone:phone, countryCode:code, message:msg, preferredContact:reach, listing:LISTING })
+                    body: JSON.stringify({
+                        fullName: name, email: email,
+                        phone: phone, countryCode: code,
+                        message: msg,
+                        preferredContact: ['wa','email','call'].filter(k => document.getElementById('reach-'+k).checked).map(k => k === 'wa' ? 'whatsapp' : k),
+                        studioId: LISTING.url.split('/').pop(),
+                        studioTitle: LISTING.name,
+                        studioLocation: LISTING.location,
+                        studioType: LISTING.type,
+                        studioRent: LISTING.rent,
+                        studioUrl: LISTING.url
+                    })
                 });
             } catch(e) {}
             const fullPhone = (code + phone.replace(/^0/,'')).replace(/\s/g,'');

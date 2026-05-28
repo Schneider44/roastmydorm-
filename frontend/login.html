@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — RoastMyDorm</title>
+  <meta name="description" content="Sign in to RoastMyDorm to find student housing in Morocco.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #f0fdfd 0%, #e6fafa 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,168,168,0.12);
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      color: #00a8a8;
+      margin-bottom: 4px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .tagline {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    /* Google button container */
+    #google-signin-btn {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+      min-height: 44px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e5e7eb;
+    }
+    .divider span { color: #9ca3af; font-size: 13px; }
+
+    /* Email sign-in form */
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: #00a8a8; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: #00a8a8;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 16px;
+    }
+    .btn-primary:hover { background: #007a7a; }
+    .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    .switch-link {
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .switch-link a { color: #00a8a8; text-decoration: none; font-weight: 600; }
+
+    .error-msg {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      color: #dc2626;
+      font-size: 13px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-msg {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      color: #16a34a;
+      font-size: 13px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .tab {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab.active {
+      background: #fff;
+      color: #00a8a8;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .footer-note {
+      margin-top: 28px;
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+    }
+    .footer-note a { color: #6b7280; }
+
+    @media (max-width: 480px) {
+      .card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <a href="/" class="logo">🏠 RoastMyDorm</a>
+  <p class="tagline">Student housing in Morocco</p>
+
+  <h1>Welcome back</h1>
+  <p class="subtitle">Sign in to save listings, write reviews, and find roommates.</p>
+
+  <!-- Google One Tap / Sign In With Google button -->
+  <div id="google-signin-btn"></div>
+
+  <div class="divider"><span>or continue with email</span></div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('login')">Sign In</button>
+    <button class="tab" onclick="switchTab('register')">Create Account</button>
+  </div>
+
+  <div id="error-msg" class="error-msg"></div>
+  <div id="success-msg" class="success-msg"></div>
+
+  <!-- Login Tab -->
+  <div id="tab-login" class="tab-panel active">
+    <form id="login-form" onsubmit="submitLogin(event)">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-primary" id="login-btn">Sign In</button>
+    </form>
+    <p class="switch-link">Don't have an account? <a href="#" onclick="switchTab('register')">Create one</a></p>
+  </div>
+
+  <!-- Register Tab -->
+  <div id="tab-register" class="tab-panel">
+    <form id="register-form" onsubmit="submitRegister(event)">
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input type="text" id="reg-name" placeholder="Your name" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" placeholder="Min 8 characters" required autocomplete="new-password" minlength="8">
+      </div>
+      <button type="submit" class="btn-primary" id="register-btn">Create Account</button>
+    </form>
+    <p class="switch-link">Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a></p>
+  </div>
+
+  <p class="footer-note">
+    By continuing, you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.
+  </p>
+</div>
+
+<script>
+  // Set your Google Client ID here (or load from meta tag)
+  window.GOOGLE_CLIENT_ID = ''; // ← filled in by server or meta tag
+
+  const API_BASE = (
+    ['localhost','127.0.0.1',''].includes(location.hostname)
+    ? 'http://localhost:5000/api'
+    : 'https://www.roastmydorm.com/api'
+  );
+
+  // Redirect if already logged in
+  const session = (() => { try { return JSON.parse(localStorage.getItem('rmd_session')); } catch { return null; } })();
+  if (session?.accessToken) {
+    const redirect = new URLSearchParams(location.search).get('redirect') || '/';
+    window.location.href = redirect;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('success-msg').style.display = 'none';
+  }
+
+  function showSuccess(msg) {
+    const el = document.getElementById('success-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+  }
+
+  function clearMessages() {
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'none';
+  }
+
+  function setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = loading;
+    btn.innerHTML = loading
+      ? '<span class="spinner"></span>Please wait...'
+      : (btnId === 'login-btn' ? 'Sign In' : 'Create Account');
+  }
+
+  function switchTab(tab) {
+    clearMessages();
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0 ? 'login' : 'register') === tab));
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  }
+
+  function saveAndRedirect(data) {
+    localStorage.setItem('rmd_session', JSON.stringify({
+      user: data.user,
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken
+    }));
+    const redirect = new URLSearchParams(location.search).get('redirect') || '/';
+    window.location.href = redirect;
+  }
+
+  async function submitLogin(e) {
+    e.preventDefault();
+    clearMessages();
+    setLoading('login-btn', true);
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('login-email').value.trim(),
+          password: document.getElementById('login-password').value
+        })
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+      saveAndRedirect(data.data);
+    } catch (err) {
+      showError(err.message || 'Sign in failed. Please try again.');
+    } finally {
+      setLoading('login-btn', false);
+    }
+  }
+
+  async function submitRegister(e) {
+    e.preventDefault();
+    clearMessages();
+    setLoading('register-btn', true);
+    try {
+      const res = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('reg-name').value.trim(),
+          email: document.getElementById('reg-email').value.trim(),
+          password: document.getElementById('reg-password').value
+        })
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+      saveAndRedirect(data.data);
+    } catch (err) {
+      showError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading('register-btn', false);
+    }
+  }
+</script>
+
+<!-- Load Google Auth library (handles One Tap) -->
+<script src="/js/google-auth.js"></script>
+<script>
+  if (window.GOOGLE_CLIENT_ID) {
+    GoogleAuth.init({
+      clientId: window.GOOGLE_CLIENT_ID,
+      onSuccess: (user) => {
+        showSuccess(`Welcome, ${user.name}! Redirecting...`);
+        setTimeout(() => {
+          const redirect = new URLSearchParams(location.search).get('redirect') || '/';
+          window.location.href = redirect;
+        }, 800);
+      },
+      onError: (msg) => showError(msg)
+    });
+  }
+</script>
+
+</body>
+</html>

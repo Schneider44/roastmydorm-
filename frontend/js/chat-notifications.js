@@ -1,4 +1,4 @@
-/**
+﻿/**
  * chat-notifications.js
  * Include this script on any page to show unread message badges + browser notifications.
  * Polls GET /api/roommate/messages/unread-count every 30 seconds.
@@ -10,7 +10,7 @@
 (function () {
     const API = ['localhost', '127.0.0.1', ''].includes(window.location.hostname)
         ? 'http://localhost:5000/api'
-        : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+        : 'https://www.roastmydorm.com/api';
 
     let token = localStorage.getItem('rmd_token');
     if (!token) return; // not logged in, nothing to do

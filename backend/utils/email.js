@@ -1,19 +1,63 @@
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const https = require('https');
+
+// Send via Resend API (primary)
+async function _sendViaResend({ to, subject, html }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error('RESEND_API_KEY not set');
+  const from = process.env.RESEND_FROM || 'RoastMyDorm <noreply@roastmydorm.com>';
+  const payload = JSON.stringify({ from, to: Array.isArray(to) ? to : [to], subject, html });
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'api.resend.com', path: '/emails', method: 'POST',
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) }
+    };
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.on('data', c => body += c);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(body);
+          if (res.statusCode >= 200 && res.statusCode < 300) resolve({ success: true, id: json.id });
+          else reject(new Error(json.message || `Resend error ${res.statusCode}`));
+        } catch (e) { reject(e); }
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('Resend timeout')); });
+    req.write(payload);
+    req.end();
+  });
+}
 
 // Create transporter based on environment
 const createTransporter = () => {
-  // Use Gmail SMTP (most common for Morocco-based apps)
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: false, // true for 465, false for other ports
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS // Use App Password for Gmail
+      pass: process.env.EMAIL_PASS
     }
   });
 };
+
+// Route: try Resend first, fall back to SMTP
+async function _sendEmail({ to, subject, html }) {
+  if (process.env.RESEND_API_KEY) {
+    try { return await _sendViaResend({ to, subject, html }); }
+    catch (e) { console.warn('⚠️  Resend failed, trying SMTP:', e.message); }
+  }
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error('Email service not configured. Set RESEND_API_KEY or EMAIL_USER + EMAIL_PASS.');
+  }
+  const transport = createTransporter();
+  const from = `"RoastMyDorm" <${process.env.EMAIL_USER}>`;
+  const info = await transport.sendMail({ from, to, subject, html });
+  return { success: true, id: info.messageId };
+}
 
 /**
  * Generate a random verification token
@@ -37,12 +81,6 @@ const generateVerificationCode = () => {
  * @param {string} type - 'token' (link) or 'code' (6-digit)
  */
 const sendVerificationEmail = async (to, name, verificationToken, type = 'code') => {
-  // Require email credentials
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('Email service not configured. Please set EMAIL_USER and EMAIL_PASS environment variables.');
-  }
-  
-  const transporter = createTransporter();
 
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
   
@@ -176,15 +214,9 @@ const sendVerificationEmail = async (to, name, verificationToken, type = 'code')
   }
 
   try {
-    const info = await transporter.sendMail({
-      from: `"RoastMyDorm" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      html
-    });
-    
-    console.log('Verification email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    const result = await _sendEmail({ to, subject, html });
+    console.log('Verification email sent:', result.id);
+    return { success: true, messageId: result.id };
   } catch (error) {
     console.error('Error sending verification email:', error);
     throw error;
@@ -195,12 +227,6 @@ const sendVerificationEmail = async (to, name, verificationToken, type = 'code')
  * Send password reset email
  */
 const sendPasswordResetEmail = async (to, name, resetToken) => {
-  // Require email credentials
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('Email service not configured. Please set EMAIL_USER and EMAIL_PASS environment variables.');
-  }
-  
-  const transporter = createTransporter();
 
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
   const resetUrl = `${clientUrl}/reset-password.html?token=${resetToken}`;
@@ -265,15 +291,9 @@ const sendPasswordResetEmail = async (to, name, resetToken) => {
   `;
 
   try {
-    const info = await transporter.sendMail({
-      from: `"RoastMyDorm" <${process.env.EMAIL_USER}>`,
-      to,
-      subject: 'Reset Your RoastMyDorm Password',
-      html
-    });
-    
-    console.log('Password reset email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    const result = await _sendEmail({ to, subject: 'Reset Your RoastMyDorm Password', html });
+    console.log('Password reset email sent:', result.id);
+    return { success: true, messageId: result.id };
   } catch (error) {
     console.error('Error sending password reset email:', error);
     throw error;

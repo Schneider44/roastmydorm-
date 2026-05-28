@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -2682,7 +2682,7 @@ NB: for a single girl
             const h = window.location.hostname;
             return (h === 'localhost' || h === '127.0.0.1' || h === '')
                 ? 'http://localhost:5000/api'
-                : 'https://roastmydorm-backend-zy4p.vercel.app/api';
+                : 'https://www.roastmydorm.com/api';
         })();
 
         async function submitEnquiry(event) {
@@ -2701,17 +2701,22 @@ NB: for a single girl
             submitBtn.disabled = true;
 
             try {
-                await fetch(`${API_BASE}/enquiries/confirm`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                await fetch(API_BASE + '/inquiries', {
+                    method: 'POST', headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({
-                        clientName: name, clientEmail: email,
-                        clientPhone: phone, countryCode: code,
-                        message: msg, preferredContact: reach,
-                        listing: LISTING
+                        fullName: name, email: email,
+                        phone: phone, countryCode: code,
+                        message: msg,
+                        preferredContact: ['wa','email','call'].filter(k => document.getElementById('reach-'+k).checked).map(k => k === 'wa' ? 'whatsapp' : k),
+                        studioId: LISTING.url.split('/').pop(),
+                        studioTitle: LISTING.name,
+                        studioLocation: LISTING.location,
+                        studioType: LISTING.type,
+                        studioRent: LISTING.rent,
+                        studioUrl: LISTING.url
                     })
                 });
-            } catch(e) { /* silent — show success anyway */ }
+            } catch(e) {}
 
             // Build WhatsApp "send to yourself" message
             const fullPhone = (code + phone.replace(/^0/, '')).replace(/\s/g,'');

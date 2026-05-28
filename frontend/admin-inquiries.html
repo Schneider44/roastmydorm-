@@ -1,0 +1,875 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inquiry CRM — RoastMyDorm Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh;}
+h1,h2,h3,.font-poppins{font-family:'Poppins',sans-serif;}
+
+/* ── Layout ── */
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:240px;background:#0f172a;flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;transition:transform 0.3s;}
+.sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.sidebar-logo a{color:#fff;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;}
+.sidebar-logo a span{color:#00a8a8;}
+.sidebar-nav{flex:1;padding:16px 0;overflow-y:auto;}
+.nav-section{padding:8px 20px 4px;font-size:0.68rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#475569;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;color:#94a3b8;text-decoration:none;font-size:0.875rem;font-weight:500;transition:all 0.2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{color:#fff;background:rgba(255,255,255,0.06);border-left-color:#00a8a8;}
+.nav-item.active{color:#00a8a8;}
+.nav-item i{width:18px;text-align:center;}
+.nav-badge{margin-left:auto;background:#ef4444;color:#fff;font-size:0.65rem;font-weight:700;padding:2px 7px;border-radius:20px;}
+
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-width:0;}
+.topbar{background:#fff;border-bottom:1px solid #e2e8f0;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40;}
+.topbar-left{display:flex;align-items:center;gap:16px;}
+.topbar-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.1rem;color:#0f172a;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:8px;font-weight:600;font-size:0.875rem;cursor:pointer;border:none;transition:all 0.2s;font-family:'Inter',sans-serif;}
+.btn-primary{background:#00a8a8;color:#fff;}
+.btn-primary:hover{background:#007a7a;}
+.btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;}
+.btn-secondary:hover{background:#e2e8f0;}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+.btn-danger:hover{background:#fee2e2;}
+.btn-sm{padding:5px 11px;font-size:0.8rem;}
+.btn-icon{padding:8px;background:#f1f5f9;color:#475569;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;}
+.btn-icon:hover{background:#e2e8f0;}
+
+.content{padding:24px 28px;flex:1;}
+
+/* ── Stats cards ── */
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{background:#fff;border-radius:12px;padding:18px 20px;border:1px solid #e2e8f0;}
+.stat-label{font-size:0.75rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.stat-value{font-family:'Poppins',sans-serif;font-size:1.75rem;font-weight:800;color:#0f172a;line-height:1;}
+.stat-sub{font-size:0.75rem;color:#94a3b8;margin-top:4px;}
+.stat-card.new .stat-value{color:#3b82f6;}
+.stat-card.contacted .stat-value{color:#f59e0b;}
+.stat-card.qualified .stat-value{color:#8b5cf6;}
+.stat-card.won .stat-value{color:#10b981;}
+.stat-card.lost .stat-value{color:#ef4444;}
+
+/* ── Filters bar ── */
+.filters-bar{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.search-box{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;flex:1;min-width:200px;}
+.search-box i{color:#94a3b8;font-size:0.875rem;}
+.search-box input{border:none;background:none;outline:none;font-size:0.875rem;color:#1e293b;width:100%;}
+.filter-select{padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;color:#1e293b;background:#f8fafc;cursor:pointer;outline:none;}
+.filter-select:focus{border-color:#00a8a8;}
+.filter-date{padding:7px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.8rem;color:#475569;background:#f8fafc;outline:none;}
+.filter-date:focus{border-color:#00a8a8;}
+
+/* ── Table ── */
+.table-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #f1f5f9;}
+.table-title{font-weight:700;color:#0f172a;font-size:0.9rem;}
+.table-actions{display:flex;gap:8px;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:11px 14px;text-align:left;font-size:0.75rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;background:#f8fafc;border-bottom:1px solid #e2e8f0;white-space:nowrap;}
+.tbl td{padding:12px 14px;border-bottom:1px solid #f8fafc;font-size:0.875rem;vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:#f8fafc;}
+.tbl tr.selected td{background:#eff6ff;}
+.tbl input[type=checkbox]{width:15px;height:15px;accent-color:#00a8a8;cursor:pointer;}
+
+.client-info{display:flex;flex-direction:column;}
+.client-name{font-weight:600;color:#0f172a;}
+.client-email{font-size:0.78rem;color:#64748b;}
+.client-phone{font-size:0.78rem;color:#64748b;}
+
+.listing-info{max-width:180px;}
+.listing-title{font-weight:600;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.listing-loc{font-size:0.78rem;color:#64748b;}
+
+/* Status badges */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
+.badge-new{background:#dbeafe;color:#1d4ed8;}
+.badge-contacted{background:#fef3c7;color:#92400e;}
+.badge-qualified{background:#ede9fe;color:#6d28d9;}
+.badge-closed_won{background:#d1fae5;color:#065f46;}
+.badge-closed_lost{background:#fee2e2;color:#991b1b;}
+.badge-priority-high{background:#fee2e2;color:#dc2626;}
+.badge-priority-urgent{background:#dc2626;color:#fff;}
+.badge-priority-normal{background:#f1f5f9;color:#64748b;}
+.badge-priority-low{background:#f0fdf4;color:#166534;}
+
+.agent-avatar{width:28px;height:28px;border-radius:50%;background:#00a8a8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;}
+.agent-cell{display:flex;align-items:center;gap:8px;}
+.agent-name{font-size:0.82rem;font-weight:600;color:#374151;}
+
+.action-btns{display:flex;gap:6px;align-items:center;}
+.time-cell{font-size:0.78rem;color:#64748b;white-space:nowrap;}
+
+/* ── Pagination ── */
+.pagination{display:flex;align-items:center;justify-content:between;padding:14px 18px;border-top:1px solid #f1f5f9;gap:8px;}
+.pagination-info{font-size:0.8rem;color:#64748b;flex:1;}
+.page-btns{display:flex;gap:4px;}
+.page-btn{padding:6px 11px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.8rem;cursor:pointer;background:#fff;color:#374151;transition:all 0.2s;}
+.page-btn:hover,.page-btn.active{background:#00a8a8;color:#fff;border-color:#00a8a8;}
+.page-btn:disabled{opacity:.4;cursor:default;pointer-events:none;}
+
+/* ── Detail drawer ── */
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;backdrop-filter:blur(2px);}
+.drawer-overlay.open{display:block;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:480px;background:#fff;box-shadow:-4px 0 32px rgba(0,0,0,0.12);z-index:101;transform:translateX(100%);transition:transform 0.3s;display:flex;flex-direction:column;overflow:hidden;}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.drawer-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;color:#0f172a;}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 24px;}
+.drawer-footer{padding:16px 24px;border-top:1px solid #e2e8f0;flex-shrink:0;display:flex;gap:10px;}
+
+.detail-section{margin-bottom:22px;}
+.detail-section-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#94a3b8;margin-bottom:10px;}
+.detail-row{display:flex;gap:8px;margin-bottom:8px;font-size:0.875rem;}
+.detail-label{color:#64748b;min-width:110px;flex-shrink:0;}
+.detail-value{color:#0f172a;font-weight:500;word-break:break-word;}
+
+.timeline-item{display:flex;gap:12px;padding-bottom:16px;position:relative;}
+.timeline-item:not(:last-child)::before{content:'';position:absolute;left:10px;top:22px;bottom:0;width:1px;background:#e2e8f0;}
+.timeline-dot{width:22px;height:22px;border-radius:50%;background:#e0f2fe;color:#0284c7;display:flex;align-items:center;justify-content:center;font-size:0.6rem;flex-shrink:0;margin-top:1px;}
+.timeline-content{flex:1;}
+.timeline-event{font-size:0.83rem;font-weight:500;color:#1e293b;}
+.timeline-time{font-size:0.73rem;color:#94a3b8;margin-top:2px;}
+
+.note-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+.note-text{font-size:0.875rem;color:#1e293b;line-height:1.5;}
+.note-meta{font-size:0.73rem;color:#94a3b8;margin-top:6px;}
+.note-input{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.875rem;font-family:'Inter',sans-serif;resize:vertical;min-height:72px;outline:none;}
+.note-input:focus{border-color:#00a8a8;box-shadow:0 0 0 3px rgba(0,168,168,0.1);}
+
+/* ── Analytics panel ── */
+.analytics-panel{display:none;}
+.analytics-panel.visible{display:block;}
+.chart-bars{display:flex;align-items:flex-end;gap:4px;height:80px;margin-top:8px;}
+.chart-bar{flex:1;background:#00a8a8;border-radius:3px 3px 0 0;min-height:4px;transition:height 0.3s;cursor:default;position:relative;}
+.chart-bar:hover::after{content:attr(data-label);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:3px 7px;border-radius:5px;font-size:0.68rem;white-space:nowrap;}
+.city-bar-wrap{margin-bottom:8px;}
+.city-bar-label{display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;}
+.city-bar-track{height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden;}
+.city-bar-fill{height:100%;background:#00a8a8;border-radius:4px;transition:width 0.5s;}
+
+/* ── Toasts ── */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:10px;background:#0f172a;color:#fff;font-size:0.875rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,0.2);animation:slideUp 0.3s ease;min-width:240px;}
+.toast.success{background:#065f46;}
+.toast.error{background:#991b1b;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ── Empty state ── */
+.empty-state{text-align:center;padding:60px 20px;}
+.empty-state i{font-size:3rem;color:#cbd5e1;margin-bottom:16px;}
+.empty-state p{color:#64748b;font-size:0.9rem;}
+
+/* ── Responsive ── */
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:repeat(3,1fr);}
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.mobile-open{transform:translateX(0);}
+  .main{margin-left:0;}
+}
+@media(max-width:640px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .drawer{width:100%;}
+  .content{padding:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Auth gate -->
+<div id="authGate" style="display:none;position:fixed;inset:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#1e293b;border-radius:16px;padding:40px 36px;width:360px;text-align:center;">
+    <div style="font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:24px;">🏠 Admin Login</div>
+    <input id="loginEmail" type="email" placeholder="Email" style="width:100%;padding:12px;border:1px solid #334155;border-radius:8px;background:#0f172a;color:#fff;font-size:0.9rem;outline:none;margin-bottom:12px;">
+    <input id="loginPass" type="password" placeholder="Password" style="width:100%;padding:12px;border:1px solid #334155;border-radius:8px;background:#0f172a;color:#fff;font-size:0.9rem;outline:none;margin-bottom:18px;">
+    <button onclick="doLogin()" style="width:100%;padding:13px;background:#00a8a8;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;font-family:'Poppins',sans-serif;">Sign In</button>
+    <div id="loginError" style="color:#f87171;font-size:0.8rem;margin-top:12px;display:none;"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <a href="admin.html"><span>Roast</span>MyDorm</a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Main</div>
+      <a href="admin.html" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a href="admin-inquiries.html" class="nav-item active"><i class="fas fa-inbox"></i> Inquiries <span class="nav-badge" id="newBadge">0</span></a>
+      <div class="nav-section">Listings</div>
+      <a href="admin.html#dorms" class="nav-item"><i class="fas fa-building"></i> Dorms</a>
+      <a href="admin.html#reviews" class="nav-item"><i class="fas fa-star"></i> Reviews</a>
+      <div class="nav-section">Team</div>
+      <a href="#" class="nav-item" onclick="showAgentsPanel()"><i class="fas fa-users"></i> Agents</a>
+    </nav>
+    <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);">
+      <button onclick="doLogout()" class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="btn-icon" id="menuToggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title">Inquiry CRM</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-secondary btn-sm" onclick="toggleAnalytics()"><i class="fas fa-chart-bar"></i> Analytics</button>
+        <button class="btn btn-primary btn-sm" onclick="refreshInquiries()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        <div style="width:34px;height:34px;border-radius:50%;background:#00a8a8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;" id="adminAvatar">A</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- Stats -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub">all time</div></div>
+        <div class="stat-card new"><div class="stat-label">New</div><div class="stat-value" id="statNew">—</div><div class="stat-sub">needs action</div></div>
+        <div class="stat-card contacted"><div class="stat-label">Contacted</div><div class="stat-value" id="statContacted">—</div><div class="stat-sub">in progress</div></div>
+        <div class="stat-card won"><div class="stat-label">Won</div><div class="stat-value" id="statWon">—</div><div class="stat-sub" id="statConversion">—% conversion</div></div>
+        <div class="stat-card" style="grid-column:5"><div class="stat-label">This Week</div><div class="stat-value" id="statWeek">—</div><div class="stat-sub">new enquiries</div></div>
+      </div>
+
+      <!-- Analytics -->
+      <div class="analytics-panel" id="analyticsPanel">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:4px;">Daily Submissions (14 days)</div>
+            <div class="chart-bars" id="dailyChart"></div>
+          </div>
+          <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;">Top Cities</div>
+            <div id="cityBars"></div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin-bottom:24px;">
+          <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;">Top Listings by Inquiries</div>
+          <div id="topListings" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-bar">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search name, email, phone, listing…" oninput="debouncedSearch()">
+        </div>
+        <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="closed_won">Closed Won</option>
+          <option value="closed_lost">Closed Lost</option>
+        </select>
+        <select class="filter-select" id="filterAgent" onchange="applyFilters()">
+          <option value="">All agents</option>
+          <option value="unassigned">Unassigned</option>
+        </select>
+        <input type="date" class="filter-date" id="filterFrom" onchange="applyFilters()">
+        <input type="date" class="filter-date" id="filterTo" onchange="applyFilters()">
+        <button class="btn btn-secondary btn-sm" onclick="clearFilters()"><i class="fas fa-times"></i> Clear</button>
+        <select class="filter-select" id="bulkAction" style="min-width:140px;">
+          <option value="">Bulk action…</option>
+          <option value="new">Mark: New</option>
+          <option value="contacted">Mark: Contacted</option>
+          <option value="qualified">Mark: Qualified</option>
+          <option value="closed_won">Mark: Won</option>
+          <option value="closed_lost">Mark: Lost</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="applyBulk()">Apply</button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title" id="tableTitle">Inquiries</span>
+          <div class="table-actions">
+            <button class="btn btn-secondary btn-sm" onclick="exportCsv()"><i class="fas fa-download"></i> Export CSV</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                <th>Client</th>
+                <th>Listing</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Agent</th>
+                <th>WhatsApp</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inquiriesBody">
+              <tr><td colspan="9"><div class="empty-state"><i class="fas fa-inbox"></i><p>Loading inquiries…</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span class="pagination-info" id="paginationInfo"></span>
+          <div class="page-btns" id="pageBtns"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span class="drawer-title" id="drawerTitle">Inquiry Detail</span>
+    <button class="btn-icon" onclick="closeDrawer()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-footer">
+    <select id="drawerStatus" class="filter-select" style="flex:1;" onchange="updateInquiryStatus()">
+      <option value="new">New</option>
+      <option value="contacted">Contacted</option>
+      <option value="qualified">Qualified</option>
+      <option value="closed_won">Closed Won</option>
+      <option value="closed_lost">Closed Lost</option>
+    </select>
+    <select id="drawerAgent" class="filter-select" style="flex:1;" onchange="assignAgent()">
+      <option value="">Unassigned</option>
+    </select>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── Config ────────────────────────────────────────────────
+const API_BASE = (function(){
+  const h = window.location.hostname;
+  return (h === 'localhost' || h === '127.0.0.1' || h === '')
+    ? 'http://localhost:5000/api'
+    : 'https://www.roastmydorm.com/api';
+})();
+
+// ── State ─────────────────────────────────────────────────
+let token       = localStorage.getItem('adminToken') || '';
+let currentPage = 1;
+let totalPages  = 1;
+let inquiries   = [];
+let agents      = [];
+let selectedIds = new Set();
+let currentInquiryId = null;
+let refreshTimer = null;
+
+// ── Auth ──────────────────────────────────────────────────
+function checkAuth() {
+  if (!token) {
+    document.getElementById('authGate').style.display = 'flex';
+  } else {
+    document.getElementById('authGate').style.display = 'none';
+    init();
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.style.display = 'none';
+  try {
+    const r = await apiFetch('/auth/login', 'POST', { email, password: pass }, false);
+    if (r.token || r.data?.accessToken) {
+      token = r.token || r.data.accessToken;
+      localStorage.setItem('adminToken', token);
+      document.getElementById('authGate').style.display = 'none';
+      init();
+    } else {
+      errEl.textContent = r.message || 'Login failed'; errEl.style.display = 'block';
+    }
+  } catch(e) {
+    errEl.textContent = e.message; errEl.style.display = 'block';
+  }
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function doLogout() {
+  localStorage.removeItem('adminToken');
+  token = '';
+  location.reload();
+}
+
+// ── API helper ────────────────────────────────────────────
+async function apiFetch(path, method = 'GET', body = null, auth = true) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (auth && token) headers['Authorization'] = `Bearer ${token}`;
+  const opts = { method, headers };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API_BASE + path, opts);
+  const json = await r.json();
+  if (r.status === 401) { doLogout(); throw new Error('Session expired'); }
+  if (!r.ok && !json.success) throw new Error(json.message || `HTTP ${r.status}`);
+  return json;
+}
+
+// ── Init ──────────────────────────────────────────────────
+async function init() {
+  await Promise.all([loadAgents(), loadStats(), loadInquiries()]);
+  // auto-refresh every 60s
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => { loadStats(); loadInquiries(false); }, 60000);
+}
+
+// ── Stats ─────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const r = await apiFetch('/admin/inquiries/stats');
+    const d = r.data;
+    document.getElementById('statTotal').textContent    = d.overview.total;
+    document.getElementById('statNew').textContent      = d.overview.newCount;
+    document.getElementById('statContacted').textContent = d.overview.contacted;
+    document.getElementById('statWon').textContent      = d.overview.closedWon;
+    document.getElementById('statConversion').textContent = d.overview.conversionRate + '% conversion';
+    document.getElementById('statWeek').textContent     = d.volume.week;
+    document.getElementById('newBadge').textContent     = d.overview.newCount;
+
+    renderDailyChart(d.dailyTrend || []);
+    renderCityBars(d.byCity || []);
+    renderTopListings(d.byStudio || []);
+  } catch(e) { console.error('Stats:', e); }
+}
+
+function renderDailyChart(data) {
+  const el = document.getElementById('dailyChart');
+  if (!data.length) { el.innerHTML = '<div style="color:#94a3b8;font-size:0.8rem;">No data</div>'; return; }
+  const max = Math.max(...data.map(d => d.count), 1);
+  el.innerHTML = data.map(d => {
+    const pct = Math.max(4, Math.round((d.count / max) * 100));
+    const label = d._id + ': ' + d.count;
+    return `<div class="chart-bar" style="height:${pct}%" data-label="${label}" title="${label}"></div>`;
+  }).join('');
+}
+
+function renderCityBars(data) {
+  const el = document.getElementById('cityBars');
+  if (!data.length) { el.innerHTML = '<div style="color:#94a3b8;font-size:0.8rem;">No data</div>'; return; }
+  const max = Math.max(...data.map(d => d.count), 1);
+  el.innerHTML = data.map(d => `
+    <div class="city-bar-wrap">
+      <div class="city-bar-label"><span>${d._id || 'Unknown'}</span><strong>${d.count}</strong></div>
+      <div class="city-bar-track"><div class="city-bar-fill" style="width:${Math.round((d.count/max)*100)}%"></div></div>
+    </div>`).join('');
+}
+
+function renderTopListings(data) {
+  const el = document.getElementById('topListings');
+  el.innerHTML = data.map(d => `
+    <div style="background:#f1f5f9;border-radius:8px;padding:8px 14px;font-size:0.82rem;">
+      <div style="font-weight:600;">${d._id}</div>
+      <div style="color:#64748b;">${d.count} inquiries</div>
+    </div>`).join('');
+}
+
+// ── Agents ────────────────────────────────────────────────
+async function loadAgents() {
+  try {
+    const r = await apiFetch('/admin/inquiries/agents/list');
+    agents = r.data || [];
+    const sel = document.getElementById('filterAgent');
+    const drawerSel = document.getElementById('drawerAgent');
+    agents.forEach(a => {
+      [sel, drawerSel].forEach(s => {
+        const o = document.createElement('option');
+        o.value = a._id; o.textContent = a.name + (a.openInquiries ? ` (${a.openInquiries})` : '');
+        s.appendChild(o);
+      });
+    });
+  } catch(e) { /* no agents yet */ }
+}
+
+// ── Load inquiries ────────────────────────────────────────
+async function loadInquiries(showLoader = true) {
+  if (showLoader) {
+    document.getElementById('inquiriesBody').innerHTML = `<tr><td colspan="9"><div class="empty-state"><i class="fas fa-circle-notch fa-spin"></i><p>Loading…</p></div></td></tr>`;
+  }
+  try {
+    const params = buildQueryParams();
+    const r = await apiFetch('/admin/inquiries?' + params);
+    inquiries = r.data.inquiries;
+    const pg  = r.data.pagination;
+    totalPages = pg.pages;
+    currentPage = pg.page;
+    renderTable(inquiries);
+    renderPagination(pg);
+    document.getElementById('tableTitle').textContent = `Inquiries (${pg.total})`;
+  } catch(e) { toast('Failed to load inquiries', 'error'); }
+}
+
+function buildQueryParams() {
+  const p = new URLSearchParams();
+  p.set('page', currentPage);
+  p.set('limit', 25);
+  const s = document.getElementById('filterStatus').value;
+  const a = document.getElementById('filterAgent').value;
+  const q = document.getElementById('searchInput').value.trim();
+  const from = document.getElementById('filterFrom').value;
+  const to   = document.getElementById('filterTo').value;
+  if (s)    p.set('status', s);
+  if (a)    p.set('assignedTo', a);
+  if (q)    p.set('search', q);
+  if (from) p.set('from', from);
+  if (to)   p.set('to', to);
+  return p.toString();
+}
+
+// ── Render table ──────────────────────────────────────────
+function renderTable(rows) {
+  const tbody = document.getElementById('inquiriesBody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><i class="fas fa-inbox"></i><p>No inquiries found</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(inq => {
+    const agent = inq.assignedTo;
+    const initials = agent ? agent.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) : '?';
+    const waIcon = inq.waMessageSent
+      ? '<i class="fab fa-whatsapp" style="color:#25D366;" title="Sent via Cloud API"></i>'
+      : inq.waFallbackUrl
+        ? `<a href="${inq.waFallbackUrl}" target="_blank" style="color:#25D366;" title="wa.me link"><i class="fab fa-whatsapp"></i></a>`
+        : '<i class="fab fa-whatsapp" style="color:#cbd5e1;" title="Not sent"></i>';
+
+    return `<tr class="${selectedIds.has(inq._id) ? 'selected' : ''}">
+      <td><input type="checkbox" ${selectedIds.has(inq._id)?'checked':''} onchange="toggleSelect('${inq._id}', this)"></td>
+      <td>
+        <div class="client-info">
+          <span class="client-name">${esc(inq.fullName)}</span>
+          <span class="client-email">${esc(inq.email)}</span>
+          <span class="client-phone">${esc(inq.phone)}</span>
+        </div>
+      </td>
+      <td>
+        <div class="listing-info">
+          <div class="listing-title" title="${esc(inq.studioTitle)}">${esc(inq.studioTitle)}</div>
+          <div class="listing-loc">${esc(inq.city || inq.studioLocation)}</div>
+        </div>
+      </td>
+      <td>
+        <select class="filter-select" style="font-size:0.75rem;padding:4px 8px;" onchange="quickStatus('${inq._id}', this.value)">
+          ${['new','contacted','qualified','closed_won','closed_lost'].map(s =>
+            `<option value="${s}" ${inq.status===s?'selected':''}>${statusLabel(s)}</option>`
+          ).join('')}
+        </select>
+      </td>
+      <td><span class="badge badge-priority-${inq.priority||'normal'}">${inq.priority||'normal'}</span></td>
+      <td>
+        <div class="agent-cell">
+          ${agent
+            ? `<div class="agent-avatar">${initials}</div><span class="agent-name">${esc(agent.name)}</span>`
+            : `<span style="color:#94a3b8;font-size:0.8rem;">Unassigned</span>`}
+        </div>
+      </td>
+      <td style="text-align:center;">${waIcon}</td>
+      <td class="time-cell">${formatDate(inq.createdAt)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-icon" title="View detail" onclick="openDrawer('${inq._id}')"><i class="fas fa-eye"></i></button>
+          ${inq.waFallbackUrl ? `<a href="${inq.waFallbackUrl}" target="_blank" class="btn-icon" title="Send WhatsApp"><i class="fab fa-whatsapp" style="color:#25D366;"></i></a>` : ''}
+          <a href="mailto:${esc(inq.email)}" class="btn-icon" title="Email client"><i class="fas fa-envelope"></i></a>
+          <button class="btn-icon btn-danger" title="Delete" onclick="deleteInquiry('${inq._id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Pagination ────────────────────────────────────────────
+function renderPagination(pg) {
+  document.getElementById('paginationInfo').textContent =
+    `Showing ${(pg.page-1)*pg.limit+1}–${Math.min(pg.page*pg.limit,pg.total)} of ${pg.total}`;
+  const wrap = document.getElementById('pageBtns');
+  const pages = [];
+  pages.push(`<button class="page-btn" ${pg.page===1?'disabled':''} onclick="goPage(${pg.page-1})"><i class="fas fa-chevron-left"></i></button>`);
+  for (let i = Math.max(1, pg.page-2); i <= Math.min(pg.pages, pg.page+2); i++) {
+    pages.push(`<button class="page-btn ${i===pg.page?'active':''}" onclick="goPage(${i})">${i}</button>`);
+  }
+  pages.push(`<button class="page-btn" ${pg.page===pg.pages?'disabled':''} onclick="goPage(${pg.page+1})"><i class="fas fa-chevron-right"></i></button>`);
+  wrap.innerHTML = pages.join('');
+}
+
+function goPage(p) { currentPage = p; loadInquiries(); }
+
+// ── Filters ───────────────────────────────────────────────
+function applyFilters() { currentPage = 1; loadInquiries(); }
+function clearFilters() {
+  ['filterStatus','filterAgent','filterFrom','filterTo'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('searchInput').value = '';
+  applyFilters();
+}
+
+let searchTimer;
+function debouncedSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(applyFilters, 400);
+}
+
+function refreshInquiries() { loadStats(); loadInquiries(); toast('Refreshed'); }
+
+// ── Selection + Bulk ──────────────────────────────────────
+function toggleSelect(id, cb) {
+  cb.checked ? selectedIds.add(id) : selectedIds.delete(id);
+  document.querySelector(`tr td:first-child input[type=checkbox]`);
+}
+function toggleSelectAll() {
+  const checked = document.getElementById('selectAll').checked;
+  inquiries.forEach(inq => {
+    checked ? selectedIds.add(inq._id) : selectedIds.delete(inq._id);
+  });
+  document.querySelectorAll('.tbl tbody input[type=checkbox]').forEach(cb => cb.checked = checked);
+  document.querySelectorAll('.tbl tbody tr').forEach(tr => tr.classList.toggle('selected', checked));
+}
+async function applyBulk() {
+  const action = document.getElementById('bulkAction').value;
+  if (!action || !selectedIds.size) { toast('Select inquiries and a bulk action first', 'error'); return; }
+  try {
+    await apiFetch('/admin/inquiries/bulk', 'POST', { ids: [...selectedIds], status: action });
+    selectedIds.clear();
+    toast(`${selectedIds.size || 'Selected'} inquiries updated to "${statusLabel(action)}"`, 'success');
+    loadInquiries();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── Quick status change (inline dropdown) ─────────────────
+async function quickStatus(id, status) {
+  try {
+    await apiFetch(`/admin/inquiries/${id}`, 'PATCH', { status });
+    toast(`Status → ${statusLabel(status)}`, 'success');
+    loadStats();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── Delete ────────────────────────────────────────────────
+async function deleteInquiry(id) {
+  if (!confirm('Delete this inquiry?')) return;
+  try {
+    await apiFetch(`/admin/inquiries/${id}`, 'DELETE');
+    toast('Deleted', 'success');
+    loadInquiries();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── Detail Drawer ─────────────────────────────────────────
+async function openDrawer(id) {
+  currentInquiryId = id;
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBody').innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-circle-notch fa-spin" style="color:#00a8a8;font-size:2rem;"></i></div>';
+  try {
+    const r = await apiFetch(`/admin/inquiries/${id}`);
+    const inq = r.data;
+    document.getElementById('drawerTitle').textContent = inq.fullName;
+    document.getElementById('drawerStatus').value = inq.status;
+    document.getElementById('drawerAgent').value  = inq.assignedTo?._id || '';
+    renderDrawer(inq);
+  } catch(e) { document.getElementById('drawerBody').innerHTML = '<p style="color:red;padding:20px;">'+e.message+'</p>'; }
+}
+
+function renderDrawer(inq) {
+  const wa = inq.waMessageSent
+    ? '<span style="color:#25D366;"><i class="fab fa-whatsapp"></i> Sent via Cloud API</span>'
+    : inq.waFallbackUrl
+      ? `<a href="${inq.waFallbackUrl}" target="_blank" style="color:#25D366;"><i class="fab fa-whatsapp"></i> Open wa.me link</a>`
+      : '<span style="color:#94a3b8;">Not sent</span>';
+
+  document.getElementById('drawerBody').innerHTML = `
+    <div class="detail-section">
+      <div class="detail-section-title">Contact</div>
+      <div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">${esc(inq.fullName)}</span></div>
+      <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value"><a href="mailto:${esc(inq.email)}" style="color:#00a8a8;">${esc(inq.email)}</a></span></div>
+      <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">${esc(inq.phone)}</span></div>
+      <div class="detail-row"><span class="detail-label">Prefers</span><span class="detail-value">${(inq.preferredContact||[]).join(', ') || '—'}</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Listing</div>
+      <div class="detail-row"><span class="detail-label">Title</span><span class="detail-value">${esc(inq.studioTitle)}</span></div>
+      <div class="detail-row"><span class="detail-label">Location</span><span class="detail-value">${esc(inq.studioLocation||'—')}</span></div>
+      <div class="detail-row"><span class="detail-label">Type</span><span class="detail-value">${esc(inq.studioType||'—')}</span></div>
+      <div class="detail-row"><span class="detail-label">Rent</span><span class="detail-value" style="color:#00a8a8;font-weight:700;">${esc(inq.studioRent||'—')}</span></div>
+      ${inq.studioUrl ? `<div class="detail-row"><span class="detail-label">Page</span><span class="detail-value"><a href="${esc(inq.studioUrl)}" target="_blank" style="color:#00a8a8;">View listing →</a></span></div>` : ''}
+    </div>
+    ${inq.message ? `<div class="detail-section"><div class="detail-section-title">Message</div><div style="background:#f8fafc;border-radius:8px;padding:12px;font-size:0.875rem;color:#374151;line-height:1.6;">${esc(inq.message)}</div></div>` : ''}
+    <div class="detail-section">
+      <div class="detail-section-title">Automation</div>
+      <div class="detail-row"><span class="detail-label">WhatsApp</span><span class="detail-value">${wa}</span></div>
+      <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${inq.emailSent ? '<span style="color:#10b981;"><i class="fas fa-check"></i> Sent</span>' : '<span style="color:#94a3b8;">Not sent</span>'}</span></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Notes</div>
+      <div id="drawerNotes">${renderNotes(inq.notes||[], inq._id)}</div>
+      <textarea class="note-input" id="newNoteInput" placeholder="Add a note…"></textarea>
+      <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;justify-content:center;" onclick="addNote('${inq._id}')">
+        <i class="fas fa-plus"></i> Add Note
+      </button>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Timeline</div>
+      <div>${renderTimeline(inq.timeline||[])}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Meta</div>
+      <div class="detail-row"><span class="detail-label">Source</span><span class="detail-value">${esc(inq.source||'—')}</span></div>
+      <div class="detail-row"><span class="detail-label">Created</span><span class="detail-value">${new Date(inq.createdAt).toLocaleString()}</span></div>
+      <div class="detail-row"><span class="detail-label">ID</span><span class="detail-value" style="font-size:0.75rem;color:#94a3b8;">${inq._id}</span></div>
+    </div>`;
+}
+
+function renderNotes(notes, inquiryId) {
+  if (!notes.length) return '<div style="color:#94a3b8;font-size:0.8rem;margin-bottom:12px;">No notes yet.</div>';
+  return notes.slice().reverse().map(n => `
+    <div class="note-card">
+      <div class="note-text">${esc(n.text)}</div>
+      <div class="note-meta">${n.author} · ${formatDate(n.createdAt)}
+        <button onclick="deleteNote('${inquiryId}','${n._id}')" style="float:right;background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.75rem;"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+}
+
+function renderTimeline(events) {
+  if (!events.length) return '<div style="color:#94a3b8;font-size:0.8rem;">No events yet.</div>';
+  return events.slice().reverse().map(e => `
+    <div class="timeline-item">
+      <div class="timeline-dot"><i class="fas fa-circle" style="font-size:6px;"></i></div>
+      <div class="timeline-content">
+        <div class="timeline-event">${esc(e.event)}</div>
+        <div class="timeline-time">${e.actor} · ${formatDate(e.createdAt)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  currentInquiryId = null;
+}
+
+async function updateInquiryStatus() {
+  if (!currentInquiryId) return;
+  const status = document.getElementById('drawerStatus').value;
+  try {
+    await apiFetch(`/admin/inquiries/${currentInquiryId}`, 'PATCH', { status });
+    toast(`Status → ${statusLabel(status)}`, 'success');
+    loadInquiries(false);
+    loadStats();
+  } catch(e) { toast(e.message,'error'); }
+}
+
+async function assignAgent() {
+  if (!currentInquiryId) return;
+  const agentId = document.getElementById('drawerAgent').value;
+  try {
+    await apiFetch(`/admin/inquiries/${currentInquiryId}`, 'PATCH', { assignedTo: agentId || null });
+    const name = agentId ? agents.find(a=>a._id===agentId)?.name || 'Agent' : 'nobody';
+    toast(`Assigned to ${name}`, 'success');
+    loadInquiries(false);
+  } catch(e) { toast(e.message,'error'); }
+}
+
+async function addNote(id) {
+  const text = document.getElementById('newNoteInput').value.trim();
+  if (!text) return;
+  try {
+    const r = await apiFetch(`/admin/inquiries/${id}/notes`, 'POST', { text });
+    document.getElementById('newNoteInput').value = '';
+    document.getElementById('drawerNotes').innerHTML = renderNotes(r.data, id);
+    toast('Note added', 'success');
+  } catch(e) { toast(e.message,'error'); }
+}
+
+async function deleteNote(inquiryId, noteId) {
+  try {
+    await apiFetch(`/admin/inquiries/${inquiryId}/notes/${noteId}`, 'DELETE');
+    // reload drawer
+    openDrawer(inquiryId);
+  } catch(e) { toast(e.message,'error'); }
+}
+
+// ── Export CSV ────────────────────────────────────────────
+function exportCsv() {
+  if (!inquiries.length) { toast('No data to export', 'error'); return; }
+  const cols = ['Full Name','Email','Phone','Listing','Location','Type','Rent','Status','Priority','Agent','WA Sent','Email Sent','Created'];
+  const rows = inquiries.map(i => [
+    i.fullName, i.email, i.phone, i.studioTitle, i.studioLocation||'', i.studioType||'',
+    i.studioRent||'', i.status, i.priority||'',
+    i.assignedTo?.name||'', i.waMessageSent?'Yes':'No', i.emailSent?'Yes':'No',
+    new Date(i.createdAt).toLocaleDateString()
+  ].map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(','));
+  const csv  = [cols.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a'); a.href=url; a.download='inquiries.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Analytics toggle ──────────────────────────────────────
+function toggleAnalytics() {
+  const p = document.getElementById('analyticsPanel');
+  p.classList.toggle('visible');
+  if (p.classList.contains('visible')) loadStats();
+}
+
+// ── Agents panel (simple modal) ───────────────────────────
+function showAgentsPanel() {
+  const names = agents.map(a =>
+    `${a.name} <${a.email}> — ${a.openInquiries||0} open | ${a.isAvailable?'✅':'❌'}`
+  ).join('\n') || 'No agents yet.';
+  alert('Agents:\n\n' + names + '\n\nTo manage agents, use POST/PATCH/DELETE /api/admin/inquiries/agents via API.');
+}
+
+// ── Sidebar toggle (mobile) ───────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+// ── Helpers ───────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  const now = new Date();
+  const diff = (now - dt) / 1000;
+  if (diff < 60)   return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff/86400) + 'd ago';
+  return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+}
+function statusLabel(s) {
+  return {new:'New',contacted:'Contacted',qualified:'Qualified',closed_won:'Won',closed_lost:'Lost'}[s]||s;
+}
+function toast(msg, type='info') {
+  const wrap = document.getElementById('toastWrap');
+  const el   = document.createElement('div');
+  el.className = 'toast ' + (type==='success'?'success':type==='error'?'error':'');
+  el.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':type==='error'?'exclamation-circle':'info-circle'}"></i> ${msg}`;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── Boot ──────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>
