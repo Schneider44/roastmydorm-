@@ -6,7 +6,7 @@ const https = require('https');
 async function _sendViaResend({ to, subject, html }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) throw new Error('RESEND_API_KEY not set');
-  const from = process.env.RESEND_FROM || 'RoastMyDorm <noreply@roastmydorm.com>';
+  const from = process.env.RESEND_FROM || 'RoastMyDorm <onboarding@resend.dev>';
   const payload = JSON.stringify({ from, to: Array.isArray(to) ? to : [to], subject, html });
   return new Promise((resolve, reject) => {
     const options = {
@@ -44,19 +44,20 @@ const createTransporter = () => {
   });
 };
 
-// Route: try Resend first, fall back to SMTP
+// Route: try Gmail SMTP first, fall back to Resend
 async function _sendEmail({ to, subject, html }) {
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    try {
+      const transport = createTransporter();
+      const from = `"RoastMyDorm" <${process.env.EMAIL_USER}>`;
+      const info = await transport.sendMail({ from, to, subject, html });
+      return { success: true, id: info.messageId };
+    } catch (e) { console.warn('⚠️  SMTP failed, trying Resend:', e.message); }
+  }
   if (process.env.RESEND_API_KEY) {
-    try { return await _sendViaResend({ to, subject, html }); }
-    catch (e) { console.warn('⚠️  Resend failed, trying SMTP:', e.message); }
+    return await _sendViaResend({ to, subject, html });
   }
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error('Email service not configured. Set RESEND_API_KEY or EMAIL_USER + EMAIL_PASS.');
-  }
-  const transport = createTransporter();
-  const from = `"RoastMyDorm" <${process.env.EMAIL_USER}>`;
-  const info = await transport.sendMail({ from, to, subject, html });
-  return { success: true, id: info.messageId };
+  throw new Error('Email service not configured. Set EMAIL_USER + EMAIL_PASS or RESEND_API_KEY.');
 }
 
 /**

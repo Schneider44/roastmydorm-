@@ -127,7 +127,7 @@ const allowedOrigins = [
   'https://roastmydorm.com',
   'http://www.roastmydorm.com',
   'http://roastmydorm.com',
-  'https://roastmydorm-frontend.vercel.app',
+  'https://www.roastmydorm.com',
   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   ...(process.env.NODE_ENV !== 'production' ? [
     'http://localhost:5173',
@@ -233,7 +233,7 @@ const connectDB = async () => {
     let mongoUri = process.env.MONGODB_URI;
 
     if (!mongoUri) {
-      throw new Error('MONGODB_URI is missing. Set it in .env locally and in Vercel Environment Variables.');
+      throw new Error('MONGODB_URI environment variable is not set.');
     }
 
     // On production/serverless, never try local/in-memory DB fallback
@@ -270,8 +270,9 @@ const connectDB = async () => {
     } else {
       await mongoose.connect(mongoUri, {
         maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 15000,
         socketTimeoutMS: 45000,
+        connectTimeoutMS: 15000,
       });
 
       console.log('✅ MongoDB connected successfully');
@@ -327,6 +328,28 @@ function safeRoute(path, modulePath) {
     app.use(path, (req, res) => res.status(503).json({ success: false, message: `Route temporarily unavailable: ${path}` }));
   }
 }
+
+// Temporary email diagnostics endpoint — remove after fixing email issue
+app.get('/api/test-email', async (req, res) => {
+  const to = req.query.to || process.env.ADMIN_EMAIL;
+  const result = { env: {
+    RESEND_API_KEY: process.env.RESEND_API_KEY ? '✅ set' : '❌ missing',
+    RESEND_FROM: process.env.RESEND_FROM || '❌ missing',
+    EMAIL_USER: process.env.EMAIL_USER || '❌ missing',
+    EMAIL_PASS: process.env.EMAIL_PASS ? `✅ set (${process.env.EMAIL_PASS.length} chars)` : '❌ missing',
+    NODE_ENV: process.env.NODE_ENV
+  }};
+  try {
+    const { sendVerificationEmail } = require('./utils/email');
+    await sendVerificationEmail(to, 'Test', '123456', 'code');
+    result.emailSent = true;
+    result.sentTo = to;
+  } catch (e) {
+    result.emailSent = false;
+    result.error = e.message;
+  }
+  res.json(result);
+});
 
 safeRoute('/api/auth', './routes/auth');
 safeRoute('/api/auth', './routes/googleAuth');

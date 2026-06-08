@@ -283,7 +283,7 @@ router.post('/send-verification', asyncHandler(async (req, res) => {
   try {
     await sendVerificationEmail(normalizedEmail, name, verificationCode, 'code');
   } catch (emailErr) {
-    console.error('[send-verification] Email delivery failed:', emailErr.message);
+    console.error('[send-verification] Email delivery failed:', emailErr.message, emailErr.stack);
     throw errors.internal('Unable to send verification email. Please try again in a few minutes or contact support.');
   }
 
