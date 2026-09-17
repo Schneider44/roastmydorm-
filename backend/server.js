@@ -59,6 +59,10 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
+      // The property page embeds a keyless OpenStreetMap "approximate area"
+      // map. frame-src otherwise falls back to default-src 'self', which
+      // silently blanks the iframe with no visible error.
+      frameSrc: ["'self'", "https://www.openstreetmap.org"],
       connectSrc: ["'self'", process.env.CLIENT_URL || 'https://www.roastmydorm.com']
     }
   },
@@ -88,29 +92,59 @@ app.use(compression({
   }
 }));
 
-// Rate limiting - General
+// Rate limiting - General. This is a coarse, IP-keyed BACKSTOP against
+// anonymous/pre-auth abuse of the whole /api/ surface - it deliberately
+// cannot key by user (it runs before any route's own `auth` middleware, so
+// req.user is never populated here yet). The real, precise limiting lives
+// on individual authenticated routes instead (see
+// backend/middleware/rateLimiters.js, wired into backend/routes/roommate.js
+// et al.) - those are keyed by user, not IP, which is what actually fixes
+// "one feature's heavy legitimate use locks out every other user on the
+// same network." 100/15min here was low enough that a SINGLE legitimate
+// page load (several requests) plus any polling could exhaust it for an
+// entire shared IP; raised to a real backstop level instead.
 const generalLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 100,
-  message: {
-    success: false,
-    message: 'Too many requests from this IP, please try again later.'
-  },
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS, 10) || 300,
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => req.path === '/api/health'
+  skip: (req) => req.path === '/api/health',
+  handler: (req, res) => {
+    const resetMs = req.rateLimit && req.rateLimit.resetTime
+      ? req.rateLimit.resetTime.getTime() - Date.now()
+      : 0;
+    const retryAfter = Math.max(1, Math.ceil(resetMs / 1000));
+    console.warn(`[rate-limit:general] blocked ip=${req.ip} route=${req.originalUrl}`);
+    res.set('Retry-After', String(retryAfter));
+    res.status(429).json({
+      success: false,
+      error: 'RATE_LIMITED',
+      message: 'Trop de demandes. Réessaie dans quelques instants.',
+      retryAfter,
+    });
+  },
 });
 
 // Stricter rate limiting for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // 10 attempts per 15 minutes
-  message: {
-    success: false,
-    message: 'Too many login attempts, please try again after 15 minutes.'
-  },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  handler: (req, res) => {
+    const resetMs = req.rateLimit && req.rateLimit.resetTime
+      ? req.rateLimit.resetTime.getTime() - Date.now()
+      : 0;
+    const retryAfter = Math.max(1, Math.ceil(resetMs / 1000));
+    console.warn(`[rate-limit:auth] blocked ip=${req.ip} route=${req.originalUrl}`);
+    res.set('Retry-After', String(retryAfter));
+    res.status(429).json({
+      success: false,
+      error: 'RATE_LIMITED',
+      message: 'Trop de tentatives. Réessaie dans quelques instants.',
+      retryAfter,
+    });
+  },
 });
 
 // Apply rate limiters
@@ -200,6 +234,44 @@ mongoose.set('bufferCommands', false);
 // Cache the connection across invocations (important for serverless)
 let cachedConn = null;
 
+// Safety-critical indexes that MUST exist before any request is served
+// against them - a background "it'll build eventually" index is not good
+// enough here, since RoommateMatch's unique {user1Id,user2Id} index is part
+// of how duplicate mutual-interest records are prevented (see
+// controllers/roommateController.js sendInterest). Tracked separately from
+// mongoose's own connection readyState because readyState going to 1 only
+// means the socket is connected, not that this check has run yet - and once
+// it's 1, later connectDB() calls take the early-return branch and would
+// otherwise skip re-checking after a first-attempt failure.
+let criticalIndexesReady = false;
+async function ensureCriticalIndexes() {
+  if (criticalIndexesReady) return;
+  const RoommateMatch = require('./models/RoommateMatch');
+  const RoommateProfile = require('./models/RoommateProfile');
+  const Notification = require('./models/Notification');
+  const DormInquiry = require('./models/DormInquiry');
+  // HousingRequestDedupClaim's unique index on `identityKey` is not an
+  // optional performance index - it IS the atomic-deduplication mechanism
+  // (see services/housingRequestDedupClaim.js). Without it,
+  // HousingRequestDedupClaim.create() never throws E11000 on a concurrent
+  // duplicate, and every racer silently "wins," which is exactly the bug
+  // this collection exists to prevent. Distinct from the proposed
+  // DormInquiry performance indexes (deliberately NOT added as `.index()`
+  // calls on that schema yet, pending explicit approval) - this one is
+  // required for correctness from the moment this feature is live at all.
+  const HousingRequestDedupClaim = require('./models/HousingRequestDedupClaim');
+  // syncIndexes() (not init()) deliberately - init()'s build promise is
+  // cached on the model after first use and does not reliably re-attempt on
+  // a later call, which matters here because this function itself gets
+  // called again on every connectDB() invocation until it succeeds.
+  await RoommateMatch.syncIndexes();
+  await RoommateProfile.syncIndexes();
+  await Notification.syncIndexes();
+  await DormInquiry.syncIndexes();
+  await HousingRequestDedupClaim.syncIndexes();
+  criticalIndexesReady = true;
+}
+
 // Register mongoose error listeners immediately (before any connect attempt)
 // so that auth failures never become unhandled 'error' events that crash the process
 if (!mongoose.connection.__hasListeners) {
@@ -215,8 +287,12 @@ if (!mongoose.connection.__hasListeners) {
 
 const connectDB = async () => {
   try {
-    // If already connected, reuse it
+    // If already connected, reuse it - but still confirm critical indexes
+    // before handing the connection back (see ensureCriticalIndexes above:
+    // this is what makes a first-attempt index failure keep failing on every
+    // later request instead of silently succeeding once readyState is 1).
     if (mongoose.connection.readyState === 1) {
+      await ensureCriticalIndexes();
       return mongoose.connection;
     }
 
@@ -226,6 +302,7 @@ const connectDB = async () => {
         mongoose.connection.once('connected', resolve);
         mongoose.connection.once('error', reject);
       });
+      await ensureCriticalIndexes();
       cachedConn = mongoose.connection;
       return cachedConn;
     }
@@ -278,6 +355,8 @@ const connectDB = async () => {
       console.log('✅ MongoDB connected successfully');
     }
 
+    await ensureCriticalIndexes();
+
     cachedConn = mongoose.connection;
     return cachedConn;
 
@@ -288,10 +367,23 @@ const connectDB = async () => {
 };
 
 // Connect once when the function/container initializes.
-// If it fails, it will throw; your routes should handle DB-dependent operations accordingly.
-connectDB().catch(() => {
-  // swallow here to avoid crashing immediately on cold start;
-  // DB-dependent endpoints will still error and logs will show why.
+connectDB().catch((err) => {
+  if (process.env.VERCEL) {
+    // Swallow on serverless: process.exit() would kill the whole function
+    // container, not just this cold start, and the per-request /api
+    // middleware below already re-attempts (and re-verifies critical
+    // indexes) on every request, so a transient failure here self-heals.
+    return;
+  }
+  // Outside serverless (Passenger, or `node server.js` directly), a failed
+  // first connection - including a failed critical-index build, see
+  // ensureCriticalIndexes() above - is not something to silently paper over
+  // with per-request 503s. Fail loudly and let the process supervisor
+  // (Passenger) restart it, rather than running indefinitely in a state
+  // where safety-critical uniqueness guarantees might not be enforced.
+  console.error('FATAL: startup database connection/index verification failed:', err.message);
+  _step(`FATAL startup DB error: ${err.message}`);
+  process.exit(1);
 });
 
 // ============================================
@@ -367,11 +459,25 @@ try {
 }
 
 safeRoute('/api/dorms', './routes/dorms');
+safeRoute('/api/dorm-inquiries', './routes/dormInquiries');
+// New admin-mediated housing-request flow - deliberately a separate mount
+// from /api/dorm-inquiries above, not a branch inside it. See the header
+// comment on routes/housingRequests.js for why.
+safeRoute('/api/housing-requests', './routes/housingRequests');
+// Internal, cron-only endpoints (own auth via X-Internal-Cron-Secret, not
+// the normal JWT flow - see middleware/internalAuth.js). Never linked from
+// the admin UI.
+safeRoute('/api/internal/dorm-follow-ups', './routes/internal/dormFollowUps');
 safeRoute('/api/reviews', './routes/reviews');
 safeRoute('/api/users', './routes/users');
 safeRoute('/api/messages', './routes/messages');
 safeRoute('/api/analytics', './routes/analytics');
 safeRoute('/api/roommate', './routes/roommate');
+safeRoute('/api/notifications', './routes/notifications');
+// Block/report routes existed but were never mounted here - the frontend's
+// report button has been calling POST /api/reports and 404ing in production.
+safeRoute('/api/block', './routes/block');
+safeRoute('/api/reports', './routes/report');
 safeRoute('/api/blog', './routes/blog');
 safeRoute('/api/questions', './routes/questions');
 safeRoute('/api/badges', './routes/badges');
@@ -386,6 +492,44 @@ safeRoute('/api/stripe', './routes/stripe');
 
 // Admin Dashboard Routes (full suite: dorms, users, reviews, analytics, etc.)
 safeRoute('/api/admin', './routes/admin/index');
+
+// Dynamic public listing page for database-backed Dorm records (see
+// frontend/property-detail.html + frontend/js/property-detail.js, which
+// already handled the static properties.js-driven case and was extended to
+// also fetch /api/dorms/slug/:slug when loaded from this path). Served
+// directly here, ahead of the static-file middleware below, since it isn't
+// a real file on disk.
+//
+// SEO fix: this used to be an unconditional res.sendFile() of the generic
+// template regardless of :slug, which is why every listing's pre-JS <head>
+// (title/description/canonical) was identical and pointed at
+// /property-detail.html instead of its own URL - see routes/dormSeo.js's
+// own comment for the full root-cause writeup and proof. The handler below
+// does one Dorm lookup (reused for the redirect check, the noindex
+// decision, and the metadata - never queried twice) and injects real
+// per-listing tags into the same template before sending it; the
+// client-side fetch of /api/dorms/slug/:slug and property-detail.js's own
+// rendering are completely unchanged.
+//
+// frontendPath is declared further down this file (module-level const),
+// but by the time any request actually reaches this handler the whole
+// module has already finished loading, so the closure sees it fine.
+const { createDormSeoHandler } = require('./routes/dormSeo');
+app.get('/logement/:slug', createDormSeoHandler({
+  DormModel: require('./models/Dorm'),
+  // A function, not the value itself: frontendPath is declared later in
+  // this same file (see comment above), so it must be read lazily at
+  // request time, never destructured here at module-load time.
+  getFrontendPath: () => frontendPath,
+}));
+
+// Same pattern for the roommate profile-view page: :publicProfileId is the
+// opaque id from RoommateProfile (never the internal Mongo userId - see
+// roommateController.js's stripInternalId). find-roommate-profile-view.js
+// reads it back out of the URL path itself, not a query string.
+app.get('/colocataires/:publicProfileId', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'find-roommate-profile-view.html'));
+});
 
 // SEO Routes - Serve at root level for search engines
 app.get('/sitemap.xml', (req, res) => {
@@ -427,29 +571,140 @@ app.get('/api/health', async (req, res) => {
   });
 });
 
+// Liveness: the Node process itself is up. Deliberately touches nothing
+// else (no DB), so it can never be dragged down by a database problem -
+// that's what /health/ready is for.
+app.get('/health/live', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
+
+// Readiness: essential dependencies (MongoDB) are actually available. Does
+// not attempt a reconnect (unlike /api/health) - a readiness probe should
+// answer immediately with the current state, not spend a request trying to
+// fix it.
+app.get('/health/ready', (req, res) => {
+  const ready = mongoose.connection.readyState === 1;
+  res.status(ready ? 200 : 503).json({ status: ready ? 'OK' : 'NOT_READY' });
+});
+
 // ============================================
 // STATIC FILES (Production)
 // ============================================
 
-// Serve frontend static files from Hostinger's public_html (one level up from nodejs/)
-const frontendPath = path.join(__dirname, '..', 'public_html');
-app.use(express.static(frontendPath));
-app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api')) return next();
-  res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
-    if (err) next();
+// Serve uploaded listing photos. Configurable root (see
+// utils/dormImageStorage.js) so it can point outside this app's own
+// directory if a deploy ever wipes/replaces it.
+app.use('/uploads', express.static(
+  process.env.DORM_UPLOAD_ROOT || path.join(__dirname, 'uploads'),
+  { maxAge: '30d' }
+));
+
+// Serve frontend static files - see config/staticRoot.js for why this is
+// resolved from one shared function instead of a hardcoded path here.
+const frontendPath = require('./config/staticRoot').resolveStaticRoot();
+
+// Startup hygiene: sweep any sitemap.xml.tmp-* file left behind by a
+// process that was killed between writeFileSync and renameSync in a
+// previous run (see utils/sitemapGenerator.js's writeFileAtomic). These
+// are already harmless - never served, never read back - this just stops
+// them accumulating across repeated crashes/restarts. Never touches
+// sitemap.xml itself.
+try {
+  const removed = require('./utils/sitemapGenerator').cleanupStaleTempFiles(
+    path.join(frontendPath, 'sitemap.xml')
+  );
+  if (removed.length) {
+    console.log(`[sitemap] Removed ${removed.length} stale temp file(s) from a previous process: ${removed.join(', ')}`);
+  }
+} catch (err) {
+  console.error('[sitemap] Stale temp file cleanup failed (non-fatal):', err.message);
+}
+
+app.use(express.static(frontendPath, {
+  maxAge: '30d',
+  setHeaders: (res, filePath) => {
+    if (/\.(js|css|webp|png|jpe?g|svg|ico|woff2?|ttf)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+    }
+    // Token-bearing response pages - the token itself lives only in a URL
+    // fragment (never sent to any server) and this page never links out to
+    // a third-party origin, but Referrer-Policy is set here too as
+    // defense-in-depth alongside the page's own <meta name="referrer">.
+    if (/(^|[\\/])(landlord-followup|dorm-followup)\.html$/i.test(filePath)) {
+      res.setHeader('Referrer-Policy', 'no-referrer');
+      // Overrides the outer maxAge:'30d' above - a page whose URL fragment
+      // carries a one-time credential must never be served from a shared
+      // or browser disk cache.
+      res.setHeader('Cache-Control', 'no-store');
+    }
+    // landlord-followup.html specifically: tighter than the app-wide helmet
+    // CSP in the security-middleware section above (which allows a couple
+    // of things - openstreetmap frameSrc, broad imgSrc - this page needs
+    // none of). frame-ancestors is the CSP-native anti-clickjacking
+    // control; X-Frame-Options is the same protection for older browsers
+    // that don't read frame-ancestors.
+    if (/(^|[\\/])landlord-followup\.html$/i.test(filePath)) {
+      res.setHeader('Content-Security-Policy', [
+        "default-src 'self'",
+        "script-src 'self'",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
+        "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
+        "img-src 'self' data:",
+        "connect-src 'self'",
+        "frame-ancestors 'none'",
+        "base-uri 'none'",
+        "form-action 'self'",
+      ].join('; '));
+      res.setHeader('X-Frame-Options', 'DENY');
+    }
+  }
+}));
+// ============================================
+// 404 HANDLING (must come after API routes and the static-file middleware
+// above, so it only ever catches genuinely unmatched requests)
+// ============================================
+
+// Unmatched /api/* requests get a JSON 404, not the HTML error page - an API
+// client shouldn't have to parse HTML to find out its endpoint doesn't exist.
+app.use('/api', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Endpoint not found'
   });
 });
 
-// ============================================
-// ERROR HANDLING
-// ============================================
+// Static asset extensions that express.static above didn't find should 404
+// for real (JSON/plain), never with 404.html's HTML body - a <script src>
+// or <link href> pointing at a missing file must not get back an HTML
+// document, or the browser's strict MIME-type check blocks it outright
+// (this is the exact bug that silently broke script.js and the whole js/
+// folder in production earlier this project: a missing .js file was being
+// served as text/html with a 200 status). This check has to stay separate
+// from the generic HTML 404 handler below it.
+const STATIC_ASSET_RE = /\.(js|css|webp|png|jpe?g|svg|ico|woff2?|ttf|json|xml|txt|map)$/i;
+app.use((req, res, next) => {
+  if (!STATIC_ASSET_RE.test(req.path)) return next();
+  res.status(404).type('text/plain').send('Not found');
+});
 
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
+// Everything else unmatched is a genuinely unknown page - this is a fully
+// static multi-page site (each real page is its own .html file already
+// matched by express.static above), not a client-side-routed app, so there
+// is no SPA-style index.html fallback here on purpose. Serve the real 404
+// page with a real 404 status instead of quietly returning the homepage
+// with 200.
+//
+// NOTE ON THE PATH BELOW: this deployment's production web root is NOT
+// "../frontend" relative to this file - it's "../public_html" (see
+// `frontendPath` above, and frontend/.htaccess's PassengerAppRoot, which
+// point at .../nodejs as this app's own folder with public_html as its
+// sibling). `frontendPath` already resolves correctly for both local dev
+// and production; reusing it here (rather than hardcoding a relative path)
+// is what makes this correct in both places without manual verification
+// per environment.
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(frontendPath, '404.html'), (err) => {
+    if (err) res.status(404).type('text/plain').send('Not found');
   });
 });
 
@@ -508,23 +763,45 @@ process.on('uncaughtException', (error) => {
 });
 
 // ============================================
-// START LOCAL SERVER (for local development)
+// START SERVER
 // ============================================
 
 const PORT = process.env.PORT || 5000;
 
-// Only start server if running locally (not in Vercel/serverless)
-if (require.main === module) {
+// Skip only on Vercel's serverless runtime, which imports `app` directly and
+// manages the request lifecycle itself. Everywhere else — including Hostinger's
+// Passenger, which requires this file through its own harness rather than
+// running `node server.js` directly — `require.main === module` is false even
+// though the app must still bind a real port, so that check can't be used here.
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
   }).on('error', (err) => {
     console.error('Server error:', err.message);
   });
+
+  // Deploy-packaging note: the in-process dorm-follow-up scheduler start
+  // call (services/dormFollowUpScheduler.js) is intentionally NOT included
+  // in this deploy. That module's own dependency closure (dormFollowUpProcessor,
+  // landlordOutcomeResolver, dormFollowUpQueries, CronLock, followUpToken)
+  // belongs to the legacy dorm-inquiry follow-up flow, which is out of scope
+  // for this controlled deploy and must stay disabled per standing
+  // instruction. Since ENABLE_DORM_FOLLOWUP_SCHEDULER is unset in
+  // production, calling startDormFollowUpScheduler() here would have been a
+  // no-op anyway (see isSchedulerEnabled()) - omitting the call changes no
+  // runtime behavior, it only avoids a require() of files not shipped in
+  // this deploy.
 }
 
 // ============================================
 // EXPORT APP (for Vercel)
 // ============================================
+
+// Exposed for tests only (see tests/serverIndexFailure.test.js) - lets a
+// test deterministically await the real connection/index-verification
+// promise instead of guessing with a fixed setTimeout, which was flaky
+// under parallel test-suite load.
+app._connectDB = connectDB;
 
 module.exports = app;

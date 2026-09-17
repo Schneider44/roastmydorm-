@@ -10,7 +10,15 @@ const reviewsRouter = require('./reviews');
 const roommatesRouter = require('./roommates');
 const analyticsRouter = require('./analytics');
 const reportsRouter = require('./reports');
-const settingsRouter = require('./settings');
+const settingsRouter  = require('./settings');
+const inquiriesRouter = require('./inquiries');
+// Admin side of the new admin-mediated housing-request flow. Deliberately
+// the only addition to this file in this deploy - deploy-packaging note,
+// not a source change: everything else in this file is byte-identical to
+// the version already live in production, to avoid pulling in unrelated
+// unreviewed admin sub-routes (dorm-inquiries follow-up UI, sitemap admin)
+// or the userType->role/status field renames staged elsewhere.
+const housingRequestsRouter = require('./housingRequests');
 
 // Apply security headers and rate limiting to all admin routes
 router.use(adminSecurityHeaders);
@@ -184,6 +192,8 @@ router.use('/roommates', roommatesRouter);
 router.use('/analytics', analyticsRouter);
 router.use('/reports', reportsRouter);
 router.use('/settings', settingsRouter);
+router.use('/inquiries', inquiriesRouter);
+router.use('/housing-requests', housingRequestsRouter);
 
 module.exports = router;
 
