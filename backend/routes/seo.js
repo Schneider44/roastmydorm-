@@ -12,8 +12,12 @@ router.get('/sitemap.xml', async (req, res) => {
   try {
     const baseUrl = process.env.BASE_URL || 'https://www.roastmydorm.com';
     
-    // Fetch all active dorms
-    const dorms = await Dorm.find({ status: 'active' })
+    // Fetch all publicly-visible dorms. Same status-vocabulary fix as
+    // routes/dorms.js's public listing filter - see that file's comment
+    // for the full root cause (28 real listings have status:'published',
+    // which this filter never matched, so they were absent from the
+    // sitemap too).
+    const dorms = await Dorm.find({ status: { $in: ['active', 'published'] } })
       .select('name location.address.city slug updatedAt')
       .lean();
 
@@ -124,7 +128,7 @@ router.get('/city/:slug/metadata', async (req, res) => {
 
     const dormCount = await Dorm.countDocuments({
       'location.address.city': new RegExp(cityName, 'i'),
-      status: 'active'
+      status: { $in: ['active', 'published'] }
     });
 
     const baseUrl = process.env.BASE_URL || 'https://www.roastmydorm.com';
@@ -170,7 +174,7 @@ router.get('/university/:slug/metadata', async (req, res) => {
 
     const dormCount = await Dorm.countDocuments({
       'location.nearbyUniversities.name': new RegExp(universityName, 'i'),
-      status: 'active'
+      status: { $in: ['active', 'published'] }
     });
 
     const baseUrl = process.env.BASE_URL || 'https://www.roastmydorm.com';
@@ -248,7 +252,7 @@ router.get('/internal-links/:dormId', async (req, res) => {
     const relatedDorms = await Dorm.find({
       _id: { $ne: dormId },
       'location.address.city': city,
-      status: 'active'
+      status: { $in: ['active', 'published'] }
     })
     .select('name slug averageRating pricing.baseRent images')
     .limit(6)

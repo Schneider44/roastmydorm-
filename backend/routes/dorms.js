@@ -20,7 +20,19 @@ router.get('/', async (req, res) => {
     } = req.query;
 
     // Build filter object
-    const filter = { status: 'active' };
+    // Status vocabulary fix: production's Dorm collection has 28 real
+    // listings with status:'published' (none match the enum this
+    // currently-deployed model actually declares - 'active','inactive',
+    // 'pending','rejected','suspended' - so they must have been written by
+    // an earlier version of the admin create/approve flow no longer live),
+    // while this route only ever filtered status:'active'. Every one of
+    // those 28 listings was therefore invisible on the public site despite
+    // existing and showing correctly in the admin dashboard. Matching both
+    // values here (rather than committing to one) fixes visibility for the
+    // existing 'published' listings AND anything the current admin flow
+    // still creates as 'active', without touching the model's enum or any
+    // write path - a pure additive, read-side fix.
+    const filter = { status: { $in: ['active', 'published'] } };
 
     // Search filter
     if (search) {
