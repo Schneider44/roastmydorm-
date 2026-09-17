@@ -20,14 +20,40 @@ const GoogleAuth = (() => {
   // ── Token storage ────────────────────────────────────────────
   function saveSession(data) {
     localStorage.setItem(SESSION_KEY, JSON.stringify(data));
+    // Keep legacy keys in sync so roommate pages that read rmd_token/rmd_refresh still work
+    if (data.accessToken) localStorage.setItem('rmd_token', data.accessToken);
+    if (data.refreshToken) localStorage.setItem('rmd_refresh', data.refreshToken);
   }
 
+  // Root-cause fix: rmd-shared.js (the roommate pages) rotates rmd_token/
+  // rmd_refresh directly on every silent refresh but never touches this
+  // module's rmd_session blob, so the blob's cached tokens can go stale
+  // the moment the OTHER module refreshes first. Refresh tokens are
+  // single-use server-side, so a refresh attempt made with the stale
+  // cached one gets rejected as already-revoked, and this module's
+  // failure handling then wipes the (perfectly valid) tokens the other
+  // module just wrote - logging the user out right after they were
+  // silently re-authenticated. The raw rmd_token/rmd_refresh keys are the
+  // one source of truth both modules write to, so always prefer them over
+  // whatever's cached in the JSON blob.
   function getSession() {
-    try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; }
+    let session;
+    try { session = JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { session = null; }
+    const liveToken = localStorage.getItem('rmd_token');
+    const liveRefresh = localStorage.getItem('rmd_refresh');
+    if (!session) {
+      return liveToken ? { accessToken: liveToken, refreshToken: liveRefresh, user: null } : null;
+    }
+    if (liveToken) session.accessToken = liveToken;
+    if (liveRefresh) session.refreshToken = liveRefresh;
+    return session;
   }
 
   function clearSession() {
     localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('rmd_token');
+    localStorage.removeItem('rmd_refresh');
+    localStorage.removeItem('rmd_user');
   }
 
   function isLoggedIn() {
@@ -63,6 +89,13 @@ const GoogleAuth = (() => {
         accessToken: data.data.accessToken,
         refreshToken: data.data.refreshToken
       });
+
+      // Fired only on this success path - never on the throw below.
+      // isNewUser is an explicit server flag (backend/routes/
+      // googleAuth.js), never inferred client-side.
+      if (window.RMD && window.RMD.trackFirstParty) {
+        window.RMD.trackFirstParty(data.data.isNewUser ? 'signup' : 'login');
+      }
 
       if (typeof callbacks.onSuccess === 'function') {
         callbacks.onSuccess(data.data.user);
@@ -177,7 +210,12 @@ const GoogleAuth = (() => {
       });
       const data = await res.json();
       if (data.success) {
-        saveSession({ ...session, accessToken: data.data.accessToken });
+        // Refresh tokens rotate and are single-use server-side - the one
+        // just spent is already revoked, so the new one from this response
+        // MUST be persisted too, not just the access token. Dropping it
+        // (as this used to) leaves the client holding an already-dead
+        // refresh token, breaking every later refresh attempt.
+        saveSession({ ...session, accessToken: data.data.accessToken, refreshToken: data.data.refreshToken || session.refreshToken });
         return data.data.accessToken;
       }
     } catch (_) {}
