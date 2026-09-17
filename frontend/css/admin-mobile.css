@@ -1,0 +1,216 @@
+/**
+ * Admin dashboard — mobile/tablet responsive layer.
+ *
+ * Everything in this file lives inside @media (max-width:1024px) blocks.
+ * This is a hard rule, not a style preference: admin-dashboard.html's own
+ * inline <style> block (desktop-first, lines 26-300) must render byte-
+ * identically above 1024px, and the only way to guarantee that mechanically
+ * (rather than by eyeballing) is "zero top-level rules in this file."
+ * New CSS custom properties are similarly media-scoped under a fresh
+ * --adminmob-* namespace so they can never leak into or collide with the
+ * existing --primary/--bg-card/etc. tokens used above 1024px.
+ *
+ * Loaded via <link> after the existing inline styles, so at equal
+ * specificity these rules win the cascade without needing !important.
+ */
+
+@media (max-width: 1024px) {
+
+  /* ---------- Design tokens (mobile-only) ------------------------------ */
+  :root {
+    --adminmob-primary: #10b981;
+    --adminmob-primary-dark: #059669;
+    --adminmob-primary-light: #34d399;
+    --adminmob-primary-bg: #ecfdf5;
+    --adminmob-accent: #ff6b4a;
+    --adminmob-accent-bg: #fff1ec;
+    --adminmob-danger: #dc2626;
+    --adminmob-danger-bg: #fef2f2;
+    --adminmob-purple: #7c6fe0;
+    --adminmob-purple-bg: #f2f0fd;
+    --adminmob-warning: #f59e0b;
+    --adminmob-warning-bg: #fffbeb;
+    --adminmob-bg: #fdfaf6;
+    --adminmob-surface: #ffffff;
+    --adminmob-border: #ece5db;
+    --adminmob-text: #0f172a;
+    --adminmob-text-muted: #64748b;
+    --adminmob-text-faint: #94a3b8;
+    --adminmob-radius-sm: 10px;
+    --adminmob-radius-md: 14px;
+    --adminmob-radius-lg: 20px;
+    --adminmob-radius-pill: 999px;
+    --adminmob-bottom-nav-height: 60px;
+    --adminmob-touch-target: 44px;
+    --adminmob-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --adminmob-safe-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Reduced motion: disable the drawer/sheet slide + card transitions */
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar, .mobile-drawer-backdrop, .mobile-more-sheet, .mobile-card { transition: none !important; }
+  }
+
+  body { background: var(--adminmob-bg); }
+  .page-content { background: var(--adminmob-bg); }
+
+  /* ---------- Header safety net ----------------------------------------- */
+  .header-left, .header-right { min-width: 0; }
+  .page-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  #mobile-menu-btn { min-width: var(--adminmob-touch-target); min-height: var(--adminmob-touch-target); }
+  .top-header { padding-top: var(--adminmob-safe-top); }
+
+  /* ---------- Drawer backdrop -------------------------------------------- */
+  .mobile-drawer-backdrop {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+    z-index: 199; opacity: 0; transition: opacity 0.2s ease;
+  }
+  .mobile-drawer-backdrop[hidden] { display: none; }
+  .mobile-drawer-backdrop.show { opacity: 1; }
+  .sidebar.mobile-open { z-index: 200; }
+
+  /* ---------- Bottom nav --------------------------------------------------*/
+  .mobile-bottom-nav {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 150;
+    background: var(--adminmob-surface); border-top: 1px solid var(--adminmob-border);
+    padding-bottom: var(--adminmob-safe-bottom);
+    box-shadow: 0 -2px 10px rgba(15, 23, 42, 0.06);
+  }
+  .bottom-nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; min-height: var(--adminmob-bottom-nav-height); background: none; border: none;
+    color: var(--adminmob-text-muted); font-family: inherit; font-size: 11px; font-weight: 600;
+    cursor: pointer; padding: 6px 4px;
+  }
+  .bottom-nav-item i { font-size: 18px; }
+  .bottom-nav-item.active { color: var(--adminmob-primary); }
+  .bottom-nav-item:focus-visible { outline: 2px solid var(--adminmob-primary); outline-offset: -2px; }
+
+  .main-content {
+    padding-bottom: calc(var(--adminmob-bottom-nav-height) + var(--adminmob-safe-bottom) + 16px);
+  }
+
+  /* ---------- "Plus" bottom sheet ---------------------------------------- */
+  .mobile-more-sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 201;
+    background: var(--adminmob-surface); border-radius: var(--adminmob-radius-lg) var(--adminmob-radius-lg) 0 0;
+    padding: 8px 8px calc(16px + var(--adminmob-safe-bottom)); max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.15);
+    transform: translateY(100%); transition: transform 0.22s ease;
+  }
+  .mobile-more-sheet[hidden] { display: none; }
+  .mobile-more-sheet.show { transform: translateY(0); }
+  .mobile-more-sheet-handle {
+    width: 36px; height: 4px; border-radius: var(--adminmob-radius-pill);
+    background: var(--adminmob-border); margin: 6px auto 12px;
+  }
+  .mobile-more-sheet-title {
+    font-size: 13px; font-weight: 700; color: var(--adminmob-text-muted);
+    text-transform: uppercase; letter-spacing: 0.04em; padding: 0 12px 8px;
+  }
+  .mobile-more-item {
+    display: flex; align-items: center; gap: 14px; width: 100%; min-height: var(--adminmob-touch-target);
+    padding: 12px; background: none; border: none; border-radius: var(--adminmob-radius-sm);
+    color: var(--adminmob-text); font-family: inherit; font-size: 15px; font-weight: 500; text-align: left;
+    cursor: pointer;
+  }
+  .mobile-more-item:hover, .mobile-more-item:focus-visible { background: var(--adminmob-primary-bg); outline: none; }
+  .mobile-more-item i { width: 22px; text-align: center; color: var(--adminmob-text-muted); font-size: 16px; }
+  .mobile-more-item.danger { color: var(--adminmob-danger); border-top: 1px solid var(--adminmob-border); margin-top: 6px; padding-top: 14px; }
+  .mobile-more-item.danger i { color: var(--adminmob-danger); }
+
+  /* ---------- Generic card list (Users/Dorms/Reviews/Roommates/Contacts) */
+  .data-table-container { display: none; }
+  .mobile-card-list { display: flex; flex-direction: column; gap: 12px; }
+  .mobile-card-list[hidden] { display: none; }
+
+  .mobile-card {
+    background: var(--adminmob-surface); border: 1px solid var(--adminmob-border);
+    border-radius: var(--adminmob-radius-md); padding: 14px; box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+  }
+  .mobile-card-header { display: flex; align-items: flex-start; gap: 10px; }
+  .mobile-card-media {
+    width: 52px; height: 52px; border-radius: var(--adminmob-radius-sm); object-fit: cover; flex: none;
+    background: var(--adminmob-primary-bg);
+  }
+  .mobile-card-heading { flex: 1; min-width: 0; }
+  .mobile-card-title { font-size: 15px; font-weight: 700; color: var(--adminmob-text); margin: 0 0 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mobile-card-subtitle { font-size: 13px; color: var(--adminmob-text-muted); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mobile-card-select { flex: none; width: 20px; height: 20px; margin-top: 2px; }
+
+  .mobile-card-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .mobile-badge {
+    display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: var(--adminmob-radius-pill);
+    font-size: 11px; font-weight: 700; white-space: nowrap;
+  }
+  .mobile-badge.tone-primary { background: var(--adminmob-primary-bg); color: var(--adminmob-primary-dark); }
+  .mobile-badge.tone-purple  { background: var(--adminmob-purple-bg); color: var(--adminmob-purple); }
+  .mobile-badge.tone-warning { background: var(--adminmob-warning-bg); color: #b45309; }
+  .mobile-badge.tone-danger  { background: var(--adminmob-danger-bg); color: var(--adminmob-danger); }
+  .mobile-badge.tone-neutral { background: #f1f5f9; color: var(--adminmob-text-muted); }
+
+  .mobile-card-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-top: 10px; }
+  .mobile-card-field { min-width: 0; }
+  .mobile-card-field-label { display: block; font-size: 10px; color: var(--adminmob-text-faint); text-transform: uppercase; letter-spacing: 0.03em; }
+  .mobile-card-field-value { display: block; font-size: 13px; color: var(--adminmob-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .mobile-card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--adminmob-border); }
+  .mobile-card-actions button, .mobile-card-actions select {
+    min-height: var(--adminmob-touch-target); min-width: var(--adminmob-touch-target);
+    border-radius: var(--adminmob-radius-sm); border: 1px solid var(--adminmob-border);
+    background: var(--adminmob-surface); color: var(--adminmob-text); font-family: inherit; font-size: 13px;
+    padding: 8px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .mobile-card-actions button.primary { background: var(--adminmob-primary); border-color: var(--adminmob-primary); color: #fff; font-weight: 600; }
+  .mobile-card-actions button.danger { color: var(--adminmob-danger); border-color: var(--adminmob-danger-bg); }
+  .mobile-card-actions .mobile-card-more { position: relative; }
+
+  .mobile-card-empty, .mobile-card-loading, .mobile-card-error {
+    text-align: center; padding: 32px 16px; color: var(--adminmob-text-muted); font-size: 14px;
+  }
+
+  /* ---------- Dorm Contacts card specifics -------------------------------- */
+  .mobile-card.dc-card .mobile-card-fields { grid-template-columns: 1fr 1fr; }
+  .mobile-card.dc-card .dc-status-select { grid-column: 1 / -1; margin-top: 4px; }
+
+  /* ---------- Reports card polish (already card-based, cosmetic only) ---- */
+  .report-item { padding: 14px; }
+  .report-item .btn-small, .report-item button { min-height: var(--adminmob-touch-target); }
+
+  /* ---------- Property Requests card polish (cosmetic hook only) --------- */
+  #property-requests-page .pr-card-mobile,
+  #pr-list > * { border-radius: var(--adminmob-radius-md) !important; }
+
+  /* ---------- Charts ------------------------------------------------------ */
+  .chart-container { height: 220px; }
+  .chart-container.large { height: 240px; }
+
+  /* ---------- dorm-form-page fix (the real overflow bug) ------------------ */
+  .dorm-form-page .form-card { padding: 16px; }
+  .dorm-form-page .form-row { grid-template-columns: 1fr; }
+  .dorm-form-page .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+  .dorm-form-page #dorm-photo-grid,
+  .dorm-form-page #dorm-video-grid { grid-template-columns: 1fr; }
+  .dorm-form-page .form-actions {
+    position: sticky;
+    bottom: calc(var(--adminmob-bottom-nav-height) + var(--adminmob-safe-bottom));
+    background: var(--adminmob-surface);
+    padding: 12px 16px;
+    margin: 0 -16px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,.06);
+    z-index: 5;
+  }
+  .dorm-form-page input,
+  .dorm-form-page select,
+  .dorm-form-page textarea,
+  .dorm-form-page button { min-height: var(--adminmob-touch-target); }
+
+  /* ---------- Settings: enforce single column + touch targets ------------ */
+  .settings-page .switch { min-width: 44px; }
+  .settings-page input, .settings-page select, .settings-page button { min-height: var(--adminmob-touch-target); }
+
+  @media (max-width: 479px) {
+    .dorm-form-page .checkbox-grid { grid-template-columns: 1fr; }
+    .chart-container { height: 200px; }
+  }
+}
