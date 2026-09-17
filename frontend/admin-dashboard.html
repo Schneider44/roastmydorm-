@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Admin Dashboard - RoastMyDorm</title>
+  <meta name="robots" content="noindex, nsurollow">
+  <title>Admin Tableau de bord - RoastMyDorm</title>
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
   
   <!-- Charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <!-- Styles -->
   <style>
-/* Admin Dashboard Styles */
+/* Admin Tableau de bord Styles */
 
 :root {
   --primary: #6366f1;
@@ -27,7 +29,7 @@
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --info: #3b82f6;
+  --info: #34d399;
   --bg-dark: #0f172a;
   --bg-sidebar: #1e293b;
   --bg-card: #ffffff;
@@ -288,6 +290,22 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 @media(max-width:1024px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0}.mobile-menu-btn{display:block}.charts-grid{grid-template-columns:1fr}.chart-card.wide{grid-column:span 1}.activity-grid{grid-template-columns:1fr}.search-box{display:none}}
 @media(max-width:768px){.stats-grid{grid-template-columns:1fr}.analytics-stats-grid{grid-template-columns:1fr}.page-toolbar{flex-direction:column;align-items:stretch}.toolbar-left,.toolbar-right{flex-wrap:wrap;justify-content:stretch}.search-filter,.filter-select{flex:1;min-width:100%}.search-filter input{width:100%}.data-table-container{overflow-x:auto}.data-table{min-width:700px}.modal-content{max-height:80vh;margin:20px}.stats-row{flex-wrap:wrap}.mini-stat{flex:1;min-width:100px}.analytics-tabs,.settings-tabs{overflow-x:auto;flex-wrap:nowrap}.tab-btn{white-space:nowrap}}
 @media(max-width:480px){.page-content{padding:16px}.stat-card{padding:16px}.stat-info h3{font-size:24px}.top-header{padding:0 16px}.page-title{font-size:18px}.modal-footer{flex-direction:column}.modal-footer button{width:100%}.toast-container{left:16px;right:16px;bottom:16px}.toast{min-width:auto}}
+.dc-real-data-note{background:rgba(16,185,129,0.08);color:var(--text-secondary);border-radius:var(--border-radius);padding:10px 16px;font-size:13px;margin:8px 0 16px;display:flex;align-items:center;gap:8px}
+.hr-detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px}
+.hr-message{background:var(--bg-body);border-radius:var(--border-radius);padding:12px 16px;margin-bottom:16px}
+.hr-message p{margin:6px 0 0;white-space:pre-wrap}
+.hr-consent-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:20px}
+.hr-actions-block{border-top:1px solid var(--border-color);padding-top:14px;margin-top:14px}
+.hr-status-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.hr-hint{font-size:12px;color:var(--text-secondary);margin:4px 0 0}
+.hr-inline-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.hr-inline-form select,.hr-inline-form input[type="text"]{flex:1;min-width:160px;padding:8px 10px;border:1px solid var(--border-color);border-radius:8px;font-size:14px}
+.hr-notes-list{display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto}
+.hr-note{background:var(--bg-body);border-radius:8px;padding:8px 12px}
+.hr-note p{margin:0;font-size:13px}
+.hr-note small{color:var(--text-secondary)}
+.hr-empty-note{color:var(--text-secondary);font-size:13px}
+.hr-history-table td{font-size:13px;padding:6px 10px}
   </style>
 </head>
 <body>
@@ -296,7 +314,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
     <div class="login-container">
       <div class="login-header">
         <i class="fas fa-shield-halved"></i>
-        <h1>Admin Dashboard</h1>
+        <h1>Admin Tableau de bord</h1>
         <p>RoastMyDorm Administration</p>
       </div>
       <form id="admin-login-form" class="login-form">
@@ -305,12 +323,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           <input type="email" id="email" required placeholder="admin@roastmydorm.com" autocomplete="email">
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">Mot de passe</label>
           <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
         </div>
         <div class="form-error" id="login-error"></div>
         <button type="submit" class="btn-primary" id="login-btn">
-          <span>Sign In</span>
+          <span>Se connecter</span>
           <i class="fas fa-arrow-right"></i>
         </button>
       </form>
@@ -336,7 +354,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           <li class="nav-item active" data-page="dashboard">
             <a href="#dashboard">
               <i class="fas fa-chart-pie"></i>
-              <span>Dashboard</span>
+              <span>Tableau de bord</span>
             </a>
           </li>
           <li class="nav-item" data-page="users">
@@ -360,7 +378,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           <li class="nav-item" data-page="roommates">
             <a href="#roommates">
               <i class="fas fa-user-group"></i>
-              <span>Roommates</span>
+              <span>Colocataires</span>
             </a>
           </li>
           <li class="nav-item" data-page="analytics">
@@ -376,17 +394,24 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
               <span class="badge" id="property-requests-badge" style="display:none">0</span>
             </a>
           </li>
+          <li class="nav-item" data-page="housing-requests">
+            <a href="#housing-requests">
+              <i class="fas fa-house-circle-check"></i>
+              <span>Demandes de logement</span>
+              <span class="badge" id="housing-requests-badge" style="display:none">0</span>
+            </a>
+          </li>
           <li class="nav-item" data-page="reports">
             <a href="#reports">
               <i class="fas fa-flag"></i>
-              <span>Reports</span>
+              <span>Signalers</span>
               <span class="badge" id="reports-badge">0</span>
             </a>
           </li>
           <li class="nav-item" data-page="settings">
             <a href="#settings">
               <i class="fas fa-cog"></i>
-              <span>Settings</span>
+              <span>Paramètres</span>
             </a>
           </li>
         </ul>
@@ -394,7 +419,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 
       <div class="sidebar-footer">
         <div class="admin-profile">
-          <img src="" alt="" id="admin-avatar" class="avatar">
+          <img src="" alt="" id="admin-avatar" class="avatar" loading="lazy" decoding="async">
           <div class="admin-info">
             <span class="admin-name" id="admin-name">Admin</span>
             <span class="admin-role">Administrator</span>
@@ -402,7 +427,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
         </div>
         <button class="logout-btn" id="logout-btn">
           <i class="fas fa-sign-out-alt"></i>
-          <span>Logout</span>
+          <span>Déconnexion</span>
         </button>
       </div>
     </aside>
@@ -415,12 +440,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           <button class="mobile-menu-btn" id="mobile-menu-btn">
             <i class="fas fa-bars"></i>
           </button>
-          <h1 class="page-title" id="page-title">Dashboard</h1>
+          <h1 class="page-title" id="page-title">Tableau de bord</h1>
         </div>
         <div class="header-right">
           <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search..." id="global-search">
+            <input type="text" placeholder="Rechercher..." id="global-search">
           </div>
           <button class="notification-btn" id="notification-btn">
             <i class="fas fa-bell"></i>
@@ -434,7 +459,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 
       <!-- Page Content -->
       <div class="page-content" id="page-content">
-        <!-- Dashboard Page -->
+        <!-- Tableau de bord Page -->
         <section class="page dashboard-page active" id="dashboard-page">
           <!-- Stats Cards -->
           <div class="stats-grid">
@@ -485,7 +510,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
               </div>
               <div class="stat-info">
                 <h3 id="stat-pending-reports">0</h3>
-                <p>Pending Reports</p>
+                <p>Pending Signalers</p>
               </div>
               <div class="stat-badge urgent" id="stat-reports-urgent">
                 <span>Needs attention</span>
@@ -533,7 +558,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
               <div class="activity-list" id="recent-signups">
                 <div class="loading-placeholder">
                   <i class="fas fa-spinner fa-spin"></i>
-                  <span>Loading...</span>
+                  <span>Chargement...</span>
                 </div>
               </div>
             </div>
@@ -546,7 +571,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
               <div class="activity-list" id="recent-reviews">
                 <div class="loading-placeholder">
                   <i class="fas fa-spinner fa-spin"></i>
-                  <span>Loading...</span>
+                  <span>Chargement...</span>
                 </div>
               </div>
             </div>
@@ -559,7 +584,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
               <div class="activity-list" id="top-dorms">
                 <div class="loading-placeholder">
                   <i class="fas fa-spinner fa-spin"></i>
-                  <span>Loading...</span>
+                  <span>Chargement...</span>
                 </div>
               </div>
             </div>
@@ -572,12 +597,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <div class="toolbar-left">
               <div class="search-filter">
                 <i class="fas fa-search"></i>
-                <input type="text" id="users-search" placeholder="Search users...">
+                <input type="text" id="users-search" placeholder="Rechercher users...">
               </div>
               <select id="users-type-filter" class="filter-select">
-                <option value="">All Types</option>
+                <option value="">Tous les types</option>
                 <option value="student">Students</option>
-                <option value="landlord">Landlords</option>
+                <option value="landlord">Propriétaires</option>
               </select>
               <select id="users-status-filter" class="filter-select">
                 <option value="">All Status</option>
@@ -602,7 +627,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                   <th>User</th>
                   <th>Email</th>
                   <th>Type</th>
-                  <th>University</th>
+                  <th>Université</th>
                   <th>Joined</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -625,7 +650,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <button class="pagination-btn" id="users-prev" disabled>
               <i class="fas fa-chevron-left"></i>
             </button>
-            <span class="pagination-info">Page <span id="users-current-page">1</span> of <span id="users-total-pages">1</span></span>
+            <span class="pagination-info">Page <span id="users-current-page">1</span> sur <span id="users-total-pages">1</span></span>
             <button class="pagination-btn" id="users-next">
               <i class="fas fa-chevron-right"></i>
             </button>
@@ -638,10 +663,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <div class="toolbar-left">
               <div class="search-filter">
                 <i class="fas fa-search"></i>
-                <input type="text" id="dorms-search" placeholder="Search dorms...">
+                <input type="text" id="dorms-search" placeholder="Rechercher dorms...">
               </div>
               <select id="dorms-city-filter" class="filter-select">
-                <option value="">All Cities</option>
+                <option value="">All Villes</option>
                 <option value="Rabat">Rabat</option>
                 <option value="Casablanca">Casablanca</option>
                 <option value="Marrakech">Marrakech</option>
@@ -699,7 +724,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <button class="pagination-btn" id="dorms-prev" disabled>
               <i class="fas fa-chevron-left"></i>
             </button>
-            <span class="pagination-info">Page <span id="dorms-current-page">1</span> of <span id="dorms-total-pages">1</span></span>
+            <span class="pagination-info">Page <span id="dorms-current-page">1</span> sur <span id="dorms-total-pages">1</span></span>
             <button class="pagination-btn" id="dorms-next">
               <i class="fas fa-chevron-right"></i>
             </button>
@@ -712,7 +737,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <div class="toolbar-left">
               <div class="search-filter">
                 <i class="fas fa-search"></i>
-                <input type="text" id="reviews-search" placeholder="Search reviews...">
+                <input type="text" id="reviews-search" placeholder="Rechercher reviews...">
               </div>
               <select id="reviews-status-filter" class="filter-select">
                 <option value="">All Status</option>
@@ -752,7 +777,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                   <th>Review</th>
                   <th>Dorm</th>
                   <th>Rating</th>
-                  <th>Author</th>
+                  <th>Auteur</th>
                   <th>Date</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -775,23 +800,23 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <button class="pagination-btn" id="reviews-prev" disabled>
               <i class="fas fa-chevron-left"></i>
             </button>
-            <span class="pagination-info">Page <span id="reviews-current-page">1</span> of <span id="reviews-total-pages">1</span></span>
+            <span class="pagination-info">Page <span id="reviews-current-page">1</span> sur <span id="reviews-total-pages">1</span></span>
             <button class="pagination-btn" id="reviews-next">
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>
         </section>
 
-        <!-- Roommates Page -->
+        <!-- Colocataires Page -->
         <section class="page roommates-page" id="roommates-page">
           <div class="page-toolbar">
             <div class="toolbar-left">
               <div class="search-filter">
                 <i class="fas fa-search"></i>
-                <input type="text" id="roommates-search" placeholder="Search profiles...">
+                <input type="text" id="roommates-search" placeholder="Rechercher profiles...">
               </div>
               <select id="roommates-city-filter" class="filter-select">
-                <option value="">All Cities</option>
+                <option value="">All Villes</option>
                 <option value="Rabat">Rabat</option>
                 <option value="Casablanca">Casablanca</option>
                 <option value="Marrakech">Marrakech</option>
@@ -820,7 +845,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                 <tr>
                   <th>User</th>
                   <th>Location</th>
-                  <th>University</th>
+                  <th>Université</th>
                   <th>Budget</th>
                   <th>Matches</th>
                   <th>Status</th>
@@ -844,7 +869,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <button class="pagination-btn" id="roommates-prev" disabled>
               <i class="fas fa-chevron-left"></i>
             </button>
-            <span class="pagination-info">Page <span id="roommates-current-page">1</span> of <span id="roommates-total-pages">1</span></span>
+            <span class="pagination-info">Page <span id="roommates-current-page">1</span> sur <span id="roommates-total-pages">1</span></span>
             <button class="pagination-btn" id="roommates-next">
               <i class="fas fa-chevron-right"></i>
             </button>
@@ -878,7 +903,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                 <div class="analytics-stat-card">
                   <i class="fas fa-user-plus"></i>
                   <div class="analytics-stat-value" id="analytics-new-users">0</div>
-                  <div class="analytics-stat-label">New Users</div>
+                  <div class="analytics-stat-label">Nouveau Users</div>
                   <div class="analytics-stat-change" id="analytics-users-change">+0%</div>
                 </div>
                 <div class="analytics-stat-card">
@@ -940,7 +965,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                 </div>
                 <div class="chart-card">
                   <div class="chart-header">
-                    <h3>Top Searched Cities</h3>
+                    <h3>Top Recherchered Villes</h3>
                   </div>
                   <div class="top-list" id="top-cities-list">
                     <div class="loading-placeholder">
@@ -1031,7 +1056,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           </div>
         </section>
 
-        <!-- Reports Page -->
+        <!-- Signalers Page -->
         <section class="page reports-page" id="reports-page">
           <div class="page-toolbar">
             <div class="toolbar-left">
@@ -1043,7 +1068,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                 <option value="dismissed">Dismissed</option>
               </select>
               <select id="reports-type-filter" class="filter-select">
-                <option value="">All Types</option>
+                <option value="">Tous les types</option>
                 <option value="review">Reviews</option>
                 <option value="dorm">Dorms</option>
                 <option value="user">Users</option>
@@ -1084,14 +1109,82 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
             <button class="pagination-btn" id="reports-prev" disabled>
               <i class="fas fa-chevron-left"></i>
             </button>
-            <span class="pagination-info">Page <span id="reports-current-page">1</span> of <span id="reports-total-pages">1</span></span>
+            <span class="pagination-info">Page <span id="reports-current-page">1</span> sur <span id="reports-total-pages">1</span></span>
             <button class="pagination-btn" id="reports-next">
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>
         </section>
 
-        <!-- Settings Page -->
+        <!-- Demandes de logement Page (admin-mediated housing-request flow) -->
+        <section class="page housing-requests-page" id="housing-requests-page">
+          <div class="stats-row">
+            <div class="mini-stat"><span class="mini-stat-value" id="hr-stat-total">0</span><span class="mini-stat-label">Total demandes</span></div>
+            <div class="mini-stat"><span class="mini-stat-value" id="hr-stat-new">0</span><span class="mini-stat-label">Nouvelles</span></div>
+            <div class="mini-stat"><span class="mini-stat-value" id="hr-stat-reviewing">0</span><span class="mini-stat-label">En cours</span></div>
+            <div class="mini-stat success"><span class="mini-stat-value" id="hr-stat-handoff">0</span><span class="mini-stat-label">Mises en relation</span></div>
+            <div class="mini-stat urgent"><span class="mini-stat-value" id="hr-stat-failed">0</span><span class="mini-stat-label">Notifications échouées</span></div>
+          </div>
+          <p class="dc-real-data-note"><i class="fas fa-shield-halved"></i> Aucune coordonnée de propriétaire n'est jamais affichée à l'étudiant tant que la disponibilité n'est pas confirmée et le consentement de partage donné.</p>
+
+          <div class="page-toolbar">
+            <div class="toolbar-left">
+              <div class="search-filter">
+                <i class="fas fa-search"></i>
+                <input type="text" id="hr-search" placeholder="Référence, logement, étudiant...">
+              </div>
+              <select id="hr-status-filter" class="filter-select">
+                <option value="all">Tous les statuts</option>
+                <option value="new">Nouvelle</option>
+                <option value="reviewing">En cours de vérification</option>
+                <option value="checking_availability">Vérification disponibilité</option>
+                <option value="available">Disponible</option>
+                <option value="awaiting_student_consent">En attente de consentement</option>
+                <option value="handoff_sent">Mise en relation faite</option>
+                <option value="reserved">Réservé</option>
+                <option value="unavailable">Indisponible</option>
+                <option value="landlord_unreachable">Propriétaire injoignable</option>
+                <option value="closed">Clôturée</option>
+              </select>
+              <select id="hr-city-filter" class="filter-select">
+                <option value="">Toutes les villes</option>
+                <option value="Rabat">Rabat</option>
+                <option value="Casablanca">Casablanca</option>
+                <option value="Marrakech">Marrakech</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table" id="hr-table">
+              <thead>
+                <tr>
+                  <th>Référence</th>
+                  <th>Date</th>
+                  <th>Étudiant(e)</th>
+                  <th>Logement</th>
+                  <th>Ville</th>
+                  <th>Statut</th>
+                  <th>Notifications</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="hr-table-body">
+                <tr><td colspan="8" class="loading-row">Chargement...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mobile-card-list" id="hr-cards" role="list" hidden></div>
+
+          <div class="pagination" id="hr-pagination">
+            <button class="pagination-btn" id="hr-prev" disabled><i class="fas fa-chevron-left"></i></button>
+            <span class="pagination-info">Page <span id="hr-current-page">1</span> sur <span id="hr-total-pages">1</span></span>
+            <button class="pagination-btn" id="hr-next"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </section>
+
+        <!-- Paramètres Page -->
         <section class="page settings-page" id="settings-page">
           <div class="settings-tabs">
             <button class="tab-btn active" data-settings-tab="general">General</button>
@@ -1101,7 +1194,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           </div>
 
           <div class="settings-content">
-            <!-- General Settings -->
+            <!-- General Paramètres -->
             <div class="settings-panel active" id="general-settings">
               <div class="settings-group">
                 <h3>Site Information</h3>
@@ -1140,11 +1233,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 
               <button class="btn-primary save-settings" id="save-general-settings">
                 <i class="fas fa-save"></i>
-                <span>Save Changes</span>
+                <span>Sauvegarder Changes</span>
               </button>
             </div>
 
-            <!-- Moderation Settings -->
+            <!-- Moderation Paramètres -->
             <div class="settings-panel" id="moderation-settings">
               <div class="settings-group">
                 <h3>Review Moderation</h3>
@@ -1173,16 +1266,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
               </div>
 
               <div class="settings-group">
-                <h3>Content Filters</h3>
+                <h3>Filtres de contenu</h3>
                 <div class="setting-item toggle">
-                  <label>Enable Profanity Filter</label>
+                  <label>Enable Prsuranity Filtrer</label>
                   <label class="switch">
-                    <input type="checkbox" id="setting-profanity-filter" checked>
+                    <input type="checkbox" id="setting-prsuranity-filter" checked>
                     <span class="slider"></span>
                   </label>
                 </div>
                 <div class="setting-item toggle">
-                  <label>Enable Spam Filter</label>
+                  <label>Enable Spam Filtrer</label>
                   <label class="switch">
                     <input type="checkbox" id="setting-spam-filter" checked>
                     <span class="slider"></span>
@@ -1192,23 +1285,23 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 
               <button class="btn-primary save-settings" id="save-moderation-settings">
                 <i class="fas fa-save"></i>
-                <span>Save Changes</span>
+                <span>Sauvegarder Changes</span>
               </button>
             </div>
 
-            <!-- Features Settings -->
+            <!-- Features Paramètres -->
             <div class="settings-panel" id="features-settings">
               <div class="settings-group">
                 <h3>Feature Flags</h3>
                 <div class="setting-item toggle">
-                  <label>Roommate Matching</label>
+                  <label>Colocataire Matching</label>
                   <label class="switch">
                     <input type="checkbox" id="feature-roommate-matching" checked>
                     <span class="slider"></span>
                   </label>
                 </div>
                 <div class="setting-item toggle">
-                  <label>Landlord Chat</label>
+                  <label>Propriétaire Discussion</label>
                   <label class="switch">
                     <input type="checkbox" id="feature-landlord-chat" checked>
                     <span class="slider"></span>
@@ -1246,11 +1339,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 
               <button class="btn-primary save-settings" id="save-features-settings">
                 <i class="fas fa-save"></i>
-                <span>Save Changes</span>
+                <span>Sauvegarder Changes</span>
               </button>
             </div>
 
-            <!-- Security Settings -->
+            <!-- Security Paramètres -->
             <div class="settings-panel" id="security-settings">
               <div class="settings-group">
                 <h3>Authentication</h3>
@@ -1290,13 +1383,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
                 <h3>Cache</h3>
                 <button class="btn-secondary" id="clear-cache-btn">
                   <i class="fas fa-broom"></i>
-                  <span>Clear All Cache</span>
+                  <span>Effacer All Cache</span>
                 </button>
               </div>
 
               <button class="btn-primary save-settings" id="save-security-settings">
                 <i class="fas fa-save"></i>
-                <span>Save Changes</span>
+                <span>Sauvegarder Changes</span>
               </button>
             </div>
           </div>
@@ -1318,13 +1411,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
           </div>
 
           <div id="pr-list" style="display:grid;gap:16px">
-            <div class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i><span>Loading...</span></div>
+            <div class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i><span>Chargement...</span></div>
           </div>
 
           <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:24px" id="pr-pagination" style="display:none">
             <button class="btn-secondary" id="pr-prev" onclick="changePrPage(-1)" disabled>← Prev</button>
             <span id="pr-page-info" style="font-size:.875rem;color:#6b7280">Page 1</span>
-            <button class="btn-secondary" id="pr-next" onclick="changePrPage(1)">Next →</button>
+            <button class="btn-secondary" id="pr-next" onclick="changePrPage(1)">Suivant →</button>
           </div>
         </section>
 
@@ -1340,7 +1433,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
       <textarea id="pr-modal-note" placeholder="Note to landlord (optional)..." rows="3"
         style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #e5e7eb;border-radius:8px;font-size:.875rem;resize:vertical"></textarea>
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px">
-        <button onclick="closePrModal()" style="padding:8px 18px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer">Cancel</button>
+        <button onclick="closePrModal()" style="padding:8px 18px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;cursor:pointer">Annuler</button>
         <button id="pr-modal-confirm" style="padding:8px 18px;border:none;border-radius:8px;color:#fff;cursor:pointer;font-weight:600">Confirm</button>
       </div>
     </div>
@@ -1358,7 +1451,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
         <!-- Dynamic content -->
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-secondary" data-close-modal>Fermer</button>
         <button class="btn-danger" id="user-ban-btn">Ban User</button>
       </div>
     </div>
@@ -1375,8 +1468,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
         <!-- Dynamic content -->
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" data-close-modal>Close</button>
-        <button class="btn-primary" id="dorm-save-btn">Save Changes</button>
+        <button class="btn-secondary" data-close-modal>Fermer</button>
+        <button class="btn-primary" id="dorm-save-btn">Sauvegarder Changes</button>
       </div>
     </div>
   </div>
@@ -1392,27 +1485,43 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
         <!-- Dynamic content -->
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-secondary" data-close-modal>Fermer</button>
         <button class="btn-success" id="review-approve-btn">Approve</button>
         <button class="btn-danger" id="review-delete-btn">Delete</button>
       </div>
     </div>
   </div>
 
-  <!-- Report Detail Modal -->
+  <!-- Signaler Detail Modal -->
   <div class="modal" id="report-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Report Details</h2>
+        <h2>Signaler Details</h2>
         <button class="modal-close" data-close-modal>&times;</button>
       </div>
       <div class="modal-body" id="report-modal-body">
         <!-- Dynamic content -->
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" data-close-modal>Close</button>
+        <button class="btn-secondary" data-close-modal>Fermer</button>
         <button class="btn-warning" id="report-dismiss-btn">Dismiss</button>
         <button class="btn-primary" id="report-resolve-btn">Resolve</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Housing Request Detail Modal -->
+  <div class="modal" id="hr-modal">
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h2>Détail de la demande</h2>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body" id="hr-modal-body">
+        <!-- Dynamic content -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal>Fermer</button>
       </div>
     </div>
   </div>
@@ -1432,7 +1541,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" data-close-modal>Cancel</button>
+        <button class="btn-secondary" data-close-modal>Annuler</button>
         <button class="btn-danger" id="confirm-action-btn">Confirm</button>
       </div>
     </div>
@@ -1443,5 +1552,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background-
 
   <!-- Scripts -->
   <script src="/js/admin.js"></script>
+  <script src="js/analytics-config.js"></script>
+    <script src="js/analytics.js"></script>
+    <script src="js/lang-switcher.js"></script>
 </body>
 </html>

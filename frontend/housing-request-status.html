@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma demande de logement | RoastMyDorm</title>
+    <meta name="robots" content="noindex, nofollow">
+    <!-- Private per-request page - a token in the URL fragment identifies
+         exactly one request; never indexed, never cached. -->
+    <meta http-equiv="Cache-Control" content="no-store">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/housing-request.css">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #fdfaf6; color: #1f2937; }
+        .hrq-page-wrap .hrq-modal-body-inline { background: #fff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 32px; }
+    </style>
+</head>
+<body>
+    <header class="hrq-page-header">
+        <a href="/" class="logo">RoastMyDorm</a>
+    </header>
+    <main class="hrq-page-wrap">
+        <div class="hrq-modal-body-inline" id="hrqStatusContainer">
+            <div class="hrq-loading">Chargement…</div>
+        </div>
+    </main>
+
+    <script src="js/rmd-shared.js?v=20260905b"></script>
+    <script src="js/housing-request-widget.js"></script>
+    <script src="js/housing-request-status-boot.js"></script>
+</body>
+</html>

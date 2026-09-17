@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes demandes de contact - RoastMyDorm</title>
+    <meta name="description" content="Suis l'état de tes demandes de contact avec les propriétaires et indique si tu as trouvé un logement.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/x-icon" href="roastmydorm_logo-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/roastmydorm-design-system.css?v=20260905c">
+    <link rel="stylesheet" href="css/housing-request.css?v=20260917a">
+    <style>
+        .md-layout { max-width: 760px; margin: 0 auto; padding: var(--rmd-space-5) var(--rmd-space-4) 64px; }
+        .md-page-header h1 { font-size: 1.6rem; line-height: 1.2; }
+        .md-page-header p { color: var(--rmd-text-muted); margin: 8px 0 0; }
+
+        .md-list { display: flex; flex-direction: column; gap: 16px; margin-top: var(--rmd-space-5); }
+        .md-card { background: var(--rmd-surface); border: 1px solid var(--rmd-border); border-radius: var(--rmd-radius-lg); box-shadow: var(--rmd-shadow-sm); padding: var(--rmd-space-4); }
+        .md-card-top { display: flex; gap: 12px; }
+        .md-card-photo { width: 72px; height: 72px; border-radius: var(--rmd-radius-md); object-fit: cover; flex: none; background: var(--rmd-primary-bg); }
+        .md-card-body { flex: 1; min-width: 0; }
+        .md-card-title { font-weight: 700; font-size: 1rem; margin: 0 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .md-card-meta { color: var(--rmd-text-muted); font-size: 0.82rem; margin: 0; }
+        .md-status-badge { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: var(--rmd-radius-pill); font-size: 0.75rem; font-weight: 700; }
+        .md-status-pending { background: #fff7ed; color: #9a3412; }
+        .md-status-progress { background: #eff6ff; color: #1d4ed8; }
+        .md-status-confirmed { background: #ecfdf5; color: #047857; }
+        .md-status-closed { background: #f1f5f9; color: #475569; }
+
+        .md-outcome-prompt { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--rmd-border); }
+        .md-outcome-prompt p { margin: 0 0 10px; font-weight: 600; font-size: 0.9rem; }
+        .md-outcome-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        @media (max-width: 420px) { .md-outcome-actions { grid-template-columns: 1fr; } }
+        .md-outcome-actions button { min-height: 44px; border-radius: var(--rmd-radius-md); border: 1.5px solid var(--rmd-border); background: var(--rmd-surface); font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .md-outcome-actions button:active { transform: scale(0.98); }
+        .md-outcome-actions button[disabled] { opacity: 0.5; cursor: not-allowed; }
+        .md-outcome-actions button.md-outcome-rented { border-color: #047857; color: #047857; }
+        .md-outcome-actions button.md-outcome-unavailable { border-color: #b91c1c; color: #b91c1c; }
+
+        /* "Demandes de logement" (admin_mediated) - a clearly separate
+           section from the legacy "Demandes de contact" list below it, per
+           the explicit requirement to never blend the two flows together.
+           Reuses the .md-card visual language above for consistency, plus
+           the housing-request widget's own badge classes (hrq-badge*). */
+        .md-section-heading { font-size: 1.1rem; font-weight: 800; margin: 0 0 4px; color: var(--rmd-text); }
+        .md-section-sub { color: var(--rmd-text-muted); font-size: 0.85rem; margin: 0 0 var(--rmd-space-3); }
+        .md-section-divider { border: none; border-top: 1px solid var(--rmd-border); margin: var(--rmd-space-6) 0 var(--rmd-space-5); }
+        .hrq-md-card { background: var(--rmd-surface); border: 1px solid var(--rmd-border); border-radius: var(--rmd-radius-lg); box-shadow: var(--rmd-shadow-sm); padding: var(--rmd-space-4); cursor: pointer; transition: box-shadow .15s, border-color .15s; }
+        .hrq-md-card:hover, .hrq-md-card:focus-visible { border-color: var(--rmd-primary); box-shadow: var(--rmd-shadow); }
+        .hrq-md-card-top { display: flex; gap: 12px; }
+        .hrq-md-card-photo { width: 72px; height: 72px; border-radius: var(--rmd-radius-md); object-fit: cover; flex: none; background: var(--rmd-primary-bg); }
+        .hrq-md-card-body { flex: 1; min-width: 0; }
+        .hrq-md-card-title { font-weight: 700; font-size: 1rem; margin: 0 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .hrq-md-card-meta { color: var(--rmd-text-muted); font-size: 0.82rem; margin: 0; }
+        .hrq-md-consent-cta { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--rmd-radius-pill); background: var(--rmd-primary); color: #fff; font-weight: 700; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+<noscript>
+  <header style="background:#fff;border-bottom:1px solid #e5e7eb;padding:14px 16px;font-family:Inter,Arial,sans-serif;">
+    <strong style="font-size:1.1rem;">RoastMyDorm</strong>
+  </header>
+  <p style="text-align:center;padding:10px 16px;background:#fff7ed;color:#9a3412;font-family:Inter,Arial,sans-serif;font-size:0.85rem;margin:0;">Cette page nécessite JavaScript.</p>
+</noscript>
+
+<main class="md-layout">
+  <div class="md-page-header">
+    <h1>Mes demandes</h1>
+    <p>Suis l'état de tes demandes de logement et de tes contacts avec les propriétaires.</p>
+  </div>
+
+  <!-- ═══ Demandes de logement (admin_mediated) - new flow, shown first,
+       clearly its own section so it is never confused with the legacy
+       list below. ═══ -->
+  <section aria-labelledby="hrqSectionHeading">
+    <h2 class="md-section-heading" id="hrqSectionHeading">Demandes de logement</h2>
+    <p class="md-section-sub">Les demandes envoyées via "Demander ce logement" sur une annonce.</p>
+
+    <div class="rmd-state" id="hrqLoadingState">
+      <div class="rmd-skeleton" style="height:100px;margin-bottom:12px;"></div>
+    </div>
+    <div class="rmd-state" id="hrqNotLoggedInState" hidden>
+      <i class="fa-solid fa-lock state-icon" aria-hidden="true"></i>
+      <h2>Connecte-toi pour voir tes demandes</h2>
+      <p>Tes demandes de logement apparaissent ici une fois connecté.</p>
+      <a href="login.html?redirect=mes-demandes.html" class="btn btn-primary">Se connecter</a>
+    </div>
+    <div class="rmd-state" id="hrqSessionExpiredState" hidden>
+      <i class="fa-solid fa-clock-rotate-left state-icon" aria-hidden="true"></i>
+      <h2>Ta session a expiré</h2>
+      <p>Reconnecte-toi pour continuer.</p>
+      <a href="login.html?redirect=mes-demandes.html" class="btn btn-primary">Se reconnecter</a>
+    </div>
+    <div class="rmd-state" id="hrqEmptyState" hidden>
+      <i class="fa-solid fa-house-circle-check state-icon" aria-hidden="true"></i>
+      <h2>Aucune demande de logement</h2>
+      <p>Quand tu envoies une demande depuis une annonce, elle apparaît ici.</p>
+      <a href="casablanca-dorms.html" class="btn btn-primary">Parcourir les logements</a>
+    </div>
+    <div class="rmd-state" id="hrqErrorState" hidden>
+      <i class="fa-solid fa-triangle-exclamation state-icon" aria-hidden="true"></i>
+      <h2>Connexion au serveur impossible</h2>
+      <p>Vérifie ta connexion et réessaie.</p>
+      <button type="button" class="btn btn-secondary" id="hrqRetryBtn">Réessayer</button>
+    </div>
+
+    <div class="md-list" id="hrqList" hidden></div>
+  </section>
+
+  <hr class="md-section-divider">
+
+  <!-- ═══ Demandes de contact (legacy_direct) - the original flow, kept
+       completely untouched (same ids/markup as before). ═══ -->
+  <section aria-labelledby="legacySectionHeading">
+    <h2 class="md-section-heading" id="legacySectionHeading">Demandes de contact <span style="font-weight:500;color:var(--rmd-text-muted);font-size:0.8rem;">(ancien système)</span></h2>
+    <p class="md-section-sub">Suis l'état de tes contacts directs avec les propriétaires et indique-nous si tu as trouvé un logement.</p>
+
+    <div class="rmd-state" id="loadingState">
+      <div class="rmd-skeleton" style="height:120px;margin-bottom:12px;"></div>
+      <div class="rmd-skeleton" style="height:120px;"></div>
+    </div>
+    <div class="rmd-state" id="notLoggedInState" hidden>
+      <i class="fa-solid fa-lock state-icon" aria-hidden="true"></i>
+      <h2>Connecte-toi pour voir tes demandes</h2>
+      <p>Tes demandes de contact avec les propriétaires apparaissent ici une fois connecté.</p>
+      <a href="login.html?redirect=mes-demandes.html" class="btn btn-primary">Se connecter</a>
+    </div>
+    <div class="rmd-state" id="sessionExpiredState" hidden>
+      <i class="fa-solid fa-clock-rotate-left state-icon" aria-hidden="true"></i>
+      <h2>Ta session a expiré</h2>
+      <p>Reconnecte-toi pour continuer.</p>
+      <a href="login.html?redirect=mes-demandes.html" class="btn btn-primary">Se reconnecter</a>
+    </div>
+    <div class="rmd-state" id="emptyState" hidden>
+      <i class="fa-solid fa-inbox state-icon" aria-hidden="true"></i>
+      <h2>Aucune demande de contact</h2>
+      <p>Quand tu contactes un propriétaire depuis une annonce, ta demande apparaît ici.</p>
+      <a href="casablanca-dorms.html" class="btn btn-primary">Parcourir les logements</a>
+    </div>
+    <div class="rmd-state" id="errorState" hidden>
+      <i class="fa-solid fa-triangle-exclamation state-icon" aria-hidden="true"></i>
+      <h2>Connexion au serveur impossible</h2>
+      <p>Vérifie ta connexion et réessaie.</p>
+      <button type="button" class="btn btn-secondary" id="retryBtn">Réessayer</button>
+    </div>
+
+    <div class="md-list" id="inquiryList" hidden></div>
+  </section>
+</main>
+
+<div id="rmdModalHost"></div>
+
+<script src="js/rmd-shared.js?v=20260905b" data-rmd-active="mes-demandes"></script>
+<script src="js/mes-demandes.js?v=20260914a"></script>
+<script src="js/mes-demandes-housing-requests.js?v=20260917a"></script>
+</body>
+</html>

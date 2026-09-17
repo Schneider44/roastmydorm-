@@ -50,14 +50,16 @@ const state = {
     dorms: { page: 1, limit: 20, total: 0 },
     reviews: { page: 1, limit: 20, total: 0 },
     roommates: { page: 1, limit: 20, total: 0 },
-    reports: { page: 1, limit: 20, total: 0 }
+    reports: { page: 1, limit: 20, total: 0 },
+    housingRequests: { page: 1, limit: 25, total: 0 }
   },
   filters: {
     users: {},
     dorms: {},
     reviews: {},
     roommates: {},
-    reports: { status: 'pending' }
+    reports: { status: 'pending' },
+    housingRequests: { status: 'all', city: '', search: '' }
   },
   selectedItems: {
     users: [],
@@ -298,6 +300,7 @@ function setupEventListeners() {
   setupRoommatesPageListeners();
   setupReportsPageListeners();
   setupSettingsPageListeners();
+  setupHousingRequestsPageListeners();
 }
 
 // ============================================
@@ -327,6 +330,7 @@ function navigateToPage(page) {
     analytics: 'Analytics',
     reports: 'Reports & Moderation',
     'property-requests': 'Property Requests',
+    'housing-requests': 'Demandes de logement',
     settings: 'Settings'
   };
   document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
@@ -363,6 +367,10 @@ function loadPageData(page) {
       break;
     case 'property-requests':
       loadPropertyRequests();
+      break;
+    case 'housing-requests':
+      loadHousingRequests();
+      loadHousingRequestsStats();
       break;
     case 'settings':
       loadSettings();
@@ -2159,3 +2167,378 @@ window.filterPropRequests = filterPropRequests;
 window.changePrPage = changePrPage;
 window.openPrModal = openPrModal;
 window.closePrModal = closePrModal;
+
+// --- Admin-mediated housing-request flow (isolated deploy addition) ---
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+const HR_STATUS_LABELS = {
+  new: 'Nouvelle',
+  reviewing: 'En cours de vérification',
+  checking_availability: 'Vérification disponibilité',
+  available: 'Disponible',
+  awaiting_student_consent: 'En attente de consentement',
+  handoff_sent: 'Mise en relation faite',
+  reserved: 'Réservé',
+  unavailable: 'Indisponible',
+  landlord_unreachable: 'Propriétaire injoignable',
+  closed: 'Clôturée',
+};
+const HR_STATUS_BADGE_CLASS = {
+  new: 'pending',
+  reviewing: 'pending',
+  checking_availability: 'pending',
+  available: 'verified',
+  awaiting_student_consent: 'verified',
+  handoff_sent: 'active',
+  reserved: 'inactive',
+  unavailable: 'banned',
+  landlord_unreachable: 'banned',
+  closed: 'inactive',
+};
+// Only these are reachable via the day-to-day admin pipeline route
+// (PATCH /:id/mediation-status) - 'closed' and 'handoff_sent' are
+// deliberately excluded, matching the backend's own ADMIN_ALLOWED list.
+const HR_ADMIN_ALLOWED_STATUSES = ['reviewing', 'checking_availability', 'available', 'unavailable', 'reserved', 'landlord_unreachable'];
+const HR_CLOSURE_REASON_LABELS = {
+  fulfilled: 'Demande satisfaite',
+  student_declined: "L'étudiant(e) a refusé",
+  consent_expired: 'Consentement expiré',
+  student_withdrew: "L'étudiant(e) s'est désisté(e)",
+  listing_permanently_unavailable: 'Logement définitivement indisponible',
+  other: 'Autre',
+};
+// Matches CORRECTION_ALLOWED_TARGETS in models/DormInquiry.js exactly -
+// 'available'/'awaiting_student_consent'/'handoff_sent' are deliberately
+// unreachable via correction (see that file's comment on why).
+const HR_CORRECTION_TARGETS = ['reviewing', 'checking_availability', 'closed'];
+
+function setupHousingRequestsPageListeners() {
+  document.getElementById('hr-search')?.addEventListener('input', debounce((e) => {
+    state.filters.housingRequests.search = e.target.value;
+    state.pagination.housingRequests.page = 1;
+    loadHousingRequests();
+  }, 300));
+
+  document.getElementById('hr-status-filter')?.addEventListener('change', (e) => {
+    state.filters.housingRequests.status = e.target.value;
+    state.pagination.housingRequests.page = 1;
+    loadHousingRequests();
+  });
+
+  document.getElementById('hr-city-filter')?.addEventListener('change', (e) => {
+    state.filters.housingRequests.city = e.target.value;
+    state.pagination.housingRequests.page = 1;
+    loadHousingRequests();
+  });
+
+  document.getElementById('hr-prev')?.addEventListener('click', () => {
+    if (state.pagination.housingRequests.page > 1) {
+      state.pagination.housingRequests.page--;
+      loadHousingRequests();
+    }
+  });
+
+  document.getElementById('hr-next')?.addEventListener('click', () => {
+    const totalPages = Math.ceil(state.pagination.housingRequests.total / state.pagination.housingRequests.limit);
+    if (state.pagination.housingRequests.page < totalPages) {
+      state.pagination.housingRequests.page++;
+      loadHousingRequests();
+    }
+  });
+}
+
+async function loadHousingRequestsStats() {
+  try {
+    const data = await apiRequest('/admin/housing-requests/stats');
+    if (!data.success) return;
+    const counts = data.data.byStatus || {};
+    document.getElementById('hr-stat-total').textContent = data.data.total;
+    document.getElementById('hr-stat-new').textContent = counts.new || 0;
+    document.getElementById('hr-stat-reviewing').textContent = (counts.reviewing || 0) + (counts.checking_availability || 0);
+    document.getElementById('hr-stat-handoff').textContent = counts.handoff_sent || 0;
+    document.getElementById('hr-stat-failed').textContent = data.data.notificationsFailed;
+  } catch (error) {
+    // Non-fatal - the table itself is the primary content of this page.
+  }
+}
+
+async function loadHousingRequests() {
+  const tbody = document.getElementById('hr-table-body');
+  tbody.innerHTML = `<tr class="loading-row"><td colspan="8"><div class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i><span>Chargement des demandes...</span></div></td></tr>`;
+
+  try {
+    const { status, city, search } = state.filters.housingRequests;
+    const params = new URLSearchParams({
+      page: state.pagination.housingRequests.page,
+      limit: state.pagination.housingRequests.limit,
+    });
+    if (status && status !== 'all') params.set('mediationStatus', status);
+    if (city) params.set('city', city);
+    if (search) params.set('search', search);
+
+    const data = await apiRequest(`/admin/housing-requests?${params}`);
+
+    if (data.success) {
+      state.pagination.housingRequests.total = data.data.pagination.total;
+      renderHousingRequestsTable(data.data.items);
+      updateHousingRequestsPagination(data.data.pagination);
+      window.renderHousingRequestsCardsMobile?.(data);
+    }
+  } catch (error) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="loading-placeholder">Échec du chargement des demandes</div></td></tr>`;
+    showToast('Échec du chargement des demandes', 'error');
+  }
+}
+
+function renderHousingRequestsTable(items) {
+  const tbody = document.getElementById('hr-table-body');
+
+  if (!items || items.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="loading-placeholder">Aucune demande trouvée</div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = items.map(hr => {
+    // requester.name is always captured at submission time regardless of
+    // auth state - hr.student is just a raw ObjectId (toAdminMediationView
+    // never populates it), so it must never gate which name is shown.
+    const studentName = hr.requester?.name || '—';
+    const notifBadges = [
+      hr.mediationNotification?.adminNotifyFailed ? '<span class="status-badge banned" title="Échec de la notification admin">Admin échoué</span>' : '',
+      hr.mediationNotification?.studentNotifyFailed ? '<span class="status-badge banned" title="Échec de la notification étudiant(e)">Étudiant échoué</span>' : '',
+      (!hr.mediationNotification?.adminNotifyFailed && !hr.mediationNotification?.studentNotifyFailed) ? '<span class="status-badge active">OK</span>' : '',
+    ].join(' ');
+
+    return `
+    <tr data-id="${hr.id}">
+      <td><code>${hr.reference}</code></td>
+      <td>${formatDate(hr.createdAt)}</td>
+      <td>${escapeHtml(studentName)}${hr.requester?.isGuest ? ' <span class="status-badge inactive">invité</span>' : ''}</td>
+      <td>${escapeHtml(hr.listing?.title || '-')}</td>
+      <td>${escapeHtml(hr.listing?.city || '-')}</td>
+      <td><span class="status-badge ${HR_STATUS_BADGE_CLASS[hr.mediationStatus] || ''}">${HR_STATUS_LABELS[hr.mediationStatus] || hr.mediationStatus}</span></td>
+      <td>${notifBadges}</td>
+      <td class="actions-cell">
+        <button type="button" class="btn-icon hr-view-btn" data-id="${hr.id}" title="Détails"><i class="fas fa-eye"></i></button>
+      </td>
+    </tr>
+  `;
+  }).join('');
+}
+
+// CSP here is script-src-attr:'none' (Helmet's default, applied sitewide)
+// which silently blocks onclick="" string attributes - unlike the rest of
+// this file's older onclick="fn(...)" convention (pre-existing elsewhere,
+// out of scope to change here), this table's row action is wired via a
+// single delegated listener instead, attached once rather than re-added on
+// every render.
+document.getElementById('hr-table-body')?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.hr-view-btn');
+  if (btn) viewHousingRequest(btn.dataset.id);
+});
+
+function updateHousingRequestsPagination(pagination) {
+  document.getElementById('hr-current-page').textContent = pagination.page;
+  document.getElementById('hr-total-pages').textContent = pagination.pages;
+  document.getElementById('hr-prev').disabled = pagination.page <= 1;
+  document.getElementById('hr-next').disabled = pagination.page >= pagination.pages;
+}
+
+// Renders the read-only detail + all admin actions for one request, inside
+// the shared #hr-modal. Re-fetches fresh data every time it's opened (an
+// action never mutates the in-memory `items` array from the list load) so
+// the modal always reflects the true current mediationStatus/history.
+async function viewHousingRequest(id) {
+  try {
+    const data = await apiRequest(`/admin/housing-requests/${id}`);
+    if (!data.success) throw new Error(data.message || 'Échec du chargement');
+    renderHousingRequestModal(data.data);
+    openModal('hr-modal');
+  } catch (error) {
+    showToast('Échec du chargement de la demande', 'error');
+  }
+}
+window.viewHousingRequest = viewHousingRequest;
+
+function renderHousingRequestModal(hr) {
+  const body = document.getElementById('hr-modal-body');
+  const statusButtons = HR_ADMIN_ALLOWED_STATUSES.map(s => `
+    <button type="button" class="btn-sm hr-status-btn ${s === hr.mediationStatus ? 'btn-secondary' : 'btn-primary'}"
+      data-status="${s}" ${s === hr.mediationStatus ? 'disabled' : ''}>${HR_STATUS_LABELS[s]}</button>
+  `).join('');
+
+  const closureOptions = Object.keys(HR_CLOSURE_REASON_LABELS).map(k => `<option value="${k}">${HR_CLOSURE_REASON_LABELS[k]}</option>`).join('');
+  const correctionTargetOptions = HR_CORRECTION_TARGETS.map(s => `<option value="${s}">${HR_STATUS_LABELS[s]}</option>`).join('');
+
+  const historyRows = (hr.mediationHistory || []).slice().reverse().map(h => `
+    <tr><td>${formatDate(h.createdAt)}</td><td>${escapeHtml(h.event)}</td><td>${escapeHtml(h.actor)}</td></tr>
+  `).join('') || '<tr><td colspan="3">Aucun historique</td></tr>';
+
+  const notesRows = (hr.adminNotes || []).slice().reverse().map(n => `
+    <div class="hr-note"><p>${escapeHtml(n.text)}</p><small>${formatDate(n.createdAt)}</small></div>
+  `).join('') || '<p class="hr-empty-note">Aucune note</p>';
+
+  const retryBtn = (hr.mediationNotification?.adminNotifyFailed || hr.mediationNotification?.studentNotifyFailed)
+    ? `<button type="button" class="btn-sm btn-secondary" id="hr-retry-btn"><i class="fas fa-rotate"></i> Réessayer les notifications échouées</button>`
+    : '';
+
+  body.innerHTML = `
+    <div class="hr-detail-grid">
+      <div><strong>Référence</strong><br>${hr.reference}</div>
+      <div><strong>Statut</strong><br><span class="status-badge ${HR_STATUS_BADGE_CLASS[hr.mediationStatus] || ''}">${HR_STATUS_LABELS[hr.mediationStatus] || hr.mediationStatus}</span></div>
+      <div><strong>Logement</strong><br>${escapeHtml(hr.listing?.title || '-')} — ${escapeHtml(hr.listing?.city || '-')}</div>
+      <div><strong>Étudiant(e)</strong><br>${escapeHtml(hr.requester?.name || '-')} (${hr.requester?.isGuest ? 'invité' : 'compte'})</div>
+      <div><strong>Email</strong><br>${escapeHtml(hr.requester?.email || '-')}</div>
+      <div><strong>Téléphone</strong><br>${escapeHtml((hr.requester?.phoneCountryCode || '') + (hr.requester?.phone || '') || '-')}</div>
+      <div><strong>Université</strong><br>${escapeHtml(hr.requester?.university || '-')}</div>
+      <div><strong>Méthode préférée</strong><br>${escapeHtml(hr.requester?.preferredContactMethod || '-')}</div>
+    </div>
+    ${hr.requester?.message ? `<div class="hr-message"><strong>Message</strong><p>${escapeHtml(hr.requester.message)}</p></div>` : ''}
+    <div class="hr-consent-row">
+      <strong>Consentement</strong>
+      <span class="status-badge ${hr.consent?.processingConsentAt ? 'active' : 'inactive'}">Traitement: ${hr.consent?.processingConsentAt ? 'oui' : 'non'}</span>
+      <span class="status-badge ${hr.consent?.sharingConsentAt ? 'active' : 'inactive'}">Partage propriétaire: ${hr.consent?.sharingConsentAt ? 'oui' : 'non'}</span>
+      <span class="status-badge ${hr.handoff?.success ? 'active' : 'inactive'}">Mise en relation envoyée: ${hr.handoff?.success ? 'oui' : 'non'}</span>
+    </div>
+
+    <div class="hr-actions-block">
+      <strong>Pipeline (vérification / disponibilité)</strong>
+      <div class="hr-status-buttons">${statusButtons}</div>
+      <p class="hr-hint">Marquer "Disponible" envoie automatiquement une demande de consentement de partage à l'étudiant(e) — aucune coordonnée du propriétaire n'est communiquée avant que ce consentement ne soit donné.</p>
+    </div>
+
+    <div class="hr-actions-block">
+      <strong>Clôturer la demande</strong>
+      <div class="hr-inline-form">
+        <select id="hr-close-reason"><option value="">Motif...</option>${closureOptions}</select>
+        <button type="button" class="btn-sm btn-danger" id="hr-close-btn">Clôturer</button>
+      </div>
+    </div>
+
+    <div class="hr-actions-block">
+      <strong>Correction (statuts restreints)</strong>
+      <div class="hr-inline-form">
+        <select id="hr-correct-target">${correctionTargetOptions}</select>
+        <input type="text" id="hr-correct-reason" placeholder="Motif de la correction (obligatoire)">
+        <select id="hr-correct-closure-reason"><option value="">Motif de clôture (si applicable)</option>${closureOptions}</select>
+        <button type="button" class="btn-sm btn-secondary" id="hr-correct-btn">Corriger</button>
+      </div>
+    </div>
+
+    <div class="hr-actions-block">
+      <strong>Notifications</strong>
+      <p>Admin: ${hr.mediationNotification?.adminNotified ? 'envoyée' : (hr.mediationNotification?.adminNotifyFailed ? 'échouée' : 'en attente')} — Étudiant(e): ${hr.mediationNotification?.studentNotified ? 'envoyée' : (hr.mediationNotification?.studentNotifyFailed ? 'échouée' : 'en attente')}</p>
+      ${retryBtn}
+    </div>
+
+    <div class="hr-actions-block">
+      <strong>Notes internes</strong>
+      <div class="hr-inline-form">
+        <input type="text" id="hr-note-text" placeholder="Ajouter une note interne...">
+        <button type="button" class="btn-sm btn-primary" id="hr-note-add-btn">Ajouter</button>
+      </div>
+      <div class="hr-notes-list">${notesRows}</div>
+    </div>
+
+    <div class="hr-actions-block">
+      <strong>Historique</strong>
+      <table class="data-table hr-history-table"><tbody>${historyRows}</tbody></table>
+    </div>
+  `;
+
+  // CSP is script-src-attr:'none' (Helmet's default) - inline onclick=""
+  // attributes are silently blocked, so every action here is wired via
+  // addEventListener instead, re-attached each render since body.innerHTML
+  // was just replaced.
+  body.querySelectorAll('.hr-status-btn').forEach((btn) => {
+    btn.addEventListener('click', () => setHousingRequestMediationStatus(hr.id, btn.dataset.status));
+  });
+  document.getElementById('hr-close-btn')?.addEventListener('click', () => closeHousingRequest(hr.id));
+  document.getElementById('hr-correct-btn')?.addEventListener('click', () => correctHousingRequestStatus(hr.id));
+  document.getElementById('hr-note-add-btn')?.addEventListener('click', () => addHousingRequestNote(hr.id));
+  document.getElementById('hr-retry-btn')?.addEventListener('click', () => retryHousingRequestNotification(hr.id));
+}
+
+async function setHousingRequestMediationStatus(id, mediationStatus) {
+  try {
+    const data = await apiRequest(`/admin/housing-requests/${id}/mediation-status`, 'PATCH', { mediationStatus });
+    if (!data.success) throw new Error(data.message || 'Échec de la mise à jour');
+    showToast('Statut mis à jour', 'success');
+    renderHousingRequestModal(data.data);
+    loadHousingRequests();
+    loadHousingRequestsStats();
+  } catch (error) {
+    showToast(error.message || 'Échec de la mise à jour du statut', 'error');
+  }
+}
+window.setHousingRequestMediationStatus = setHousingRequestMediationStatus;
+
+async function closeHousingRequest(id) {
+  const closureReason = document.getElementById('hr-close-reason')?.value;
+  if (!closureReason) { showToast('Un motif de clôture est requis.', 'error'); return; }
+  try {
+    const data = await apiRequest(`/admin/housing-requests/${id}/close`, 'PATCH', { closureReason });
+    if (!data.success) throw new Error(data.message || 'Échec de la clôture');
+    showToast('Demande clôturée', 'success');
+    renderHousingRequestModal(data.data);
+    loadHousingRequests();
+    loadHousingRequestsStats();
+  } catch (error) {
+    showToast(error.message || 'Échec de la clôture', 'error');
+  }
+}
+window.closeHousingRequest = closeHousingRequest;
+
+async function correctHousingRequestStatus(id) {
+  const mediationStatus = document.getElementById('hr-correct-target')?.value;
+  const reason = document.getElementById('hr-correct-reason')?.value?.trim();
+  const closureReason = document.getElementById('hr-correct-closure-reason')?.value || undefined;
+  if (!reason) { showToast('Un motif est requis pour toute correction.', 'error'); return; }
+  try {
+    const data = await apiRequest(`/admin/housing-requests/${id}/correct`, 'PATCH', { mediationStatus, reason, closureReason });
+    if (!data.success) throw new Error(data.message || 'Échec de la correction');
+    showToast('Statut corrigé', 'success');
+    renderHousingRequestModal(data.data);
+    loadHousingRequests();
+    loadHousingRequestsStats();
+  } catch (error) {
+    showToast(error.message || 'Échec de la correction', 'error');
+  }
+}
+window.correctHousingRequestStatus = correctHousingRequestStatus;
+
+async function addHousingRequestNote(id) {
+  const input = document.getElementById('hr-note-text');
+  const text = input?.value?.trim();
+  if (!text) return;
+  try {
+    const data = await apiRequest(`/admin/housing-requests/${id}/notes`, 'POST', { text });
+    if (!data.success) throw new Error(data.message || "Échec de l'ajout de la note");
+    renderHousingRequestModal(data.data);
+  } catch (error) {
+    showToast(error.message || "Échec de l'ajout de la note", 'error');
+  }
+}
+window.addHousingRequestNote = addHousingRequestNote;
+
+async function retryHousingRequestNotification(id) {
+  try {
+    const data = await apiRequest(`/admin/housing-requests/${id}/retry-notification`, 'POST');
+    if (!data.success) throw new Error(data.message || 'Échec de la réinitialisation');
+    showToast('Nouvel essai effectué', 'success');
+    renderHousingRequestModal(data.data);
+    loadHousingRequests();
+    loadHousingRequestsStats();
+  } catch (error) {
+    showToast(error.message || "Échec de la réinitialisation de l'envoi", 'error');
+  }
+}
+window.retryHousingRequestNotification = retryHousingRequestNotification;

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fdfaf6">
+    <title>Logement étudiant - RoastMyDorm</title>
+    <meta name="description" content="Découvre ce logement étudiant vérifié sur RoastMyDorm : photos, prix, équipements et contact direct avec l'annonceur.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.roastmydorm.com/property-detail.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="RoastMyDorm">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" type="image/x-icon" href="/roastmydorm_logo-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Loaded as a plain stylesheet, NOT the preload + inline-onload swap
+         trick: this app sends `script-src-attr 'none'`, which blocks inline
+         event handlers outright, so the onload swap never fires and the
+         icon font silently never applies. -->
+    <!-- 6.5.x, not the 6.0.0 pinned elsewhere on the site: several icons this
+         page uses (people-roof, kitchen-set, elevator, house-circle-exclamation)
+         only exist from 6.1 onwards and render as blank boxes on 6.0.0. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Shared site design system (tokens, buttons, sheets, chips, states).
+         Root-relative: this page is served from the nested /logement/:slug
+         path as well as /property-detail.html, and a relative href resolves
+         to /logement/css/... there (404 -> text/plain -> stylesheet refused).
+         ?v= cache-bust: static assets are served with a 30-day Cache-Control,
+         so an un-versioned CSS edit ships a stale stylesheet to returning
+         visitors. Same convention as the other pages rebuilt this session. -->
+    <link rel="stylesheet" href="/css/roastmydorm-design-system.css?v=20260905c">
+    <link rel="stylesheet" href="/css/housing-request.css?v=20260917a">
+
+    <style>
+        /* =========================================================
+           Page-local components. Everything here is genuinely new to
+           this page (gallery, lightbox, fact chips, cost rows,
+           colocation rows, sticky contact bar); tokens, buttons,
+           sheets, states and focus/reduced-motion handling all come
+           from the shared design system above.
+           ========================================================= */
+
+        /* =========================================================
+           LAYOUT SWITCH — the page ships BOTH presentations in the
+           DOM and shows exactly one. Desktop (the restored original
+           property.html layout) is the unqualified default; the
+           mobile redesign only activates below 768px. The desktop
+           block's own ported breakpoints (1024px / 768px, copied
+           verbatim from property.html) produce the tablet view.
+           ========================================================= */
+        .property-desktop { display: block; }
+        .property-mobile { display: none; }
+        @media (max-width: 767px) {
+            .property-desktop { display: none; }
+            .property-mobile { display: block; }
+        }
+
+        body.rmd-body {
+            /* The sticky contact bar sits at the bottom of the MOBILE
+               presentation only, so this reserved space is gated to the
+               same breakpoint the bar itself is gated to. */
+            padding-bottom: 0;
+        }
+        @media (max-width: 767px) { body.rmd-body { padding-bottom: calc(150px + var(--rmd-safe-b)); } } /* two-row bar <420px */
+        @media (min-width: 420px) and (max-width: 767px) { body.rmd-body { padding-bottom: calc(96px + var(--rmd-safe-b)); } }
+        /* The desktop presentation is on the original white ground, not the
+           mobile design system's warm off-white. */
+        @media (min-width: 768px) { body.rmd-body { background: #ffffff; } }
+
+        /* An author `display` rule always beats the UA `[hidden]{display:none}`
+           rule regardless of specificity, and almost every component on this
+           page (buttons, flex rows, the sticky bar's sub-groups) sets display.
+           One page-local guard instead of re-declaring it per class — the
+           renderers below toggle visibility purely with the hidden property. */
+        [hidden] { display: none !important; }
+
+        .pd-shell { max-width: 1100px; margin: 0 auto; }
+
+        .pd-skip { position: absolute; left: -9999px; top: 8px; z-index: 500; }
+        .pd-skip:focus { left: 8px; }
+
+        /* ---------- Header ---------- */
+        .pd-header-inner { gap: var(--rmd-space-2); padding: 0 var(--rmd-space-3); }
+        @media (min-width: 768px) { .pd-header-inner { gap: var(--rmd-space-3); padding: 0 var(--rmd-space-5); } }
+        /* At 320px the back button + logo + two icon buttons don't fit at the
+           design system's default logo size, so the logo shrinks and truncates
+           rather than pushing the page into horizontal scroll. */
+        .pd-header-inner .rmd-logo {
+            font-size: 1.05rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        @media (min-width: 480px) { .pd-header-inner .rmd-logo { font-size: 1.4rem; } }
+        .pd-header-actions { display: flex; align-items: center; gap: var(--rmd-space-2); margin-left: auto; }
+        .pd-back-btn { gap: 8px; }
+        .pd-back-label { display: none; }
+        @media (min-width: 640px) {
+            .pd-back-btn { width: auto; border-radius: var(--rmd-radius-pill); padding: 0 var(--rmd-space-4); }
+            .pd-back-label { display: inline; font-weight: 700; font-size: 0.88rem; }
+        }
+
+        .rmd-mobile-drawer { display: none; position: fixed; inset: 0; z-index: 300; }
+        .rmd-mobile-drawer.open { display: block; }
+        .rmd-mobile-drawer-backdrop { position: absolute; inset: 0; background: rgba(15,23,42,0.4); }
+        .rmd-mobile-drawer-panel {
+            position: absolute; top: 0; right: 0; bottom: 0; width: min(280px, 82vw);
+            background: #fff; box-shadow: var(--rmd-shadow-lg); padding: var(--rmd-space-5);
+            display: flex; flex-direction: column; gap: var(--rmd-space-2); overflow-y: auto;
+        }
+        .rmd-mobile-drawer-panel a {
+            display: flex; align-items: center; min-height: 48px; text-decoration: none;
+            color: var(--rmd-text); font-weight: 700; border-bottom: 1px solid var(--rmd-border);
+        }
+        .rmd-mobile-drawer-close { align-self: flex-end; }
+
+        /* ---------- Draft / preview banner ---------- */
+        .pd-draft-banner {
+            display: flex; align-items: center; gap: 10px;
+            margin: var(--rmd-space-4) var(--rmd-space-4) 0;
+            background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+            border-radius: var(--rmd-radius-md); padding: 12px var(--rmd-space-4);
+            font-size: 0.88rem; font-weight: 700;
+        }
+        .pd-draft-banner[hidden] { display: none !important; }
+
+        /* ---------- Gallery ---------- */
+        .pd-gallery { position: relative; margin: var(--rmd-space-4) 0 0; }
+        @media (min-width: 768px) { .pd-gallery { padding: 0 var(--rmd-space-5); } }
+        .pd-gallery-track {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+            background: var(--rmd-primary-bg);
+        }
+        @media (min-width: 768px) { .pd-gallery-track { border-radius: var(--rmd-radius-lg); } }
+        .pd-gallery-track::-webkit-scrollbar { display: none; }
+        .pd-slide { flex: 0 0 100%; scroll-snap-align: start; aspect-ratio: 4 / 3; min-width: 0; }
+        .pd-slide button {
+            display: block; width: 100%; height: 100%; padding: 0; border: none;
+            background: none; cursor: zoom-in;
+        }
+        .pd-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .pd-gallery-empty {
+            aspect-ratio: 4 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 10px; color: var(--rmd-text-muted); background: var(--rmd-primary-bg); font-weight: 600;
+        }
+        @media (min-width: 768px) { .pd-gallery-empty { border-radius: var(--rmd-radius-lg); } }
+        .pd-gallery-empty i { font-size: 2.2rem; color: var(--rmd-primary); }
+
+        .pd-gallery-overlay {
+            position: absolute; top: var(--rmd-space-3); right: var(--rmd-space-3);
+            display: flex; gap: var(--rmd-space-2); z-index: 4;
+        }
+        @media (min-width: 768px) { .pd-gallery-overlay { top: var(--rmd-space-3); right: calc(var(--rmd-space-5) + var(--rmd-space-3)); } }
+        .pd-gallery-overlay .rmd-icon-btn { background: rgba(255,255,255,0.94); box-shadow: var(--rmd-shadow-sm); }
+        .pd-gallery-overlay .rmd-icon-btn[aria-pressed="true"] { color: #e11d48; }
+
+        .pd-gallery-counter {
+            position: absolute; bottom: var(--rmd-space-3); left: var(--rmd-space-3);
+            background: rgba(15,23,42,0.78); color: #fff; border-radius: var(--rmd-radius-pill);
+            padding: 5px 12px; font-size: 0.78rem; font-weight: 700; z-index: 4;
+        }
+        @media (min-width: 768px) { .pd-gallery-counter { left: calc(var(--rmd-space-5) + var(--rmd-space-3)); } }
+        .pd-gallery-counter[hidden] { display: none !important; }
+
+        .pd-gallery-viewall {
+            position: absolute; bottom: var(--rmd-space-3); right: var(--rmd-space-3); z-index: 4;
+            background: rgba(255,255,255,0.96); color: var(--rmd-text); box-shadow: var(--rmd-shadow-sm);
+        }
+        @media (min-width: 768px) { .pd-gallery-viewall { right: calc(var(--rmd-space-5) + var(--rmd-space-3)); } }
+
+        .pd-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0 0; }
+        .pd-dots[hidden] { display: none !important; }
+        .pd-dot {
+            width: 8px; height: 8px; border-radius: 50%; border: none; padding: 0;
+            background: var(--rmd-border); cursor: pointer;
+        }
+        .pd-dot[aria-current="true"] { background: var(--rmd-primary); width: 20px; border-radius: var(--rmd-radius-pill); }
+
+        /* Desktop filmstrip: hidden <768px per spec (mobile uses swipe + dots). */
+        .pd-filmstrip { display: none; }
+        @media (min-width: 768px) {
+            .pd-filmstrip {
+                display: flex; gap: var(--rmd-space-2); overflow-x: auto; padding: var(--rmd-space-3) var(--rmd-space-5) 0;
+                scrollbar-width: none;
+            }
+            .pd-filmstrip::-webkit-scrollbar { display: none; }
+            .pd-filmstrip[hidden] { display: none !important; }
+            .pd-thumb {
+                flex: 0 0 96px; height: 72px; border-radius: var(--rmd-radius-sm); overflow: hidden;
+                border: 2px solid transparent; padding: 0; background: var(--rmd-primary-bg); cursor: pointer;
+            }
+            .pd-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+            .pd-thumb[aria-current="true"] { border-color: var(--rmd-primary); }
+        }
+
+        /* ---------- Lightbox ---------- */
+        .pd-lightbox {
+            position: fixed; inset: 0; z-index: 400; background: rgba(15,23,42,0.96);
+            display: flex; flex-direction: column;
+        }
+        .pd-lightbox[hidden] { display: none !important; }
+        .pd-lightbox-bar {
+            display: flex; align-items: center; justify-content: space-between; gap: var(--rmd-space-3);
+            padding: calc(var(--rmd-space-3) + var(--rmd-safe-t)) var(--rmd-space-4) var(--rmd-space-3);
+            color: #fff; font-weight: 700; font-size: 0.9rem;
+        }
+        .pd-lightbox-bar .rmd-icon-btn { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); color: #fff; }
+        .pd-lightbox-stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 0 var(--rmd-space-3); }
+        .pd-lightbox-stage img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .pd-lightbox-nav {
+            display: flex; justify-content: center; gap: var(--rmd-space-4);
+            padding: var(--rmd-space-4) var(--rmd-space-4) calc(var(--rmd-space-5) + var(--rmd-safe-b));
+        }
+        .pd-lightbox-nav .rmd-icon-btn { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); color: #fff; }
+
+        /* ---------- Headline block ---------- */
+        .pd-block { padding: var(--rmd-space-5) var(--rmd-space-4) 0; }
+        @media (min-width: 768px) { .pd-block { padding-left: var(--rmd-space-5); padding-right: var(--rmd-space-5); } }
+
+        .pd-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--rmd-space-3); }
+        .pd-badges:empty { display: none; }
+        .pd-badge {
+            display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px;
+            border-radius: var(--rmd-radius-pill); font-size: 0.75rem; font-weight: 700;
+            background: var(--rmd-primary-bg); color: var(--rmd-primary-dark);
+        }
+        .pd-badge.is-warn { background: #fff7ed; color: #9a3412; }
+        .pd-badge.is-neutral { background: var(--rmd-bg); color: var(--rmd-text-muted); border: 1px solid var(--rmd-border); }
+
+        .pd-title { font-size: 1.5rem; line-height: 1.2; margin: 0 0 8px; }
+        @media (min-width: 768px) { .pd-title { font-size: 2rem; } }
+        .pd-place { margin: 0; color: var(--rmd-text-muted); font-size: 1rem; }
+        .pd-place i { color: var(--rmd-primary); margin-right: 6px; }
+        .pd-price {
+            margin: var(--rmd-space-4) 0 0; font-family: var(--rmd-font-heading);
+            font-size: 1.7rem; font-weight: 800; color: var(--rmd-primary-dark);
+        }
+        .pd-price span { font-family: var(--rmd-font-body); font-size: 0.95rem; font-weight: 600; color: var(--rmd-text-muted); }
+
+        /* ---------- Fact chips ---------- */
+        .pd-chips { display: flex; flex-wrap: wrap; gap: var(--rmd-space-2); margin: var(--rmd-space-4) 0 0; padding: 0; list-style: none; }
+        .pd-chips:empty { display: none; }
+        .pd-chips .filter-chip { cursor: default; }
+
+        .pd-primary-cta { margin-top: var(--rmd-space-4); }
+
+        /* ---------- Sections ---------- */
+        .pd-section { padding: var(--rmd-space-6) var(--rmd-space-4) 0; }
+        @media (min-width: 768px) { .pd-section { padding-left: var(--rmd-space-5); padding-right: var(--rmd-space-5); } }
+        .pd-section[hidden] { display: none !important; }
+        .pd-section h2 {
+            font-size: 1.15rem; margin: 0 0 var(--rmd-space-3);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .pd-section h2 i {
+            color: var(--rmd-primary); font-size: 0.95rem; background: var(--rmd-primary-bg);
+            width: 32px; height: 32px; border-radius: var(--rmd-radius-sm);
+            display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .pd-card {
+            background: var(--rmd-surface); border: 1px solid var(--rmd-border);
+            border-radius: var(--rmd-radius-lg); padding: var(--rmd-space-4); box-shadow: var(--rmd-shadow-sm);
+        }
+
+        /* ---------- Description ---------- */
+        .pd-desc {
+            margin: 0; color: var(--rmd-text); font-size: 1rem; white-space: pre-line;
+            display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .pd-desc.is-expanded { -webkit-line-clamp: unset; display: block; overflow: visible; }
+        .pd-desc-toggle { margin-top: var(--rmd-space-2); padding-left: 0; padding-right: 0; }
+        .pd-desc-toggle[hidden] { display: none !important; }
+
+        /* ---------- Fact rows (costs, colocation, location) ---------- */
+        .pd-rows { list-style: none; margin: 0; padding: 0; }
+        .pd-row {
+            display: flex; align-items: baseline; gap: var(--rmd-space-4);
+            padding: 12px 0; border-top: 1px solid var(--rmd-border); font-size: 0.95rem;
+        }
+        .pd-row:first-child { border-top: none; padding-top: 0; }
+        .pd-row-label { color: var(--rmd-text-muted); flex: 1 1 auto; min-width: 0; }
+        .pd-row-value { font-weight: 700; text-align: right; margin-left: auto; }
+        .pd-row.is-stacked { flex-direction: column; gap: 4px; align-items: stretch; }
+        .pd-row.is-stacked .pd-row-value { text-align: left; margin-left: 0; font-weight: 500; white-space: pre-line; }
+        .pd-row.is-highlight .pd-row-value { color: var(--rmd-primary-dark); font-size: 1.05rem; }
+
+        /* ---------- Amenities ---------- */
+        .pd-amenities { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--rmd-space-3); }
+        @media (min-width: 768px) { .pd-amenities { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        .pd-amenity { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; min-height: 44px; min-width: 0; }
+        .pd-amenity span { min-width: 0; overflow-wrap: anywhere; }
+        .pd-amenity i {
+            color: var(--rmd-primary); background: var(--rmd-primary-bg); width: 34px; height: 34px;
+            border-radius: var(--rmd-radius-sm); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* ---------- Location ---------- */
+        .pd-map { width: 100%; aspect-ratio: 16 / 10; border: 0; border-radius: var(--rmd-radius-md); display: block; background: var(--rmd-primary-bg); }
+        .pd-map-note { margin: 8px 0 0; font-size: 0.8rem; color: var(--rmd-text-muted); }
+        .pd-map-wrap[hidden] { display: none !important; }
+        .pd-map-wrap { margin-top: var(--rmd-space-4); }
+
+        /* ---------- Advertiser ---------- */
+        .pd-advertiser { display: flex; align-items: center; gap: var(--rmd-space-3); }
+        .pd-advertiser-avatar {
+            width: 52px; height: 52px; border-radius: 50%; background: var(--rmd-primary-bg);
+            color: var(--rmd-primary-dark); display: flex; align-items: center; justify-content: center;
+            font-family: var(--rmd-font-heading); font-weight: 800; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .pd-advertiser-name { margin: 0; font-weight: 800; font-size: 1.02rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .pd-advertiser-meta { margin: 2px 0 0; color: var(--rmd-text-muted); font-size: 0.85rem; }
+        .pd-safety {
+            display: flex; align-items: flex-start; gap: 10px; margin-top: var(--rmd-space-4);
+            background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412;
+            border-radius: var(--rmd-radius-md); padding: 12px var(--rmd-space-4); font-size: 0.88rem; font-weight: 600;
+        }
+        .pd-safety i { margin-top: 2px; }
+        .pd-report-btn { margin-top: var(--rmd-space-3); }
+
+        /* ---------- Similar listings ---------- */
+        .pd-similar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--rmd-space-3); }
+        @media (min-width: 560px) { .pd-similar { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .pd-similar { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        .pd-similar-card {
+            display: flex; gap: var(--rmd-space-3); text-decoration: none; color: inherit;
+            background: var(--rmd-surface); border: 1px solid var(--rmd-border);
+            border-radius: var(--rmd-radius-md); overflow: hidden; box-shadow: var(--rmd-shadow-sm);
+        }
+        @media (min-width: 560px) { .pd-similar-card { flex-direction: column; gap: 0; } }
+        .pd-similar-media {
+            flex: 0 0 108px; align-self: stretch; min-height: 92px; background: var(--rmd-primary-bg);
+            display: flex; align-items: center; justify-content: center; color: var(--rmd-primary); overflow: hidden;
+        }
+        @media (min-width: 560px) { .pd-similar-media { flex: none; width: 100%; aspect-ratio: 4 / 3; min-height: 0; } }
+        .pd-similar-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pd-similar-body { padding: 10px var(--rmd-space-3) 12px 0; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        @media (min-width: 560px) { .pd-similar-body { padding: var(--rmd-space-3); } }
+        .pd-similar-title { margin: 0; font-family: var(--rmd-font-heading); font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+        .pd-similar-place { margin: 0; font-size: 0.8rem; color: var(--rmd-text-muted); }
+        .pd-similar-price { margin: 2px 0 0; font-weight: 800; color: var(--rmd-primary-dark); font-size: 0.95rem; }
+
+        /* ---------- Sticky contact bar ---------- */
+        .pd-contact-bar {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 200;
+            background: rgba(255,255,255,0.97); border-top: 1px solid var(--rmd-border);
+            box-shadow: 0 -4px 20px rgba(15,23,42,0.06);
+            padding: 10px var(--rmd-space-4) calc(10px + var(--rmd-safe-b));
+            display: flex; align-items: center; gap: var(--rmd-space-3);
+        }
+        .pd-contact-bar[hidden] { display: none !important; }
+        /* The bar is position:fixed, so a display:none on an ANCESTOR is what
+           actually removes it — but it must be impossible for it to survive at
+           desktop width even if the DOM nesting ever changes, hence this
+           explicit, breakpoint-gated guard as well. */
+        @media (min-width: 768px) { .pd-contact-bar { display: none !important; } }
+        /* Below 420px "Contacter maintenant" + price + two icon buttons cannot
+           share one row without truncating the label, so the bar wraps: price
+           and icons on the first row, the full-width primary button below. */
+        .pd-contact-bar { flex-wrap: wrap; row-gap: 8px; }
+        .pd-bar-price { display: flex; flex-direction: column; line-height: 1.2; flex-shrink: 0; order: 1; }
+        .pd-bar-price strong { font-family: var(--rmd-font-heading); font-size: 1.05rem; color: var(--rmd-text); white-space: nowrap; }
+        .pd-bar-price span { font-size: 0.72rem; color: var(--rmd-text-muted); }
+        .pd-bar-icons { display: flex; align-items: center; gap: var(--rmd-space-2); order: 2; margin-left: auto; }
+        .pd-bar-actions { display: flex; align-items: center; order: 3; flex: 1 1 100%; min-width: 0; }
+        .pd-bar-actions .btn-primary { white-space: nowrap; }
+        @media (min-width: 420px) {
+            .pd-contact-bar { flex-wrap: nowrap; }
+            .pd-bar-actions { order: 2; flex: 1 1 auto; margin-left: auto; }
+            .pd-bar-icons { order: 3; margin-left: 0; }
+        }
+        .pd-bar-whatsapp { color: #25D366; }
+        .pd-bar-fav[aria-pressed="true"] { color: #e11d48; }
+        .pd-bar-notice {
+            display: flex; align-items: center; gap: 8px; width: 100%;
+            color: #9a3412; font-weight: 700; font-size: 0.85rem;
+        }
+
+        /* ---------- Sheets ---------- */
+        .pd-sheet-methods { display: flex; flex-direction: column; gap: var(--rmd-space-2); margin-top: var(--rmd-space-4); }
+        .pd-sheet-methods .btn { width: 100%; }
+        .pd-sheet-pending { display: flex; align-items: center; gap: 10px; color: var(--rmd-text-muted); font-size: 0.9rem; margin-top: var(--rmd-space-4); }
+        .pd-sheet-pending[hidden] { display: none !important; }
+        .pd-sheet-error { color: var(--rmd-danger); font-size: 0.9rem; margin-top: var(--rmd-space-4); }
+        .pd-sheet-error[hidden] { display: none !important; }
+        .pd-sheet-success { color: var(--rmd-primary-dark, #059669); font-size: 0.9rem; margin-top: var(--rmd-space-4); font-weight: 600; }
+        .pd-sheet-success[hidden] { display: none !important; }
+        .pd-sheet-advertiser { margin: 0 0 var(--rmd-space-2); color: var(--rmd-text-muted); font-size: 0.92rem; }
+        .pd-reason-list { display: flex; flex-direction: column; gap: var(--rmd-space-2); margin: 0 0 var(--rmd-space-4); }
+
+        /* ---------- Loading / not-found ---------- */
+        .pd-skeleton-hero { width: 100%; aspect-ratio: 4/3; border-radius: 0; }
+        @media (min-width: 768px) { .pd-skeleton-hero { border-radius: var(--rmd-radius-lg); } }
+        .pd-skeleton-lines { display: flex; flex-direction: column; gap: 12px; padding: var(--rmd-space-5) var(--rmd-space-4); }
+        .pd-skeleton-line { height: 16px; }
+        #loadingState[hidden], #notFoundState[hidden] { display: none !important; }
+
+        /* ---------- Legacy static-dataset enquiry modal (unchanged flow) ---------- */
+        .pd-enq-modal { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 350; display: none; align-items: flex-end; justify-content: center; }
+        .pd-enq-modal.show { display: flex; }
+        .pd-enq-sheet {
+            background: var(--rmd-surface); width: 100%; max-width: 480px; border-radius: 20px 20px 0 0;
+            padding: var(--rmd-space-5); padding-bottom: calc(var(--rmd-space-5) + var(--rmd-safe-b));
+            max-height: 88vh; overflow-y: auto; position: relative;
+        }
+        @media (min-width: 768px) { .pd-enq-sheet { border-radius: var(--rmd-radius-lg); margin: auto; } }
+        @media (min-width: 768px) { .pd-enq-modal { align-items: center; } }
+
+        /* =========================================================
+           ORIGINAL DESKTOP DESIGN — restored from frontend/property.html.
+           Every rule below is that file's own CSS, with two mechanical
+           changes and nothing else:
+             1. every class is `dt-` prefixed and every selector is scoped
+                under `.property-desktop`, so these rules cannot leak into
+                the mobile design system components above (and the design
+                system's own `.verified-badge` cannot leak in here);
+             2. `#dt`-prefixed ids replace the originals, which collided
+                with the mobile markup's ids.
+           Container widths, grid columns, gallery proportions, spacing and
+           the two internal breakpoints are unchanged from the original.
+           ========================================================= */
+        .property-desktop {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6; color: #1f2937; background: #ffffff;
+        }
+        .property-desktop h1, .property-desktop h2, .property-desktop h3 {
+            font-family: 'Poppins', sans-serif; color: #111827; margin: 0;
+        }
+        .property-desktop p { margin: 0; }
+
+        /* Header */
+        .property-desktop .dt-header { background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 1rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .property-desktop .dt-header-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .property-desktop .dt-logo { font-size: 1.5rem; font-weight: 800; text-decoration: none; font-family: 'Poppins', sans-serif; color: #1f2937; }
+        .property-desktop .dt-logo span { background: linear-gradient(135deg, #10b981 0%, #059669 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .property-desktop .dt-nav-btn { background: transparent; border: 1px solid #e5e7eb; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; text-decoration: none; color: #1f2937; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem; line-height: 1.6; }
+        .property-desktop .dt-nav-btn:hover { background: #f3f4f6; }
+
+        /* Breadcrumbs */
+        .property-desktop .dt-breadcrumbs { background: #f9fafb; padding: 0.75rem 0; border-bottom: 1px solid #e5e7eb; }
+        .property-desktop .dt-breadcrumbs-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; font-size: 0.875rem; color: #6b7280; }
+        .property-desktop .dt-breadcrumbs a { color: #10b981; text-decoration: none; }
+        .property-desktop .dt-breadcrumbs a:hover { color: #059669; }
+
+        /* Loading / erreur */
+        .property-desktop .dt-state-box { text-align: center; padding: 100px 20px; color: #6b7280; }
+        .property-desktop .dt-state-box i { font-size: 3rem; margin-bottom: 16px; display: block; }
+        .property-desktop .dt-state-box h2 { font-size: 1.5rem; margin-bottom: 8px; color: #374151; }
+        .property-desktop .dt-state-box p { margin-bottom: 20px; }
+        .property-desktop [hidden] { display: none !important; }
+
+        /* Main container — the original two-column desktop grid */
+        .property-desktop .dt-main-container { max-width: 1400px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 1fr 400px; gap: 3rem; align-items: start; }
+
+        /* Gallery */
+        .property-desktop .dt-hero-gallery { grid-column: 1 / -1; margin-bottom: 2rem; }
+        .property-desktop .dt-gallery-main { display: grid; grid-template-columns: 2fr 1fr; gap: 0.5rem; height: 500px; border-radius: 16px; overflow: hidden; }
+        .property-desktop .dt-main-image { cursor: pointer; position: relative; background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #e0f2f1; border: none; padding: 0; display: block; width: 100%; }
+        .property-desktop .dt-main-image.dt-no-photo { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e0f2f1, #b2dfdb); cursor: default; }
+        .property-desktop .dt-main-image.dt-no-photo i { font-size: 5rem; color: #80cbc4; }
+        .property-desktop .dt-thumbnails { display: flex; flex-direction: column; gap: 0.5rem; }
+        .property-desktop .dt-thumbnail { flex: 1; background-size: cover; background-position: center; background-repeat: no-repeat; cursor: pointer; background-color: #e0f2f1; transition: opacity 0.3s ease; border: none; padding: 0; }
+        .property-desktop .dt-thumbnail:hover { opacity: 0.8; }
+        .property-desktop .dt-view-all-btn { position: absolute; bottom: 1.5rem; right: 1.5rem; background: rgba(255,255,255,0.95); color: #1f2937; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .property-desktop .dt-view-all-btn:hover { background: white; transform: translateY(-2px); }
+
+        /* Main content column */
+        .property-desktop .dt-main-content { display: flex; flex-direction: column; gap: 2rem; min-width: 0; }
+
+        /* Title section */
+        .property-desktop .dt-title-section h1 { font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem; line-height: 1.2; }
+        .property-desktop .dt-subtitle { font-size: 1.125rem; color: #6b7280; margin-bottom: 1.5rem; }
+        .property-desktop .dt-price-tag { display: inline-flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1rem; }
+        .property-desktop .dt-price { font-size: 2.25rem; font-weight: 800; color: #10b981; font-family: 'Poppins', sans-serif; }
+        .property-desktop .dt-period { font-size: 1.125rem; color: #6b7280; font-weight: 500; }
+        .property-desktop .dt-metadata { display: flex; align-items: center; gap: 2rem; margin-top: 1rem; flex-wrap: wrap; }
+        .property-desktop .dt-metadata-item { display: flex; align-items: center; gap: 0.5rem; color: #6b7280; font-size: 0.95rem; }
+        .property-desktop .dt-metadata-item i { color: #10b981; }
+
+        /* Info cards */
+        .property-desktop .dt-info-section { background: #f9fafb; border-radius: 16px; padding: 1.5rem; }
+        .property-desktop .dt-info-section h2 { font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 1.25rem; }
+        .property-desktop .dt-specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+        .property-desktop .dt-spec-card { background: white; border-radius: 12px; padding: 1rem; text-align: center; border: 1px solid #e5e7eb; }
+        .property-desktop .dt-spec-card i { font-size: 1.5rem; color: #10b981; margin-bottom: 0.5rem; display: block; }
+        .property-desktop .dt-spec-label { font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .property-desktop .dt-spec-value { font-size: 1rem; font-weight: 700; color: #111827; margin-top: 0.25rem; }
+
+        /* Équipements */
+        .property-desktop .dt-amenities-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        .property-desktop .dt-amenity-item { display: flex; align-items: center; gap: 0.5rem; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.875rem; color: #374151; font-weight: 500; }
+        .property-desktop .dt-amenity-item i { color: #10b981; }
+
+        /* Description */
+        .property-desktop .dt-description-text { color: #4b5563; line-height: 1.8; font-size: 1rem; white-space: pre-line; }
+
+        /* Similar listings — same card language as the info sections above */
+        .property-desktop .dt-similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+        .property-desktop .dt-similar-card { display: block; background: white; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; transition: box-shadow 0.3s ease; }
+        .property-desktop .dt-similar-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .property-desktop .dt-similar-media { height: 130px; background: #e0f2f1; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #80cbc4; font-size: 1.75rem; }
+        .property-desktop .dt-similar-body { padding: 0.75rem 1rem 1rem; }
+        .property-desktop .dt-similar-title { font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 0.15rem; }
+        .property-desktop .dt-similar-place { font-size: 0.8rem; color: #6b7280; }
+        .property-desktop .dt-similar-price { font-size: 0.95rem; font-weight: 800; color: #10b981; margin-top: 0.25rem; }
+
+        /* Booking widget (right column, sticky) */
+        .property-desktop .dt-booking-widget { position: sticky; top: 100px; background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.08); height: fit-content; }
+        .property-desktop .dt-widget-price { font-size: 2rem; font-weight: 800; color: #10b981; font-family: 'Poppins', sans-serif; margin-bottom: 0.25rem; }
+        .property-desktop .dt-widget-price-info { font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem; }
+        .property-desktop .dt-verified-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: #ecfdf5; color: #065f46; padding: 0.375rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 0.5rem; }
+        .property-desktop .dt-verified-badge i { color: #10b981; }
+        .property-desktop .dt-draft-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; padding: 0.5rem 0.75rem; border-radius: 12px; font-size: 0.8rem; font-weight: 700; margin-top: 0.75rem; }
+        .property-desktop .dt-widget-divider { height: 1px; background: #e5e7eb; margin: 1.5rem 0; }
+        .property-desktop .dt-landlord-info { margin-bottom: 1.5rem; }
+        .property-desktop .dt-landlord-info h3 { font-size: 0.875rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; }
+        .property-desktop .dt-landlord-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; font-size: 0.9rem; color: #374151; }
+        .property-desktop .dt-landlord-row i { color: #10b981; width: 16px; text-align: center; }
+        .property-desktop .dt-cta-button { width: 100%; background: #10b981; color: white; border: none; padding: 1rem 1.5rem; border-radius: 12px; font-size: 1.125rem; font-weight: 700; cursor: pointer; margin-bottom: 0.75rem; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,168,168,0.3); font-family: 'Poppins', sans-serif; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .property-desktop .dt-cta-button:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,168,168,0.4); }
+        .property-desktop .dt-cta-button.dt-whatsapp { background: #25d366; box-shadow: 0 4px 12px rgba(37,211,102,0.3); }
+        .property-desktop .dt-cta-button.dt-whatsapp:hover { background: #1da851; box-shadow: 0 8px 20px rgba(37,211,102,0.4); }
+        .property-desktop .dt-cta-button.dt-secondary { background: white; color: #10b981; border: 2px solid #10b981; box-shadow: none; }
+        .property-desktop .dt-cta-button.dt-secondary:hover { background: #f0faf9; }
+        .property-desktop .dt-contact-error { color: #b91c1c; font-size: 0.85rem; font-weight: 600; margin-top: 0.25rem; }
+        .property-desktop .dt-contact-success { color: #059669; font-size: 0.85rem; font-weight: 600; margin-top: 0.25rem; }
+
+        /* Lightbox (desktop's own — entirely separate from the mobile one) */
+        .property-desktop .dt-lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999; align-items: center; justify-content: center; }
+        .property-desktop .dt-lightbox.dt-open { display: flex; }
+        .property-desktop .dt-lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 8px; object-fit: contain; }
+        .property-desktop .dt-lb-close { position: absolute; top: 20px; right: 24px; color: #fff; font-size: 2rem; cursor: pointer; background: none; border: none; line-height: 1; }
+        .property-desktop .dt-lb-prev, .property-desktop .dt-lb-next { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 1.4rem; width: 48px; height: 48px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .property-desktop .dt-lb-prev { left: 20px; }
+        .property-desktop .dt-lb-next { right: 20px; }
+        .property-desktop .dt-lb-prev:hover, .property-desktop .dt-lb-next:hover { background: rgba(255,255,255,0.3); }
+        .property-desktop .dt-lb-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+
+        /* property.html's own internal responsive breakpoints, verbatim.
+           These are what render the 768–1023px "tablet" presentation. */
+        @media (max-width: 1024px) {
+            .property-desktop .dt-main-container { grid-template-columns: 1fr; }
+            .property-desktop .dt-booking-widget { position: static; }
+        }
+        @media (max-width: 768px) {
+            .property-desktop .dt-gallery-main { grid-template-columns: 1fr; height: 280px; }
+            .property-desktop .dt-thumbnails { flex-direction: row; }
+            .property-desktop .dt-thumbnail { height: 120px; flex: none; width: calc(50% - 0.25rem); }
+            .property-desktop .dt-title-section h1 { font-size: 1.75rem; }
+            .property-desktop .dt-main-container { padding: 1rem; gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body class="rmd-body">
+
+<!-- =====================================================================
+     DESKTOP PRESENTATION (>=768px) — the original RoastMyDorm property page,
+     restored from frontend/property.html. Structure, container widths, grid
+     columns and gallery proportions are that page's, unchanged. Only the ids
+     are `dt`-prefixed (the mobile block below already owns the originals),
+     the inline `onclick=` handlers are gone (this app sends
+     `script-src-attr 'none'`, which blocks them outright — property-detail.js
+     wires these with addEventListener instead), and the copy is fully French.
+     ===================================================================== -->
+<div class="property-desktop">
+
+    <header class="dt-header">
+        <div class="dt-header-container">
+            <a href="/index.html" class="dt-logo">Roast<span>My</span>Dorm</a>
+            <!-- A real <button> + addEventListener, not the original
+                 href="javascript:history.back()": this project never ships
+                 javascript: URLs, and the fallback target is derived from the
+                 listing's own city rather than hardcoded. -->
+            <button type="button" class="dt-nav-btn" id="dtBackBtn">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> Retour à listings
+            </button>
+        </div>
+    </header>
+
+    <div class="dt-breadcrumbs">
+        <nav class="dt-breadcrumbs-container" id="dtBreadcrumbs" aria-label="Fil d'Ariane">
+            <a href="/index.html">Accueil</a> &rsaquo;
+            <a href="/index.html" id="dtBreadcrumbCity">Logements</a> &rsaquo;
+            <span id="dtBreadcrumbTitle">Logement</span>
+        </nav>
+    </div>
+
+    <div id="dtLoadingState" class="dt-state-box" aria-busy="true" aria-live="polite">
+        <i class="fas fa-spinner fa-spin" style="color:#10b981;" aria-hidden="true"></i>
+        <h2>Chargement du logement…</h2>
+    </div>
+
+    <div id="dtErrorState" class="dt-state-box" hidden>
+        <i class="fas fa-exclamation-circle" style="color:#ef4444;" aria-hidden="true"></i>
+        <h2>Logement introuvable</h2>
+        <p>Cette annonce n'existe plus ou n'est plus en ligne.</p>
+        <a href="/index.html" class="dt-nav-btn" id="dtErrorLink">← Voir d'autres logements</a>
+    </div>
+
+    <div id="dtContent" hidden>
+        <div class="dt-main-container">
+
+            <!-- Gallery — full width above the two columns -->
+            <div class="dt-hero-gallery">
+                <div class="dt-gallery-main" id="dtGalleryMain">
+                    <div class="dt-main-image dt-no-photo"><i class="fas fa-home" aria-hidden="true"></i></div>
+                </div>
+            </div>
+
+            <!-- Left column -->
+            <div class="dt-main-content">
+
+                <div class="dt-title-section">
+                    <h1 id="dtPropTitle">Logement</h1>
+                    <p class="dt-subtitle" id="dtPropSubtitle" hidden></p>
+                    <div class="dt-price-tag" id="dtPriceTag" hidden>
+                        <span class="dt-price" id="dtPropPrice"></span>
+                        <span class="dt-period">/ mois</span>
+                    </div>
+                    <div class="dt-metadata" id="dtPropMeta"></div>
+                </div>
+
+                <section class="dt-info-section" id="dtVideosSection" hidden>
+                    <h2>Visite en vidéo</h2>
+                    <div id="dtVideos"></div>
+                </section>
+                <div class="dt-info-section" id="dtSpecsSection" hidden>
+                    <h2>Informations clés</h2>
+                    <div class="dt-specs-grid" id="dtSpecsGrid"></div>
+                </div>
+
+                <div class="dt-info-section" id="dtAmenitiesSection" hidden>
+                    <h2>Équipements</h2>
+                    <div class="dt-amenities-grid" id="dtAmenitiesGrid"></div>
+                </div>
+
+                <div class="dt-info-section" id="dtDescSection" hidden>
+                    <h2>À propos de ce bien</h2>
+                    <p class="dt-description-text" id="dtPropDesc"></p>
+                </div>
+
+                <div class="dt-info-section" id="dtSimilarSection" hidden>
+                    <h2>Logements similaires</h2>
+                    <div class="dt-similar-grid" id="dtSimilarGrid"></div>
+                </div>
+
+            </div>
+
+            <!-- Right column: sticky contact card -->
+            <div class="dt-booking-widget">
+                <div class="dt-widget-price" id="dtWidgetPrice" hidden></div>
+                <div class="dt-widget-price-info" id="dtWidgetPriceInfo" hidden>par mois</div>
+                <div class="dt-verified-badge" id="dtVerifiedBadge" hidden><i class="fas fa-check-circle" aria-hidden="true"></i> Annonce vérifiée</div>
+                <div class="dt-draft-badge" id="dtDraftBadge" hidden><i class="fas fa-eye" aria-hidden="true"></i> Aperçu administrateur — cette annonce n'est pas encore publiée</div>
+                <div class="dt-widget-divider"></div>
+                <div class="dt-landlord-info">
+                    <h3>Contacter le propriétaire</h3>
+                    <div id="dtLandlordRows"></div>
+                </div>
+                <button type="button" id="dtBtnCall" class="dt-cta-button" hidden><i class="fas fa-phone" aria-hidden="true"></i> Appeler</button>
+                <button type="button" id="dtBtnWhatsapp" class="dt-cta-button dt-whatsapp" hidden><i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp</button>
+                <button type="button" id="dtBtnEmail" class="dt-cta-button" hidden><i class="fas fa-envelope" aria-hidden="true"></i> Email</button>
+                <p class="dt-contact-error" id="dtContactError" hidden role="status"></p>
+                <p class="dt-contact-success" id="dtContactSuccess" hidden role="status"></p>
+                <a href="/index.html" id="dtMoreListings" class="dt-cta-button dt-secondary" style="margin-top:0.5rem;"><i class="fas fa-search" aria-hidden="true"></i> Voir d'autres logements</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="dt-lightbox" id="dtLightbox" role="dialog" aria-modal="true" aria-label="Photos du logement">
+        <button type="button" class="dt-lb-close" id="dtLbClose" aria-label="Fermer la galerie"><i class="fas fa-times" aria-hidden="true"></i></button>
+        <button type="button" class="dt-lb-prev" id="dtLbPrev" aria-label="Photo précédente"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+        <img id="dtLbImg" src="" alt="" loading="lazy" decoding="async">
+        <button type="button" class="dt-lb-next" id="dtLbNext" aria-label="Photo suivante"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+        <div class="dt-lb-counter" id="dtLbCounter"></div>
+    </div>
+
+</div>
+
+<!-- =====================================================================
+     MOBILE PRESENTATION (<768px) — the redesigned page, unchanged.
+     ===================================================================== -->
+<div class="property-mobile">
+    <a href="#main" class="btn btn-primary pd-skip">Aller au contenu principal</a>
+
+    <!-- ============ 1. MOBILE HEADER ============ -->
+    <header class="rmd-header">
+        <div class="rmd-header-inner pd-header-inner">
+            <button type="button" class="rmd-icon-btn pd-back-btn" id="backBtn" aria-label="Retour aux logements">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i><span class="pd-back-label">Retour aux logements</span>
+            </button>
+            <a href="/index.html" class="rmd-logo">Roast<span>My</span>Dorm</a>
+            <div class="pd-header-actions">
+                <button type="button" class="rmd-icon-btn" id="shareBtnHeader" aria-label="Partager ce logement"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i></button>
+                <button type="button" class="rmd-icon-btn" id="mobileMenuBtn" aria-label="Menu" aria-expanded="false" aria-controls="mobileDrawer"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="rmd-mobile-drawer" id="mobileDrawer">
+        <div class="rmd-mobile-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+        <div class="rmd-mobile-drawer-panel" role="dialog" aria-modal="true" aria-label="Menu de navigation">
+            <button type="button" class="rmd-icon-btn rmd-mobile-drawer-close" id="mobileDrawerClose" aria-label="Fermer le menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            <a href="/index.html">Accueil</a>
+            <a href="/casablanca-dorms.html" id="drawerCityLink">Logements</a>
+            <a href="/find-roommate.html">Colocataires</a>
+            <a href="/safety.html">Sécurité</a>
+            <a href="/for-landlords.html" class="btn btn-primary" style="margin-top:8px;justify-content:center;">Déposer une annonce</a>
+        </div>
+    </div>
+
+    <div class="pd-shell">
+        <!-- Admin preview banner (draft listings only) -->
+        <p class="pd-draft-banner" id="draftBanner" hidden>
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            <span>Aperçu administrateur — cette annonce n'est pas encore publiée</span>
+        </p>
+
+        <!-- Loading state -->
+        <div id="loadingState" aria-busy="true" aria-live="polite">
+            <div class="rmd-skeleton pd-skeleton-hero"></div>
+            <div class="pd-skeleton-lines">
+                <div class="rmd-skeleton pd-skeleton-line" style="width:72%"></div>
+                <div class="rmd-skeleton pd-skeleton-line" style="width:44%"></div>
+                <div class="rmd-skeleton pd-skeleton-line" style="width:58%"></div>
+            </div>
+            <span class="rmd-sr-only">Chargement du logement…</span>
+        </div>
+
+        <!-- Not found state -->
+        <div id="notFoundState" class="rmd-state" hidden>
+            <i class="fa-solid fa-house-circle-exclamation state-icon" aria-hidden="true"></i>
+            <h2>Logement introuvable</h2>
+            <p>Cette annonce n'existe plus ou n'est plus en ligne. Découvrez d'autres logements près de votre campus.</p>
+            <a href="/index.html" class="btn btn-primary">Voir d'autres logements</a>
+        </div>
+
+        <main id="main">
+            <article id="propertyDetail" hidden>
+                <!-- ============ 2. GALLERY ============ -->
+                <section class="pd-gallery" aria-label="Photos du logement">
+                    <div class="pd-gallery-track" id="galleryTrack" role="group" aria-roledescription="carrousel" aria-label="Photos du logement"></div>
+                    <div class="pd-gallery-overlay">
+                        <button type="button" class="rmd-icon-btn" id="favBtnTop" aria-label="Ajouter aux favoris" aria-pressed="false"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                        <button type="button" class="rmd-icon-btn" id="shareBtnGallery" aria-label="Partager ce logement"><i class="fa-solid fa-share-nodes" aria-hidden="true"></i></button>
+                    </div>
+                    <p class="pd-gallery-counter" id="galleryCounter" hidden aria-live="polite"></p>
+                    <button type="button" class="btn btn-sm pd-gallery-viewall" id="viewPhotosBtn" hidden></button>
+                    <div class="pd-dots" id="galleryDots" role="tablist" aria-label="Choisir une photo" hidden></div>
+                    <div class="pd-filmstrip" id="galleryFilmstrip" hidden></div>
+                </section>
+
+                <!-- ============ 3. BADGES / TITLE / LOCATION / PRICE ============ -->
+                <section class="pd-block" aria-labelledby="propTitle">
+                    <div class="pd-badges" id="statusBadges"></div>
+                    <h1 class="pd-title" id="propTitle"></h1>
+                    <p class="pd-place" id="propPlace" hidden><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span id="propPlaceText"></span></p>
+                    <p class="pd-price" id="propPrice" hidden></p>
+
+                    <!-- ============ 4. FACT CHIPS ============ -->
+                    <ul class="pd-chips" id="factChips"></ul>
+
+                    <button type="button" class="btn btn-primary btn-block pd-primary-cta" id="primaryContactBtn" hidden>
+                        <i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Contacter maintenant
+                    </button>
+                </section>
+
+                <!-- ============ 5. DESCRIPTION ============ -->
+                <section class="pd-section" id="videosSection" hidden>
+                    <h2>Visite en vidéo</h2>
+                    <div id="propertyVideos"></div>
+                </section>
+                <section class="pd-section" id="descriptionSection" aria-labelledby="descriptionHeading" hidden>
+                    <h2 id="descriptionHeading"><i class="fa-solid fa-align-left" aria-hidden="true"></i> À propos de ce logement</h2>
+                    <div class="pd-card">
+                        <p class="pd-desc" id="descriptionText"></p>
+                        <button type="button" class="btn btn-ghost btn-sm pd-desc-toggle" id="descriptionToggle" aria-expanded="false" hidden>Afficher toute la description</button>
+                    </div>
+                </section>
+
+                <!-- ============ 6. COSTS AND RENTAL CONDITIONS ============ -->
+                <section class="pd-section" id="costsSection" aria-labelledby="costsHeading" hidden>
+                    <h2 id="costsHeading"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Coûts et conditions</h2>
+                    <ul class="pd-rows pd-card" id="costRows"></ul>
+                </section>
+
+                <!-- ============ 7. COLOCATION ============ -->
+                <section class="pd-section" id="colocationSection" aria-labelledby="colocationHeading" hidden>
+                    <h2 id="colocationHeading"><i class="fa-solid fa-people-roof" aria-hidden="true"></i> Vie en colocation</h2>
+                    <ul class="pd-rows pd-card" id="colocationRows"></ul>
+                </section>
+
+                <!-- ============ 8. AMENITIES ============ -->
+                <section class="pd-section" id="amenitiesSection" aria-labelledby="amenitiesHeading" hidden>
+                    <h2 id="amenitiesHeading"><i class="fa-solid fa-list-check" aria-hidden="true"></i> Équipements</h2>
+                    <ul class="pd-amenities pd-card" id="amenitiesGrid"></ul>
+                </section>
+
+                <!-- ============ 9. LOCATION ============ -->
+                <section class="pd-section" id="locationSection" aria-labelledby="locationHeading" hidden>
+                    <h2 id="locationHeading"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Emplacement</h2>
+                    <div class="pd-card">
+                        <ul class="pd-rows" id="locationRows"></ul>
+                        <div class="pd-map-wrap" id="mapWrap" hidden>
+                            <iframe class="pd-map" id="mapFrame" title="Carte approximative du quartier" loading="lazy" referrerpolicy="no-referrer"></iframe>
+                            <p class="pd-map-note">Emplacement approximatif : la carte montre le quartier, pas l'adresse exacte.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============ 10. ADVERTISER AND SAFETY ============ -->
+                <section class="pd-section" id="advertiserSection" aria-labelledby="advertiserHeading" hidden>
+                    <h2 id="advertiserHeading"><i class="fa-solid fa-user-shield" aria-hidden="true"></i> À propos de l'annonceur</h2>
+                    <div class="pd-card">
+                        <div class="pd-advertiser">
+                            <span class="pd-advertiser-avatar" id="advertiserInitial" aria-hidden="true"></span>
+                            <div>
+                                <p class="pd-advertiser-name" id="advertiserName"></p>
+                                <p class="pd-advertiser-meta" id="advertiserMeta" hidden></p>
+                            </div>
+                        </div>
+                        <p class="pd-safety">
+                            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                            <span>Ne payez jamais avant d'avoir visité le logement et vérifié l'identité de l'annonceur.</span>
+                        </p>
+                        <button type="button" class="btn btn-danger-outline btn-sm pd-report-btn" id="reportBtn">
+                            <i class="fa-solid fa-flag" aria-hidden="true"></i> Signaler cette annonce
+                        </button>
+                    </div>
+                </section>
+
+                <!-- ============ 11. SIMILAR LISTINGS ============ -->
+                <section class="pd-section" id="similarSection" aria-labelledby="similarHeading" hidden>
+                    <h2 id="similarHeading"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Logements similaires</h2>
+                    <ul class="pd-similar" id="similarList"></ul>
+                    <a class="btn btn-outline btn-block" id="similarFallbackBtn" href="/index.html" hidden></a>
+                </section>
+            </article>
+        </main>
+    </div>
+
+    <!-- ============ 12. STICKY CONTACT BAR ============ -->
+    <div class="pd-contact-bar" id="contactBar" hidden>
+        <div class="pd-bar-price" id="barPrice" hidden><strong id="barPriceValue"></strong><span>par mois</span></div>
+        <div class="pd-bar-icons" id="barIcons">
+            <button type="button" class="rmd-icon-btn pd-bar-whatsapp" id="barWhatsappBtn" aria-label="Contacter par WhatsApp" hidden><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></button>
+            <button type="button" class="rmd-icon-btn pd-bar-fav" id="favBtnBar" aria-label="Ajouter aux favoris" aria-pressed="false"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+        </div>
+        <div class="pd-bar-actions" id="barActions">
+            <button type="button" class="btn btn-primary btn-block" id="contactBtn"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i> Contacter maintenant</button>
+        </div>
+        <p class="pd-bar-notice" id="barDraftNotice" hidden>
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            <span>Aperçu administrateur — cette annonce n'est pas encore publiée</span>
+        </p>
+    </div>
+
+    <!-- ============ LIGHTBOX ============ -->
+    <div class="pd-lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photos du logement" hidden>
+        <div class="pd-lightbox-bar">
+            <span id="lightboxCounter"></span>
+            <button type="button" class="rmd-icon-btn" id="lightboxClose" aria-label="Fermer la galerie"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <div class="pd-lightbox-stage"><img id="lightboxImage" alt=""></div>
+        <div class="pd-lightbox-nav">
+            <button type="button" class="rmd-icon-btn" id="lightboxPrev" aria-label="Photo précédente"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+            <button type="button" class="rmd-icon-btn" id="lightboxNext" aria-label="Photo suivante"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+    </div>
+
+    <!-- ============ CONTACT SHEET ============ -->
+    <div class="rmd-sheet-backdrop" id="contactSheetBackdrop" hidden></div>
+    <div class="rmd-sheet" id="contactSheet" role="dialog" aria-modal="true" aria-labelledby="contactSheetTitle" hidden>
+        <div class="rmd-sheet-handle" aria-hidden="true"></div>
+        <h2 class="rmd-sheet-title" id="contactSheetTitle">Contacter l'annonceur</h2>
+        <p class="pd-sheet-advertiser" id="contactSheetAdvertiser" hidden></p>
+        <p class="pd-sheet-pending" id="contactSheetPending"><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Récupération des coordonnées…</p>
+        <p class="pd-sheet-error" id="contactSheetError" hidden></p>
+        <p class="pd-sheet-success" id="contactSheetSuccess" hidden></p>
+        <div class="pd-sheet-methods" id="contactSheetMethods"></div>
+        <p class="pd-safety">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <span>Ne payez jamais avant d'avoir visité le logement et vérifié l'identité de l'annonceur.</span>
+        </p>
+        <div class="rmd-sheet-actions">
+            <button type="button" class="btn btn-secondary" id="contactSheetClose">Fermer</button>
+        </div>
+    </div>
+
+    <!-- ============ REPORT SHEET ============ -->
+    <div class="rmd-sheet-backdrop" id="reportSheetBackdrop" hidden></div>
+    <div class="rmd-sheet" id="reportSheet" role="dialog" aria-modal="true" aria-labelledby="reportSheetTitle" hidden>
+        <div class="rmd-sheet-handle" aria-hidden="true"></div>
+        <h2 class="rmd-sheet-title" id="reportSheetTitle">Signaler cette annonce</h2>
+        <form id="reportForm">
+            <fieldset class="rmd-lf-types" style="margin-bottom:16px;">
+                <legend class="rmd-sr-only">Motif du signalement</legend>
+                <div class="pd-reason-list">
+                    <label class="select-card" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;"><input type="radio" name="reportReason" value="scam" checked><span>Annonce frauduleuse</span></label>
+                    <label class="select-card" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;"><input type="radio" name="reportReason" value="misinformation"><span>Informations inexactes</span></label>
+                    <label class="select-card" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;"><input type="radio" name="reportReason" value="inappropriate"><span>Contenu inapproprié</span></label>
+                    <label class="select-card" style="flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;"><input type="radio" name="reportReason" value="other"><span>Autre</span></label>
+                </div>
+            </fieldset>
+            <div class="rmd-field">
+                <label for="reportDetails">Détails (facultatif)</label>
+                <textarea class="rmd-textarea" id="reportDetails" rows="3" maxlength="1000"></textarea>
+            </div>
+            <p class="pd-sheet-error" id="reportError" hidden></p>
+            <div class="rmd-sheet-actions">
+                <button type="button" class="btn btn-secondary" id="reportSheetClose">Annuler</button>
+                <button type="submit" class="btn btn-primary" id="reportSubmit">Envoyer</button>
+            </div>
+        </form>
+    </div>
+
+    </div><!-- /.property-mobile -->
+
+    <!-- ============ LEGACY STATIC-DATASET ENQUIRY MODAL (unchanged flow) ============
+         Deliberately OUTSIDE .property-mobile: it is a full-screen overlay used
+         by the legacy property-detail.html?id= path, which is reachable at
+         desktop width too, where .property-mobile is display:none. -->
+    <div class="pd-enq-modal" id="enquireModal">
+        <div class="pd-enq-sheet" role="dialog" aria-modal="true" aria-labelledby="enqModalTitle">
+            <button type="button" class="rmd-icon-btn" id="modalCloseBtn" aria-label="Fermer" style="position:absolute;top:14px;right:14px;"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            <h2 class="rmd-sheet-title" id="enqModalTitle">Contacter l'annonceur</h2>
+            <form id="enquireForm">
+                <div class="rmd-field"><label for="enq-name">Nom</label><input class="rmd-input" type="text" id="enq-name" required autocomplete="name"></div>
+                <div class="rmd-field"><label for="enq-email">Email</label><input class="rmd-input" type="email" id="enq-email" required autocomplete="email"></div>
+                <div class="rmd-field"><label for="enq-phone">Téléphone (WhatsApp)</label><input class="rmd-input" type="tel" id="enq-phone" required autocomplete="tel" placeholder="6XXXXXXXX"></div>
+                <div class="rmd-field"><label for="enq-message">Message (facultatif)</label><textarea class="rmd-textarea" id="enq-message" rows="3"></textarea></div>
+                <button type="submit" class="btn btn-primary btn-block">Envoyer ma demande</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/analytics-config.js"></script>
+    <script src="/js/analytics.js?v=20260909a"></script>
+    <script src="/js/seo-utils.js"></script>
+    <script src="/data/properties.js"></script>
+    <!-- RMD_AUTH (resolveSession/authenticatedFetch with single-flight token
+         refresh) - the canonical auth flow, needed by the tracked contact
+         flow below instead of introducing another private token check. -->
+    <script src="/js/rmd-shared.js?v=20260905b"></script>
+    <script src="/js/housing-request-widget.js?v=20260917a"></script>
+    <script src="/js/property-detail.js?v=20260911video1"></script>
+</body>
+</html>
